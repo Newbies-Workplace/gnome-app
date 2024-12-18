@@ -1,0 +1,14 @@
+services:
+  gnome-db:
+    image: postgres:15.3
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: gnome
+      POSTGRES_PASSWORD: gnome
+    ports:
+      - "5432:5432"
+#    volumes:
+#      - gnome-db-data:/var/lib/postgresql/data
+
+#volumes:
+#  gnome-db-data:

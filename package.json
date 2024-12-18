@@ -1,0 +1,8 @@
+{
+  "name": "gnome-app",
+  "version": "1.0.0",
+  "workspaces": [
+    "apps/*"
+  ],
+  "private": true
+}
