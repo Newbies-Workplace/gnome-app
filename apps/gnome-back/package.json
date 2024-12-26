@@ -4,8 +4,8 @@
   "type": "module",
   "scripts": {
     "build": "nest build",
-    "lint": "yarn biome check ./src --write && prisma format",
-    "lint:ci": "yarn biome ci ./src",
+    "lint": "biome check ./src --write && prisma format",
+    "lint:ci": "biome ci ./src",
     "start": "nest start",
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
@@ -33,7 +33,6 @@
     "rxjs": "^7.8.1"
   },
   "devDependencies": {
-    "@biomejs/biome": "1.9.4",
     "@nestjs/cli": "^10.0.0",
     "@nestjs/schematics": "^10.0.0",
     "@nestjs/testing": "^10.0.0",

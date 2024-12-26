@@ -8,8 +8,8 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "test": "jest --watchAll",
-    "lint": "yarn biome check ./src --write",
-    "lint:ci": "yarn biome ci ./src"
+    "lint": "biome check ./src --write",
+    "lint:ci": "biome ci ./src"
   },
   "jest": {
     "preset": "jest-expo"
@@ -54,7 +54,6 @@
     "zustand": "^5.0.2"
   },
   "devDependencies": {
-    "@biomejs/biome": "1.9.4",
     "@babel/core": "^7.25.2",
     "@types/jest": "^29.5.12",
     "@types/react": "~18.3.12",
