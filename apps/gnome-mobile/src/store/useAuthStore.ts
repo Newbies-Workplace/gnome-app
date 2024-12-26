@@ -1,4 +1,4 @@
-import {create} from "zustand/react";
+import { create } from "zustand/react";
 
 export interface AuthStore {
   session: string | null;
@@ -16,11 +16,11 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
       setTimeout(() => {
         resolve();
       }, 2000);
-    })
+    });
 
     set({ isLoading: false });
   },
   login: () => {
     set({ session: "123", isLoading: false });
-  }
+  },
 }));
