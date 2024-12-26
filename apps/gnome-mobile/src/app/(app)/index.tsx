@@ -24,6 +24,8 @@ export default function Index() {
       />
 
       <Skeleton className="h-12 w-12 rounded-full" />
+
+      <Text>Zmienna: {process.env.EXPO_PUBLIC_API_URL}</Text>
     </View>
   );
 }
