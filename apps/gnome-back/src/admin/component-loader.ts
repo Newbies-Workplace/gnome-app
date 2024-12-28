@@ -1,4 +1,4 @@
-import { ComponentLoader } from 'adminjs';
+import { ComponentLoader } from "adminjs";
 
 const componentLoader = new ComponentLoader();
 

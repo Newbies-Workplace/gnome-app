@@ -1,8 +1,21 @@
 {
   "name": "gnome-app",
   "version": "1.0.0",
-  "workspaces": [
-    "apps/*"
-  ],
-  "private": true
+  "workspaces": ["apps/*"],
+  "private": true,
+  "scripts": {
+    "prepare": "husky",
+    "lint": "yarn workspaces run lint",
+    "lint:ci": "yarn workspaces run lint:ci"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "1.9.4",
+    "husky": "9.1.7",
+    "lint-staged": "15.2.11"
+  },
+  "lint-staged": {
+    "*": [
+      "biome check --write --no-errors-on-unmatched --files-ignore-unknown=true"
+    ]
+  }
 }
