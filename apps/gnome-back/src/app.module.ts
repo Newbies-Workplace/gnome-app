@@ -4,11 +4,14 @@ import { Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
 import AdminJS, { type AdminJSOptions } from "adminjs";
 
+import { JwtModule } from "@nestjs/jwt";
 import provider from "./admin/auth-provider.js";
 import componentLoader from "./admin/component-loader.js";
 import { AppController } from "./app.controller.js";
 import { AppService } from "./app.service.js";
+import { AuthModule } from "./auth/auth.module.js";
 import { PrismaService } from "./prisma.service.js";
+import { UsersModule } from "./users/users.module.js";
 
 AdminJS.registerAdapter({ Database, Resource });
 
@@ -52,8 +55,10 @@ AdminJS.registerAdapter({ Database, Resource });
         };
       },
     }),
+    AuthModule,
+    UsersModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, PrismaService],
 })
 export class AppModule {}

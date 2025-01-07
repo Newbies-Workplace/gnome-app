@@ -12,3 +12,11 @@ model Gnome {
   id   String @id @default(uuid())
   name String
 }
+
+model User {
+  id         String @id @default(uuid())
+  googleId   String
+  name       String
+  email      String
+  pictureUrl String
+}
