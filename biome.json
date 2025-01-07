@@ -12,6 +12,9 @@
         "useButtonType": "off",
         "noSvgWithoutTitle": "off"
       },
+      "suspicious": {
+        "noExplicitAny": "warn"
+      },
       "correctness": {
         "useExhaustiveDependencies": "off"
       }

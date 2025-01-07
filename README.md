@@ -25,8 +25,9 @@ Run the following command to start the backend service:
 
 Create a `.env` file based on `.env.example` in `apps/gnome-mobile` directory and fill in the necessary values.
 
-You can start the mobile app by running the following command:
+You can start the mobile app by running the following commands:
 ```bash
+  yarn workspace gnome-mobile prebuild
   yarn workspace gnome-mobile android
 ```
 

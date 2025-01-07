@@ -5,7 +5,7 @@ export interface AuthStore {
   isLoading: boolean;
 
   init: () => Promise<void>;
-  login: () => void;
+  login: (googleIdToken: string) => Promise<void>;
 }
 
 export const useAuthStore = create<AuthStore>((set, get) => ({
@@ -20,7 +20,10 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
 
     set({ isLoading: false });
   },
-  login: () => {
+  login: async (googleIdToken: string) => {
+    //todo execute backend login
+    console.log(googleIdToken);
+
     set({ session: "123", isLoading: false });
   },
 }));
