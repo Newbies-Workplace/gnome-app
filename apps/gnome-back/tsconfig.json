@@ -1,6 +1,9 @@
 {
   "compilerOptions": {
-    "module": "NodeNext",
+    "paths": {
+      "@/*": ["src/*"]
+    },
+    "module": "commonjs",
     "declaration": true,
     "removeComments": true,
     "emitDecoratorMetadata": true,

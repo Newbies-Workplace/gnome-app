@@ -1,19 +1,17 @@
-import { Controller, Get, UseGuards } from '@nestjs/common';
-import { UsersService } from './users.service.js';
-import { User } from 'src/auth/jwt/jwtuser.decorator.js';
-import { JWTUser } from 'src/auth/jwt/JWTUser.js';
-import { User as PrismaUser } from '@prisma/client';
-import { JwtGuard } from 'src/auth/jwt/jwt.guard.js';
+import { JWTUser } from "@/auth/jwt/JWTUser";
+import { JwtGuard } from "@/auth/jwt/jwt.guard";
+import { User } from "@/auth/jwt/jwtuser.decorator";
+import { UsersService } from "@/users/users.service";
+import { Controller, Get, UseGuards } from "@nestjs/common";
+import { User as PrismaUser } from "@prisma/client";
 
-@Controller('users')
+@Controller("users")
 export class UsersController {
-    constructor(
-        private readonly usersService: UsersService,
-    ) {}
+  constructor(private readonly usersService: UsersService) {}
 
-    @Get('@me')
-    @UseGuards(JwtGuard)
-    async getMe(@User() user: JWTUser): Promise<PrismaUser> {
-        return this.usersService.findUserById(user.id);
-    }
+  @Get("@me")
+  @UseGuards(JwtGuard)
+  async getMe(@User() user: JWTUser): Promise<PrismaUser> {
+    return this.usersService.findUserById(user.id);
+  }
 }

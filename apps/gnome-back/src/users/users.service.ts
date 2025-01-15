@@ -1,14 +1,14 @@
+import { GoogleUser } from "@/auth/types/GoogleUser";
+import { PrismaService } from "@/db/prisma.service";
 import { Injectable } from "@nestjs/common";
-import type { User } from "@prisma/client";
-import type { GoogleUser } from "src/auth/types/GoogleUser.js";
-import type { PrismaService } from "src/prisma.service.js";
+import { User } from "@prisma/client";
 
 @Injectable()
 export class UsersService {
-  constructor(private readonly prismaservice: PrismaService) {}
+  constructor(private readonly prismaService: PrismaService) {}
 
   async findUserById(id: string): Promise<User | null> {
-    return this.prismaservice.user.findUnique({
+    return this.prismaService.user.findUnique({
       where: {
         id,
       },
@@ -16,7 +16,7 @@ export class UsersService {
   }
 
   async createUserWithGoogleData(data: GoogleUser): Promise<User> {
-    return this.prismaservice.user.create({
+    return this.prismaService.user.create({
       data: {
         email: data.email,
         name: data.name,
@@ -27,7 +27,7 @@ export class UsersService {
   }
 
   async findUserByGoogleId(googleId: string): Promise<User | null> {
-    return this.prismaservice.user.findFirst({
+    return this.prismaService.user.findFirst({
       where: {
         googleId,
       },

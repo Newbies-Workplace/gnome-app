@@ -1,7 +1,6 @@
+import { GoogleUser } from "@/auth/types/GoogleUser";
 import { Injectable } from "@nestjs/common";
 import { OAuth2Client } from "google-auth-library";
-import { UsersService } from "src/users/users.service.js";
-import type { GoogleUser } from "./types/GoogleUser.js";
 
 @Injectable()
 export class AuthService {

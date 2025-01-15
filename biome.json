@@ -3,10 +3,18 @@
   "organizeImports": {
     "enabled": true
   },
+  "javascript": {
+    "parser": {
+      "unsafeParameterDecoratorsEnabled": true
+    }
+  },
   "linter": {
     "enabled": true,
     "rules": {
       "recommended": true,
+      "style": {
+        "useImportType": "off"
+      },
       "a11y": {
         "useKeyWithClickEvents": "off",
         "useButtonType": "off",

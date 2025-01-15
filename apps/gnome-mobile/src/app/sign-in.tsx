@@ -3,15 +3,18 @@ import { Text } from "@/components/ui/text";
 import { useAuthStore } from "@/store/useAuthStore";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import { useRouter } from "expo-router";
+import { useEffect } from "react";
 import { View } from "react-native";
 
 export default function SignInScreen() {
   const { login } = useAuthStore();
   const { replace } = useRouter();
 
-  GoogleSignin.configure({
-    webClientId: process.env.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID,
-  });
+  useEffect(() => {
+    GoogleSignin.configure({
+      webClientId: process.env.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID,
+    });
+  }, []);
 
   const onSignInPress = async () => {
     console.log("sign in");

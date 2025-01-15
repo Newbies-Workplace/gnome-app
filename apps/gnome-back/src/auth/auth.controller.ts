@@ -1,8 +1,8 @@
+import { AuthService } from "@/auth/auth.service";
+import { GoogleAuthRequest } from "@/auth/dto/GoogleAuth.request";
+import { UsersService } from "@/users/users.service";
 import { Body, Controller, Post } from "@nestjs/common";
-import type { JwtService } from "@nestjs/jwt";
-import type { UsersService } from "src/users/users.service.js";
-import type { AuthService } from "./auth.service.js";
-import type { GoogleAuthRequest } from "./dto/GoogleAuth.request.js";
+import { JwtService } from "@nestjs/jwt";
 
 @Controller("auth")
 export class AuthController {
