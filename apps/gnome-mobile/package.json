@@ -3,6 +3,7 @@
   "main": "expo-router/entry",
   "version": "1.0.0",
   "scripts": {
+    "proxy": "adb reverse tcp:3000 tcp:3000",
     "start": "expo start",
     "android": "expo run:android",
     "ios": "expo run:ios",
@@ -24,6 +25,7 @@
     "@rn-primitives/portal": "^1.1.0",
     "@rn-primitives/slot": "^1.1.0",
     "@rn-primitives/types": "^1.1.0",
+    "axios": "^1.7.9",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "expo": "~52.0.20",

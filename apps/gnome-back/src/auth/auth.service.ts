@@ -11,7 +11,6 @@ export class AuthService {
   async verifyGoogleToken(idToken: string): Promise<GoogleUser> {
     const ticket = await this.client.verifyIdToken({
       idToken,
-      audience: `${process.env.GOOGLE_ID}.apps.googleusercontent.com`,
     });
 
     const payload = ticket.getPayload();

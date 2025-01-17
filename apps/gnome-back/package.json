@@ -5,6 +5,7 @@
     "build": "nest build",
     "lint": "biome check ./src --write && prisma format",
     "lint:ci": "biome ci ./src",
+    "studio": "prisma studio",
     "start": "nest start",
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",

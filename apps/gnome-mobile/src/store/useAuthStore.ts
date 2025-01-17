@@ -1,3 +1,4 @@
+import { AuthService } from "@/lib/api/Auth.service";
 import { create } from "zustand/react";
 
 export interface AuthStore {
@@ -6,6 +7,7 @@ export interface AuthStore {
 
   init: () => Promise<void>;
   login: (googleIdToken: string) => Promise<void>;
+  logout: () => Promise<void>;
 }
 
 export const useAuthStore = create<AuthStore>((set, get) => ({
@@ -22,8 +24,11 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
   },
   login: async (googleIdToken: string) => {
     //todo execute backend login
-    console.log(googleIdToken);
+    await AuthService.loginWithGoogle(googleIdToken);
 
     set({ session: "123", isLoading: false });
+  },
+  logout: async () => {
+    set({ session: null, isLoading: false });
   },
 }));
