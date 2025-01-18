@@ -1,10 +1,14 @@
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Skeleton } from "@/components/ui/skeleton";
+import { useAuthStore } from "@/store/useAuthStore";
 import React, { useState } from "react";
 import { Text, View } from "react-native";
 
 export default function Index() {
   const [value, setValue] = useState("");
+
+  const { logout, user } = useAuthStore();
 
   const onChangeText = (text: string) => {
     setValue(text);
@@ -12,7 +16,14 @@ export default function Index() {
 
   return (
     <View className={"p-4 flex gap-2 justify-center items-center"}>
-      <Text className={""}>Edit app/index.tsx to edit this screen.</Text>
+      <Text className={""}>Zalogowano jako: {user?.name}</Text>
+
+      <Avatar alt="Your avatar">
+        <AvatarImage source={{ uri: user?.pictureUrl }} />
+        <AvatarFallback>
+          <Text>You</Text>
+        </AvatarFallback>
+      </Avatar>
 
       <Input
         className={"w-full"}
@@ -23,9 +34,11 @@ export default function Index() {
         aria-errormessage="inputError"
       />
 
-      <Skeleton className="h-12 w-12 rounded-full" />
-
       <Text>Zmienna: {process.env.EXPO_PUBLIC_API_URL}</Text>
+
+      <Button onPress={logout}>
+        <Text>Wyloguj</Text>
+      </Button>
     </View>
   );
 }

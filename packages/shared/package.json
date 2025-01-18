@@ -1,0 +1,17 @@
+{
+  "name": "@repo/shared",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "tsc --watch",
+    "build": "tsc",
+    "lint": "biome check ./src --write",
+    "lint:ci": "biome ci ./src"
+  },
+  "exports": {
+    "./responses": "./src/responses.ts"
+  },
+  "devDependencies": {
+    "typescript": "latest"
+  }
+}

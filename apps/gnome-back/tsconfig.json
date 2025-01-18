@@ -1,6 +1,10 @@
 {
   "compilerOptions": {
-    "module": "NodeNext",
+    "paths": {
+      "@/*": ["src/*"]
+    },
+    "moduleResolution": "nodenext",
+    "module": "nodenext",
     "declaration": true,
     "removeComments": true,
     "emitDecoratorMetadata": true,

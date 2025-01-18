@@ -18,15 +18,16 @@ Setup docker on your machine and run the following command to start database:
 
 Run the following command to start the backend service:
 ```bash
-  yarn workspace gnome-back start:dev
+  yarn dev
 ```
 
 ### Mobile app
 
 Create a `.env` file based on `.env.example` in `apps/gnome-mobile` directory and fill in the necessary values.
 
-You can start the mobile app by running the following command:
+You can start the mobile app by running the following commands:
 ```bash
+  yarn workspace gnome-mobile prebuild
   yarn workspace gnome-mobile android
 ```
 
