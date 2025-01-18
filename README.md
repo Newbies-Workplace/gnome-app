@@ -18,7 +18,7 @@ Setup docker on your machine and run the following command to start database:
 
 Run the following command to start the backend service:
 ```bash
-  yarn workspace gnome-back start:dev
+  yarn dev
 ```
 
 ### Mobile app

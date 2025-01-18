@@ -31,7 +31,7 @@ export default function SignInScreen() {
       } else {
         throw new Error("no ID token present!");
       }
-    } catch (error: any) {
+    } catch (error) {
       console.error(error);
     }
   };

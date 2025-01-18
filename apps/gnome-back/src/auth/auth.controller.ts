@@ -3,6 +3,7 @@ import { GoogleAuthRequest } from "@/auth/dto/GoogleAuth.request";
 import { UsersService } from "@/users/users.service";
 import { Body, Controller, Post } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
+import { UserResponse } from "@repo/shared/responses";
 
 @Controller("auth")
 export class AuthController {
@@ -21,16 +22,19 @@ export class AuthController {
       user = await this.usersService.createUserWithGoogleData(userData);
     }
 
-    const payload = {
+    const payload: {
+      user: UserResponse;
+    } = {
       user: {
         id: user.id,
         name: user.name,
         email: user.email,
-        googleId: user.googleId,
+        pictureUrl: user.pictureUrl,
       },
     };
 
     return {
+      user: payload.user,
       access_token: await this.jwtService.signAsync(payload),
     };
   }
