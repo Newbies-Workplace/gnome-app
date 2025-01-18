@@ -7,7 +7,7 @@
     "lint:ci": "biome ci ./src",
     "studio": "prisma studio --port 5556",
     "start": "nest start",
-    "dev": "nest start --watch --debug",
+    "dev": "nest start --watch",
     "start:prod": "node dist/main",
     "test": "jest",
     "test:watch": "jest --watch",

@@ -15,7 +15,7 @@
     "lint-staged": "15.2.11",
     "turbo": "^2.3.3"
   },
-  "packageManager": "^yarn@1.22.19",
+  "packageManager": "yarn@1.22.22",
   "lint-staged": {
     "*": [
       "biome check --write --no-errors-on-unmatched --files-ignore-unknown=true"
