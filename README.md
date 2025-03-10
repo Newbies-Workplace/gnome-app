@@ -16,6 +16,13 @@ Setup docker on your machine and run the following command to start database:
   docker-compose up -d
 ```
 
+Migrate db:
+```bash
+  cd apps/gnome-back
+  npx prisma generate
+  npx prisma migrate dev
+```
+
 Run the following command to start the backend service:
 ```bash
   yarn dev
