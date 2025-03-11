@@ -11,6 +11,9 @@ datasource db {
 model Gnome {
   id   String @id @default(uuid())
   name String
+
+  latitude  Float
+  longitude Float
 }
 
 model User {
