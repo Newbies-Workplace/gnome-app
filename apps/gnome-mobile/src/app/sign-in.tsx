@@ -6,28 +6,16 @@ import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import { ActivityIndicator, View } from "react-native";
+import { Link } from "expo-router";
 
 export default function SignInScreen() {
   const { login } = useAuthStore();
   const { replace } = useRouter();
 
-  const [loading, setLoading] = useState(true);
-  const [text, setText] = useState();
-
   useEffect(() => {
     GoogleSignin.configure({
       webClientId: process.env.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID,
     });
-  }, []);
-
-  useEffect(() => {
-    GnomesService.getGnomes()
-      .then((gnomes) => {
-        setText(gnomes[0].name);
-        setLoading(false);
-        console.log(gnomes);
-      })
-      .catch(console.error);
   }, []);
 
   const onSignInPress = async () => {
@@ -50,16 +38,14 @@ export default function SignInScreen() {
     }
   };
 
-  if (loading) {
-    return <ActivityIndicator size={"large"} />;
-  }
-
   return (
     <View className={"p-4"}>
-      <Text>{text}</Text>
 
       <Button onPress={onSignInPress}>
         <Text>Zaloguj</Text>
+      </Button>
+      <Button>
+      <Link href="/login">Przejdź do strony głównej</Link>
       </Button>
     </View>
   );
