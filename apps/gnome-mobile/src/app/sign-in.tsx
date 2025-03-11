@@ -18,7 +18,7 @@ export default function SignInScreen() {
 
       <View className="bg-[rgba(30,32,30)] p-10 ">
         <Text style={{ color: "white", fontSize: 24, fontWeight: "bold", marginBottom: 10}} className="text-center text-base/10 font-Afacad">
-          Znajdź swojego ulubionego&nbsp;krasnala!
+          Znajdź swojego ulubionego krasnala!
         </Text>
         <Text style={{ color: "white", fontSize: 18, marginBottom: 20}} className="text-center font-Afacad">
           Dołącz do nas i odkryj swojego idealnego krasnala we Wrocławiu!
