@@ -1,6 +1,7 @@
 import { Text } from "@/components/ui/text";
 import { useAuthStore } from "@/store/useAuthStore";
 import { Redirect, Slot } from "expo-router";
+import { View } from "react-native";
 
 export default function AppLayout() {
   const { accessToken, isLoading } = useAuthStore();
@@ -13,5 +14,5 @@ export default function AppLayout() {
     return <Redirect href={"/sign-in"} />;
   }
 
-  return <Slot />;
+return <Slot />
 }

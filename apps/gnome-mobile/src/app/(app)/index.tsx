@@ -27,7 +27,7 @@ export default function Index() {
 
       <Input
         className={"w-full"}
-        placeholder="Write some stuff..."
+        placeholder="bbbbbbbbbb"
         value={value}
         onChangeText={onChangeText}
         aria-labelledby="inputLabel"
@@ -37,7 +37,7 @@ export default function Index() {
       <Text>Zmienna: {process.env.EXPO_PUBLIC_API_URL}</Text>
 
       <Button onPress={logout}>
-        <Text>Wyloguj</Text>
+        <Text style={{ color: 'white' }}>Wyloguj</Text>
       </Button>
     </View>
   );
