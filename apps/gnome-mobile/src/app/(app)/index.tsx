@@ -37,7 +37,7 @@ export default function Index() {
       <Text>Zmienna: {process.env.EXPO_PUBLIC_API_URL}</Text>
 
       <Button onPress={logout}>
-        <Text>Wyloguj</Text>
+        <Text className={"text-white"}>Wyloguj</Text>
       </Button>
     </View>
   );
