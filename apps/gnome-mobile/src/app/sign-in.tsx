@@ -1,66 +1,37 @@
 import { Button } from "@/components/ui/button";
 import { Text } from "@/components/ui/text";
-import { GnomesService } from "@/lib/api/Gnomes.service";
-import { useAuthStore } from "@/store/useAuthStore";
-import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import { useRouter } from "expo-router";
-import { useEffect, useState } from "react";
-import { ActivityIndicator, View } from "react-native";
+import { View, Image } from "react-native";
+
 
 export default function SignInScreen() {
-  const { login } = useAuthStore();
   const { replace } = useRouter();
 
-  const [loading, setLoading] = useState(true);
-  const [text, setText] = useState();
-
-  useEffect(() => {
-    GoogleSignin.configure({
-      webClientId: process.env.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID,
-    });
-  }, []);
-
-  useEffect(() => {
-    GnomesService.getGnomes()
-      .then((gnomes) => {
-        setText(gnomes[0].name);
-        setLoading(false);
-        console.log(gnomes);
-      })
-      .catch(console.error);
-  }, []);
-
-  const onSignInPress = async () => {
-    console.log("sign in");
-
-    try {
-      await GoogleSignin.hasPlayServices();
-      const signInResponse = await GoogleSignin.signIn();
-      const idToken = signInResponse?.data?.idToken;
-
-      if (idToken) {
-        await login(idToken);
-
-        replace("/");
-      } else {
-        throw new Error("no ID token present!");
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  if (loading) {
-    return <ActivityIndicator size={"large"} />;
-  }
-
   return (
-    <View className={"p-4"}>
-      <Text>{text}</Text>
+    <View className="flex-1 justify-end">
+      <Image
+        source={require("@/assets/images/bgmax.png")}
+        className="w-full h-full flex-1 object-cover"
+        style={{
+          transform: 'scale(1)'
+        }}
+      />
 
-      <Button onPress={onSignInPress}>
-        <Text>Zaloguj</Text>
-      </Button>
+      <View className="bg-[rgba(30,32,30)] p-10 ">
+        <Text style={{ color: "white", fontSize: 24, fontWeight: "bold", marginBottom: 10}} className="text-center text-base/10 font-Afacad">
+          Znajdź swojego ulubionego krasnala!
+        </Text>
+        <Text style={{ color: "white", fontSize: 18, marginBottom: 20}} className="text-center font-Afacad">
+          Dołącz do nas i odkryj swojego idealnego krasnala we Wrocławiu!
+        </Text>
+        <Button onPress={() => replace("/exp1")} className="w-full mb-4 rounded-3xl bg-[rgba(214,72,74)] font-Afacad">
+          <Text className="text-white">Załóż konto</Text>
+        </Button>
+        <Button onPress={() => replace("/exp2")} className="w-full bg-gray-500 rounded-3xl bg-[rgba(142,143,142)] font-Afacad">
+          <Text className="text-white">Zaloguj się</Text>
+        </Button>
+      </View>
+
     </View>
   );
 }
