@@ -3,6 +3,7 @@ import { Text } from "@/components/ui/text";
 import { useRouter } from "expo-router";
 import { View, Image } from "react-native";
 
+
 export default function SignInScreen() {
   const { replace } = useRouter();
 
@@ -30,6 +31,7 @@ export default function SignInScreen() {
           <Text className="text-white">Zaloguj się</Text>
         </Button>
       </View>
+
     </View>
   );
 }
