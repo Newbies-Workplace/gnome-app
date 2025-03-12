@@ -52,7 +52,7 @@ export default function SignInScreen() {
   }
 
   return (
-    <View style={{ flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: "#121212"}}>
+    <View className="flex-1 justify-end">
       <Image
         source={require("@/assets/images/bgmax.png")}
         className="w-full h-full flex-1 object-cover"
@@ -60,29 +60,25 @@ export default function SignInScreen() {
           transform: "scale(1)",
         }}
       />
-      <Text style={{ color: "white", fontSize: 24, fontWeight: "bold", marginBottom: 20 }}>Zaloguj się!</Text>
-      <TextInput
-        style={{ backgroundColor: "#1E1E1E", color: "white", width: 300, padding: 10, marginBottom: 10, borderRadius: 30 }}
-        placeholder="Email"
-        placeholderTextColor="#ccc"
-      />
-      <TextInput
-        style={{ backgroundColor: "#1E1E1E", color: "white", width: 300, padding: 10, marginBottom: 10, borderRadius: 30 }}
-        placeholder="Hasło"
-        placeholderTextColor="#ccc"
-        secureTextEntry
-      />
-      <TouchableOpacity onPress={onSignInPress} style={{ flexDirection: "row", alignItems: "center", backgroundColor: "white", padding: 10, borderRadius: 30, marginBottom: 10 }}>
-        <FontAwesome name="google" size={20} color="black" />
-        <Text style={{ marginLeft: 10, color: "black" }}>Zaloguj przez Google</Text>
-      </TouchableOpacity>
-      <TouchableOpacity onPress={() => replace("/index")} style={{ backgroundColor: "#D32F2F", padding: 15, borderRadius: 30, width: 300, alignItems: "center" }}>
-        <Text style={{ color: "white", fontWeight: "bold" }}>Zaloguj</Text>
-      </TouchableOpacity>
-      <Text style={{ color: "white", marginTop: 20 }}>
-        Nie masz konta?
-        <Text onPress={() => replace("/register")} style={{ color: "#FF5252", fontWeight: "bold" }}> Zarejestruj się tutaj!</Text>
-      </Text>
-    </View>
+      <View className="bg-background p-10">
+        <Text className="text-white text-2xl font-bold mb-5 text-center">Zaloguj się!</Text>
+        <TextInput className="bg-background text-white w-full p-2.5 mb-2.5 rounded-3xl placeholder:text-[white] border border-[white]" placeholder="Email" secureTextEntry />
+        <TextInput className="bg-background text-white w-full p-2.5 mb-2.5 rounded-3xl placeholder:text-[white] border border-[white]" placeholder="Hasło" secureTextEntry/>
+
+        <TouchableOpacity onPress={() => console.log("Zalogowano po podaniu email oraz haslo")} className="bg-primary mb-2.5 p-2.5 rounded-3xl w-full flex items-center">
+          <Text className="text-white font-bold">Zaloguj</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity onPress={onSignInPress} className="flex flex-row bg-white p-2.5 rounded-[30px] mb-2.5">
+          <FontAwesome name="google" size={20} color="black" />
+          <Text className="ml-2.5 text-black" >Zaloguj przez Google</Text>
+        </TouchableOpacity>
+
+        <Text className="text-white mt-5 text-center">
+          Nie masz konta?
+          <Text onPress={() => replace("/register")} style={{ color: "#FF5252", fontWeight: "bold" }}> Zarejestruj się tutaj!</Text>
+        </Text>
+      </View>
+      </View>
   );
 }
