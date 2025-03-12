@@ -13,7 +13,12 @@ export default function RootLayout() {
 
   return (
     <>
-      <Stack />
+      <Stack
+        screenOptions={{
+          // Hide the header for this route
+          headerShown: false,
+        }}
+      />
       <PortalHost />
     </>
   );
