@@ -1,40 +1,33 @@
 import { useState } from "react";
-import viteLogo from "/vite.svg";
-import reactLogo from "./../assets/react.svg";
-import "./../App.css";
 
 export const HomePage = () => {
   const [count, setCount] = useState(0);
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank" rel="noreferrer">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank" rel="noreferrer">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+    <div
+      className={"flex w-screen h-screen justify-center items-center flex-col"}
+    >
+      <button
+        className={
+          "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
+        }
+        onClick={() => setCount((count) => count + 1)}
+      >
+        count is {count}
+      </button>
 
       <p>
-        Go to gnomes page <a href="/gnomes/test">here</a>
+        Go to gnomes page{" "}
+        <a href="/gnomes/test" className={"underline"}>
+          here
+        </a>
       </p>
       <p>
-        Go to report page <a href="/report">here</a>
+        Go to report page{" "}
+        <a href="/report" className={"underline"}>
+          here
+        </a>
       </p>
-    </>
+    </div>
   );
 };
