@@ -47,22 +47,21 @@ export default function SignInScreen() {
           </Text>
 
           <Text
-            className="text-[rgba(214,72,74)]"
-            onPress={() => replace("/sign-in")}
+            className="text-[rgba(214,72,74)] font-bold"
+            onPress={() => replace("/login")}
           >
             Zaloguj się
           </Text>
 
-          <Text className="w-full text-white font-bold text-center bg-[rgba(30,32,30)] mx-auto">
-            Akceptuje
-            <Text className="text-white" onPress={() => replace("/sign-in")}>
-              politykę prywatności
+          <Text className="w-full text-white text-center bg-[rgba(30,32,30)] mx-auto">
+            <Text className="text-white" onPress={() => replace("/welcome")}>
+            Akceptuje politykę prywatności
             </Text>
           </Text>
         </View>
 
         <Button
-          onPress={() => replace("/sign-in")}
+          onPress={() => replace("/register")}
           className="border rounded-3xl bg-[rgba(214,72,74)] border-[rgba(214,72,74)] mt-4 mb-4 w-80 h-20 mx-auto"
         >
           <Text className="text-white text-center font-bold font-Afacad">
