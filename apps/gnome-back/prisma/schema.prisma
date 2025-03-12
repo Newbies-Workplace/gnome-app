@@ -8,18 +8,47 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Gnome {
-  id   String @id @default(uuid())
-  name String
-
-  latitude  Float
-  longitude Float
+model User {
+  id                String              @id @unique @default(uuid())
+  googleId          String?
+  name              String?
+  email             String?
+  pictureUrl        String?
+  role              userRole?           @default(USER)
+  gnomeInteractions gnomeInteractions[]
+  friends           friends[]           @relation("friendship")
+  friends2          friends[]           @relation("friendship2") /// to sie ignoruje przy wybieraniu znajomych
 }
 
-model User {
-  id         String @id @default(uuid())
-  googleId   String
-  name       String
-  email      String
-  pictureUrl String
+model Gnomy {
+  id                String              @id @unique @default(uuid())
+  name              String?
+  latitude          Float?
+  longitude         Float?
+  location          String?
+  date              DateTime?
+  gnomeInteractions gnomeInteractions[]
+}
+
+model gnomeInteractions {
+  id       String  @id @unique @default(uuid())
+  user_id  User?   @relation(fields: [userId], references: [id])
+  gnome_id Gnomy?  @relation(fields: [gnomyId], references: [id])
+  userId   String?
+  gnomyId  String?
+}
+
+model friends {
+  id     String  @id @unique @default(cuid())
+  user_1 User?   @relation("friendship", fields: [userId1], references: [id])
+  user_2 User?   @relation("friendship2", fields: [userId2], references: [id])
+  status String
+  userId1 String?
+  userId2 String?
+}
+
+enum userRole {
+  ADMIN
+  USER
+  MODERATOR
 }

@@ -1,3 +1,0 @@
--- AlterTable
-ALTER TABLE "Gnome" ADD COLUMN     "latitude" DOUBLE PRECISION NOT NULL,
-ADD COLUMN     "longitude" DOUBLE PRECISION NOT NULL;
