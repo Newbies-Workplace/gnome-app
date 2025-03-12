@@ -1,7 +1,7 @@
 import { GoogleUser } from "@/auth/types/GoogleUser";
 import { PrismaService } from "@/db/prisma.service";
 import { Injectable } from "@nestjs/common";
-import { User, friends } from "@prisma/client";
+import { Friendship, User } from "@prisma/client";
 
 @Injectable()
 export class UsersService {
@@ -18,10 +18,10 @@ export class UsersService {
     return this.prismaService.user.findMany();
   }
 
-  async findUserFriends(userId1: string): Promise<friends[]> {
-    return this.prismaService.friends.findMany({
+  async findUserFriends(senderId: string): Promise<Friendship[]> {
+    return this.prismaService.friendship.findMany({
       where: {
-        userId1,
+        senderId,
       },
     });
   }

@@ -9,7 +9,7 @@ export class GnomesController {
 
   @Get("")
   async getAll(@User() user: JWTUser): Promise<any> {
-    const gnomes = await this.prismaService.gnomy.findMany();
+    const gnomes = await this.prismaService.gnome.findMany();
 
     return gnomes;
   }

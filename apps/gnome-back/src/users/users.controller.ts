@@ -1,5 +1,4 @@
 import { JWTUser } from "@/auth/jwt/JWTUser";
-import { JwtGuard } from "@/auth/jwt/jwt.guard";
 import { User } from "@/auth/jwt/jwtuser.decorator";
 import { UsersService } from "@/users/users.service";
 import { Controller, Get, Param, UseGuards } from "@nestjs/common";
@@ -13,6 +12,10 @@ export class UsersController {
   findAll() {
     return this.usersService.findAll();
   }
+  @Get("@me")
+  async getMe(@User() user: JWTUser): Promise<PrismaUser> {
+    return this.usersService.findUserById(user.id);
+  }
 
   @Get(":id")
   findUserById(@Param("id") id: string) {
@@ -20,12 +23,7 @@ export class UsersController {
   }
 
   @Get(":id/friends")
-  findUserFriends(@Param("id") userId1: string) {
-    return this.usersService.findUserFriends(userId1);
+  findUserFriends(@Param("id") senderId: string) {
+    return this.usersService.findUserFriends(senderId);
   }
-
-  // @Get("@me")
-  // async getMe(@User() user: JWTUser): Promise<PrismaUser> {
-  //   return this.usersService.findUserById(user.id);
-  // }
 }
