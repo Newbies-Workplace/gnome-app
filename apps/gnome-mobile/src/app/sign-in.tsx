@@ -1,8 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Text } from "@/components/ui/text";
 import { useRouter } from "expo-router";
-import { View, Image } from "react-native";
-
+import { Image, View } from "react-native";
 
 export default function SignInScreen() {
   const { replace } = useRouter();
@@ -13,25 +12,41 @@ export default function SignInScreen() {
         source={require("@/assets/images/bgmax.png")}
         className="w-full h-full flex-1 object-cover"
         style={{
-          transform: 'scale(1)'
+          transform: "scale(1)",
         }}
       />
 
       <View className="bg-[rgba(30,32,30)] p-10 ">
-        <Text style={{ color: "white", fontSize: 24, fontWeight: "bold", marginBottom: 10}} className="text-center text-base/10 font-Afacad">
+        <Text
+          style={{
+            color: "white",
+            fontSize: 24,
+            fontWeight: "bold",
+            marginBottom: 10,
+          }}
+          className="text-center text-base/10 font-Afacad"
+        >
           Znajdź swojego ulubionego krasnala!
         </Text>
-        <Text style={{ color: "white", fontSize: 18, marginBottom: 20}} className="text-center font-Afacad">
+        <Text
+          style={{ color: "white", fontSize: 18, marginBottom: 20 }}
+          className="text-center font-Afacad"
+        >
           Dołącz do nas i odkryj swojego idealnego krasnala we Wrocławiu!
         </Text>
-        <Button onPress={() => replace("/exp1")} className="w-full mb-4 rounded-3xl bg-[rgba(214,72,74)] font-Afacad">
+        <Button
+          onPress={() => replace("/register")}
+          className="w-full mb-4 rounded-3xl bg-[rgba(214,72,74)] font-Afacad"
+        >
           <Text className="text-white">Załóż konto</Text>
         </Button>
-        <Button onPress={() => replace("/exp2")} className="w-full bg-gray-500 rounded-3xl bg-[rgba(142,143,142)] font-Afacad">
+        <Button
+          onPress={() => replace("/exp2")}
+          className="w-full bg-gray-500 rounded-3xl bg-[rgba(142,143,142)] font-Afacad"
+        >
           <Text className="text-white">Zaloguj się</Text>
         </Button>
       </View>
-
     </View>
   );
 }
