@@ -1,16 +1,30 @@
 import { JWTUser } from "@/auth/jwt/JWTUser";
 import { User } from "@/auth/jwt/jwtuser.decorator";
-import { PrismaService } from "@/db/prisma.service";
-import { Controller, Get } from "@nestjs/common";
+import { Controller, Get, Param } from "@nestjs/common";
+import { GnomesService } from "./gnomes.service";
 
 @Controller("gnomes")
 export class GnomesController {
-  constructor(private readonly prismaService: PrismaService) {}
+  constructor(private readonly gnomeService: GnomesService) {}
+
+  // Pobieranie wszystkich gnomów
 
   @Get("")
-  async getAll(@User() user: JWTUser): Promise<any> {
-    const gnomes = await this.prismaService.gnome.findMany();
+  getPlaceData() {
+    return this.gnomeService.getPlaceDate();
+  }
 
-    return gnomes;
+  // Pobieranie interakcji gnomów
+
+  @Get(":id")
+  getFound(@Param("id") gnomeId: string) {
+    return this.gnomeService.getInteractionCount(gnomeId);
+  }
+
+  // Dodanie nowego gnoma
+
+  @Get(":id/creationDate")
+  getCreationDate(@Param("id") id: string) {
+    return this.gnomeService.getCreationDate(id);
   }
 }
