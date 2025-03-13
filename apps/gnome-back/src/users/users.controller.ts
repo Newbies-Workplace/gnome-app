@@ -1,4 +1,5 @@
 import { JWTUser } from "@/auth/jwt/JWTUser";
+import { JwtGuard } from "@/auth/jwt/jwt.guard";
 import { User } from "@/auth/jwt/jwtuser.decorator";
 import { UsersService } from "@/users/users.service";
 import { Controller, Get, Param, UseGuards } from "@nestjs/common";
@@ -13,6 +14,7 @@ export class UsersController {
     return this.usersService.findAll();
   }
   @Get("@me")
+  @UseGuards(JwtGuard)
   async getMe(@User() user: JWTUser): Promise<PrismaUser> {
     return this.usersService.findUserById(user.id);
   }

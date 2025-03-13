@@ -24,17 +24,19 @@ CREATE TABLE "Gnome" (
     "longitude" DOUBLE PRECISION NOT NULL,
     "location" TEXT NOT NULL,
     "creationDate" TIMESTAMP(3) NOT NULL,
+    "description" TEXT NOT NULL,
 
     CONSTRAINT "Gnome_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "GnomeInteractions" (
+CREATE TABLE "GnomeInteraction" (
     "id" TEXT NOT NULL,
+    "interactionDate" TIMESTAMP(3) NOT NULL,
     "userId" TEXT NOT NULL,
     "gnomeId" TEXT NOT NULL,
 
-    CONSTRAINT "GnomeInteractions_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "GnomeInteraction_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -54,16 +56,16 @@ CREATE UNIQUE INDEX "User_id_key" ON "User"("id");
 CREATE UNIQUE INDEX "Gnome_id_key" ON "Gnome"("id");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "GnomeInteractions_id_key" ON "GnomeInteractions"("id");
+CREATE UNIQUE INDEX "GnomeInteraction_id_key" ON "GnomeInteraction"("id");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Friendship_id_key" ON "Friendship"("id");
 
 -- AddForeignKey
-ALTER TABLE "GnomeInteractions" ADD CONSTRAINT "GnomeInteractions_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "GnomeInteraction" ADD CONSTRAINT "GnomeInteraction_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "GnomeInteractions" ADD CONSTRAINT "GnomeInteractions_gnomeId_fkey" FOREIGN KEY ("gnomeId") REFERENCES "Gnome"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "GnomeInteraction" ADD CONSTRAINT "GnomeInteraction_gnomeId_fkey" FOREIGN KEY ("gnomeId") REFERENCES "Gnome"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Friendship" ADD CONSTRAINT "Friendship_senderId_fkey" FOREIGN KEY ("senderId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

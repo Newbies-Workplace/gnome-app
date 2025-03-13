@@ -15,7 +15,7 @@ model User {
   email             String
   pictureUrl        String
   role              UserRole           @default(USER)
-  gnomeInteractions GnomeInteractions[]
+  gnomeInteractions GnomeInteraction[]
   sentRequest       Friendship[]          @relation("sender")
   receivedRequest   Friendship[]          @relation("receiver")
 }
@@ -27,13 +27,15 @@ model Gnome {
   longitude         Float
   location          String
   creationDate      DateTime
-  interactions GnomeInteractions[]
+  description       String
+  interactions GnomeInteraction[]
 }
 
-model GnomeInteractions {
+model GnomeInteraction {
   id       String  @id @unique @default(uuid())
   user  User   @relation(fields: [userId], references: [id])
   gnome Gnome  @relation(fields: [gnomeId], references: [id])
+  interactionDate DateTime
   userId   String
   gnomeId  String
 }
