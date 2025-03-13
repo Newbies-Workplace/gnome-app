@@ -10,7 +10,7 @@ export default function AppLayout() {
   }
 
   if (!accessToken) {
-    return <Redirect href={"/sign-in"} />;
+    return <Redirect href={"/welcome"} />;
   }
 
   return <Slot />;
