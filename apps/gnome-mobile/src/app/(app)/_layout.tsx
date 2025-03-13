@@ -1,6 +1,6 @@
 import { Text } from "@/components/ui/text";
 import { useAuthStore } from "@/store/useAuthStore";
-import { Redirect, Slot } from "expo-router";
+import { Redirect, Tabs } from "expo-router";
 
 export default function AppLayout() {
   const { accessToken, isLoading } = useAuthStore();
@@ -13,5 +13,5 @@ export default function AppLayout() {
     return <Redirect href={"/welcome"} />;
   }
 
-  return <Slot />;
+  return <Tabs />;
 }
