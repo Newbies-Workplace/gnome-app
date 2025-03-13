@@ -16,7 +16,7 @@ export default function SignInScreen() {
         }}
       />
 
-      <View className="bg-[rgba(30,32,30)] p-10 ">
+      <View className="bg-background p-10 ">
         <Text
           style={{
             color: "white",
@@ -36,7 +36,7 @@ export default function SignInScreen() {
         </Text>
         <Button
           onPress={() => replace("/register")}
-          className="w-full mb-4 rounded-3xl bg-[rgba(214,72,74)] font-Afacad"
+          className="w-full mb-4 rounded-3xl bg-primary font-Afacad"
         >
           <Text className="text-white">Załóż konto</Text>
         </Button>
