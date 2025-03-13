@@ -21,7 +21,7 @@ export class GnomesController {
     return this.gnomeService.getInteractionCount(gnomeId);
   }
 
-  // Dodanie nowego gnoma
+  // Pobranie daty postawienia gnoma
 
   @Get(":id/creationDate")
   getCreationDate(@Param("id") id: string) {
