@@ -1,10 +1,18 @@
-import React, { useEffect, useState } from "react";
-import { View, Alert, TouchableOpacity, Image, TextInput, Text, ActivityIndicator } from "react-native";
-import { GoogleSignin } from "@react-native-google-signin/google-signin";
-import { useAuthStore } from "@/store/useAuthStore";
-import { useRouter } from "expo-router";
-import { FontAwesome } from "@expo/vector-icons";
 import { GnomesService } from "@/lib/api/Gnomes.service";
+import { useAuthStore } from "@/store/useAuthStore";
+import { FontAwesome } from "@expo/vector-icons";
+import { GoogleSignin } from "@react-native-google-signin/google-signin";
+import { useRouter } from "expo-router";
+import React, { useEffect, useState } from "react";
+import {
+  ActivityIndicator,
+  Alert,
+  Image,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
 
 export default function SignInScreen() {
   const { login } = useAuthStore();
@@ -43,7 +51,10 @@ export default function SignInScreen() {
       }
     } catch (error) {
       console.error(error);
-      Alert.alert("Błąd", "Nie udało się zalogować przez Google. Spróbuj ponownie.");
+      Alert.alert(
+        "Błąd",
+        "Nie udało się zalogować przez Google. Spróbuj ponownie.",
+      );
     }
   };
 
@@ -61,24 +72,46 @@ export default function SignInScreen() {
         }}
       />
       <View className="bg-background p-10">
-        <Text className="text-white text-2xl font-bold mb-5 text-center">Zaloguj się!</Text>
-        <TextInput className="bg-background text-white w-full p-2.5 mb-2.5 rounded-3xl placeholder:text-[white] border border-[white]" placeholder="Email" secureTextEntry />
-        <TextInput className="bg-background text-white w-full p-2.5 mb-2.5 rounded-3xl placeholder:text-[white] border border-[white]" placeholder="Hasło" secureTextEntry/>
+        <Text className="text-white text-2xl font-bold mb-5 text-center">
+          Zaloguj się!
+        </Text>
+        <TextInput
+          className="bg-background text-white w-full p-2.5 mb-2.5 rounded-3xl placeholder:text-[white] border border-[white]"
+          placeholder="Email"
+          secureTextEntry
+        />
+        <TextInput
+          className="bg-background text-white w-full p-2.5 mb-2.5 rounded-3xl placeholder:text-[white] border border-[white]"
+          placeholder="Hasło"
+          secureTextEntry
+        />
 
-        <TouchableOpacity onPress={() => console.log("Zalogowano po podaniu email oraz haslo")} className="bg-primary mb-2.5 p-2.5 rounded-3xl w-full flex items-center">
+        <TouchableOpacity
+          onPress={() => console.log("Zalogowano po podaniu email oraz haslo")}
+          className="bg-primary mb-2.5 p-2.5 rounded-3xl w-full flex items-center"
+        >
           <Text className="text-white font-bold">Zaloguj</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={onSignInPress} className="flex flex-row bg-white p-2.5 rounded-[30px] mb-2.5">
+        <TouchableOpacity
+          onPress={onSignInPress}
+          className="flex flex-row bg-white p-2.5 rounded-[30px] mb-2.5"
+        >
           <FontAwesome name="google" size={20} color="black" />
-          <Text className="ml-2.5 text-black" >Zaloguj przez Google</Text>
+          <Text className="ml-2.5 text-black">Zaloguj przez Google</Text>
         </TouchableOpacity>
 
         <Text className="text-white mt-5 text-center">
           Nie masz konta?
-          <Text onPress={() => replace("/register")} style={{ color: "#FF5252", fontWeight: "bold" }}> Zarejestruj się tutaj!</Text>
+          <Text
+            onPress={() => replace("/register")}
+            style={{ color: "#FF5252", fontWeight: "bold" }}
+          >
+            {" "}
+            Zarejestruj się tutaj!
+          </Text>
         </Text>
       </View>
-      </View>
+    </View>
   );
 }
