@@ -5,13 +5,14 @@ import { useAuthStore } from "@/store/useAuthStore";
 import { useRouter } from "expo-router";
 import React from "react";
 import { Image, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function SignInScreen() {
   const { login } = useAuthStore();
   const { replace } = useRouter();
 
   return (
-    <View className="flex-1 justify-end">
+    <SafeAreaView className="flex-1 justify-end">
       <Image
         source={require("@/assets/images/bgmax.png")}
         className="w-full h-full flex-1 object-cover"
@@ -43,18 +44,17 @@ export default function SignInScreen() {
       <View className="bg-[rgba(30,32,30)]">
         <View className="flex items-center mb-4">
           <Text className="w-full text-white font-bold text-center bg-[rgba(30,32,30)] mx-auto mt-2 mb-2">
-            Masz konto?
-          </Text>
-
-          <Text
-            className="text-[rgba(214,72,74)]"
-            onPress={() => replace("/sign-in")}
-          >
-            Zaloguj się
+            Masz konto?&nbsp;
+            <Text
+              className="text-[rgba(214,72,74)]"
+              onPress={() => replace("/login")}
+            >
+              Zaloguj się
+            </Text>
           </Text>
 
           <Text className="w-full text-white font-bold text-center bg-[rgba(30,32,30)] mx-auto">
-            Akceptuje
+            Akceptuje&nbsp;
             <Text className="text-white" onPress={() => replace("/sign-in")}>
               politykę prywatności
             </Text>
@@ -70,6 +70,6 @@ export default function SignInScreen() {
           </Text>
         </Button>
       </View>
-    </View>
+    </SafeAreaView>
   );
 }
