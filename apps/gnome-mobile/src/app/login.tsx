@@ -13,6 +13,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function SignInScreen() {
   const { login } = useAuthStore();
@@ -63,7 +64,7 @@ export default function SignInScreen() {
   }
 
   return (
-    <View className="flex-1 justify-end">
+    <SafeAreaView className="flex-1 justify-end">
       <Image
         source={require("@/assets/images/bgmax.png")}
         className="w-full h-full flex-1 object-cover"
@@ -112,6 +113,6 @@ export default function SignInScreen() {
           </Text>
         </Text>
       </View>
-    </View>
+    </SafeAreaView>
   );
 }

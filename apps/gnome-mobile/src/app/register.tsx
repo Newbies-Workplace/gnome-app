@@ -5,13 +5,14 @@ import { useAuthStore } from "@/store/useAuthStore";
 import { useRouter } from "expo-router";
 import React from "react";
 import { Image, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function SignInScreen() {
   const { login } = useAuthStore();
   const { replace } = useRouter();
 
   return (
-    <View className="flex-1 justify-end">
+    <SafeAreaView className="flex-1 justify-end">
       <Image
         source={require("@/assets/images/bgmax.png")}
         className="w-full h-full flex-1 object-cover"
@@ -65,6 +66,6 @@ export default function SignInScreen() {
           </Text>
         </View>
       </View>
-    </View>
+    </SafeAreaView>
   );
 }
