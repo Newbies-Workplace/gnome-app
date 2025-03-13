@@ -40,7 +40,7 @@ export default function SignInScreen() {
           </Text>
           
         </View>
-        <Button onPress={() => replace("/navi")}
+        <Button onPress={() => replace("/main-page")}
         className="border rounded-3xl border-red-800 bg-red-800 mt-4 mb-4 w-80 h-20 mx-auto">
           <Text>Zaloguj</Text>
         </Button>
