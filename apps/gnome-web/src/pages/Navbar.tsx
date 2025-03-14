@@ -11,9 +11,9 @@ const Navbar = () => {
   ];
 
   return (
-    <header className="flex w-screen h-screen justify-center items-center flex-col">
+    <header className={"flex w-screen h-100 flex-row"}>
       {links.map((link, index) => (
-        <p
+        <section
           key={index}
           className={`linki p-4 flex items-center justify-center w-1/5 h-16 ${
             location.pathname.startsWith(link.href)
@@ -25,7 +25,7 @@ const Navbar = () => {
           <Link to={link.href} className="underline text-white">
             {link.text}
           </Link>
-        </p>
+        </section>
       ))}
     </header>
   );
