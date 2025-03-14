@@ -23,6 +23,7 @@ export default function RootLayout() {
           headerShown: false,
         }}
       />
+
       <PortalHost />
     </>
   );
