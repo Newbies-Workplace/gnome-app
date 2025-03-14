@@ -11,7 +11,7 @@ const Navbar = () => {
   ];
 
   return (
-    <header className="flex w-screen h-screen justify-center items-center flex-col">
+    <header className="flex w-screen h-100 justify-center items-center flex-row">
       {links.map((link, index) => (
         <p
           key={index}
