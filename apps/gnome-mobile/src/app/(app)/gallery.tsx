@@ -2,12 +2,12 @@ import { Tabs } from "expo-router";
 import React from "react";
 import { Text, View } from "react-native";
 
-const Home = () => {
+const Gallery = () => {
   return (
     <View>
-      <Text>home</Text>
+      <Text>Galeria</Text>
     </View>
   );
 };
 
-export default Home;
+export default Gallery;

@@ -2,12 +2,12 @@ import { Tabs } from "expo-router";
 import React from "react";
 import { Text, View } from "react-native";
 
-const Main = () => {
+const Collection = () => {
   return (
     <View>
-      <Text>Main</Text>
+      <Text>Kolekcja</Text>
     </View>
   );
 };
 
-export default Main;
+export default Collection;

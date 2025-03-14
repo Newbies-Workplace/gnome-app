@@ -16,5 +16,27 @@ export default function AppLayout() {
     return <Redirect href={"/welcome"} />;
   }
 
-  return <Tabs />;
+  return (
+    <Tabs
+      screenOptions={({ route }) => ({
+        tabBarStyle: {
+          backgroundColor: "gray",
+        },
+        tabBarLabelStyle: {
+          color: "white",
+        },
+        tabBarIconStyle: {
+          color: "white",
+        },
+        tabBarActiveTintColor: "red",
+        tabBarInactiveTintColor: "white",
+        tabBarPressColor: "red",
+      })}
+    >
+      <Tabs.Screen name="index" options={{ title: "Główna" }} />
+      <Tabs.Screen name="collection" options={{ title: "Kolekcja" }} />
+      <Tabs.Screen name="friends" options={{ title: "Znajomi" }} />
+      <Tabs.Screen name="gallery" options={{ title: "Galeria" }} />
+    </Tabs>
+  );
 }
