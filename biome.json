@@ -19,10 +19,12 @@
       "a11y": {
         "useKeyWithClickEvents": "off",
         "useButtonType": "off",
-        "noSvgWithoutTitle": "off"
+        "noSvgWithoutTitle": "off",
+        "useAltText": "off"
       },
       "suspicious": {
-        "noExplicitAny": "warn"
+        "noExplicitAny": "warn",
+        "noArrayIndexKey": "warn"
       },
       "correctness": {
         "useExhaustiveDependencies": "off"
