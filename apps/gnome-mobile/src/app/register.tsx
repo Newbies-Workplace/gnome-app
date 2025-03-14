@@ -37,7 +37,7 @@ export default function SignInScreen() {
           placeholder="Hasło"
         />
         <Button
-          onPress={() => replace("/register")}
+          onPress={() => replace("/home")}
           className="border rounded-3xl border-primary mt-4 mb-4 h-20 mx-auto w-full"
         >
           <Text className="text-white text-center font-bold font-Afacad">
