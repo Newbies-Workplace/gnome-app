@@ -10,13 +10,13 @@ export class GnomesController {
   // Pobieranie wszystkich gnomów
 
   @Get("")
-  getPlaceData() {
-    return this.gnomeService.getPlaceDate();
+  getAllGnomes() {
+    return this.gnomeService.getAllGnomes();
   }
 
   // Pobieranie interakcji gnomów
 
-  @Get(":id")
+  @Get(":id/interactions")
   getFound(@Param("id") gnomeId: string) {
     return this.gnomeService.getInteractionCount(gnomeId);
   }
