@@ -1,6 +1,7 @@
 import { createRoot } from "react-dom/client";
 import "./index.css";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { AdminPage } from "./pages/AdminPage.tsx";
 import { GnomePage } from "./pages/GnomePage.tsx";
 import { HomePage } from "./pages/HomePage.tsx";
 import { LogPage } from "./pages/LogPage.tsx";
@@ -13,6 +14,7 @@ createRoot(document.getElementById("root")!).render(
       <Route path={"report"} element={<ReportPage />} />
       <Route path={"gnomes/:gnomeId"} element={<GnomePage />} />
       <Route path={"log"} element={<LogPage />} />
+      <Route path={"admin"} element={<AdminPage />} />
     </Routes>
   </BrowserRouter>,
 );

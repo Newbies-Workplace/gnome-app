@@ -1,4 +1,4 @@
-import { Link, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 const Navbar = () => {
   const location = useLocation();
@@ -8,12 +8,13 @@ const Navbar = () => {
     { href: "/gnomes/test", img: "../src/images/gnome.png", text: "Lista" },
     { href: "/report", img: "../src/images/Zglos.png", text: "Zgłoś" },
     { href: "/log", img: "../src/images/Login.png", text: "Logowanie" },
+    { href: "/admin", img: "../src/images/Admin.png", text: "Admin" },
   ];
 
   return (
-    <header className="flex w-screen h-100 justify-center items-center flex-row">
+    <header className={"flex w-screen h-100 flex-row"}>
       {links.map((link, index) => (
-        <p
+        <section
           key={index}
           className={`linki p-4 flex items-center justify-center w-1/5 h-16 ${
             location.pathname.startsWith(link.href)
@@ -22,10 +23,10 @@ const Navbar = () => {
           }`}
         >
           <img src={link.img} alt="" className="h-8 w-8 mr-2" />
-          <Link to={link.href} className="underline text-white">
+          <a href={link.href} className="underline text-white">
             {link.text}
-          </Link>
-        </p>
+          </a>
+        </section>
       ))}
     </header>
   );

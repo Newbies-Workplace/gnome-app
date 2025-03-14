@@ -20,5 +20,9 @@
     "*": [
       "biome check --write --no-errors-on-unmatched --files-ignore-unknown=true"
     ]
+  },
+  "dependencies": {
+    "@types/react-native": "^0.72.8",
+    "react-router-dom": "^7.3.0"
   }
 }
