@@ -16,7 +16,7 @@ export class GnomesService {
     return collection.length;
   }
 
-  async getPlaceDate(): Promise<Gnome[]> {
+  async getAllGnomes(): Promise<Gnome[]> {
     return this.prismaService.gnome.findMany();
   }
 
