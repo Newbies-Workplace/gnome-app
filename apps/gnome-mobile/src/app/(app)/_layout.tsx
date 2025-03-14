@@ -1,6 +1,9 @@
 import { Text } from "@/components/ui/text";
 import { useAuthStore } from "@/store/useAuthStore";
-import { Redirect, Tabs } from "expo-router";
+import { Redirect } from "expo-router";
+import { Tabs } from "expo-router";
+import React from "react";
+import { View } from "react-native";
 
 export default function AppLayout() {
   const { accessToken, isLoading } = useAuthStore();
