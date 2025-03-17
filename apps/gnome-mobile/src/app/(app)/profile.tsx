@@ -100,7 +100,7 @@ export default function ProfileScreen() {
             {[1, 2, 3].map((index) => (
               <View key={index} className="items-center">
                 <Image
-                  source={require("@/assets/images/example1.png")}
+                  source={require("@/assets/images/placeholder.png")}
                   className="w-30 h-30 rounded-md mb-2"
                 />
                 <Text
