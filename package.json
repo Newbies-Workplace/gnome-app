@@ -23,6 +23,9 @@
   },
   "dependencies": {
     "@types/react-native": "^0.72.8",
+    "@types/react-router-dom": "^5.3.3",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
     "react-router-dom": "^7.3.0"
   }
 }
