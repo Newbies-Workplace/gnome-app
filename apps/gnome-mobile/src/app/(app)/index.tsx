@@ -2,6 +2,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useAuthStore } from "@/store/useAuthStore";
+import { replace } from "expo-router/build/global-state/routing";
 import React, { useState } from "react";
 import { Text, View } from "react-native";
 
