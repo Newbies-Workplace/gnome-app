@@ -23,6 +23,7 @@
   },
   "dependencies": {
     "@types/react-native": "^0.72.8",
+    "classnames": "^2.5.1",
     "react-router-dom": "^7.3.0"
   }
 }

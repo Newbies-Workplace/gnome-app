@@ -13,21 +13,23 @@ const Navbar = () => {
 
   return (
     <header className={"flex w-screen h-100 flex-row"}>
-      {links.map((link, index) => (
-        <section
-          key={index}
-          className={`linki p-4 flex items-center justify-center w-1/5 h-16 ${
-            location.pathname.startsWith(link.href)
-              ? "bg-yellow-500"
-              : "bg-gray-800"
-          }`}
-        >
-          <img src={link.img} alt="" className="h-8 w-8 mr-2" />
-          <a href={link.href} className="underline text-white">
-            {link.text}
-          </a>
-        </section>
-      ))}
+      {links.map((link, index) => {
+        const isActive = location.pathname === link.href;
+        return (
+          <section
+            key={index}
+            tabIndex={isActive ? 0 : -1}
+            className={`linki p-4 flex items-center justify-center w-1/5 h-16 ${
+              isActive ? "bg-yellow-500" : "bg-gray-800"
+            }`}
+          >
+            <img src={link.img} alt="" className="h-8 w-8 mr-2" />
+            <a href={link.href} className="underline text-white">
+              {link.text}
+            </a>
+          </section>
+        );
+      })}
     </header>
   );
 };
