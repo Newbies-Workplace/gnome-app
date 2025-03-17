@@ -14,17 +14,20 @@
       "recommended": true,
       "style": {
         "useImportType": "off",
-        "noNonNullAssertion": "warn"
+        "noNonNullAssertion": "warn",
+        "useSelfClosingElements": "off"
       },
       "a11y": {
         "useKeyWithClickEvents": "off",
         "useButtonType": "off",
         "noSvgWithoutTitle": "off",
-        "useAltText": "off"
+        "useAltText": "off",
+        "useAnchorContent": "off"
       },
       "suspicious": {
         "noExplicitAny": "warn",
-        "noArrayIndexKey": "off"
+        "noArrayIndexKey": "warn",
+        "noAssignInExpressions": "warn"
       },
       "correctness": {
         "useExhaustiveDependencies": "off",

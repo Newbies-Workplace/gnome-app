@@ -5,6 +5,7 @@ export const LogPage = () => {
     <div>
       <Navbar />
       <h1>Logowanie</h1>
+      <a href="./logadmin"></a>
     </div>
   );
 };
