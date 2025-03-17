@@ -1,5 +1,9 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import {
+  ProfileButton,
+  ProfileButtonLogout,
+} from "@/components/ui/profile-button";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useNavigation } from "@react-navigation/native";
 import React from "react";
@@ -40,7 +44,7 @@ export default function ProfileScreen() {
     Znajomi: require("@/assets/icons/friends.svg"),
     Osiągnięcia: require("@/assets/icons/achievements.svg"),
     Zadania: require("@/assets/icons/quests.svg"),
-    "Ostatnio odkryte": require("@/assets/icons/latest-seen.svg"),
+    Odkryte: require("@/assets/icons/latest-seen.svg"),
     Odznaki: require("@/assets/icons/awards.svg"),
     Ustawienia: require("@/assets/icons/settings.svg"),
     Wyloguj: require("@/assets/icons/log-out.svg"),
@@ -90,31 +94,30 @@ export default function ProfileScreen() {
 
       {/* Menu */}
       <View className="w-full mt-4">
-        {["Znajomi", "Osiągnięcia", "Zadania"].map((item) => (
-          <Button
-            key={item}
-            className="rounded-lg bg-background mb-3 flex flex-row justify-start"
-          >
-            <Image source={buttonIcons[item]} className="w-7 h-7 mr-2" />
-            <Text className="text-white text-lg font-bold">{item}</Text>
-          </Button>
-        ))}
-
+        <ProfileButton
+          text="Znajomi"
+          image={buttonIcons.Znajomi}
+          onClick={() => {}}
+        />
+        <ProfileButton
+          text="Osiągnięcia"
+          image={buttonIcons.Osiągnięcia}
+          onClick={() => {}}
+        />
+        <ProfileButton
+          text="Zadania"
+          image={buttonIcons.Zadania}
+          onClick={() => {}}
+        />
         {/* Ostatnio odkryte */}
         <View className="mb-4">
-          <Button
-            key="Ostatnio odkryte"
-            className="rounded-lg bg-background mt-8 mb-2 flex flex-row justify-start"
+          <ProfileButton
+            text="Ostatnio odkryte"
+            image={buttonIcons.Odkryte}
+            onClick={() => {}}
           >
-            <Image
-              source={buttonIcons["Ostatnio odkryte"]}
-              className="w-7 h-7 mr-2"
-            />
-            <Text className="text-white text-lg font-bold">
-              Ostatnio odkryte
-            </Text>
-          </Button>
-
+            <Image source={buttonIcons.Odkryte} className="w-7 h-7 mr-2" />
+          </ProfileButton>
           {/* Trzy zdjęcia z polami tekstowymi */}
           <View className="flex flex-row justify-between mb-4">
             {[1, 2, 3].map((index) => (
@@ -123,17 +126,7 @@ export default function ProfileScreen() {
                   source={require("@/assets/images/placeholder.png")}
                   className="w-30 h-30 rounded-md mb-2"
                 />
-                <Text
-                  style={{
-                    width: 80,
-                    height: 30,
-                    textAlign: "center",
-                    borderRadius: 5,
-                    paddingHorizontal: 5,
-                    color: "white",
-                    fontWeight: "bold",
-                  }}
-                >
+                <Text className="w-20 h-7 text-center rounded px-1 text-white font-bold">
                   ?
                 </Text>
               </View>
@@ -142,24 +135,20 @@ export default function ProfileScreen() {
         </View>
 
         {/* Ustawienia */}
-        {["Ustawienia"].map((item) => (
-          <Button
-            key={item}
-            className="rounded-lg bg-background mb-3 flex flex-row justify-start"
-          >
-            <Image source={buttonIcons[item]} className="w-7 h-7 mr-2" />
-            <Text className="text-white text-lg font-bold">{item}</Text>
-          </Button>
-        ))}
+        <ProfileButton
+          text="Znajomi"
+          image={buttonIcons.Ustawienia}
+          onClick={() => {}}
+        />
 
         {/* Wylogowanie */}
-        <Button
-          className="rounded-lg bg-background flex flex-row justify-start"
-          onPress={handleLogout}
-        >
-          <Image source={buttonIcons.Wyloguj} className="w-7 h-7 mr-2" />
-          <Text className="text-primary text-lg font-bold">Wyloguj</Text>
-        </Button>
+        <ProfileButtonLogout
+          text="Wyloguj"
+          image={buttonIcons.Wyloguj}
+          onClick={() => {
+            handleLogout;
+          }}
+        />
       </View>
     </SafeAreaView>
   );
