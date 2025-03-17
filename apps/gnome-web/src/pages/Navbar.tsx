@@ -16,18 +16,15 @@ const Navbar = () => {
       {links.map((link, index) => {
         const isActive = location.pathname === link.href;
         return (
-          <section
-            key={index}
-            tabIndex={isActive ? 0 : -1}
-            className={`linki p-4 flex items-center justify-center w-1/5 h-16 ${
-              isActive ? "bg-yellow-500" : "bg-gray-800"
-            }`}
-          >
-            <img src={link.img} alt="" className="h-8 w-8 mr-2" />
-            <a href={link.href} className="underline text-white">
+          <a href={link.href} className="link-section">
+            <section
+              key={index}
+              className={`nav-section ${isActive ? "active" : ""}`}
+            >
+              <img src={link.img} alt="" className="h-8 w-8 mr-2" />
               {link.text}
-            </a>
-          </section>
+            </section>
+          </a>
         );
       })}
     </header>
