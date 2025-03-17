@@ -5,14 +5,15 @@ import { useAuthStore } from "@/store/useAuthStore";
 import { replace } from "expo-router/build/global-state/routing";
 import React, { useState } from "react";
 import { Text, View } from "react-native";
+import { useRouter } from "expo-router";
 
 export default function Index() {
   const [value, setValue] = useState("");
-
+  const { replace } = useRouter();
   const { logout, user } = useAuthStore();
 
   const onChangeText = (text: string) => {
-    setValue(text);
+    setValue(text); 
   };
 
   return (
@@ -39,6 +40,9 @@ export default function Index() {
 
       <Button onPress={logout}>
         <Text className={"text-white"}>Wyloguj</Text>
+      </Button>
+      <Button onPress={() => replace("/profile")}>
+        <Text className={"text-white"}>Profil</Text>
       </Button>
     </View>
   );
