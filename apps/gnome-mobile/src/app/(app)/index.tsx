@@ -2,10 +2,10 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useAuthStore } from "@/store/useAuthStore";
+import { useRouter } from "expo-router";
 import { replace } from "expo-router/build/global-state/routing";
 import React, { useState } from "react";
 import { Text, View } from "react-native";
-import { useRouter } from "expo-router";
 
 export default function Index() {
   const [value, setValue] = useState("");
@@ -13,7 +13,7 @@ export default function Index() {
   const { logout, user } = useAuthStore();
 
   const onChangeText = (text: string) => {
-    setValue(text); 
+    setValue(text);
   };
 
   return (
