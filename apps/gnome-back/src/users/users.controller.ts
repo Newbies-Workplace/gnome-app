@@ -14,7 +14,7 @@ import {
   UseGuards,
 } from "@nestjs/common";
 import { User as PrismaUser } from "@prisma/client";
-import { userUpdate } from "./dto/userUpdate.dto";
+import { updateProfile } from "./interfaces/updateProfile";
 
 @Controller("users")
 export class UsersController {
@@ -28,7 +28,7 @@ export class UsersController {
 
   @Patch("@me") // zaaktualizuj profil
   @UseGuards(JwtGuard)
-  async changeUserData(@User() user: JWTUser, @Body() body: userUpdate) {
+  async changeUserData(@User() user: JWTUser, @Body() body: updateProfile) {
     return this.usersService.changeUserData(
       user.id,
       body.name,
