@@ -9,14 +9,14 @@ import { SafeAreaView } from "react-native-safe-area-context";
 // Import ikon jako komponenty SVG
 import ArrowLeft from "@/assets/icons/arrow-left.svg";
 import ZadajPytanieIcon from "@/assets/icons/askquestion.svg";
-import WygladIcon from "@/assets/icons/design.svg";
+import DesignIcon from "@/assets/icons/design.svg";
 import FAQIcon from "@/assets/icons/faq.svg";
-import JezykIcon from "@/assets/icons/language.svg";
-import GlowneIcon from "@/assets/icons/main.svg";
-import MotywIcon from "@/assets/icons/mode.svg";
-import PowiadomieniaIcon from "@/assets/icons/notifications.svg";
-import PrywatnoscIcon from "@/assets/icons/privacy.svg";
-import BezpieczenstwoIcon from "@/assets/icons/security.svg";
+import LanguageIcon from "@/assets/icons/language.svg";
+import MainIcon from "@/assets/icons/main.svg";
+import ModeIcon from "@/assets/icons/mode.svg";
+import NotificationsIcon from "@/assets/icons/notifications.svg";
+import PrivacyIcon from "@/assets/icons/privacy.svg";
+import SecurityIcon from "@/assets/icons/security.svg";
 
 function SettingsScreen() {
   const { replace } = useRouter();
@@ -42,7 +42,7 @@ function SettingsScreen() {
         {/* 1 przycisk */}
         <SettingsOption
           text="Motyw"
-          image={MotywIcon}
+          image={ModeIcon}
           onClick={() => replace("/theme")}
           customClass="mb-8"
         />
@@ -50,17 +50,17 @@ function SettingsScreen() {
         {/* 3 przyciski */}
         <SettingsOption
           text="Powiadomienia"
-          image={PowiadomieniaIcon}
+          image={NotificationsIcon}
           onClick={() => replace("/notifications")}
         />
         <SettingsOption
           text="Prywatność"
-          image={PrywatnoscIcon}
+          image={PrivacyIcon}
           onClick={() => replace("/privacy")}
         />
         <SettingsOption
           text="Bezpieczeństwo"
-          image={BezpieczenstwoIcon}
+          image={SecurityIcon}
           onClick={() => replace("/security")}
           customClass="mb-8"
         />
@@ -68,17 +68,17 @@ function SettingsScreen() {
         {/* 3 przyciski */}
         <SettingsOption
           text="Główne"
-          image={GlowneIcon}
+          image={MainIcon}
           onClick={() => replace("/main")}
         />
         <SettingsOption
           text="Wygląd"
-          image={WygladIcon}
+          image={DesignIcon}
           onClick={() => replace("/appearance")}
         />
         <SettingsOption
           text="Język"
-          image={JezykIcon}
+          image={LanguageIcon}
           onClick={() => replace("/language")}
           extraText="Polski"
           customClass="mb-8"
