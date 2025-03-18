@@ -18,19 +18,6 @@ export class UsersService {
     return this.prismaService.user.findMany();
   }
 
-  async getMyGnomes(
-    id: string,
-  ): Promise<Array<{ gnomeId: string; interactionDate: Date; gnome: Gnome }>> {
-    return this.prismaService.gnomeInteraction.findMany({
-      where: { userId: id },
-      select: {
-        gnomeId: true,
-        interactionDate: true,
-        gnome: true,
-      },
-    });
-  }
-
   async changeUserData(
     id: string,
     name: string,
@@ -53,107 +40,6 @@ export class UsersService {
     return this.prismaService.user.update({
       where: { id: id },
       data: dataToUpdate,
-    });
-  }
-
-  async searchForFriend(name: string): Promise<any> {
-    return this.prismaService.user.findMany({
-      where: {
-        name: {
-          contains: name,
-          mode: "insensitive",
-        },
-      },
-      select: {
-        name: true,
-        pictureUrl: true,
-      },
-    });
-  }
-
-  async findUserFriends(senderId: string): Promise<Friendship[]> {
-    return this.prismaService.friendship.findMany({
-      where: {
-        senderId: senderId,
-        status: "ACTIVE",
-      },
-    });
-  }
-
-  async findPendingRequests(senderId: string): Promise<Friendship[]> {
-    return this.prismaService.friendship.findMany({
-      where: {
-        OR: [{ senderId: senderId }, { receiverId: senderId }],
-        status: "PENDING",
-      },
-    });
-  }
-
-  async sendFriendRequest(senderId: string, receiverId: string) {
-    return this.prismaService.friendship.create({
-      data: {
-        senderId: senderId,
-        receiverId: receiverId,
-      },
-    });
-  }
-
-  async acceptFriendRequest(senderId: string, receiverId: string) {
-    return await this.prismaService.$transaction(async (prisma) => {
-      const updatedFriendship = await prisma.friendship.updateMany({
-        where: {
-          senderId: senderId,
-          receiverId: receiverId,
-          status: "PENDING",
-        },
-        data: {
-          status: "ACTIVE",
-        },
-      });
-
-      if (updatedFriendship.count === 0) {
-        throw new Error("Invalid invite");
-      }
-
-      const newFriendship = await prisma.friendship.create({
-        data: {
-          senderId: receiverId,
-          receiverId: senderId,
-          status: "ACTIVE",
-        },
-      });
-
-      return { updatedFriendship, newFriendship };
-    });
-  }
-
-  async deleteFriend(senderId: string, receiverId: string) {
-    return this.prismaService.$transaction(async (prisma) => {
-      const cancelInvitation = await prisma.friendship.deleteMany({
-        where: {
-          status: "PENDING",
-          OR: [
-            { senderId: senderId, receiverId: receiverId },
-            { senderId: receiverId, receiverId: senderId },
-          ],
-        },
-      });
-
-      if (cancelInvitation.count === 0) {
-        throw new Error("Nothing to cancel");
-      }
-
-      const deleteFriendship = await prisma.friendship.deleteMany({
-        where: {
-          status: "ACTIVE",
-          OR: [
-            { senderId: senderId, receiverId: receiverId },
-            { senderId: receiverId, receiverId: senderId },
-          ],
-        },
-      });
-
-      return { deleteFriendship, cancelInvitation };
     });
   }
 
