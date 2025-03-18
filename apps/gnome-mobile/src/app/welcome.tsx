@@ -36,13 +36,13 @@ export default function SignInScreen() {
         </Text>
         <Button
           onPress={() => replace("/register")}
-          className="items-center justify-center w-full mb-4 rounded-3xl bg-primary font-Afacad"
+          className="w-full mb-4 rounded-3xl bg-primary font-Afacad"
         >
           <Text className="text-white">Załóż konto</Text>
         </Button>
         <Button
           onPress={() => replace("/login")}
-          className="items-center justify-center w-full rounded-3xl bg-primary font-Afacad"
+          className="w-full rounded-3xl bg-primary font-Afacad"
         >
           <Text className="text-white">Zaloguj się</Text>
         </Button>
