@@ -1,41 +1,71 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { useAuthStore } from "@/store/useAuthStore";
-import { replace } from "expo-router/build/global-state/routing";
-import React, { useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
-import MapView from "react-native-maps";
+import React from "react";
+import { StyleSheet, View } from "react-native";
+import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
 
-export default function Index() {
-  const [value, setValue] = useState("");
-  const { logout, user } = useAuthStore();
-
-  const onChangeText = (text: string) => {
-    setValue(text);
+const MapScreenWithLogout = () => {
+  const region = {
+    latitude: 51.1079, // współrzędne Wrocławia
+    longitude: 17.0385,
+    latitudeDelta: 0.01,
+    longitudeDelta: 0.03,
   };
 
   return (
-    <View className={"p-4 flex gap-2 justify-center items-center"}>
-      <Text>Zalogowano jako: {user?.name}</Text>
-      <Avatar alt="Your avatar">
-        <AvatarImage source={{ uri: user?.pictureUrl }} />
-        <AvatarFallback>
-          <Text>You</Text>
-        </AvatarFallback>
-      </Avatar>
-      <Input
-        className={"w-full"}
-        placeholder="Write some stuff..."
-        value={value}
-        onChangeText={onChangeText}
-        aria-labelledby="inputLabel"
-        aria-errormessage="inputError"
-      />
-      <Text>Zmienna: {process.env.EXPO_PUBLIC_API_URL}</Text>
-      <Button onPress={logout}>
-        <Text className={"text-white"}>Wyloguj</Text>
-      </Button>
+    <View style={styles.container}>
+      {/* Map View */}
+      <View style={styles.mapContainer}>
+        <MapView
+          style={styles.map}
+          region={region}
+          provider={PROVIDER_GOOGLE}
+          zoomEnabled={true}
+          zoomControlEnabled={true}
+          scrollEnabled={true}
+        >
+          <Marker
+            coordinate={{
+              latitude: 51.09701966184086,
+              longitude: 17.035843526079727,
+            }}
+            title="Krasnal Podróznik"
+            description="Krasnal wysiadający z autobusu"
+            icon={require("@/assets/images/krasnal.png")}
+          />
+          <Marker
+            coordinate={{
+              latitude: 51.10894028789954,
+              longitude: 17.03288804137201,
+            }}
+            title="Krasnale Syzyfki"
+            description="Ciągle pchają ten nieszczęsny kamień"
+            icon={require("@/assets/images/krasnal.png")}
+          />
+          <Marker
+            coordinate={{
+              latitude: 51.10947379220885,
+              longitude: 17.057842134960516,
+            }}
+            title="Krasnal Mędruś"
+            description="Ponąć studenci przychodzą do niego po porady"
+            icon={require("@/assets/images/krasnal.png")}
+          />
+        </MapView>
+      </View>
     </View>
   );
-}
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: "flex-end",
+  },
+  mapContainer: {
+    flex: 1,
+  },
+  map: {
+    ...StyleSheet.absoluteFillObject,
+  },
+});
+
+export default MapScreenWithLogout;
