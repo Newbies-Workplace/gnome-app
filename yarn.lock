@@ -8941,18 +8941,6 @@ react-native-maps@^1.20.1:
   dependencies:
     "@types/geojson" "^7946.0.13"
 
-react-native-open-street-map@^2.0.1:
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/react-native-open-street-map/-/react-native-open-street-map-2.0.1.tgz#3a1c7f14edd0ec04013c2fdb4800551e617fd3c3"
-  integrity sha512-2aRWfVljG44Gicy7vtV2sul3lbzkpMJz7VYfcielhsYo7BeSwFPfu0bfS/ziUKzjigxZCOw4VCXpgMrr7DKnlQ==
-  dependencies:
-    react-native-permissions "^3.3.1"
-
-react-native-permissions@^3.3.1:
-  version "3.10.1"
-  resolved "https://registry.yarnpkg.com/react-native-permissions/-/react-native-permissions-3.10.1.tgz#cb0171c8d12113869deaabbdfb979aad1a44752b"
-  integrity sha512-Gc5BxxpjZn4QNUDiVeHOO0vXh3AH7ToolmwTJozqC6DsxV7NAf3ttap+8BSmzDR8WxuAM3Cror+YNiBhHJx7/w==
-
 react-native-reanimated@~3.16.1:
   version "3.16.5"
   resolved "https://registry.npmjs.org/react-native-reanimated/-/react-native-reanimated-3.16.5.tgz"
