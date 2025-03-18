@@ -1,11 +1,31 @@
-import { Tabs } from "expo-router";
-import React from "react";
-import { Text, View } from "react-native";
+import React, { useState } from "react";
+import { Text, View, FlatList } from "react-native";
+import axiosInstance from "@/utils/axiosInstance";
+import { Button } from "@/components/ui/button";
 
 const Collection = () => {
+  const [krasnale, setKrasnale] = useState([]);
+
+  const fetchKrasnale = async () => {
+    try {
+      const response = await axiosInstance.get("/api/rest/v1/gnomes");
+      setKrasnale(response.data);
+    } catch (error) {
+      console.error("Błąd pobierania danych:", error);
+    }
+  };
+
   return (
-    <View>
-      <Text>Kolekcja</Text>
+    <View className="p-5">
+      <Text className="text-2xl font-bold mb-4">Kolekcja</Text>
+      <Button onPress={fetchKrasnale}>
+        <Text className="text-white">Pobierz Krasnale</Text>
+      </Button>
+      <FlatList 
+        data={krasnale}
+        keyExtractor={(item) => item.id.toString()}
+        renderItem={({ item }) => <Text className="text-lg py-1">{item.name}</Text>}
+      />
     </View>
   );
 };
