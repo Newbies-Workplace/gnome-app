@@ -7,7 +7,6 @@ const Navbar = () => {
     { href: "/", img: "../src/images/Home.png", text: "Strona Główna" },
     { href: "/gnomes/test", img: "../src/images/gnome.png", text: "Lista" },
     { href: "/report", img: "../src/images/Zglos.png", text: "Zgłoś" },
-    { href: "/log", img: "../src/images/Login.png", text: "Logowanie" },
     { href: "/logadmin", img: "../src/images/Admin.png", text: "Admin" },
   ];
 

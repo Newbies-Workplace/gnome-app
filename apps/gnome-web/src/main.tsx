@@ -7,7 +7,6 @@ import { GnomePage } from "./pages/GnomePage.tsx";
 import { HomePage } from "./pages/HomePage.tsx";
 import InfoAddPage from "./pages/InfoAddPage";
 import { LogAdminPage } from "./pages/LogAdminPage.tsx";
-import { LogPage } from "./pages/LogPage.tsx";
 import { LostInfoPage } from "./pages/LostInfoPage.tsx";
 import { ReportPage } from "./pages/ReportPage.tsx";
 

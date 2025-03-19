@@ -21,7 +21,7 @@ header {
   flex-direction: row; /* zamiast column */
   justify-content: center;
   align-items: center;
-  background-color: #333;
+  background-color: #444;
 }
 
 .link-section {
@@ -40,6 +40,10 @@ header {
   background-color: #444;
   color: #d9d9d9;
   border-radius: 5px;
+  border-style: none solid none none;
+  border-color: #333;
+  border-width: 5px;
+  margin: 0;
 }
 .nav-section:hover {
   background-color: #555;
@@ -51,4 +55,8 @@ header {
 .nav-section {
   text-decoration: none;
   color: #fff;
+}
+
+a {
+  text-decoration: none;
 }
