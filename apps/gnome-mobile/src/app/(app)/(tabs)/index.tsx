@@ -2,7 +2,7 @@ import React from "react";
 import { StyleSheet, View } from "react-native";
 import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
 
-const MapScreenWithLogout = () => {
+const MapScreen = () => {
   const region = {
     latitude: 51.1079, // współrzędne Wrocławia
     longitude: 17.0385,
@@ -68,4 +68,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default MapScreenWithLogout;
+export default MapScreen;
