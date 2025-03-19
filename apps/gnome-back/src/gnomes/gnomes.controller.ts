@@ -35,7 +35,7 @@ export class GnomesController {
 
   // Wyświetlanie swojej interakcji z gnomem
 
-  @Get("@me/gnomes")
+  @Get("@me")
   @UseGuards(JwtGuard)
   async getMyGnomes(@User() user: JWTUser) {
     return this.gnomeService.getMyGnomes(user.id);
