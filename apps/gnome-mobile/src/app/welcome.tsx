@@ -17,32 +17,21 @@ export default function SignInScreen() {
       />
 
       <View className="bg-background p-10 ">
-        <Text
-          style={{
-            color: "white",
-            fontSize: 24,
-            fontWeight: "bold",
-            marginBottom: 10,
-          }}
-          className="text-center text-base/10 font-Afacad"
-        >
+        <Text className="text-white text-[24px] font-bold mb-2 text-center text-base/10 font-Afacad">
           Znajdź swojego ulubionego krasnala!
         </Text>
-        <Text
-          style={{ color: "white", fontSize: 18, marginBottom: 20 }}
-          className="text-center font-Afacad"
-        >
+        <Text className="text-white text-[18px] mb-5 text-center font-Afacad">
           Dołącz do nas i odkryj swojego idealnego krasnala we Wrocławiu!
         </Text>
         <Button
           onPress={() => replace("/register")}
-          className="w-full mb-4 rounded-3xl bg-primary font-Afacad"
+          className="items-center justify-center w-full mb-4 rounded-3xl bg-primary font-Afacad"
         >
           <Text className="text-white">Załóż konto</Text>
         </Button>
         <Button
           onPress={() => replace("/login")}
-          className="w-full rounded-3xl bg-primary font-Afacad"
+          className="w-full rounded-3xl bg-secondary font-Afacad"
         >
           <Text className="text-white">Zaloguj się</Text>
         </Button>
