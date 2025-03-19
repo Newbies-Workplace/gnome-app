@@ -54,7 +54,7 @@ export default function SignInScreen() {
 
           <Text
             className="text-primary font-bold text-2xl mb-2"
-            onPress={() => replace("/map")}
+            onPress={() => replace("/login")}
           >
             Zaloguj się
           </Text>
