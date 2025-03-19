@@ -4,6 +4,7 @@ import { GnomesModule } from "@/gnomes/gnomes.module";
 import { UsersModule } from "@/users/users.module";
 import { Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
+import { FriendsModule } from "./friends/friends.module";
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { ConfigModule } from "@nestjs/config";
     AuthModule,
     UsersModule,
     GnomesModule,
+    FriendsModule,
   ],
 })
 export class AppModule {}

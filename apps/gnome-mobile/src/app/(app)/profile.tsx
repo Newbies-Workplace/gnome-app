@@ -6,7 +6,9 @@ import {
 } from "@/components/ui/profile-button";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useNavigation } from "@react-navigation/native";
+import { useRouter } from "expo-router";
 import React from "react";
+import { useEffect } from "react";
 import {
   Alert,
   Image,
@@ -17,9 +19,9 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
+// import ikon
 import AchievementsIcon from "@/assets/icons/achievements.svg";
 import BackIcon from "@/assets/icons/arrow-left.svg";
-// import ikon
 import FriendsIcon from "@/assets/icons/friends.svg";
 import LastSeenIcon from "@/assets/icons/last-seen.svg";
 import LogoutIcon from "@/assets/icons/log-out.svg";
@@ -30,6 +32,7 @@ import ShareIcon from "@/assets/icons/share-right.svg";
 export default function ProfileScreen() {
   const { logout, user } = useAuthStore();
   const navigation = useNavigation();
+  const { replace } = useRouter();
 
   const handleLogout = () => {
     Alert.alert("Wylogowanie", "Czy na pewno chcesz się wylogować?", [
@@ -38,6 +41,24 @@ export default function ProfileScreen() {
     ]);
   };
 
+  // header z powrotem i udostepnianiem
+  useEffect(() => {
+    navigation.setOptions({
+      headerLeft: () => (
+        <TouchableOpacity className="p-5" onPress={() => navigation.goBack()}>
+          <BackIcon className="w-7 h-7" />
+        </TouchableOpacity>
+      ),
+      headerRight: () => (
+        <TouchableOpacity className="p-5" onPress={handleShare}>
+          <ShareIcon className="w-7 h-7" />
+        </TouchableOpacity>
+      ),
+      headerStyle: { backgroundColor: "#1E1E1E" },
+    });
+  }, [navigation]);
+
+  // udostepnianie
   const handleShare = async () => {
     try {
       if (user?.name) {
@@ -60,18 +81,8 @@ export default function ProfileScreen() {
 
   return (
     <SafeAreaView className="p-6 flex-1 bg-primary-foreground items-center">
-      {/* Nagłówek */}
-      <View className="flex flex-row justify-between items-center bg-primary-foreground w-full">
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <BackIcon className="w-7 h-7" />
-        </TouchableOpacity>
-        <TouchableOpacity onPress={handleShare}>
-          <ShareIcon className="w-7 h-7" />
-        </TouchableOpacity>
-      </View>
-
       {/* Profil */}
-      <View className="flex flex-row items-center gap-5 p-6 rounded-lg bg-background-foreground w-full justify-center">
+      <View className="flex flex-row items-center gap-5 mb-5 rounded-lg bg-background-foreground w-full justify-center">
         <Avatar alt="Your avatar" className="w-20 h-20">
           <AvatarImage source={{ uri: user.pictureUrl }} />
           <AvatarFallback>
@@ -88,22 +99,28 @@ export default function ProfileScreen() {
 
       {/* Menu */}
       <View className="w-full mt-4">
-        <ProfileButton text="Znajomi" image={FriendsIcon} onClick={() => {}} />
+        <ProfileButton
+          text="Znajomi"
+          image={FriendsIcon}
+          onClick={() => replace("/friends")}
+        />
         <ProfileButton
           text="Osiągnięcia"
           image={AchievementsIcon}
-          onClick={() => {}}
+          onClick={() => replace("/achievements")}
         />
-        <ProfileButton text="Zadania" image={QuestsIcon} onClick={() => {}} />
+        <ProfileButton
+          text="Zadania"
+          image={QuestsIcon}
+          onClick={() => replace("/quests")}
+        />
         {/* Ostatnio odkryte */}
         <View className="mb-4">
           <ProfileButton
             text="Ostatnio odkryte"
             image={LastSeenIcon}
             onClick={() => {}}
-          >
-            <Image source={LastSeenIcon} className="w-7 h-7 mr-2" />
-          </ProfileButton>
+          />
           {/* Trzy zdjęcia z polami tekstowymi */}
           <View className="flex flex-row justify-between mb-4">
             {[1, 2, 3].map((index) => (
@@ -121,7 +138,11 @@ export default function ProfileScreen() {
         </View>
 
         {/* Ustawienia */}
-        <ProfileButton text="Znajomi" image={SettingsIcon} onClick={() => {}} />
+        <ProfileButton
+          text="Ustawienia"
+          image={SettingsIcon}
+          onClick={() => replace("/settings")}
+        />
 
         {/* Wylogowanie */}
         <ProfileButtonLogout

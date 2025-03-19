@@ -1,7 +1,7 @@
 import { GoogleUser } from "@/auth/types/GoogleUser";
 import { PrismaService } from "@/db/prisma.service";
 import { Injectable } from "@nestjs/common";
-import { Friendship, User } from "@prisma/client";
+import { Friendship, Gnome, GnomeInteraction, User } from "@prisma/client";
 
 @Injectable()
 export class UsersService {
@@ -18,11 +18,28 @@ export class UsersService {
     return this.prismaService.user.findMany();
   }
 
-  async findUserFriends(senderId: string): Promise<Friendship[]> {
-    return this.prismaService.friendship.findMany({
-      where: {
-        senderId,
-      },
+  async changeUserData(
+    id: string,
+    name: string,
+    pictureUrl: string,
+  ): Promise<{ id: string; name: string; pictureUrl: string }> {
+    const dataToUpdate: any = {};
+
+    if (name) {
+      dataToUpdate.name = name;
+    }
+
+    if (pictureUrl) {
+      dataToUpdate.pictureUrl = pictureUrl;
+    }
+
+    if (Object.keys(dataToUpdate).length === 0) {
+      return { id, name, pictureUrl };
+    }
+
+    return this.prismaService.user.update({
+      where: { id: id },
+      data: dataToUpdate,
     });
   }
 

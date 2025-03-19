@@ -11,7 +11,11 @@ async function bootstrap() {
   app.use(morgan("tiny"));
   app.setGlobalPrefix("api/rest/v1");
   app.useGlobalPipes(new ValidationPipe());
-  app.enableCors();
+  app.enableCors({
+    origin: "*",
+    allowedHeaders: ["Authorization", "Content-Type"],
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
+  });
 
   await app.listen(process.env.PORT ?? 3000);
 }
