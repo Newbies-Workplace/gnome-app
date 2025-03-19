@@ -12,6 +12,7 @@ export class GnomesController {
   // Pobieranie wszystkich gnomów
 
   @Get("")
+  @UseGuards(JwtGuard)
   getAllGnomes() {
     return this.gnomeService.getAllGnomes();
   }
@@ -19,6 +20,7 @@ export class GnomesController {
   // Pobranie danych gnoma
 
   @Get(":id")
+  @UseGuards(JwtGuard)
   getGnomeData(@Param("id") gnomeId: string) {
     return this.gnomeService.getGnomeData(gnomeId);
   }
@@ -26,6 +28,7 @@ export class GnomesController {
   // Pobieranie interakcji gnomów
 
   @Get(":id/interactions")
+  @UseGuards(JwtGuard)
   getInteractionCount(@Param("id") gnomeId: string) {
     return this.gnomeService.getInteractionCount(gnomeId);
   }
@@ -41,6 +44,7 @@ export class GnomesController {
   // Tworzenie nowego gnoma
 
   @Post()
+  @UseGuards(JwtGuard)
   async createGnome(@Body() createGnomeDto: createGnomeDto) {
     return this.gnomeService.createGnome(createGnomeDto);
   }
