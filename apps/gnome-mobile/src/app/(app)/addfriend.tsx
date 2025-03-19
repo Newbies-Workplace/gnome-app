@@ -55,7 +55,9 @@ export default function AddFriend() {
           <ArrowLeft className="w-7 h-7" />
         </TouchableOpacity>
       ),
-      headerStyle: { backgroundColor: "#1E1E1E" },
+      headerTitle: "",
+      headerStyle: { backgroundColor: "#1E201E" },
+      headerShadowVisible: false,
     });
   }, [navigation, push]);
 

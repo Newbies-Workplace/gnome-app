@@ -58,7 +58,9 @@ export default function Friends() {
           <AddUser className="w-7 h-7" />
         </TouchableOpacity>
       ),
-      headerStyle: { backgroundColor: "#1E1E1E" },
+      headerTitle: "",
+      headerShadowVisible: false,
+      headerStyle: { backgroundColor: "#1E201E" },
     });
   }, [navigation, push]);
 

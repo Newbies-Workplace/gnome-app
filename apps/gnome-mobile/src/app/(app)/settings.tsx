@@ -35,7 +35,8 @@ function SettingsScreen() {
         </Text>
       ),
       headerTitleAlign: "center",
-      headerStyle: { backgroundColor: "#1E1E1E" },
+      headerShadowVisible: false,
+      headerStyle: { backgroundColor: "#1E201E" },
     });
   }, [navigation, push]);
 
