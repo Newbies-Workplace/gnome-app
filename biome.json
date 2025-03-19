@@ -13,9 +13,10 @@
     "rules": {
       "recommended": true,
       "style": {
-        "useImportType": "off",
+        "useImportType": "warn",
         "noNonNullAssertion": "warn",
-        "useSelfClosingElements": "off"
+        "useSelfClosingElements": "warn",
+        "noUnusedTemplateLiteral": "warn"
       },
       "a11y": {
         "useKeyWithClickEvents": "off",

@@ -1,4 +1,4 @@
-import Navbar from "./Navbar";
+import Navbar from "../components/Navbar";
 
 export const LogAdminPage = () => {
   const LogButtonStyle: React.CSSProperties = {
