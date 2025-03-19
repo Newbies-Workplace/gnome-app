@@ -63,7 +63,7 @@ export default function SignInScreen() {
               Akceptuje politykę prywatności
             </Text>
           </Text>
-          <Button onPress={() => replace("/login")} />
+          <Button onPress={() => replace("/settings")} />
         </View>
       </View>
     </SafeAreaView>
