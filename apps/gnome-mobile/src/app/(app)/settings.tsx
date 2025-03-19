@@ -2,7 +2,7 @@ import { SettingsOption } from "@/components/ui/SettingsOption";
 import { Text } from "@/components/ui/text";
 import { useNavigation } from "@react-navigation/native";
 import { useRouter } from "expo-router";
-import React from "react";
+import React, { useEffect } from "react";
 import { TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -19,24 +19,28 @@ import PrivacyIcon from "@/assets/icons/privacy.svg";
 import SecurityIcon from "@/assets/icons/security.svg";
 
 function SettingsScreen() {
-  const { replace } = useRouter();
+  const { replace, push } = useRouter();
   const navigation = useNavigation();
+
+  useEffect(() => {
+    navigation.setOptions({
+      headerLeft: () => (
+        <TouchableOpacity className="p-5" onPress={() => push("/profile")}>
+          <ArrowLeft className="w-7 h-7" />
+        </TouchableOpacity>
+      ),
+      headerTitle: () => (
+        <Text className="text-white text-xl font-bold text-center">
+          Ustawienia
+        </Text>
+      ),
+      headerTitleAlign: "center",
+      headerStyle: { backgroundColor: "#1E1E1E" },
+    });
+  }, [navigation, push]);
 
   return (
     <SafeAreaView className="flex-1 bg-background">
-      {/* Nagłówek */}
-      <View className="flex flex-row items-center justify-between px-4 py-3 bg-background">
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <ArrowLeft width={36} height={36} />
-        </TouchableOpacity>
-
-        <Text className="text-white text-xl font-bold flex-1 text-center">
-          Ustawienia
-        </Text>
-
-        <View style={{ width: 36 }} />
-      </View>
-
       {/* Opcje ustawień */}
       <View className="w-full px-4 mt-4">
         {/* 1 przycisk */}
