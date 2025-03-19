@@ -18,11 +18,7 @@ const CameraScreen = () => {
   useEffect(() => {
     (async () => {
       const cameraPermission = await Camera.requestCameraPermission();
-      const microphonePermission = await Camera.requestMicrophonePermission();
-      setHasPermission(
-        cameraPermission === "authorized" &&
-          microphonePermission === "authorized",
-      );
+      setHasPermission(cameraPermission === "authorized");
     })();
   }, []);
 
