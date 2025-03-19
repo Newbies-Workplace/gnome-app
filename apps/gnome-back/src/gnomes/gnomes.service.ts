@@ -1,10 +1,21 @@
 import { PrismaService } from "@/db/prisma.service";
 import { Injectable } from "@nestjs/common";
 import { Gnome } from "@prisma/client";
+import { createGnomeDto } from "./gnomeCreate.dto";
 
 @Injectable()
 export class GnomesService {
   constructor(private readonly prismaService: PrismaService) {}
+
+  async getAllGnomes(): Promise<Gnome[]> {
+    return this.prismaService.gnome.findMany();
+  }
+
+  async getGnomeData(id: string): Promise<Gnome[]> {
+    return this.prismaService.gnome.findMany({
+      where: { id },
+    });
+  }
 
   async getInteractionCount(gnomeId: string): Promise<number> {
     const collection = await this.prismaService.gnomeInteraction.findMany({
@@ -16,16 +27,24 @@ export class GnomesService {
     return collection.length;
   }
 
-  async getAllGnomes(): Promise<Gnome[]> {
-    return this.prismaService.gnome.findMany();
+  async getMyGnomes(
+    id: string,
+  ): Promise<Array<{ gnomeId: string; interactionDate: Date; gnome: Gnome }>> {
+    return this.prismaService.gnomeInteraction.findMany({
+      where: { userId: id },
+      select: {
+        gnomeId: true,
+        interactionDate: true,
+        gnome: true,
+      },
+    });
   }
 
-  async getCreationDate(id: string): Promise<Date> {
-    const gnome = await this.prismaService.gnome.findUnique({
-      where: { id },
-      select: { creationDate: true },
+  async createGnome(data: createGnomeDto) {
+    return this.prismaService.gnome.create({
+      data: {
+        ...data,
+      },
     });
-
-    return gnome.creationDate;
   }
 }

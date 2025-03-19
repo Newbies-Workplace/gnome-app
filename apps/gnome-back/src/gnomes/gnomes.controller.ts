@@ -1,6 +1,8 @@
 import { JWTUser } from "@/auth/jwt/JWTUser";
+import { JwtGuard } from "@/auth/jwt/jwt.guard";
 import { User } from "@/auth/jwt/jwtuser.decorator";
-import { Controller, Get, Param } from "@nestjs/common";
+import { Body, Controller, Get, Param, Post, UseGuards } from "@nestjs/common";
+import { createGnomeDto } from "./gnomeCreate.dto";
 import { GnomesService } from "./gnomes.service";
 
 @Controller("gnomes")
@@ -14,17 +16,32 @@ export class GnomesController {
     return this.gnomeService.getAllGnomes();
   }
 
+  // Pobranie danych gnoma
+
+  @Get(":id")
+  getGnomeData(@Param("id") gnomeId: string) {
+    return this.gnomeService.getGnomeData(gnomeId);
+  }
+
   // Pobieranie interakcji gnomów
 
   @Get(":id/interactions")
-  getFound(@Param("id") gnomeId: string) {
+  getInteractionCount(@Param("id") gnomeId: string) {
     return this.gnomeService.getInteractionCount(gnomeId);
   }
 
-  // Pobranie daty postawienia gnoma
+  // Wyświetlanie swojej interakcji z gnomem
 
-  @Get(":id/creationDate")
-  getCreationDate(@Param("id") id: string) {
-    return this.gnomeService.getCreationDate(id);
+  @Get("@me/gnomes")
+  @UseGuards(JwtGuard)
+  async getMyGnomes(@User() user: JWTUser) {
+    return this.gnomeService.getMyGnomes(user.id);
+  }
+
+  // Tworzenie nowego gnoma
+
+  @Post()
+  async createGnome(@Body() createGnomeDto: createGnomeDto) {
+    return this.gnomeService.createGnome(createGnomeDto);
   }
 }
