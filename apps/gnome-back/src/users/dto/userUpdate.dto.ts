@@ -1,6 +1,6 @@
 import { IsNotEmpty, IsString, IsUrl } from "class-validator";
 
-export class userUpdate {
+export class UserUpdate {
   @IsString()
   @IsNotEmpty()
   name: string;
