@@ -1,11 +1,16 @@
-import { Tabs } from "expo-router";
+import { useAuthStore } from "@/store/useAuthStore";
 import React from "react";
-import { Text, View } from "react-native";
+import { Button, Text, View } from "react-native";
 
 const Gallery = () => {
+  const { logout } = useAuthStore();
+
   return (
-    <View>
-      <Text>Galeria</Text>
+    <View className="flex-1 justify-center items-center p-4">
+      <Text className="text-xl font-bold mb-4">Galeria</Text>
+      <View className="w-full p-5 flex items-center">
+        <Button title="Logout" onPress={logout} color="red" />
+      </View>
     </View>
   );
 };
