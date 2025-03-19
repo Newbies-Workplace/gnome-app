@@ -5,6 +5,7 @@ import { Text } from "@/components/ui/text";
 import { useNavigation } from "@react-navigation/native";
 import { Tabs, useRouter } from "expo-router";
 import React from "react";
+import { useEffect } from "react";
 import { Image, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -17,29 +18,26 @@ export default function Friends() {
     push("/addfriend"); // Navigate to AddFriend screen
   };
 
+  useEffect(() => {
+    navigation.setOptions({
+      headerLeft: () => (
+        <TouchableOpacity className="ml-2" onPress={() => navigation.goBack()}>
+          <ArrowLeft width={36} height={36} />
+        </TouchableOpacity>
+      ),
+      headerRight: () => (
+        <TouchableOpacity className="mr-2" onPress={handleAddFriendClick}>
+          <AddUser width={28} height={28} />
+        </TouchableOpacity>
+      ),
+      headerStyle: { backgroundColor: "#1E1E1E" },
+    });
+  }, [navigation]);
+
   return (
     <SafeAreaView className="flex-1 bg-background pt-6">
       {/* Header Section */}
-      <View className="px-6 py-3 bg-background">
-        {/* Icons Row */}
-        <View className="flex flex-row items-center justify-between">
-          {/* Back Button */}
-          <TouchableOpacity
-            className="ml-2"
-            onPress={() => navigation.goBack()}
-          >
-            <ArrowLeft width={36} height={36} />
-          </TouchableOpacity>
-
-          {/* Empty View for spacing */}
-          <View />
-
-          {/* Add Friend Button with onClick event */}
-          <TouchableOpacity className="mr-2" onPress={handleAddFriendClick}>
-            <AddUser width={28} height={28} />
-          </TouchableOpacity>
-        </View>
-      </View>
+      <View className="px-6 py-3 bg-background" />
 
       {/* Centered Title */}
       <View className="absolute top-24 left-0 right-0 items-center">
