@@ -1,7 +1,7 @@
 import { PrismaService } from "@/db/prisma.service";
 import { Injectable } from "@nestjs/common";
 import { Gnome } from "@prisma/client";
-import { createGnomeDto } from "./gnomeCreate.dto";
+import { createGnomeDto } from "./dto/gnomeCreate.dto";
 
 @Injectable()
 export class GnomesService {
