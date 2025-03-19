@@ -1,7 +1,7 @@
-import React, { useState } from "react";
-import { Text, View, FlatList } from "react-native";
-import axiosInstance from "@/utils/axiosInstance";
 import { Button } from "@/components/ui/button";
+import { axiosInstance } from "@/lib/api/axios";
+import React, { useState } from "react";
+import { FlatList, Text, View } from "react-native";
 
 const Collection = () => {
   const [krasnale, setKrasnale] = useState([]);
@@ -21,10 +21,12 @@ const Collection = () => {
       <Button onPress={fetchKrasnale}>
         <Text className="text-white">Pobierz Krasnale</Text>
       </Button>
-      <FlatList 
+      <FlatList
         data={krasnale}
         keyExtractor={(item) => item.id.toString()}
-        renderItem={({ item }) => <Text className="text-lg py-1">{item.name}</Text>}
+        renderItem={({ item }) => (
+          <Text className="text-lg py-1">{item.name}</Text>
+        )}
       />
     </View>
   );

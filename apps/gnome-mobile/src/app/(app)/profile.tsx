@@ -17,6 +17,16 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
+import AchievementsIcon from "@/assets/icons/achievements.svg";
+import BackIcon from "@/assets/icons/arrow-left.svg";
+// import ikon
+import FriendsIcon from "@/assets/icons/friends.svg";
+import LastSeenIcon from "@/assets/icons/last-seen.svg";
+import LogoutIcon from "@/assets/icons/log-out.svg";
+import QuestsIcon from "@/assets/icons/quests.svg";
+import SettingsIcon from "@/assets/icons/settings.svg";
+import ShareIcon from "@/assets/icons/share-right.svg";
+
 export default function ProfileScreen() {
   const { logout, user } = useAuthStore();
   const navigation = useNavigation();
@@ -40,16 +50,6 @@ export default function ProfileScreen() {
     }
   };
 
-  const buttonIcons = {
-    Znajomi: require("@/assets/icons/friends.svg"),
-    Osiągnięcia: require("@/assets/icons/achievements.svg"),
-    Zadania: require("@/assets/icons/quests.svg"),
-    Odkryte: require("@/assets/icons/latest-seen.svg"),
-    Odznaki: require("@/assets/icons/awards.svg"),
-    Ustawienia: require("@/assets/icons/settings.svg"),
-    Wyloguj: require("@/assets/icons/log-out.svg"),
-  };
-
   if (!user) {
     return (
       <View className="flex-1 items-center justify-center">
@@ -63,16 +63,10 @@ export default function ProfileScreen() {
       {/* Nagłówek */}
       <View className="flex flex-row justify-between items-center bg-primary-foreground w-full">
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Image
-            source={require("@/assets/icons/arrow-left.svg")}
-            className="w-7 h-7"
-          />
+          <BackIcon className="w-7 h-7" />
         </TouchableOpacity>
         <TouchableOpacity onPress={handleShare}>
-          <Image
-            source={require("@/assets/icons/share-right.svg")}
-            className="w-7 h-7"
-          />
+          <ShareIcon className="w-7 h-7" />
         </TouchableOpacity>
       </View>
 
@@ -94,29 +88,21 @@ export default function ProfileScreen() {
 
       {/* Menu */}
       <View className="w-full mt-4">
-        <ProfileButton
-          text="Znajomi"
-          image={buttonIcons.Znajomi}
-          onClick={() => {}}
-        />
+        <ProfileButton text="Znajomi" image={FriendsIcon} onClick={() => {}} />
         <ProfileButton
           text="Osiągnięcia"
-          image={buttonIcons.Osiągnięcia}
+          image={AchievementsIcon}
           onClick={() => {}}
         />
-        <ProfileButton
-          text="Zadania"
-          image={buttonIcons.Zadania}
-          onClick={() => {}}
-        />
+        <ProfileButton text="Zadania" image={QuestsIcon} onClick={() => {}} />
         {/* Ostatnio odkryte */}
         <View className="mb-4">
           <ProfileButton
             text="Ostatnio odkryte"
-            image={buttonIcons.Odkryte}
+            image={LastSeenIcon}
             onClick={() => {}}
           >
-            <Image source={buttonIcons.Odkryte} className="w-7 h-7 mr-2" />
+            <Image source={LastSeenIcon} className="w-7 h-7 mr-2" />
           </ProfileButton>
           {/* Trzy zdjęcia z polami tekstowymi */}
           <View className="flex flex-row justify-between mb-4">
@@ -135,19 +121,13 @@ export default function ProfileScreen() {
         </View>
 
         {/* Ustawienia */}
-        <ProfileButton
-          text="Znajomi"
-          image={buttonIcons.Ustawienia}
-          onClick={() => {}}
-        />
+        <ProfileButton text="Znajomi" image={SettingsIcon} onClick={() => {}} />
 
         {/* Wylogowanie */}
         <ProfileButtonLogout
           text="Wyloguj"
-          image={buttonIcons.Wyloguj}
-          onClick={() => {
-            handleLogout;
-          }}
+          image={LogoutIcon}
+          onClick={handleLogout}
         />
       </View>
     </SafeAreaView>
