@@ -11,7 +11,9 @@ import {
   Query,
   UseGuards,
 } from "@nestjs/common";
-import { friendsDto } from "./dto/friends.dto";
+import { AcceptFriendRequest } from "./dto/AcceptRequest.dto";
+import { DeleteFriend } from "./dto/DeleteFriend.dto";
+import { SendFriendRequest } from "./dto/SendRequest.dto";
 import { FriendsService } from "./friends.service";
 
 @Controller("friends")
@@ -39,13 +41,16 @@ export class FriendsController {
 
   @Post("@me/invitation") // zaproszenie znajomego
   @UseGuards(JwtGuard)
-  sendFriendRequest(@User() user: JWTUser, @Body() body: friendsDto) {
+  sendFriendRequest(@User() user: JWTUser, @Body() body: SendFriendRequest) {
     return this.friendsService.sendFriendRequest(user.id, body.friendId);
   }
 
   @Post("@me/accept") // zaakceptowanie zaproszenia do znajomych
   @UseGuards(JwtGuard)
-  acceptFriendRequest(@User() user: JWTUser, @Body() body: friendsDto) {
+  acceptFriendRequest(
+    @User() user: JWTUser,
+    @Body() body: AcceptFriendRequest,
+  ) {
     console.log(user.id);
     console.log(body.senderId);
     return this.friendsService.acceptFriendRequest(body.senderId, user.id);
@@ -53,7 +58,7 @@ export class FriendsController {
 
   @Delete("@me") // usun znajomego
   @UseGuards(JwtGuard)
-  deleteFriend(@User() user: JWTUser, @Body() body: friendsDto) {
+  deleteFriend(@User() user: JWTUser, @Body() body: DeleteFriend) {
     return this.friendsService.deleteFriend(user.id, body.friendId);
   }
 }
