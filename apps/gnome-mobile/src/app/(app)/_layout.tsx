@@ -35,7 +35,7 @@ export default function AppLayout() {
     >
       <Tabs.Screen name="index" options={{ title: "Główna" }} />
       <Tabs.Screen name="collection" options={{ title: "Kolekcja" }} />
-      <Tabs.Screen name="friends" options={{ title: "Znajomi" }} />
+      <Tabs.Screen name="friends" options={{ headerShown: false }} />
       <Tabs.Screen name="gallery" options={{ title: "Galeria" }} />
     </Tabs>
   );
