@@ -95,24 +95,24 @@ export default function ProfileScreen() {
       <View className="w-full mt-4">
         <ProfileButton
           text="Znajomi"
-          image={FriendsIcon}
+          image={<FriendsIcon />}
           onClick={() => replace("/friends")}
         />
         <ProfileButton
           text="Osiągnięcia"
-          image={AchievementsIcon}
+          image={<AchievementsIcon />}
           onClick={() => replace("/achievements")}
         />
         <ProfileButton
           text="Zadania"
-          image={QuestsIcon}
+          image={<QuestsIcon />}
           onClick={() => replace("/quests")}
         />
         {/* Ostatnio odkryte */}
         <View className="mb-4">
           <ProfileButton
             text="Ostatnio odkryte"
-            image={LastSeenIcon}
+            image={<LastSeenIcon />}
             onClick={() => replace("/collection")}
           />
           {/* Trzy zdjęcia z polami tekstowymi */}
@@ -140,14 +140,14 @@ export default function ProfileScreen() {
         {/* Ustawienia */}
         <ProfileButton
           text="Ustawienia"
-          image={SettingsIcon}
+          image={<SettingsIcon />}
           onClick={() => replace("/settings")}
         />
 
         {/* Wylogowanie */}
         <ProfileButtonLogout
           text="Wyloguj"
-          image={LogoutIcon}
+          image={<LogoutIcon />}
           onClick={handleLogout}
         />
       </View>
