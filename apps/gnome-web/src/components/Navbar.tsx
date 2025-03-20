@@ -22,12 +22,12 @@ const Navbar = () => {
         return (
           <a
             href={link.href}
-            className="w-1/4 h-full flex justify-center items-center no-underline text-white;"
+            className="w-1/4 h-full flex justify-center items-center no-underline"
           >
             <section
               key={index}
               className={cn(
-                `w-full h-full flex justify-center items-center bg-[#444] text-[#fff] rounded-md`,
+                `w-full h-full flex justify-center items-center bg-[#444] text-[#dadada] rounded-md`,
                 `${
                   isActive ||
                   (
