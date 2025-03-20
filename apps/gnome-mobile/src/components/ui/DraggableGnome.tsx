@@ -1,8 +1,9 @@
 import React, { useRef, useState } from "react";
-import { Alert, Image, PanResponder, View } from "react-native";
+import { Image, PanResponder, View, useWindowDimensions } from "react-native";
 
-const DraggableGnome = () => {
-  const trackWidth = 344;
+const DraggableGnome = ({ onUnlock }) => {
+  const { width } = useWindowDimensions();
+  const trackWidth = width * 0.9;
   const trackHeight = 70;
   const gnomeWidth = 100;
   const gnomeHeight = 63;
@@ -20,7 +21,7 @@ const DraggableGnome = () => {
       },
       onPanResponderRelease: (_, gestureState) => {
         if (gestureState.dx >= endX - startX - 20) {
-          Alert.alert("Unlocked!");
+          if (onUnlock) onUnlock();
         }
         setPosition({ x: startX, y: 0 });
       },
@@ -29,10 +30,26 @@ const DraggableGnome = () => {
 
   return (
     <View className="flex-1 justify-end items-center pb-10 mb-4">
-      <Image
-        source={require("@/assets/icons/dragger.png")}
-        className="absolute w-[344px] h-[70px]"
-      />
+      <View
+        className="flex-row items-center bg-background rounded-full relative"
+        style={{ width: trackWidth, height: trackHeight }}
+      >
+        <Image
+          source={require("@/assets/icons/middle_dragger.png")}
+          className="absolute"
+          style={{
+            width: 232,
+            height: 11,
+            left: trackWidth / 2 - 116,
+            top: trackHeight / 2 - 5.5,
+          }}
+        />
+        <Image
+          source={require("@/assets/icons/lock.png")}
+          className="absolute w-[50px] h-[50px]"
+          style={{ right: 10 }}
+        />
+      </View>
       <Image
         {...pan.panHandlers}
         source={require("@/assets/icons/mad-gnome.png")}
@@ -40,7 +57,7 @@ const DraggableGnome = () => {
         style={{
           transform: [
             { translateX: position.x },
-            { translateY: -trackHeight / 2 + gnomeHeight / 2 },
+            { translateY: -gnomeHeight / 2 - 6 },
           ],
         }}
       />
