@@ -41,7 +41,7 @@ export default function Index() {
       <Button onPress={logout}>
         <Text className={"text-white"}>Wyloguj</Text>
       </Button>
-      <Button onPress={() => replace("/profile")}>
+      <Button onPress={() => replace("/sitemap")}>
         <Text className={"text-white"}>Profil</Text>
       </Button>
     </View>
