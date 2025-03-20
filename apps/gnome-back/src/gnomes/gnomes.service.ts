@@ -1,7 +1,7 @@
 import { PrismaService } from "@/db/prisma.service";
 import { Injectable } from "@nestjs/common";
 import { Gnome } from "@prisma/client";
-import { createGnomeDto } from "./dto/gnomeCreate.dto";
+import { CreateGnomeRequest } from "./dto/gnomeCreate.dto";
 
 @Injectable()
 export class GnomesService {
@@ -40,7 +40,7 @@ export class GnomesService {
     });
   }
 
-  async createGnome(data: createGnomeDto) {
+  async createGnome(data: CreateGnomeRequest) {
     return this.prismaService.gnome.create({
       data: {
         ...data,

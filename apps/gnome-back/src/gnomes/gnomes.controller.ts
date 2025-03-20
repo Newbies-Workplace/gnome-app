@@ -2,7 +2,7 @@ import { JWTUser } from "@/auth/jwt/JWTUser";
 import { JwtGuard } from "@/auth/jwt/jwt.guard";
 import { User } from "@/auth/jwt/jwtuser.decorator";
 import { Body, Controller, Get, Param, Post, UseGuards } from "@nestjs/common";
-import { createGnomeDto } from "./dto/gnomeCreate.dto";
+import { CreateGnomeRequest } from "./dto/gnomeCreate.dto";
 import { GnomesService } from "./gnomes.service";
 
 @Controller("gnomes")
@@ -45,7 +45,7 @@ export class GnomesController {
 
   @Post()
   @UseGuards(JwtGuard)
-  async createGnome(@Body() createGnomeDto: createGnomeDto) {
+  async createGnome(@Body() createGnomeDto: CreateGnomeRequest) {
     return this.gnomeService.createGnome(createGnomeDto);
   }
 }
