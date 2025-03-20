@@ -7,10 +7,10 @@ import NavIcon, {
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
-import Collection from "../(tabs)/Collection";
-import Friends from "../(tabs)/Friends";
-import Home from "../(tabs)/Home";
-import Image from "../(tabs)/Image";
+import Collection from "../(tabs)/collection";
+import Friends from "../(tabs)/friends";
+import Image from "../(tabs)/gallery";
+import Home from "../(tabs)/index";
 
 const Tab = createBottomTabNavigator();
 

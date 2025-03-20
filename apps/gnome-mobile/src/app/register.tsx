@@ -37,7 +37,7 @@ export default function SignInScreen() {
           placeholder="Hasło"
         />
         <Button
-          onPress={() => replace("/Home")}
+          onPress={() => replace("/index")}
           className="border rounded-3xl border-primary mt-4 mb-4 h-20 mx-auto w-full"
         >
           <Text className="text-white text-center font-bold font-Afacad">
@@ -49,14 +49,13 @@ export default function SignInScreen() {
       <View className="bg-background">
         <View className="flex items-center mb-4">
           <Text className="w-full text-white font-bold text-center bg-background mx-auto mt-2 mb-2">
-            Masz konto?
-          </Text>
-
-          <Text
-            className="text-primary font-bold text-2xl mb-2"
-            onPress={() => replace("/login")}
-          >
-            Zaloguj się
+            Masz konto?{" "}
+            <Text
+              className="text-primary font-bold mb-2"
+              onPress={() => replace("/login")}
+            >
+              Zaloguj się
+            </Text>
           </Text>
 
           <Text className="w-full text-white text-center bg-background mx-auto">
@@ -64,6 +63,7 @@ export default function SignInScreen() {
               Akceptuje politykę prywatności
             </Text>
           </Text>
+          <Button onPress={() => replace("/settings")} />
         </View>
       </View>
     </SafeAreaView>
