@@ -1,3 +1,4 @@
+import { LinkButton } from "../components/LinkButton";
 import Navbar from "../components/Navbar";
 
 export const LogAdminPage = () => {
@@ -14,12 +15,7 @@ export const LogAdminPage = () => {
     <div>
       <Navbar />
       <h1>Zaloguj się jako administrator</h1>
-      <button
-        style={LogButtonStyle}
-        onClick={() => (window.location.href = "/admin")}
-      >
-        Zaloguj
-      </button>
+      <LinkButton to="/admin" label="Zaloguj" />
     </div>
   );
 };
