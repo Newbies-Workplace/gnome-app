@@ -8,8 +8,7 @@ const Navbar = () => {
     { href: "/", img: "../src/images/Home.png", text: "Strona Główna" },
     { href: "/gnomes/test", img: "../src/images/gnome.png", text: "Lista" },
     { href: "/report", img: "../src/images/Zglos.png", text: "Zgłoś" },
-    { href: "/admin", img: "../src/images/Admin.png", text: "Admin" },
-    { href: "/logadmin", img: "../src/images/Admin.png", text: "Admin" },
+    { href: "/admin/logadmin", img: "../src/images/Admin.png", text: "Admin" },
   ];
 
   return (
@@ -29,7 +28,15 @@ const Navbar = () => {
               key={index}
               className={cn(
                 `w-49/50 h-full flex justify-center items-center bg-[#444] text-[#fff] rounded-md`,
-                `${isActive ? "bg-[#333];" : "hover:bg-[#555]"}`,
+                `${
+                  isActive ||
+                  (
+                    link.href === "/admin/logadmin" &&
+                      location.pathname.startsWith("/admin")
+                  )
+                    ? "bg-[#333]"
+                    : "hover:bg-[#555]"
+                }`,
               )}
             >
               <img src={link.img} alt="" className="h-8 w-8 mr-2" />
