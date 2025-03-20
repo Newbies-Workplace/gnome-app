@@ -4,7 +4,7 @@ import { LinkButton } from "../components/LinkButton";
 const AddInfoPage: React.FC = () => {
   return (
     <div>
-      <LinkButton to="/" label="Strona Główna" />
+      <LinkButton to="/admin" label="Admin" />
       <LinkButton to="/admin/addgnome" label="Dodaj kolejnego" />
     </div>
   );

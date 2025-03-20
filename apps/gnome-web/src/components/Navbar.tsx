@@ -14,7 +14,7 @@ const Navbar = () => {
   return (
     <header
       className={
-        "text-[#fff] py-2 text-center h-24 w-full flex flex-row justify-center items-center bg-[#333]"
+        "text-[#fff] py-2 text-center h-24 w-full flex flex-row justify-center items-center "
       }
     >
       {links.map((link, index) => {
@@ -27,7 +27,7 @@ const Navbar = () => {
             <section
               key={index}
               className={cn(
-                `w-49/50 h-full flex justify-center items-center bg-[#444] text-[#fff] rounded-md`,
+                `w-49/50 h-full flex justify-center items-center bg-[#444] text-[#DADADA] rounded-md`,
                 `${
                   isActive ||
                   (

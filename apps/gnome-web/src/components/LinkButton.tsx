@@ -6,19 +6,12 @@ type LinkButtonProps = {
 };
 
 export const LinkButton: React.FC<LinkButtonProps> = ({ to, label }) => {
-  const buttonStyle: React.CSSProperties = {
-    backgroundColor: "#1E201E",
-    color: "#757A75",
-    borderRadius: "50px",
-    padding: "60px 50px",
-    border: "none",
-    cursor: "pointer",
-    margin: "10px",
-  };
   return (
     <div>
       <Link to={to}>
-        <button style={buttonStyle}>{label}</button>
+        <button className="bg-[#1E201E] text-[#757A75] rounded-full px-12 py-10 border-none cursor-pointer m-2">
+          {label}
+        </button>
       </Link>
     </div>
   );
