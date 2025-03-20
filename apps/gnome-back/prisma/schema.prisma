@@ -33,6 +33,7 @@ model User {
   sentRequest       Friendship[]       @relation("sender")
   receivedRequest   Friendship[]       @relation("receiver")
   memberships       TeamMembership[]   @relation("member")
+
 }
 
 
