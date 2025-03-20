@@ -46,7 +46,7 @@ export default function SignInScreen() {
       const idToken = signInResponse?.data?.idToken;
       if (idToken) {
         await login(idToken);
-        replace("/");
+        replace("/Home");
       } else {
         throw new Error("No ID token present!");
       }

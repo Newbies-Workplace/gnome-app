@@ -2,11 +2,12 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useAuthStore } from "@/store/useAuthStore";
+import { Ionicons } from "@expo/vector-icons";
 import { replace } from "expo-router/build/global-state/routing";
 import React, { useState } from "react";
 import { Text, View } from "react-native";
 
-export default function Index() {
+export default function Home() {
   const [value, setValue] = useState("");
 
   const { logout, user } = useAuthStore();
