@@ -1,22 +1,76 @@
+import * as Location from "expo-location";
 import React from "react";
-import { StyleSheet, View } from "react-native";
+import { useEffect, useState } from "react";
+import { Platform, StyleSheet, Text, View } from "react-native";
 import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
+import { ZoomIn } from "react-native-reanimated";
 
-const MapScreen = () => {
-  const region = {
-    latitude: 51.1079, // współrzędne Wrocławia
+const App = () => {
+  const [location, setLocation] = useState<Location.LocationObject | null>(
+    null,
+  );
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+
+  const defaultRegion = {
+    latitude: 51.1079, // Współrzędne Wrocławia
     longitude: 17.0385,
     latitudeDelta: 0.01,
-    longitudeDelta: 0.03,
+    longitudeDelta: 0.05,
   };
+
+  useEffect(() => {
+    let subscription: Location.LocationSubscription | null = null;
+
+    (async () => {
+      try {
+        // Prośba o pozwolenie na dostęp do lokalizacji
+        const { status } = await Location.requestForegroundPermissionsAsync();
+        if (status !== "granted") {
+          setErrorMsg("Permission to access location was denied");
+          return;
+        }
+
+        // Rozpocznij śledzenie lokalizacji
+        subscription = await Location.watchPositionAsync(
+          {
+            accuracy: Location.Accuracy.High,
+            timeInterval: 1, // Aktualizuj co 0.1 sekundę
+            distanceInterval: 1, // Aktualizuj co 1 metrów
+          },
+          (newLocation) => {
+            setLocation(newLocation); // Ustaw nową lokalizację
+            console.log("New location:", newLocation.coords);
+          },
+        );
+      } catch (error) {
+        console.error("Error getting location:", error);
+        setErrorMsg("Error getting location");
+      }
+    })();
+
+    // Czyszczenie subskrypcji przy odmontowaniu komponentu
+    return () => {
+      if (subscription) {
+        subscription.remove();
+      }
+    };
+  }, []);
+
+  let text = "Waiting...";
+  if (errorMsg) {
+    text = errorMsg;
+  } else if (location) {
+    text = JSON.stringify(location);
+  }
 
   return (
     <View style={styles.container}>
-      {/* Map View */}
       <View style={styles.mapContainer}>
         <MapView
           style={styles.map}
-          region={region}
+          initialRegion={defaultRegion}
+          showsUserLocation
+          followsUserLocation
           provider={PROVIDER_GOOGLE}
           zoomEnabled={true}
           zoomControlEnabled={true}
@@ -66,6 +120,11 @@ const styles = StyleSheet.create({
   map: {
     ...StyleSheet.absoluteFillObject,
   },
+  text: {
+    fontSize: 16,
+    textAlign: "center",
+    marginTop: 20,
+  },
 });
 
-export default MapScreen;
+export default App;
