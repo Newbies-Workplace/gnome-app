@@ -1,14 +1,11 @@
-import { useParams } from "react-router";
+import Navbar from "../components/Navbar";
+import { BgElement } from "../components/bg_element";
 
 export const GnomePage = () => {
-  const { gnomeId } = useParams();
-
   return (
-    <div
-      className={"flex w-screen h-screen justify-center items-center flex-col"}
-    >
-      <h1>Gnomes, id: {gnomeId}</h1>
-      <p>Welcome to the Gnome Web App!</p>
+    <div>
+      <Navbar />
+      <BgElement roundedBr="15px" roundedBl="15px" />
     </div>
   );
 };
