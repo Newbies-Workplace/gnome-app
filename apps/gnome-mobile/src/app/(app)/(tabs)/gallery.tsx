@@ -19,6 +19,10 @@ const Gallery = () => {
         <Button title="camera" onPress={() => router.replace("/camera")} />
         <Button title="profile" onPress={() => router.replace("/profile")} />
         <Button title="settings" onPress={() => router.replace("/settings")} />
+        <Button
+          title="gnomedetail"
+          onPress={() => router.replace("/gnome_detail")}
+        />
       </View>
     </View>
   );
