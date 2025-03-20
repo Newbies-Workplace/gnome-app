@@ -1,3 +1,6 @@
+import DateIcon from "@/assets/icons/date.svg";
+import FoundIcon from "@/assets/icons/found.svg";
+import { GnomeCard } from "@/components/ui/GnomeCard";
 import React from "react";
 import { Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
 
@@ -5,7 +8,9 @@ const GnomeScreen = () => {
   return (
     <ScrollView className="bg-background my-2">
       <View className="p-5 my-2">
-        <Image source={require("@/assets/icons/gnome-detail.png")} />
+        <View className="justify-center items-center">
+          <Image source={require("@/assets/icons/gnome-detail.png")} />
+        </View>
         <View>
           <Text className="text-center text-white text-3xl text-bold font-afacad my-2">
             Movemenciak
@@ -17,12 +22,18 @@ const GnomeScreen = () => {
             className="border-b border-primary my-2"
             style={{ width: "80%", alignSelf: "center" }}
           />
-          <Text className="text-white font-afacad my-2">
-            Data znalezienia: 05-04-2024
-          </Text>
-          <Text className="text-white font-afacad my-2">
-            Data postawienia: 04-03-2023
-          </Text>
+          <View className="flex-row items-center">
+            <FoundIcon width={20} height={20} />
+            <Text className="text-white font-afacad my-2 ml-2">
+              Data znalezienia: 05-04-2024
+            </Text>
+          </View>
+          <View className="flex-row items-center">
+            <DateIcon width={20} height={20} />
+            <Text className="text-white font-afacad my-2 ml-2">
+              Data postawienia: 04-03-2023
+            </Text>
+          </View>
           <View
             className="border-b border-primary my-2"
             style={{ width: "80%", alignSelf: "center" }}
@@ -51,47 +62,22 @@ const GnomeScreen = () => {
             w ręce Oki’ego, po koncercie z trasy ERA47.
           </Text>
         </View>
-        <View
-          className="flex-row justify-center my-4 p-4"
-          style={{ justifyContent: "center", alignItems: "center" }}
-        >
-          <View>
-            <Image
-              source={require("@/assets/images/placeholder.png")}
-              style={{
-                width: 100,
-                height: 100,
-                borderRadius: 10,
-                marginRight: 10,
-              }}
-            />
-            <Text className="text-center text-white text-lg font-afacad my-2">
-              ?
-            </Text>
-          </View>
-          <View>
-            <Image
-              source={require("@/assets/images/placeholder.png")}
-              style={{
-                width: 100,
-                height: 100,
-                borderRadius: 10,
-                marginRight: 10,
-              }}
-            />
-            <Text className="text-center text-white text-lg font-afacad my-2">
-              ?
-            </Text>
-          </View>
-          <View>
-            <Image
-              source={require("@/assets/images/placeholder.png")}
-              style={{ width: 100, height: 100, borderRadius: 10 }}
-            />
-            <Text className="text-center text-white text-lg font-afacad my-2">
-              ?
-            </Text>
-          </View>
+        <View className="justify-center flex-row">
+          <GnomeCard
+            image={require("@/assets/images/placeholder.png")}
+            text="?"
+            onClick={() => replace("/collection")}
+          />
+          <GnomeCard
+            image={require("@/assets/images/placeholder.png")}
+            text="?"
+            onClick={() => replace("/collection")}
+          />
+          <GnomeCard
+            image={require("@/assets/images/placeholder.png")}
+            text="?"
+            onClick={() => replace("/collection")}
+          />
         </View>
       </View>
     </ScrollView>
