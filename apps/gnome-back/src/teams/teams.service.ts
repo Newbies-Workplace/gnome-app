@@ -4,17 +4,7 @@ import { TeamMembership } from "@prisma/client";
 @Injectable()
 export class TeamsService {
   constructor(private readonly prisma: PrismaService) {}
-  async getAllTeams() {
-    return this.prisma.teams.findMany({
-      include: {
-        members: {
-          select: {
-            userId: true,
-          },
-        },
-      },
-    });
-  }
+
   async getTeam(id: string) {
     return this.prisma.teams.findUnique({
       include: {

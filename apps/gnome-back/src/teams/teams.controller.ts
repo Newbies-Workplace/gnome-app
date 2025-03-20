@@ -18,12 +18,6 @@ import { TeamsService } from "./teams.service";
 export class TeamsController {
   constructor(private readonly teamsService: TeamsService) {}
 
-  @Get() // GET /teams
-  @UseGuards(JwtGuard) // Wymaga autoryzacji
-  getTeams() {
-    return this.teamsService.getAllTeams();
-  }
-
   @Get("@me") // GET /teams/@me
   @UseGuards(JwtGuard)
   async getMyTeam(@User() user: JWTUser) {
@@ -39,8 +33,8 @@ export class TeamsController {
 
   @Post() // POST /teams
   @UseGuards(JwtGuard)
-  async create(@Body() team: { members: string[] }) {
-    const leaderId = team.members[0];
+  async create(@Body() team: { members: string[] }, @User() user: JWTUser) {
+    const leaderId = user.id;
     return this.teamsService.createTeam(leaderId, team.members);
   }
 
