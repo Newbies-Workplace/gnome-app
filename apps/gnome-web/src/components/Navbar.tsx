@@ -5,16 +5,16 @@ const Navbar = () => {
   const location = useLocation();
 
   const links = [
-    { href: "/", img: "../src/images/Home.png", text: "Strona Główna" },
-    { href: "/gnomes/test", img: "../src/images/gnome.png", text: "Lista" },
-    { href: "/report", img: "../src/images/Zglos.png", text: "Zgłoś" },
-    { href: "/admin/logadmin", img: "../src/images/Admin.png", text: "Admin" },
+    { href: "/", img: "../src/images/Home.svg", text: "Strona Główna" },
+    { href: "/gnomes/test", img: "../src/images/gnome.svg", text: "Lista" },
+    { href: "/report", img: "../src/images/Zglos.svg", text: "Zgłoś" },
+    { href: "/admin/logadmin", img: "../src/images/Admin.svg", text: "Admin" },
   ];
 
   return (
     <header
       className={
-        "text-[#fff] py-2 text-center h-24 w-full flex flex-row justify-center items-center bg-[#333]"
+        "ml-5 text-[#fff] py-2 text-center h-24 w-49/50 flex flex-row justify-center items-center bg-[#444]"
       }
     >
       {links.map((link, index) => {
@@ -27,7 +27,7 @@ const Navbar = () => {
             <section
               key={index}
               className={cn(
-                `w-49/50 h-full flex justify-center items-center bg-[#444] text-[#fff] rounded-md`,
+                `w-full h-full flex justify-center items-center bg-[#444] text-[#fff] rounded-md`,
                 `${
                   isActive ||
                   (
