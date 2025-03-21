@@ -1,9 +1,8 @@
 import * as Location from "expo-location";
 import React from "react";
 import { useEffect, useState } from "react";
-import { Platform, StyleSheet, Text, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
-import { ZoomIn } from "react-native-reanimated";
 
 const App = () => {
   const [location, setLocation] = useState<Location.LocationObject | null>(
@@ -17,6 +16,76 @@ const App = () => {
     latitudeDelta: 0.01,
     longitudeDelta: 0.05,
   };
+
+  const MapStyle = [
+    { elementType: "geometry", stylers: [{ color: "#1a1d2a" }] },
+    { elementType: "labels.text.fill", stylers: [{ color: "#c0c0c8" }] },
+    { elementType: "labels.text.stroke", stylers: [{ color: "#1a1d2a" }] },
+
+    {
+      featureType: "administrative",
+      elementType: "geometry",
+      stylers: [{ color: "#33354a" }],
+    },
+    {
+      featureType: "administrative.locality",
+      elementType: "labels.text.fill",
+      stylers: [{ color: "#d8d8df" }],
+    },
+
+    {
+      featureType: "road",
+      elementType: "geometry",
+      stylers: [{ color: "#2c2f3e" }],
+    },
+    {
+      featureType: "road",
+      elementType: "labels.text.fill",
+      stylers: [{ color: "#b0b0b8" }],
+    },
+    {
+      featureType: "road.highway",
+      elementType: "geometry",
+      stylers: [{ color: "#404354" }],
+    },
+    {
+      featureType: "road.highway",
+      elementType: "labels.text.fill",
+      stylers: [{ color: "#e0e0e6" }],
+    },
+
+    {
+      featureType: "water",
+      elementType: "geometry",
+      stylers: [{ color: "#1f2637" }],
+    },
+    {
+      featureType: "water",
+      elementType: "labels.text.fill",
+      stylers: [{ color: "#5878a5" }],
+    },
+
+    {
+      featureType: "poi",
+      elementType: "geometry",
+      stylers: [{ color: "#252839" }],
+    },
+    {
+      featureType: "poi.business",
+      elementType: "labels.text.fill",
+      stylers: [{ color: "#ffa45c" }],
+    },
+    {
+      featureType: "poi.park",
+      elementType: "geometry",
+      stylers: [{ color: "#1d3c2c" }],
+    },
+    {
+      featureType: "poi.park",
+      elementType: "labels.text.fill",
+      stylers: [{ color: "#60d158" }],
+    },
+  ];
 
   useEffect(() => {
     let subscription: Location.LocationSubscription | null = null;
@@ -75,6 +144,7 @@ const App = () => {
           zoomEnabled={true}
           zoomControlEnabled={true}
           scrollEnabled={true}
+          customMapStyle={MapStyle}
         >
           <Marker
             coordinate={{
