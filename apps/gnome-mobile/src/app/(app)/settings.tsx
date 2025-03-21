@@ -44,14 +44,13 @@ function SettingsScreen() {
     <SafeAreaView className="flex-1 bg-background">
       {/* Opcje ustawień */}
       <View className="w-full px-4 mt-4">
-        {/* 1 przycisk */}
+        {/* 1 przycisk */},
         <SettingsOption
           text="Motyw"
           image={ModeIcon}
           onClick={() => replace("/theme")}
           customClass="mb-8"
         />
-
         {/* 3 przyciski */}
         <SettingsOption
           text="Powiadomienia"
@@ -69,7 +68,6 @@ function SettingsScreen() {
           onClick={() => replace("/security")}
           customClass="mb-8"
         />
-
         {/* 3 przyciski */}
         <SettingsOption
           text="Główne"
@@ -88,7 +86,6 @@ function SettingsScreen() {
           extraText="Polski"
           customClass="mb-8"
         />
-
         {/* 2 przyciski */}
         <SettingsOption
           text="Zadaj pytanie"
