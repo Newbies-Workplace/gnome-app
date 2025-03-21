@@ -1,4 +1,11 @@
-import { IsNotEmpty, IsNumber, IsString, IsUrl } from "class-validator";
+import {
+  IsLatitude,
+  IsLongitude,
+  IsNotEmpty,
+  IsNumber,
+  IsString,
+  IsUrl,
+} from "class-validator";
 
 export class CreateReportRequest {
   @IsString()
@@ -9,11 +16,11 @@ export class CreateReportRequest {
   @IsNotEmpty()
   pictureUrl: string;
 
-  @IsNumber()
+  @IsLatitude()
   @IsNotEmpty()
   latitude: number;
 
-  @IsNumber()
+  @IsLongitude()
   @IsNotEmpty()
   longitude: number;
 
