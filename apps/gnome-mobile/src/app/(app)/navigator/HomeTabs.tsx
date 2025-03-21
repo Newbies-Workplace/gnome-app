@@ -1,9 +1,3 @@
-import NavIcon, {
-  NavHomeIcon,
-  NavMushroomIcon,
-  NavImageIcon,
-  NavFriendsIcon,
-} from "@/components/ui/navIcons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
@@ -11,6 +5,12 @@ import Collection from "../(tabs)/collection";
 import Friends from "../(tabs)/friends";
 import Image from "../(tabs)/gallery";
 import Home from "../(tabs)/index";
+
+import NavFriendsIcon from "@/assets/icons/NavFriends.svg";
+//Ikony do tabsów
+import NavHomeIcon from "@/assets/icons/NavHome.svg";
+import NavImageIcon from "@/assets/icons/NavImage.svg";
+import NavMushroomIcon from "@/assets/icons/NavMushroom.svg";
 
 const Tab = createBottomTabNavigator();
 
@@ -32,11 +32,11 @@ const HomeTabs = () => {
         component={Home}
         options={{
           headerShown: false,
-          tabBarIcon: ({ color, size, focused }) => (
-            <NavIcon
+          tabBarIcon: ({ color, size = 25, focused }) => (
+            <NavHomeIcon
+              height={size}
+              width={size}
               color={focused ? "#FFF" : color}
-              icon={NavHomeIcon}
-              size={size}
             />
           ),
         }}
@@ -46,11 +46,11 @@ const HomeTabs = () => {
         component={Collection}
         options={{
           headerShown: false,
-          tabBarIcon: ({ color, size, focused }) => (
-            <NavIcon
+          tabBarIcon: ({ color, size = 25, focused }) => (
+            <NavMushroomIcon
+              height={size}
+              width={size}
               color={focused ? "#FFF" : color}
-              icon={NavMushroomIcon}
-              size={size}
             />
           ),
         }}
@@ -60,11 +60,11 @@ const HomeTabs = () => {
         component={Friends}
         options={{
           headerShown: false,
-          tabBarIcon: ({ color, size, focused }) => (
-            <NavIcon
+          tabBarIcon: ({ color, size = 25, focused }) => (
+            <NavFriendsIcon
+              height={size}
+              width={size}
               color={focused ? "#FFF" : color}
-              icon={NavFriendsIcon}
-              size={size}
             />
           ),
         }}
@@ -74,11 +74,11 @@ const HomeTabs = () => {
         component={Image}
         options={{
           headerShown: false,
-          tabBarIcon: ({ color, size, focused }) => (
-            <NavIcon
+          tabBarIcon: ({ color, size = 25, focused }) => (
+            <NavImageIcon
               color={focused ? "#FFF" : color}
-              icon={NavImageIcon}
-              size={size}
+              height={size}
+              width={size}
             />
           ),
         }}
