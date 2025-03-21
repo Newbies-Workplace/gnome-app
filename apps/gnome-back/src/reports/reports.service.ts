@@ -4,19 +4,14 @@ import { Report } from "@prisma/client";
 
 @Injectable()
 export class ReportsService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prismaService: PrismaService) {}
 
   async getAllReports(): Promise<{ id: string; reportAuthor: string }[]> {
-    return this.prisma.report.findMany({
-      select: {
-        id: true,
-        reportAuthor: true,
-      },
-    });
+    return this.prismaService.report.findMany();
   }
 
   async getReportsCount(): Promise<number> {
-    const collection = await this.prisma.report.findMany();
+    const collection = await this.prismaService.report.findMany();
     return collection.length;
   }
 
@@ -28,7 +23,7 @@ export class ReportsService {
     location: string,
     reportAuthor: string,
   ) {
-    return this.prisma.report.create({
+    return this.prismaService.report.create({
       data: {
         gnomeName: gnomeName,
         pictureUrl: pictureUrl,
@@ -41,7 +36,7 @@ export class ReportsService {
   }
 
   async getUniqueReport(id: string): Promise<Report | null> {
-    return this.prisma.report.findUnique({
+    return this.prismaService.report.findUnique({
       where: {
         id: id,
       },
@@ -49,7 +44,7 @@ export class ReportsService {
   }
 
   async deleteReport(id: string) {
-    return this.prisma.report.delete({
+    return this.prismaService.report.delete({
       where: {
         id: id,
       },
@@ -57,7 +52,7 @@ export class ReportsService {
   }
 
   async deleteAllReports() {
-    const deleteAll = await this.prisma.report.deleteMany();
+    const deleteAll = await this.prismaService.report.deleteMany();
     return deleteAll.count;
   }
 }

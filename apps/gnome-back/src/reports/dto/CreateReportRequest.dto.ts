@@ -1,6 +1,6 @@
 import { IsNotEmpty, IsNumber, IsString, IsUrl } from "class-validator";
 
-export class CreateReport {
+export class CreateReportRequest {
   @IsString()
   @IsNotEmpty()
   gnomeName: string;

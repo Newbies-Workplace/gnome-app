@@ -1,4 +1,6 @@
 import { JwtGuard } from "@/auth/jwt/jwt.guard";
+import { Role } from "@/role/role.decorator";
+import { RoleGuard } from "@/roleguard/role.guard";
 import {
   Body,
   Controller,
@@ -8,26 +10,30 @@ import {
   Post,
   UseGuards,
 } from "@nestjs/common";
-import { CreateReport } from "./dto/createReport.dto";
+import { CreateReportRequest } from "./dto/CreateReportRequest.dto";
 import { ReportsService } from "./reports.service";
 
 @Controller("reports")
 export class ReportsController {
-  constructor(private readonly reports: ReportsService) {}
+  constructor(private readonly reportsService: ReportsService) {}
 
   @Get("")
+  @UseGuards(JwtGuard, RoleGuard)
+  @Role(["ADMIN"])
   getAllReports() {
-    return this.reports.getAllReports();
+    return this.reportsService.getAllReports();
   }
 
   @Get("count")
+  @UseGuards(JwtGuard, RoleGuard)
+  @Role(["ADMIN"])
   getReportsCount() {
-    return this.reports.getReportsCount();
+    return this.reportsService.getReportsCount();
   }
 
   @Post("")
-  createReport(@Body() body: CreateReport) {
-    return this.reports.createReport(
+  createReport(@Body() body: CreateReportRequest) {
+    return this.reportsService.createReport(
       body.gnomeName,
       body.pictureUrl,
       body.latitude,
@@ -38,18 +44,24 @@ export class ReportsController {
   }
 
   @Get(":id")
+  @UseGuards(JwtGuard, RoleGuard)
+  @Role(["ADMIN"])
   getUniqueReport(@Param("id") id: string) {
-    return this.reports.getUniqueReport(id);
+    return this.reportsService.getUniqueReport(id);
   }
 
   @Delete(":id")
+  @UseGuards(JwtGuard, RoleGuard)
+  @Role(["ADMIN"])
   deleteReport(@Param("id") id: string) {
-    return this.reports.deleteReport(id);
+    return this.reportsService.deleteReport(id);
   }
 
   @Delete("")
+  @UseGuards(JwtGuard, RoleGuard)
+  @Role(["ADMIN"])
   deleteAllReports() {
     /* zwraca liczbe usunietych zgloszen */
-    return this.reports.deleteAllReports();
+    return this.reportsService.deleteAllReports();
   }
 }
