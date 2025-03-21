@@ -1,22 +1,16 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
+import { GnomeCard } from "@/components/ui/GnomeCard";
 import {
   ProfileButton,
   ProfileButtonLogout,
-} from "@/components/ui/profile-button";
+} from "@/components/ui/ProfileButton";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useNavigation } from "@react-navigation/native";
 import { useRouter } from "expo-router";
 import React from "react";
 import { useEffect } from "react";
-import {
-  Alert,
-  Image,
-  Share,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { Alert, Share, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 // import ikon
@@ -119,21 +113,27 @@ export default function ProfileScreen() {
           <ProfileButton
             text="Ostatnio odkryte"
             image={LastSeenIcon}
-            onClick={() => {}}
+            onClick={() => replace("/collection")}
           />
           {/* Trzy zdjęcia z polami tekstowymi */}
-          <View className="flex flex-row justify-between mb-4">
-            {[1, 2, 3].map((index) => (
-              <View key={index} className="items-center">
-                <Image
-                  source={require("@/assets/images/placeholder.png")}
-                  className="w-30 h-30 rounded-md mb-2"
-                />
-                <Text className="w-20 h-7 text-center rounded px-1 text-white font-bold">
-                  ?
-                </Text>
-              </View>
-            ))}
+          <View>
+            <View className="justify-center flex-row">
+              <GnomeCard
+                image={require("@/assets/images/placeholder.png")}
+                text="?"
+                onClick={() => replace("/collection")}
+              />
+              <GnomeCard
+                image={require("@/assets/images/placeholder.png")}
+                text="?"
+                onClick={() => replace("/collection")}
+              />
+              <GnomeCard
+                image={require("@/assets/images/placeholder.png")}
+                text="?"
+                onClick={() => replace("/collection")}
+              />
+            </View>
           </View>
         </View>
 
