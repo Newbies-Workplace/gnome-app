@@ -41,7 +41,6 @@ const MapScreen = () => {
           setErrorMsg("Permission to access location was denied");
           return;
         }
-
         subscription = await Location.watchPositionAsync(
           {
             accuracy: Location.Accuracy.High,
@@ -65,7 +64,7 @@ const MapScreen = () => {
         setErrorMsg("Error getting location");
       }
     })();
-
+    
     return () => {
       if (subscription) {
         subscription.remove();
@@ -270,3 +269,4 @@ const MapStyle = [
 ];
 
 export default MapScreen;
+
