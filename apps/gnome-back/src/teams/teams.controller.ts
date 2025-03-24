@@ -1,5 +1,5 @@
 import { JwtGuard } from "@/auth/jwt/jwt.guard";
-import { JWTUser } from "@/auth/jwt/jwtuser";
+import type { JWTUser } from "@/auth/jwt/jwtuser";
 import { User } from "@/auth/jwt/jwtuser.decorator";
 import {
   Body,
@@ -12,7 +12,7 @@ import {
   Query,
   UseGuards,
 } from "@nestjs/common";
-import { TeamsService } from "./teams.service";
+import type { TeamsService } from "./teams.service";
 
 @Controller("teams")
 export class TeamsController {
