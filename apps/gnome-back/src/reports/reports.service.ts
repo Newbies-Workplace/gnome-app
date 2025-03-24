@@ -6,7 +6,7 @@ import { Report } from "@prisma/client";
 export class ReportsService {
   constructor(private readonly prismaService: PrismaService) {}
 
-  async getAllReports(): Promise<{ id: string; reportAuthor: string }[]> {
+  async getAllReports(): Promise<Report[]> {
     return this.prismaService.report.findMany();
   }
 
