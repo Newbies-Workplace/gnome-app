@@ -1,4 +1,5 @@
 import { AuthService } from "@/lib/api/Auth.service";
+import { axiosInstance } from "@/lib/api/axios";
 import type { UserResponse } from "@repo/shared/responses";
 import { create } from "zustand/react";
 

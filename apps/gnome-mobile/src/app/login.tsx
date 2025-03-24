@@ -5,7 +5,6 @@ import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import {
-  ActivityIndicator,
   Alert,
   Image,
   Text,
@@ -46,10 +45,6 @@ export default function SignInScreen() {
       );
     }
   };
-
-  if (loading) {
-    return <ActivityIndicator size={"large"} color="#ffffff" />;
-  }
 
   return (
     <SafeAreaView className="flex-1 justify-end">
