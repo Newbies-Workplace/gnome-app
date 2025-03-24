@@ -1,10 +1,10 @@
 import { Role } from "@/role/role.decorator";
 import {
-  CanActivate,
-  ExecutionContext,
+  type CanActivate,
+  type ExecutionContext,
   Injectable,
 } from "@nestjs/common";
-import { Reflector } from "@nestjs/core";
+import type { Reflector } from "@nestjs/core";
 import { Observable } from "rxjs";
 
 @Injectable()
