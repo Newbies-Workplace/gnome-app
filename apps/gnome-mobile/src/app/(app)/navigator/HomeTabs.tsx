@@ -6,8 +6,8 @@ import Friends from "../(tabs)/friends";
 import Image from "../(tabs)/gallery";
 import Home from "../(tabs)/index";
 
-import NavFriendsIcon from "@/assets/icons/NavFriends.svg";
 //Ikony do tabsów
+import NavFriendsIcon from "@/assets/icons/NavFriends.svg";
 import NavHomeIcon from "@/assets/icons/NavHome.svg";
 import NavImageIcon from "@/assets/icons/NavImage.svg";
 import NavMushroomIcon from "@/assets/icons/NavMushroom.svg";
@@ -70,7 +70,7 @@ const HomeTabs = () => {
         }}
       />
       <Tab.Screen
-        name="Zdjęcie"
+        name="Galeria"
         component={Image}
         options={{
           headerShown: false,
