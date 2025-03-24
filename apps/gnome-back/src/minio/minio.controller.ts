@@ -1,4 +1,5 @@
 import type { JWTUser } from "@/auth/jwt/JWTUser";
+import { JwtGuard } from "@/auth/jwt/jwt.guard";
 import { User } from "@/auth/jwt/jwtuser.decorator";
 import {
   Body,
@@ -8,6 +9,7 @@ import {
   Param,
   Post,
   UploadedFile,
+  UseGuards,
   UseInterceptors,
 } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
@@ -19,6 +21,7 @@ export class MinioController {
 
   @Post("image")
   @UseInterceptors(FileInterceptor("file"))
+  @UseGuards(JwtGuard)
   async uploadFile(
     @UploadedFile() file: Express.Multer.File,
     @User() user: JWTUser,
