@@ -30,6 +30,7 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
   login: async (googleIdToken: string) => {
     const response = await AuthService.loginWithGoogle(googleIdToken);
 
+    axiosInstance.defaults.headers.Authorization = `Bearer ${response.access_token}`;
     set({
       accessToken: response.access_token,
       isLoading: false,
