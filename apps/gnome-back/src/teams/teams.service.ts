@@ -41,7 +41,7 @@ export class TeamsService {
   async createTeam(leaderId: string, memberIds: string[]) {
     return this.prisma.team.create({
       data: {
-        leader: leaderId, // Lider zespołu, ustawiany jako pierwszy członek
+        leader: leaderId, // Lider zespołu ustawiany jako pierwszy członek
         members: {
           create: memberIds.map((userId) => ({
             user: {
