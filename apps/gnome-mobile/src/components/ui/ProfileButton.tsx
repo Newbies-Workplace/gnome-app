@@ -1,6 +1,10 @@
 import { Text } from "@/components/ui/text";
-import React from "react";
-import { Image, ImageSourcePropType, TouchableOpacity } from "react-native";
+import type React from "react";
+import {
+  Image,
+  type ImageSourcePropType,
+  TouchableOpacity,
+} from "react-native";
 
 interface ProfileButtonProps {
   image: ImageSourcePropType | string;

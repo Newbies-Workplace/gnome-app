@@ -1,5 +1,5 @@
 import { AuthService } from "@/lib/api/Auth.service";
-import { UserResponse } from "@repo/shared/responses";
+import type { UserResponse } from "@repo/shared/responses";
 import { create } from "zustand/react";
 
 export interface AuthStore {
