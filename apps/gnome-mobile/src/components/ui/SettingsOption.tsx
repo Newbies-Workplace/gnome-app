@@ -1,5 +1,5 @@
 import { Text } from "@/components/ui/text";
-import React from "react";
+import type React from "react";
 import { TouchableOpacity, View } from "react-native";
 
 // Import ikon jako komponenty

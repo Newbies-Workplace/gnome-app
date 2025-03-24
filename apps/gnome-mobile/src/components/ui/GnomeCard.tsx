@@ -1,7 +1,7 @@
-import React from "react";
+import type React from "react";
 import {
   Image,
-  ImageSourcePropType,
+  type ImageSourcePropType,
   Text,
   TouchableOpacity,
   View,
