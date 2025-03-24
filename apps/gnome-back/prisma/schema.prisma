@@ -28,7 +28,18 @@ model Gnome {
   location     String
   creationDate DateTime
   description  String
+  exists       Boolean            @default(true)
   interactions GnomeInteraction[]
+}
+
+model Report {
+  id                String @id @unique @default(cuid())
+  gnomeName         String
+  pictureUrl        String
+  latitude          Float
+  longitude         Float
+  location          String
+  reportAuthor      String
 }
 
 model GnomeInteraction {
