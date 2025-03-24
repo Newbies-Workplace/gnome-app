@@ -6,6 +6,11 @@ import { Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
 import { FriendsModule } from "./friends/friends.module";
 
+import { TeamsModule } from "./teams/teams.module";
+
+import { ReportsModule } from "./reports/reports.module";
+
+
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -15,7 +20,9 @@ import { FriendsModule } from "./friends/friends.module";
     AuthModule,
     UsersModule,
     GnomesModule,
+    TeamsModule,
     FriendsModule,
+    ReportsModule,
   ],
 })
 export class AppModule {}
