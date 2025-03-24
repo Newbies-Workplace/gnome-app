@@ -1,15 +1,56 @@
+import FriendIcon from "@/assets/icons/add-friend.svg";
+import TeamIcon from "@/assets/icons/team.svg";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Text } from "@/components/ui/text";
+import { useAuthStore } from "@/store/useAuthStore";
+import { useNavigation } from "@react-navigation/native";
 import * as Location from "expo-location";
-import React, { createRef, useRef } from "react";
-import { useEffect, useState } from "react";
-import { StyleSheet, View } from "react-native";
-import MapView, { PROVIDER_GOOGLE, Marker, Region } from "react-native-maps";
+import { useRouter } from "expo-router";
+import React, { createRef, useEffect, useState } from "react";
+import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
+import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
 
-const App = () => {
+const HeaderControls = ({ user, replace }) => {
+  return (
+    <View className="absolute top-5 left-2 right-2 p-2 flex-row justify-between items-center">
+      <View className="flex flex-row items-center gap-5 w-full justify-between">
+        <TouchableOpacity onPress={() => replace("/profile")}>
+          <Avatar alt="Your avatar" className="w-16 h-16">
+            <AvatarImage source={{ uri: user.pictureUrl }} />
+            <AvatarFallback>
+              <Text className="text-md">You</Text>
+            </AvatarFallback>
+          </Avatar>
+        </TouchableOpacity>
+        <View className="flex-row">
+          <TouchableOpacity
+            onPress={() => replace("/addfriend")}
+            className="w-16 h-16 bg-background rounded-full flex justify-center items-center mr-2"
+          >
+            <FriendIcon width={20} height={20} fill="#000" />
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => replace("/teams")}
+            className="w-16 h-16 bg-background rounded-full flex justify-center items-center"
+          >
+            <TeamIcon width={20} height={20} fill="#000" />
+          </TouchableOpacity>
+        </View>
+      </View>
+    </View>
+  );
+};
+
+const MapScreen = () => {
+  const { user } = useAuthStore();
+  const navigation = useNavigation();
+  const { replace } = useRouter();
   const ref = createRef<MapView>();
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
+
   const defaultRegion = {
-    latitude: 51.1079, // Współrzędne Wrocławia
+    latitude: 51.1079,
     longitude: 17.0385,
     latitudeDelta: 0.01,
     longitudeDelta: 0.05,
@@ -20,14 +61,11 @@ const App = () => {
 
     (async () => {
       try {
-        // Prośba o pozwolenie na dostęp do lokalizacji
         const { status } = await Location.requestForegroundPermissionsAsync();
         if (status !== "granted") {
           setErrorMsg("Permission to access location was denied");
           return;
         }
-
-        // Rozpocznij śledzenie lokalizacji
         subscription = await Location.watchPositionAsync(
           {
             accuracy: Location.Accuracy.High,
@@ -52,7 +90,6 @@ const App = () => {
       }
     })();
 
-    // Czyszczenie subskrypcji przy odmontowaniu komponentu
     return () => {
       if (subscription) {
         subscription.remove();
@@ -66,52 +103,64 @@ const App = () => {
   }
 
   return (
-    <View style={styles.container}>
-      <View style={styles.mapContainer}>
-        <MapView
-          style={styles.map}
-          initialRegion={defaultRegion}
-          showsUserLocation={true}
-          provider={PROVIDER_GOOGLE}
-          zoomEnabled={false}
-          zoomControlEnabled={false}
-          scrollEnabled={false}
-          customMapStyle={MapStyle}
-          showsCompass={false}
-          showsMyLocationButton={false}
-          minZoomLevel={18}
-          maxZoomLevel={20}
-          ref={ref}
+    <View className="flex-1">
+      <MapView
+        style={styles.map}
+        initialRegion={defaultRegion}
+        showsUserLocation={true}
+        provider={PROVIDER_GOOGLE}
+        zoomEnabled={false}
+        zoomControlEnabled={false}
+        scrollEnabled={false}
+        customMapStyle={MapStyle}
+        showsCompass={false}
+        showsMyLocationButton={false}
+        minZoomLevel={18}
+        maxZoomLevel={20}
+        ref={ref}
+      >
+        <Marker
+          coordinate={{
+            latitude: 51.09701966184086,
+            longitude: 17.035843526079727,
+          }}
+          title="Krasnal Podróżnik"
+          description="Krasnal wysiadający z autobusu"
         >
-          <Marker
-            coordinate={{
-              latitude: 51.09701966184086,
-              longitude: 17.035843526079727,
-            }}
-            title="Krasnal Podróznik"
-            description="Krasnal wysiadający z autobusu"
-            icon={require("@/assets/images/krasnal.png")}
+          <Image
+            source={require("@/assets/images/krasnal.png")}
+            style={{ width: 30, height: 30 }}
           />
-          <Marker
-            coordinate={{
-              latitude: 51.10894028789954,
-              longitude: 17.03288804137201,
-            }}
-            title="Krasnale Syzyfki"
-            description="Ciągle pchają ten nieszczęsny kamień"
-            icon={require("@/assets/images/krasnal.png")}
+        </Marker>
+        <Marker
+          coordinate={{
+            latitude: 51.10894028789954,
+            longitude: 17.03288804137201,
+          }}
+          title="Krasnale Syzyfki"
+          description="Ciągle pchają ten nieszczęsny kamień"
+        >
+          <Image
+            source={require("@/assets/images/krasnal.png")}
+            style={{ width: 30, height: 30 }}
           />
-          <Marker
-            coordinate={{
-              latitude: 51.10947379220885,
-              longitude: 17.057842134960516,
-            }}
-            title="Krasnal Mędruś"
-            description="Ponąć studenci przychodzą do niego po porady"
-            icon={require("@/assets/images/krasnal.png")}
+        </Marker>
+        <Marker
+          coordinate={{
+            latitude: 51.10947379220885,
+            longitude: 17.057842134960516,
+          }}
+          title="Krasnal Mędruś"
+          description="Ponoć studenci przychodzą do niego po porady"
+        >
+          <Image
+            source={require("@/assets/images/krasnal.png")}
+            style={{ width: 30, height: 30 }}
           />
-        </MapView>
-      </View>
+        </Marker>
+      </MapView>
+
+      <HeaderControls user={user} replace={replace} />
     </View>
   );
 };
@@ -133,8 +182,6 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
 });
-
-export default App;
 
 const MapStyle = [
   { elementType: "geometry", stylers: [{ color: "#1a1d2a" }] },
@@ -206,3 +253,5 @@ const MapStyle = [
     stylers: [{ color: "#60d158" }],
   },
 ];
+
+export default MapScreen;
