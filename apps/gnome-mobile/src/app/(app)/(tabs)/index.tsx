@@ -1,13 +1,11 @@
 import * as Location from "expo-location";
-import React from "react";
+import React, { createRef, useRef } from "react";
 import { useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
-import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
+import MapView, { PROVIDER_GOOGLE, Marker, Region } from "react-native-maps";
 
 const App = () => {
-  const [location, setLocation] = useState<Location.LocationObject | null>(
-    null,
-  );
+  const ref = createRef<MapView>();
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   const defaultRegion = {
@@ -16,76 +14,6 @@ const App = () => {
     latitudeDelta: 0.01,
     longitudeDelta: 0.05,
   };
-
-  const MapStyle = [
-    { elementType: "geometry", stylers: [{ color: "#1a1d2a" }] },
-    { elementType: "labels.text.fill", stylers: [{ color: "#c0c0c8" }] },
-    { elementType: "labels.text.stroke", stylers: [{ color: "#1a1d2a" }] },
-
-    {
-      featureType: "administrative",
-      elementType: "geometry",
-      stylers: [{ color: "#33354a" }],
-    },
-    {
-      featureType: "administrative.locality",
-      elementType: "labels.text.fill",
-      stylers: [{ color: "#d8d8df" }],
-    },
-
-    {
-      featureType: "road",
-      elementType: "geometry",
-      stylers: [{ color: "#2c2f3e" }],
-    },
-    {
-      featureType: "road",
-      elementType: "labels.text.fill",
-      stylers: [{ color: "#b0b0b8" }],
-    },
-    {
-      featureType: "road.highway",
-      elementType: "geometry",
-      stylers: [{ color: "#404354" }],
-    },
-    {
-      featureType: "road.highway",
-      elementType: "labels.text.fill",
-      stylers: [{ color: "#e0e0e6" }],
-    },
-
-    {
-      featureType: "water",
-      elementType: "geometry",
-      stylers: [{ color: "#1f2637" }],
-    },
-    {
-      featureType: "water",
-      elementType: "labels.text.fill",
-      stylers: [{ color: "#5878a5" }],
-    },
-
-    {
-      featureType: "poi",
-      elementType: "geometry",
-      stylers: [{ color: "#252839" }],
-    },
-    {
-      featureType: "poi.business",
-      elementType: "labels.text.fill",
-      stylers: [{ color: "#ffa45c" }],
-    },
-    {
-      featureType: "poi.park",
-      elementType: "geometry",
-      stylers: [{ color: "#1d3c2c" }],
-    },
-    {
-      featureType: "poi.park",
-      elementType: "labels.text.fill",
-      stylers: [{ color: "#60d158" }],
-    },
-  ];
 
   useEffect(() => {
     let subscription: Location.LocationSubscription | null = null;
@@ -103,12 +31,19 @@ const App = () => {
         subscription = await Location.watchPositionAsync(
           {
             accuracy: Location.Accuracy.High,
-            timeInterval: 1, // Aktualizuj co 0.1 sekundę
-            distanceInterval: 1, // Aktualizuj co 1 metrów
+            timeInterval: 1,
+            distanceInterval: 1,
           },
           (newLocation) => {
-            setLocation(newLocation); // Ustaw nową lokalizację
-            console.log("New location:", newLocation.coords);
+            ref.current?.animateToRegion(
+              {
+                latitude: newLocation.coords.latitude,
+                longitude: newLocation.coords.longitude,
+                latitudeDelta: defaultRegion.latitudeDelta,
+                longitudeDelta: defaultRegion.longitudeDelta,
+              },
+              100,
+            );
           },
         );
       } catch (error) {
@@ -128,8 +63,6 @@ const App = () => {
   let text = "Waiting...";
   if (errorMsg) {
     text = errorMsg;
-  } else if (location) {
-    text = JSON.stringify(location);
   }
 
   return (
@@ -138,13 +71,17 @@ const App = () => {
         <MapView
           style={styles.map}
           initialRegion={defaultRegion}
-          showsUserLocation
-          followsUserLocation
+          showsUserLocation={true}
           provider={PROVIDER_GOOGLE}
-          zoomEnabled={true}
-          zoomControlEnabled={true}
-          scrollEnabled={true}
+          zoomEnabled={false}
+          zoomControlEnabled={false}
+          scrollEnabled={false}
           customMapStyle={MapStyle}
+          showsCompass={false}
+          showsMyLocationButton={false}
+          minZoomLevel={18}
+          maxZoomLevel={20}
+          ref={ref}
         >
           <Marker
             coordinate={{
@@ -198,3 +135,74 @@ const styles = StyleSheet.create({
 });
 
 export default App;
+
+const MapStyle = [
+  { elementType: "geometry", stylers: [{ color: "#1a1d2a" }] },
+  { elementType: "labels.text.fill", stylers: [{ color: "#c0c0c8" }] },
+  { elementType: "labels.text.stroke", stylers: [{ color: "#1a1d2a" }] },
+
+  {
+    featureType: "administrative",
+    elementType: "geometry",
+    stylers: [{ color: "#33354a" }],
+  },
+  {
+    featureType: "administrative.locality",
+    elementType: "labels.text.fill",
+    stylers: [{ color: "#d8d8df" }],
+  },
+
+  {
+    featureType: "road",
+    elementType: "geometry",
+    stylers: [{ color: "#2c2f3e" }],
+  },
+
+  {
+    featureType: "road",
+    elementType: "labels.text.fill",
+    stylers: [{ color: "#b0b0b8" }],
+  },
+  {
+    featureType: "road.highway",
+    elementType: "geometry",
+    stylers: [{ color: "#404354" }],
+  },
+  {
+    featureType: "road.highway",
+    elementType: "labels.text.fill",
+    stylers: [{ color: "#e0e0e6" }],
+  },
+
+  {
+    featureType: "water",
+    elementType: "geometry",
+    stylers: [{ color: "#1f2637" }],
+  },
+  {
+    featureType: "water",
+    elementType: "labels.text.fill",
+    stylers: [{ color: "#5878a5" }],
+  },
+
+  {
+    featureType: "poi",
+    elementType: "geometry",
+    stylers: [{ visibility: "off" }],
+  },
+  {
+    featureType: "poi.business",
+    elementType: "all",
+    stylers: [{ visibility: "off" }],
+  },
+  {
+    featureType: "poi.park",
+    elementType: "geometry",
+    stylers: [{ color: "#1d3c2c" }],
+  },
+  {
+    featureType: "poi.park",
+    elementType: "labels.text.fill",
+    stylers: [{ color: "#60d158" }],
+  },
+];
