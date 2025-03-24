@@ -2,7 +2,6 @@ import { Text } from "@/components/ui/text";
 import type React from "react";
 import { Image, ImageSourcePropType, TouchableOpacity } from "react-native";
 
-
 interface ProfileButtonProps {
   image: React.ReactNode;
   text: string;
