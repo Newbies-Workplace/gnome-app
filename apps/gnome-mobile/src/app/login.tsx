@@ -27,18 +27,6 @@ export default function SignInScreen() {
     });
   }, []);
 
-  useEffect(() => {
-    GnomesService.getGnomes()
-      .then((gnomes) => {
-        setText(gnomes[0]?.name || "");
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.error(error);
-        setLoading(false);
-      });
-  }, []);
-
   const onSignInPress = async () => {
     try {
       await GoogleSignin.hasPlayServices();
