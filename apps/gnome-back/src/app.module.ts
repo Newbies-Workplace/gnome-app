@@ -8,13 +8,14 @@ import { FriendsModule } from "./friends/friends.module";
 
 import { TeamsModule } from "./teams/teams.module";
 
+import { MinioModule } from "./minio/minio.module";
 import { ReportsModule } from "./reports/reports.module";
-
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       envFilePath: ".env",
+      isGlobal: true,
     }),
     PrismaModule,
     AuthModule,
@@ -23,6 +24,7 @@ import { ReportsModule } from "./reports/reports.module";
     TeamsModule,
     FriendsModule,
     ReportsModule,
+    MinioModule,
   ],
 })
 export class AppModule {}
