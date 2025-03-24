@@ -4,9 +4,8 @@ import { GnomesModule } from "@/gnomes/gnomes.module";
 import { UsersModule } from "@/users/users.module";
 import { Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
-import { TeamsModule } from "./teams/teams.module";
 import { FriendsModule } from "./friends/friends.module";
-
+import { TeamsModule } from "./teams/teams.module";
 
 @Module({
   imports: [

@@ -9,17 +9,17 @@ datasource db {
 }
 
 model Team {
-  id      String @id @unique @default(cuid())
-  leader  String @unique   
+  id      String           @id @unique @default(cuid())
+  leader  String           @unique
   members TeamMembership[] @relation("team")
 }
 
 model TeamMembership {
-  id      String @id @unique @default(cuid())
-  team    Team  @relation("team", fields: [teamId], references: [id])
-  teamId  String
-  user    User   @relation("member", fields: [userId], references: [id])
-  userId  String
+  id     String @id @unique @default(cuid())
+  team   Team   @relation("team", fields: [teamId], references: [id])
+  teamId String
+  user   User   @relation("member", fields: [userId], references: [id])
+  userId String
 }
 
 model User {
@@ -33,11 +33,7 @@ model User {
   sentRequest       Friendship[]       @relation("sender")
   receivedRequest   Friendship[]       @relation("receiver")
   memberships       TeamMembership[]   @relation("member")
-
 }
-
-
-
 
 model Gnome {
   id           String             @id @unique @default(uuid())
