@@ -5,6 +5,23 @@ CREATE TYPE "UserRole" AS ENUM ('ADMIN', 'USER', 'MODERATOR');
 CREATE TYPE "Status" AS ENUM ('ACTIVE', 'PENDING');
 
 -- CreateTable
+CREATE TABLE "Team" (
+    "id" TEXT NOT NULL,
+    "leader" TEXT NOT NULL,
+
+    CONSTRAINT "Team_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "TeamMembership" (
+    "id" TEXT NOT NULL,
+    "teamId" TEXT NOT NULL,
+    "userId" TEXT NOT NULL,
+
+    CONSTRAINT "TeamMembership_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
 CREATE TABLE "User" (
     "id" TEXT NOT NULL,
     "googleId" TEXT NOT NULL,
@@ -25,8 +42,22 @@ CREATE TABLE "Gnome" (
     "location" TEXT NOT NULL,
     "creationDate" TIMESTAMP(3) NOT NULL,
     "description" TEXT NOT NULL,
+    "exists" BOOLEAN NOT NULL DEFAULT true,
 
     CONSTRAINT "Gnome_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Report" (
+    "id" TEXT NOT NULL,
+    "gnomeName" TEXT NOT NULL,
+    "pictureUrl" TEXT NOT NULL,
+    "latitude" DOUBLE PRECISION NOT NULL,
+    "longitude" DOUBLE PRECISION NOT NULL,
+    "location" TEXT NOT NULL,
+    "reportAuthor" TEXT NOT NULL,
+
+    CONSTRAINT "Report_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -50,16 +81,34 @@ CREATE TABLE "Friendship" (
 );
 
 -- CreateIndex
+CREATE UNIQUE INDEX "Team_id_key" ON "Team"("id");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Team_leader_key" ON "Team"("leader");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "TeamMembership_id_key" ON "TeamMembership"("id");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "User_id_key" ON "User"("id");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Gnome_id_key" ON "Gnome"("id");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "Report_id_key" ON "Report"("id");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "GnomeInteraction_id_key" ON "GnomeInteraction"("id");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Friendship_id_key" ON "Friendship"("id");
+
+-- AddForeignKey
+ALTER TABLE "TeamMembership" ADD CONSTRAINT "TeamMembership_teamId_fkey" FOREIGN KEY ("teamId") REFERENCES "Team"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "TeamMembership" ADD CONSTRAINT "TeamMembership_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "GnomeInteraction" ADD CONSTRAINT "GnomeInteraction_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

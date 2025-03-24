@@ -1,9 +1,9 @@
 import { Text } from "@/components/ui/text";
-import React from "react";
+import type React from "react";
 import { Image, ImageSourcePropType, TouchableOpacity } from "react-native";
 
 interface ProfileButtonProps {
-  image: ImageSourcePropType | string;
+  image: React.ReactNode;
   text: string;
   onClick: () => void;
 }
@@ -18,7 +18,7 @@ export const ProfileButton: React.FC<ProfileButtonProps> = ({
       onPress={onClick}
       className="rounded-lg bg-background mb-3 flex flex-row justify-start items-center px-3 py-2"
     >
-      <Icon />
+      {Icon}
       <Text className="text-white text-lg font-bold ml-3">{text}</Text>
     </TouchableOpacity>
   );
@@ -34,7 +34,7 @@ export const ProfileButtonLogout: React.FC<ProfileButtonProps> = ({
       onPress={onClick}
       className="rounded-lg bg-background mb-3 flex flex-row justify-start items-center px-3 py-2"
     >
-      <Icon />
+      {Icon}
       <Text className="text-primary text-lg font-bold ml-3">{text}</Text>
     </TouchableOpacity>
   );

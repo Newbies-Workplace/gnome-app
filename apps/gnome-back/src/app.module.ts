@@ -10,7 +10,6 @@ import { TeamsModule } from "./teams/teams.module";
 
 import { ReportsModule } from "./reports/reports.module";
 
-
 @Module({
   imports: [
     ConfigModule.forRoot({
