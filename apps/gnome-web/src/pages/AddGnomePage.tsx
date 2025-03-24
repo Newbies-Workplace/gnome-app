@@ -7,8 +7,8 @@ export const AddGnomePage = () => {
     <div>
       <Navbar />
       <h1>Dodawanie krasnala</h1>
-      <LinkButton to="/admin" label="Powrót" />
-      <LinkButton to="/admin/infoadd" label="Dodaj" />
+      <LinkButton to="/admin" label="Powrót" px="15" py="100" />
+      <LinkButton to="/admin/infoadd" label="Dodaj" px="15" py="100" />
       <BgElement roundedBr="15px" roundedBl="15px" />
     </div>
   );
