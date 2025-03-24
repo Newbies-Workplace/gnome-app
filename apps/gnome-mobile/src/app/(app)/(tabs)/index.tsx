@@ -10,6 +10,37 @@ import React, { createRef, useEffect, useState } from "react";
 import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
 import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
 
+const HeaderControls = ({ user, replace }) => {
+  return (
+    <View className="absolute top-5 left-2 right-2 p-2 flex-row justify-between items-center">
+      <View className="flex flex-row items-center gap-5 w-full justify-between">
+        <TouchableOpacity onPress={() => replace("/profile")}>
+          <Avatar alt="Your avatar" className="w-16 h-16">
+            <AvatarImage source={{ uri: user.pictureUrl }} />
+            <AvatarFallback>
+              <Text className="text-md">You</Text>
+            </AvatarFallback>
+          </Avatar>
+        </TouchableOpacity>
+        <View className="flex-row">
+          <TouchableOpacity
+            onPress={() => replace("/addfriend")}
+            className="w-16 h-16 bg-background rounded-full flex justify-center items-center mr-2"
+          >
+            <FriendIcon width={20} height={20} fill="#000" />
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => replace("/teams")}
+            className="w-16 h-16 bg-background rounded-full flex justify-center items-center"
+          >
+            <TeamIcon width={20} height={20} fill="#000" />
+          </TouchableOpacity>
+        </View>
+      </View>
+    </View>
+  );
+};
+
 const MapScreen = () => {
   const { user } = useAuthStore();
   const navigation = useNavigation();
@@ -64,7 +95,7 @@ const MapScreen = () => {
         setErrorMsg("Error getting location");
       }
     })();
-    
+
     return () => {
       if (subscription) {
         subscription.remove();
@@ -78,14 +109,20 @@ const MapScreen = () => {
   }
 
   return (
-    <View style={{ flex: 1 }}>
+    <View className="flex-1">
       <MapView
-        style={{ flex: 1 }}
-        region={region}
+        style={styles.map}
+        initialRegion={defaultRegion}
+        showsUserLocation={true}
         provider={PROVIDER_GOOGLE}
-        zoomEnabled={true}
-        zoomControlEnabled={true}
-        scrollEnabled={true}
+        zoomEnabled={false}
+        zoomControlEnabled={false}
+        scrollEnabled={false}
+        customMapStyle={MapStyle}
+        showsCompass={false}
+        showsMyLocationButton={false}
+        minZoomLevel={18}
+        maxZoomLevel={20}
         ref={ref}
       >
         <Marker
@@ -93,7 +130,7 @@ const MapScreen = () => {
             latitude: 51.09701966184086,
             longitude: 17.035843526079727,
           }}
-          title="Krasnal Podróznik"
+          title="Krasnal Podróżnik"
           description="Krasnal wysiadający z autobusu"
         >
           <Image
@@ -120,7 +157,7 @@ const MapScreen = () => {
             longitude: 17.057842134960516,
           }}
           title="Krasnal Mędruś"
-          description="Ponąć studenci przychodzą do niego po porady"
+          description="Ponoć studenci przychodzą do niego po porady"
         >
           <Image
             source={require("@/assets/images/krasnal.png")}
@@ -129,52 +166,7 @@ const MapScreen = () => {
         </Marker>
       </MapView>
 
-      <View
-        style={{
-          position: "absolute",
-          top: 20,
-          left: 10,
-          right: 10,
-          backgroundColor: "transparent",
-          padding: 10,
-          flexDirection: "row",
-          justifyContent: "space-between",
-          alignItems: "center",
-        }}
-      >
-        <View className="flex flex-row items-center gap-5 mb-5 rounded-lg w-full justify-between">
-          <TouchableOpacity
-            onPress={() => {
-              replace("/profile");
-            }}
-          >
-            <Avatar alt="Your avatar" className="w-16 h-16">
-              <AvatarImage source={{ uri: user.pictureUrl }} />
-              <AvatarFallback>
-                <Text className="text-md">You</Text>
-              </AvatarFallback>
-            </Avatar>
-          </TouchableOpacity>
-          <View style={{ flexDirection: "row" }}>
-            <TouchableOpacity
-              onPress={() => {
-                replace("/addfriend");
-              }}
-              className="w-16 h-16 bg-background rounded-full justify-center items-center mr-2"
-            >
-              <FriendIcon width={20} height={20} fill="#000" />
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => {
-                replace("/teams");
-              }}
-              className="w-16 h-16 bg-background rounded-full justify-center items-center"
-            >
-              <TeamIcon width={20} height={20} fill="#000" />
-            </TouchableOpacity>
-          </View>
-        </View>
-      </View>
+      <HeaderControls user={user} replace={replace} />
     </View>
   );
 };
@@ -269,4 +261,3 @@ const MapStyle = [
 ];
 
 export default MapScreen;
-
