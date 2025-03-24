@@ -4,22 +4,79 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Text } from "@/components/ui/text";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useNavigation } from "@react-navigation/native";
+import * as Location from "expo-location";
 import { useRouter } from "expo-router";
-import React from "react";
-import { Image, TouchableOpacity, View } from "react-native";
+import React, { createRef, useEffect, useState } from "react";
+import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
 import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
 
 const MapScreen = () => {
   const { user } = useAuthStore();
   const navigation = useNavigation();
   const { replace } = useRouter();
+  const ref = createRef<MapView>();
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   const region = {
     latitude: 51.1079,
     longitude: 17.0385,
     latitudeDelta: 0.01,
-    longitudeDelta: 0.03,
+    longitudeDelta: 0.05,
   };
+
+  const defaultRegion = {
+    latitude: 51.1079,
+    longitude: 17.0385,
+    latitudeDelta: 0.01,
+    longitudeDelta: 0.05,
+  };
+
+  useEffect(() => {
+    let subscription: Location.LocationSubscription | null = null;
+
+    (async () => {
+      try {
+        const { status } = await Location.requestForegroundPermissionsAsync();
+        if (status !== "granted") {
+          setErrorMsg("Permission to access location was denied");
+          return;
+        }
+
+        subscription = await Location.watchPositionAsync(
+          {
+            accuracy: Location.Accuracy.High,
+            timeInterval: 1,
+            distanceInterval: 1,
+          },
+          (newLocation) => {
+            ref.current?.animateToRegion(
+              {
+                latitude: newLocation.coords.latitude,
+                longitude: newLocation.coords.longitude,
+                latitudeDelta: defaultRegion.latitudeDelta,
+                longitudeDelta: defaultRegion.longitudeDelta,
+              },
+              100,
+            );
+          },
+        );
+      } catch (error) {
+        console.error("Error getting location:", error);
+        setErrorMsg("Error getting location");
+      }
+    })();
+
+    return () => {
+      if (subscription) {
+        subscription.remove();
+      }
+    };
+  }, []);
+
+  let text = "Waiting...";
+  if (errorMsg) {
+    text = errorMsg;
+  }
 
   return (
     <View style={{ flex: 1 }}>
@@ -30,6 +87,7 @@ const MapScreen = () => {
         zoomEnabled={true}
         zoomControlEnabled={true}
         scrollEnabled={true}
+        ref={ref}
       >
         <Marker
           coordinate={{
@@ -71,6 +129,7 @@ const MapScreen = () => {
           />
         </Marker>
       </MapView>
+
       <View
         style={{
           position: "absolute",
@@ -120,5 +179,94 @@ const MapScreen = () => {
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: "flex-end",
+  },
+  mapContainer: {
+    flex: 1,
+  },
+  map: {
+    ...StyleSheet.absoluteFillObject,
+  },
+  text: {
+    fontSize: 16,
+    textAlign: "center",
+    marginTop: 20,
+  },
+});
+
+const MapStyle = [
+  { elementType: "geometry", stylers: [{ color: "#1a1d2a" }] },
+  { elementType: "labels.text.fill", stylers: [{ color: "#c0c0c8" }] },
+  { elementType: "labels.text.stroke", stylers: [{ color: "#1a1d2a" }] },
+
+  {
+    featureType: "administrative",
+    elementType: "geometry",
+    stylers: [{ color: "#33354a" }],
+  },
+  {
+    featureType: "administrative.locality",
+    elementType: "labels.text.fill",
+    stylers: [{ color: "#d8d8df" }],
+  },
+
+  {
+    featureType: "road",
+    elementType: "geometry",
+    stylers: [{ color: "#2c2f3e" }],
+  },
+
+  {
+    featureType: "road",
+    elementType: "labels.text.fill",
+    stylers: [{ color: "#b0b0b8" }],
+  },
+  {
+    featureType: "road.highway",
+    elementType: "geometry",
+    stylers: [{ color: "#404354" }],
+  },
+  {
+    featureType: "road.highway",
+    elementType: "labels.text.fill",
+    stylers: [{ color: "#e0e0e6" }],
+  },
+
+  {
+    featureType: "water",
+    elementType: "geometry",
+    stylers: [{ color: "#1f2637" }],
+  },
+  {
+    featureType: "water",
+    elementType: "labels.text.fill",
+    stylers: [{ color: "#5878a5" }],
+  },
+
+  {
+    featureType: "poi",
+    elementType: "geometry",
+    stylers: [{ visibility: "off" }],
+  },
+  {
+    featureType: "poi.business",
+    elementType: "all",
+    stylers: [{ visibility: "off" }],
+  },
+  {
+    featureType: "poi.park",
+    elementType: "geometry",
+    stylers: [{ color: "#1d3c2c" }],
+  },
+  {
+    featureType: "poi.park",
+    elementType: "labels.text.fill",
+    stylers: [{ color: "#60d158" }],
+  },
+];
 
 export default MapScreen;
