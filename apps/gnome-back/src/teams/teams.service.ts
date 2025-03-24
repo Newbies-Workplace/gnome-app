@@ -1,4 +1,4 @@
-import { PrismaService } from "@/db/prisma.service";
+import type { PrismaService } from "@/db/prisma.service";
 import { Injectable } from "@nestjs/common";
 import { TeamMembership } from "@prisma/client";
 @Injectable()
@@ -6,7 +6,7 @@ export class TeamsService {
   constructor(private readonly prisma: PrismaService) {}
 
   async getTeam(id: string) {
-    return this.prisma.teams.findUnique({
+    return this.prisma.team.findUnique({
       include: {
         members: {
           select: {
@@ -21,7 +21,7 @@ export class TeamsService {
   }
 
   async getTeamWithMemberId(userId: string) {
-    return this.prisma.teams.findMany({
+    return this.prisma.team.findMany({
       include: {
         members: {
           select: {
@@ -39,7 +39,7 @@ export class TeamsService {
     });
   }
   async createTeam(leaderId: string, memberIds: string[]) {
-    return this.prisma.teams.create({
+    return this.prisma.team.create({
       data: {
         leader: leaderId, // Lider zespołu, ustawiany jako pierwszy członek
         members: {
@@ -58,7 +58,7 @@ export class TeamsService {
       this.prisma.teamMembership.deleteMany({
         where: { teamId },
       }),
-      this.prisma.teams.delete({
+      this.prisma.team.delete({
         where: { id: teamId },
       }),
     ]);
@@ -86,7 +86,7 @@ export class TeamsService {
 
       // Aktualizujemy lidera, jeśli podano nowy
       if (newLeaderId) {
-        await prisma.teams.update({
+        await prisma.team.update({
           where: { id: teamId },
           data: { leader: newLeaderId },
         });
