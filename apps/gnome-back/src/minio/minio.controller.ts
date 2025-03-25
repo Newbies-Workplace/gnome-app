@@ -1,4 +1,4 @@
-import type { JWTUser } from "@/auth/jwt/JWTUser";
+import { JWTUser } from "@/auth/jwt/JWTUser";
 import { JwtGuard } from "@/auth/jwt/jwt.guard";
 import { User } from "@/auth/jwt/jwtuser.decorator";
 import {
@@ -13,7 +13,7 @@ import {
   UseInterceptors,
 } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
-import type { MinioService } from "./minio.service";
+import { MinioService } from "./minio.service";
 
 @Controller("minio")
 export class MinioController {

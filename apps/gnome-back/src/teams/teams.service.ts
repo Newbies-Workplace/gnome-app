@@ -1,4 +1,4 @@
-import type { PrismaService } from "@/db/prisma.service";
+import { PrismaService } from "@/db/prisma.service";
 import { Injectable } from "@nestjs/common";
 import { TeamMembership } from "@prisma/client";
 @Injectable()
