@@ -1,35 +1,35 @@
 import { Button } from "@/components/ui/button";
-import { axiosInstance } from "@/lib/api/axios";
-import React, { useState } from "react";
+import { useGnomeStore } from "@/store/useGnomeStore";
+import React, { useEffect } from "react";
 import { FlatList, Text, View } from "react-native";
 
-const Collection = () => {
-  const [krasnale, setKrasnale] = useState([]);
+const GnomeList = () => {
+  const { gnomes, fetchGnomes, loading, error } = useGnomeStore();
 
-  const fetchKrasnale = async () => {
-    try {
-      const response = await axiosInstance.get("/api/rest/v1/gnomes");
-      setKrasnale(response.data);
-    } catch (error) {
-      console.error("Błąd pobierania danych:", error);
-    }
-  };
+  if (loading) return <Text>Ładowanie...</Text>;
+  if (error) return <Text>Błąd: {error}</Text>;
 
   return (
     <View className="p-5">
       <Text className="text-2xl font-bold mb-4">Kolekcja</Text>
-      <Button onPress={fetchKrasnale}>
+      <Button
+        onPress={() => {
+          fetchGnomes();
+        }}
+      >
         <Text className="text-white">Pobierz Krasnale</Text>
       </Button>
       <FlatList
-        data={krasnale}
-        keyExtractor={(item) => item.id.toString()}
+        data={gnomes}
+        keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
-          <Text className="text-lg py-1">{item.name}</Text>
+          <Text style={{ fontSize: 18, marginTop: 5, color: "black" }}>
+            {item.name}
+          </Text>
         )}
       />
     </View>
   );
 };
 
-export default Collection;
+export default GnomeList;
