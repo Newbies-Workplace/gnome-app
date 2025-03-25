@@ -48,7 +48,6 @@ const MapScreen = () => {
   const ref = createRef<MapView>();
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
-
   const defaultRegion = {
     latitude: 51.1079,
     longitude: 17.0385,
