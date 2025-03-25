@@ -32,7 +32,7 @@ export class MinioController {
     @UploadedFile(
       new ParseFilePipe({
         validators: [
-          new MaxFileSizeValidator({ maxSize: 10000 }),
+          new MaxFileSizeValidator({ maxSize: 10000000 }),
           new FileTypeValidator({ fileType: "image/jpeg" }),
         ],
       }),

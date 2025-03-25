@@ -8,7 +8,8 @@ import { FriendsModule } from "./friends/friends.module";
 
 import { TeamsModule } from "./teams/teams.module";
 
-import { ThrottlerModule } from "@nestjs/throttler";
+import { APP_GUARD } from "@nestjs/core";
+import { ThrottlerGuard, ThrottlerModule } from "@nestjs/throttler";
 import { MinioModule } from "./minio/minio.module";
 import { ReportsModule } from "./reports/reports.module";
 
@@ -29,11 +30,17 @@ import { ReportsModule } from "./reports/reports.module";
     ThrottlerModule.forRoot({
       throttlers: [
         {
-          ttl: 100000,
+          ttl: 10000,
           limit: 5,
         },
       ],
     }),
+  ],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
+    },
   ],
 })
 export class AppModule {}
