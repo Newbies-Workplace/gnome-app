@@ -26,7 +26,7 @@ export class MinioService {
   }
 
   async uploadFile(file: Express.Multer.File, userId: string, gnomeId: string) {
-    const fileName = `${userId}.${gnomeId}`;
+    const fileName = `${userId}.${gnomeId}.jpg`;
     await this.minioClient.putObject(
       this.bucketName,
       fileName,
