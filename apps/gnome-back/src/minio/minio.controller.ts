@@ -1,19 +1,25 @@
-import { JWTUser } from "@/auth/jwt/JWTUser";
+import type { JWTUser } from "@/auth/jwt/JWTUser";
 import { JwtGuard } from "@/auth/jwt/jwt.guard";
 import { User } from "@/auth/jwt/jwtuser.decorator";
 import {
+  ArgumentMetadata,
   Body,
   Controller,
   Delete,
+  FileTypeValidator,
   Get,
+  Injectable,
+  MaxFileSizeValidator,
   Param,
+  ParseFilePipe,
+  PipeTransform,
   Post,
   UploadedFile,
   UseGuards,
   UseInterceptors,
 } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
-import { MinioService } from "./minio.service";
+import type { MinioService } from "./minio.service";
 
 @Controller("minio")
 export class MinioController {
@@ -23,7 +29,15 @@ export class MinioController {
   @UseInterceptors(FileInterceptor("file"))
   @UseGuards(JwtGuard)
   async uploadFile(
-    @UploadedFile() file: Express.Multer.File,
+    @UploadedFile(
+      new ParseFilePipe({
+        validators: [
+          new MaxFileSizeValidator({ maxSize: 10000 }),
+          new FileTypeValidator({ fileType: "image/jpeg" }),
+        ],
+      }),
+    )
+    file: Express.Multer.File,
     @User() user: JWTUser,
     @Body() body: { gnomeId: string },
   ) {
