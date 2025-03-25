@@ -3,12 +3,15 @@ import TeamIcon from "@/assets/icons/team.svg";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Text } from "@/components/ui/text";
 import { useAuthStore } from "@/store/useAuthStore";
+import { useGnomeStore } from "@/store/useGnomeStore";
 import { useNavigation } from "@react-navigation/native";
 import * as Location from "expo-location";
 import { useRouter } from "expo-router";
 import React, { createRef, useEffect, useState } from "react";
 import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
 import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
+
+const GnomePin = require("@/assets/images/krasnal.png");
 
 const HeaderControls = ({ user, replace }) => {
   return (
@@ -45,6 +48,7 @@ const MapScreen = () => {
   const { user } = useAuthStore();
   const navigation = useNavigation();
   const { replace } = useRouter();
+  const { gnomes, fetchGnomes } = useGnomeStore();
   const ref = createRef<MapView>();
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
@@ -118,19 +122,19 @@ const MapScreen = () => {
         maxZoomLevel={20}
         ref={ref}
       >
-        <Marker
-          coordinate={{
-            latitude: 51.09701966184086,
-            longitude: 17.035843526079727,
-          }}
-          title="Krasnal Podróżnik"
-          description="Krasnal wysiadający z autobusu"
-        >
-          <Image
-            source={require("@/assets/images/krasnal.png")}
-            style={{ width: 30, height: 30 }}
-          />
-        </Marker>
+        {gnomes.map((gnome) => (
+          <Marker
+            key={gnome.id}
+            coordinate={{
+              latitude: gnome.latitude,
+              longitude: gnome.longitude,
+            }}
+            title={gnome.name}
+            description={gnome.description}
+          >
+            <Image source={GnomePin} style={{ width: 30, height: 30 }} />
+          </Marker>
+        ))}
         <Marker
           coordinate={{
             latitude: 51.10894028789954,
