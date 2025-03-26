@@ -38,14 +38,12 @@ export class MinioController {
       }),
     )
     file: Express.Multer.File,
-    @User() user: JWTUser,
-    @Body() body: { gnomeId: string },
+    @Body() body: { fileNameString: string },
   ) {
     await this.minioService.createBucketIfNotExists();
     const fileName = await this.minioService.uploadFile(
       file,
-      user.id,
-      body.gnomeId,
+      body.fileNameString,
     );
     return fileName;
   }
