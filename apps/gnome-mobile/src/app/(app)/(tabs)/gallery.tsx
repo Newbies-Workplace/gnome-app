@@ -30,6 +30,12 @@ const Gallery = () => {
             replace("/settings");
           }}
         />
+        <Button
+          title="interaction"
+          onPress={() => {
+            replace("/interaction");
+          }}
+        />
       </View>
     </View>
   );
