@@ -1,9 +1,41 @@
 import { Button } from "@/components/ui/button";
 import { axiosInstance } from "@/lib/api/axios";
-import React, { useState } from "react";
-import { FlatList, Text, View } from "react-native";
+import { useNavigation, useRouter } from "expo-router";
+import React, { useEffect, useState } from "react";
+import { FlatList, Text, TouchableOpacity, View } from "react-native";
+
+//Import ikon
+import BackIcon from "@/assets/icons/arrow-left.svg";
 
 const Collection = () => {
+  //Header
+  const navigation = useNavigation();
+  const router = useRouter();
+  useEffect(() => {
+    navigation.setOptions({
+      headerLeft: () => (
+        <TouchableOpacity className="p-5" onPress={() => router.back()}>
+          <BackIcon className="w-7 h-7"></BackIcon>
+        </TouchableOpacity>
+      ),
+
+      headerTitle: () => (
+        <View className="text-center">
+          <Text className="text-white text-2xl font-bold text-center tracking-wide">
+            Twoja kolekcja
+          </Text>
+        </View>
+      ),
+
+      headerTitleAlign: "center",
+      headerStyle: {
+        backgroundColor: "#131413",
+      },
+      headerShadowVisible: false,
+      headerShown: true,
+    });
+  }, [navigation, router]);
+
   const [krasnale, setKrasnale] = useState([]);
 
   const fetchKrasnale = async () => {

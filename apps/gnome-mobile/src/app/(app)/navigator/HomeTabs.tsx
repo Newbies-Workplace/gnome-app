@@ -4,7 +4,7 @@ import { StyleSheet, Text, View } from "react-native";
 import Collection from "../(tabs)/collection";
 import Friends from "../(tabs)/friends";
 import Image from "../(tabs)/gallery";
-import Home from "../(tabs)/index";
+import MapScreen from "../(tabs)/index";
 
 //Ikony do tabsów
 import NavFriendsIcon from "@/assets/icons/NavFriends.svg";
@@ -29,7 +29,7 @@ const HomeTabs = () => {
     >
       <Tab.Screen
         name="Główna"
-        component={Home}
+        component={MapScreen}
         options={{
           headerShown: false,
           tabBarIcon: ({ color, size = 25, focused }) => (

@@ -1,7 +1,8 @@
 import ArrowLeft from "@/assets/icons/arrow-left.svg";
+import BackIcon from "@/assets/icons/arrow-left.svg";
 import SearchIcon from "@/assets/icons/search.svg";
 import { Text } from "@/components/ui/text";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { useRouter } from "expo-router";
 import React, { useState, useEffect } from "react";
 import {
@@ -14,6 +15,36 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 
 const FriendsList = ({ friends }) => {
+  const navigation = useNavigation();
+  const router = useRouter();
+
+  // const handleBackPress = () =>{
+  //   if(navigation.canGoBack()){
+  //     navigation.goBack();
+  //   } else {
+  //     navigation.navigate("gallery");
+  //   }
+  // };
+
+  //Header
+  useEffect(() => {
+    navigation.setOptions({
+      headerLeft: () => (
+        <TouchableOpacity className="p-5" onPress={() => router.back()}>
+          <BackIcon className="w-7 h-7"></BackIcon>
+        </TouchableOpacity>
+      ),
+      headerTitle: () => (
+        <Text className="text-white text-2xl text-center font-bold tracking-wide">
+          Dodaj znajomego
+        </Text>
+      ),
+      headerTitleAlign: "center",
+      headerShadowVisible: false,
+      headerShown: true,
+    });
+  }, [navigation, router]);
+
   return (
     <FlatList
       data={friends}
@@ -42,7 +73,7 @@ const FriendsList = ({ friends }) => {
 
 export default function AddFriend() {
   const navigation = useNavigation();
-  const { push } = useRouter();
+  const router = useRouter();
   const [searchQuery, setSearchQuery] = useState("");
   const [friends, setFriends] = useState([
     { id: "1", name: "EdwardJajko", avatar: "https://i.pravatar.cc/150?img=2" },
@@ -51,23 +82,25 @@ export default function AddFriend() {
   useEffect(() => {
     navigation.setOptions({
       headerLeft: () => (
-        <TouchableOpacity className="p-5" onPress={() => push("/friends")}>
+        <TouchableOpacity className="p-5" onPress={() => router.back()}>
           <ArrowLeft className="w-7 h-7" />
         </TouchableOpacity>
       ),
-      headerTitle: "",
-      headerStyle: { backgroundColor: "#1E201E" },
+      headerTitle: () => (
+        <Text className="text-white font-bold text-2xl text-center tracking-wide">
+          Dodaj znajomego
+        </Text>
+      ),
+      headerTitleAlign: "center",
+      headerStyle: { backgroundColor: "#131413" },
       headerShadowVisible: false,
     });
-  }, [navigation, push]);
+  }, [navigation, router]);
 
   return (
     <SafeAreaView className="flex-1 bg-background px-6 pt-6">
       <View className="flex flex-row items-center justify-between">
         <View className="w-10" />
-      </View>
-      <View className="items-center">
-        <Text className="text-white text-xl font-bold">Dodaj znajomego</Text>
       </View>
       <View className="mt-6 flex flex-row items-center bg-background rounded-full px-4 py-3 mb-6 border border-red-500">
         <SearchIcon width={20} height={20} className="text-gray-400" />

@@ -1,6 +1,10 @@
+import { useNavigation, useRouter } from "expo-router";
 import React, { useEffect, useRef, useState } from "react";
 import { Image, Text, TouchableOpacity, View } from "react-native";
 import { Camera, useCameraDevices } from "react-native-vision-camera";
+
+//Import ikon
+import BackIcon from "@/assets/icons/arrow-left.svg";
 
 const CameraScreen = () => {
   const devices = useCameraDevices();
@@ -8,6 +12,33 @@ const CameraScreen = () => {
   const cameraRef = useRef<Camera>(null);
   const [hasPermission, setHasPermission] = useState(false);
   const [flashMode, setFlashMode] = useState("off");
+
+  //Header
+  const navigation = useNavigation();
+  const router = useRouter();
+
+  useEffect(() => {
+    navigation.setOptions({
+      headerLeft: () => (
+        <TouchableOpacity className="p-5" onPress={() => router.back()}>
+          <BackIcon className="w-7 h-7"></BackIcon>
+        </TouchableOpacity>
+      ),
+      headerTitle: () => (
+        <View className="text-center">
+          <Text className="text-white text-lg font-bold text-center tracking-wide">
+            Znalazłeś krasnala?{"\n"}Zrób mu zdjęcie!
+          </Text>
+        </View>
+      ),
+      headerTitleAlign: "center",
+      headerStyle: {
+        backgroundColor: "#131413",
+      },
+      headerShadowVisible: false,
+      headerShown: true,
+    });
+  });
 
   useEffect(() => {
     console.log("Available Devices:", devices);
@@ -45,10 +76,6 @@ const CameraScreen = () => {
 
   return (
     <View className="flex-1 justify-center items-center bg-background relative">
-      <Text className="absolute top-10 text-white text-l font-bold text-center">
-        Znalazłeś krasnala?{"\n"}Zrób mu zdjęcie!
-      </Text>
-
       <View className="w-[90%] h-[80%] rounded-2xl border-4 border-red-500 overflow-hidden bg-black flex justify-center items-center">
         {device && hasPermission ? (
           <Camera

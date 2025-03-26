@@ -1,11 +1,12 @@
 import { useAuthStore } from "@/store/useAuthStore";
-import { useRouter } from "expo-router";
+import { useNavigation, useRouter } from "expo-router";
+import { navigate } from "expo-router/build/global-state/routing";
 import React from "react";
 import { Button, Text, View } from "react-native";
 
 const Gallery = () => {
   const { logout } = useAuthStore();
-  const { replace } = useRouter();
+  const router = useRouter();
 
   return (
     <View className="flex-1 justify-center items-center p-4">
@@ -15,19 +16,13 @@ const Gallery = () => {
         <Button
           title="Profile"
           onPress={() => {
-            replace("/profile");
+            router.push("/profile");
           }}
         />
         <Button
           title="Camera"
           onPress={() => {
-            replace("/camera");
-          }}
-        />
-        <Button
-          title="Settings"
-          onPress={() => {
-            replace("/settings");
+            router.push("/camera");
           }}
         />
       </View>

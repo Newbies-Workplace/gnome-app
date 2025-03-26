@@ -26,7 +26,7 @@ import ShareIcon from "@/assets/icons/share-right.svg";
 export default function ProfileScreen() {
   const { logout, user } = useAuthStore();
   const navigation = useNavigation();
-  const { replace } = useRouter();
+  const router = useRouter();
 
   const handleLogout = () => {
     Alert.alert("Wylogowanie", "Czy na pewno chcesz się wylogować?", [
@@ -39,7 +39,7 @@ export default function ProfileScreen() {
   useEffect(() => {
     navigation.setOptions({
       headerLeft: () => (
-        <TouchableOpacity className="p-5" onPress={() => navigation.goBack()}>
+        <TouchableOpacity className="p-5" onPress={() => router.back()}>
           <BackIcon className="w-7 h-7" />
         </TouchableOpacity>
       ),
@@ -48,9 +48,15 @@ export default function ProfileScreen() {
           <ShareIcon className="w-7 h-7" />
         </TouchableOpacity>
       ),
-      headerStyle: { backgroundColor: "#1E1E1E" },
+      headerTitle: "",
+      headerStyle: {
+        backgroundColor: "#131413",
+        marginBottom: 30,
+      },
+      headerShadowVisible: false,
+      headerShown: true,
     });
-  }, [navigation]);
+  }, [navigation, router]);
 
   // udostepnianie
   const handleShare = async () => {
@@ -96,24 +102,24 @@ export default function ProfileScreen() {
         <ProfileButton
           text="Znajomi"
           image={<FriendsIcon />}
-          onClick={() => replace("/friends")}
+          onClick={() => router.navigate("/friends")}
         />
         <ProfileButton
           text="Osiągnięcia"
           image={<AchievementsIcon />}
-          onClick={() => replace("/achievements")}
+          onClick={() => router.push("/achievements")}
         />
         <ProfileButton
           text="Zadania"
           image={<QuestsIcon />}
-          onClick={() => replace("/quests")}
+          onClick={() => router.push("/quests")}
         />
         {/* Ostatnio odkryte */}
         <View className="mb-4">
           <ProfileButton
             text="Ostatnio odkryte"
             image={<LastSeenIcon />}
-            onClick={() => replace("/collection")}
+            onClick={() => router.replace("/(app)/(tabs)/collection")}
           />
           {/* Trzy zdjęcia z polami tekstowymi */}
           <View>
@@ -121,17 +127,17 @@ export default function ProfileScreen() {
               <GnomeCard
                 image={require("@/assets/images/placeholder.png")}
                 text="?"
-                onClick={() => replace("/collection")}
+                onClick={() => router.replace("/collection")}
               />
               <GnomeCard
                 image={require("@/assets/images/placeholder.png")}
                 text="?"
-                onClick={() => replace("/collection")}
+                onClick={() => router.replace("/collection")}
               />
               <GnomeCard
                 image={require("@/assets/images/placeholder.png")}
                 text="?"
-                onClick={() => replace("/collection")}
+                onClick={() => router.replace("/collection")}
               />
             </View>
           </View>
@@ -141,7 +147,7 @@ export default function ProfileScreen() {
         <ProfileButton
           text="Ustawienia"
           image={<SettingsIcon />}
-          onClick={() => replace("/settings")}
+          onClick={() => router.push("/settings")}
         />
 
         {/* Wylogowanie */}
