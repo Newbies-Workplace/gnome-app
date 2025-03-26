@@ -3,12 +3,15 @@ import TeamIcon from "@/assets/icons/team.svg";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Text } from "@/components/ui/text";
 import { useAuthStore } from "@/store/useAuthStore";
+import { useGnomeStore } from "@/store/useGnomeStore";
 import { useNavigation } from "@react-navigation/native";
 import * as Location from "expo-location";
 import { useRouter } from "expo-router";
-import React, { createRef, useEffect, useState } from "react";
+import React, { createRef, useEffect, useRef, useState } from "react";
 import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
 import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
+
+const GnomePin = require("@/assets/images/krasnal.png");
 
 const HeaderControls = ({ user, replace }) => {
   return (
@@ -45,7 +48,8 @@ const MapScreen = () => {
   const { user } = useAuthStore();
   const navigation = useNavigation();
   const { replace } = useRouter();
-  const ref = createRef<MapView>();
+  const { gnomes, fetchGnomes } = useGnomeStore();
+  const ref = useRef<MapView>(null);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   const defaultRegion = {
@@ -54,6 +58,10 @@ const MapScreen = () => {
     latitudeDelta: 0.01,
     longitudeDelta: 0.05,
   };
+
+  useEffect(() => {
+    fetchGnomes();
+  }, []);
 
   useEffect(() => {
     let subscription: Location.LocationSubscription | null = null;
@@ -72,15 +80,13 @@ const MapScreen = () => {
             distanceInterval: 1,
           },
           (newLocation) => {
-            ref.current?.animateToRegion(
-              {
+            ref.current?.animateCamera({
+              center: {
                 latitude: newLocation.coords.latitude,
                 longitude: newLocation.coords.longitude,
-                latitudeDelta: defaultRegion.latitudeDelta,
-                longitudeDelta: defaultRegion.longitudeDelta,
               },
-              100,
-            );
+              pitch: 25,
+            });
           },
         );
       } catch (error) {
@@ -108,55 +114,30 @@ const MapScreen = () => {
         initialRegion={defaultRegion}
         showsUserLocation={true}
         provider={PROVIDER_GOOGLE}
-        zoomEnabled={false}
+        zoomEnabled={true}
         zoomControlEnabled={false}
         scrollEnabled={false}
         customMapStyle={MapStyle}
         showsCompass={false}
         showsMyLocationButton={false}
+        rotateEnabled={true}
         minZoomLevel={18}
         maxZoomLevel={20}
         ref={ref}
       >
-        <Marker
-          coordinate={{
-            latitude: 51.09701966184086,
-            longitude: 17.035843526079727,
-          }}
-          title="Krasnal Podróżnik"
-          description="Krasnal wysiadający z autobusu"
-        >
-          <Image
-            source={require("@/assets/images/krasnal.png")}
-            style={{ width: 30, height: 30 }}
-          />
-        </Marker>
-        <Marker
-          coordinate={{
-            latitude: 51.10894028789954,
-            longitude: 17.03288804137201,
-          }}
-          title="Krasnale Syzyfki"
-          description="Ciągle pchają ten nieszczęsny kamień"
-        >
-          <Image
-            source={require("@/assets/images/krasnal.png")}
-            style={{ width: 30, height: 30 }}
-          />
-        </Marker>
-        <Marker
-          coordinate={{
-            latitude: 51.10947379220885,
-            longitude: 17.057842134960516,
-          }}
-          title="Krasnal Mędruś"
-          description="Ponoć studenci przychodzą do niego po porady"
-        >
-          <Image
-            source={require("@/assets/images/krasnal.png")}
-            style={{ width: 30, height: 30 }}
-          />
-        </Marker>
+        {gnomes.map((gnome) => (
+          <Marker
+            key={gnome.id}
+            coordinate={{
+              latitude: gnome.latitude,
+              longitude: gnome.longitude,
+            }}
+            title={gnome.name}
+            description={gnome.description}
+          >
+            <Image source={GnomePin} style={{ width: 30, height: 30 }} />
+          </Marker>
+        ))}
       </MapView>
 
       <HeaderControls user={user} replace={replace} />
