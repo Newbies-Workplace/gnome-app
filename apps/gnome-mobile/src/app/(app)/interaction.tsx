@@ -1,6 +1,7 @@
+import DraggableGnome from "@/components/ui/DraggableGnome";
 import * as Location from "expo-location";
 import React, { useState, useEffect } from "react";
-import { Dimensions, Text, View } from "react-native";
+import { Alert, Dimensions, Text, View } from "react-native";
 import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
 
 const App = () => {
@@ -40,7 +41,7 @@ const App = () => {
         subscription = await Location.watchPositionAsync(
           {
             accuracy: Location.Accuracy.High,
-            timeInterval: 100, // update every 100ms
+            timeInterval: 20,
             distanceInterval: 1,
           },
           (newLocation) => {
@@ -93,7 +94,7 @@ const App = () => {
       } else {
         setReachedMarker(false);
       }
-    }, 15); // update every 50ms
+    }, 15);
 
     return () => clearInterval(intervalId);
   }, [userLocation, marker]);
@@ -136,46 +137,29 @@ const App = () => {
           />
           <Marker
             coordinate={userLocation}
-            title="User                                                     Location"
+            title="User  Location"
             description="This is your location"
           />
         </MapView>
       </View>
       <View className="flex-1">
         {showDistanceTracker && (
-          <View
-            style={{
-              position: "absolute",
-              top: 0,
-              left: Dimensions.get("window").width * 0.15,
-              right: Dimensions.get("window").width * 0.15,
-              height: 40,
-              justifyContent: "center",
-              alignItems: "center",
-              backgroundColor: "rgba(0, 0, 0, 0.5)",
-              padding: 10,
-            }}
-          >
-            <Text style={{ fontSize: 18, color: "white" }}>{distance}m</Text>
+          <View className="justify-center items-center bg-background border rounded-xl p-2">
+            <Text className="text-lg text-white text-bold font-Afacad">
+              Najbliższy krasnal znajduje{" "}
+            </Text>
+            <Text className="text-lg text-white text-bold font-Afacad">
+              się{" "}
+              <Text className="text-lg text-primary text-bold font-Afacad">
+                {distance}m
+              </Text>{" "}
+              od ciebie
+            </Text>
           </View>
         )}
         {reachedMarker && (
-          <View
-            style={{
-              position: "absolute",
-              top: 50,
-              left: Dimensions.get("window").width * 0.15,
-              right: Dimensions.get("window").width * 0.15,
-              height: 40,
-              justifyContent: "center",
-              alignItems: "center",
-              backgroundColor: "rgba(0, 0, 0, 0.5)",
-              padding: 10,
-            }}
-          >
-            <Text style={{ fontSize: 18, color: "white" }}>
-              You have reached the marker!
-            </Text>
+          <View>
+            <DraggableGnome onUnlock={() => Alert.alert("Gnome Unlocked!")} />
           </View>
         )}
       </View>
