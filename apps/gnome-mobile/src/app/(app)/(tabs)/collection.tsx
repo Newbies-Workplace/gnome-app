@@ -1,10 +1,13 @@
 import { GnomeCard } from "@/components/ui/GnomeCard";
 import { useGnomeStore } from "@/store/useGnomeStore";
+import { useNavigation } from "@react-navigation/native";
+import { useRouter } from "expo-router";
 import React, { useEffect } from "react";
-import { Text, View } from "react-native";
+import { FlatList, Text, View } from "react-native";
 
 const GnomeList = () => {
   const { gnomes, fetchGnomes, loading, error } = useGnomeStore();
+  const { replace } = useRouter();
 
   useEffect(() => {
     fetchGnomes();
@@ -14,18 +17,22 @@ const GnomeList = () => {
   if (error) return <Text>Błąd: {error}</Text>;
 
   return (
-    <View className="p-5 bg-background min-h-screen">
-      <Text className="text-2xl font-bold mb-4 color-white">Kolekcja</Text>
-      <View className="flex flex-row gap-4 mt-4 justify-center">
-        {gnomes.map((item) => (
-          <View key={item.id} className="w-1/3 p-1">
+    <View className="p-5 bg-background">
+      <Text className="text-2xl font-bold mb-4 text-white">Kolekcja</Text>
+      <FlatList
+        data={gnomes}
+        keyExtractor={(item) => item.id.toString()}
+        numColumns={3}
+        renderItem={({ item }) => (
+          <View className="w-1/3">
             <GnomeCard
-              image={require("@/assets/images/placeholder.png")}
+              image={require("@/assets/images/placeholder.png")} // później zdjecia z bazy ;D
               text={item.name}
+              onClick={() => replace("/gnome_detail")}
             />
           </View>
-        ))}
-      </View>
+        )}
+      />
     </View>
   );
 };
