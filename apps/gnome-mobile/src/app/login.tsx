@@ -5,7 +5,6 @@ import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import {
-  ActivityIndicator,
   Alert,
   Image,
   Text,
@@ -27,18 +26,6 @@ export default function SignInScreen() {
     });
   }, []);
 
-  useEffect(() => {
-    GnomesService.getGnomes()
-      .then((gnomes) => {
-        setText(gnomes[0]?.name || "");
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.error(error);
-        setLoading(false);
-      });
-  }, []);
-
   const onSignInPress = async () => {
     try {
       await GoogleSignin.hasPlayServices();
@@ -58,10 +45,6 @@ export default function SignInScreen() {
       );
     }
   };
-
-  if (loading) {
-    return <ActivityIndicator size={"large"} color="#ffffff" />;
-  }
 
   return (
     <SafeAreaView className="flex-1 justify-end">
