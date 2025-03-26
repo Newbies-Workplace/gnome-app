@@ -72,6 +72,8 @@ export class GnomesController {
     return this.gnomeService.createGnome(createGnomeDto);
   }
 
+  // Tworzenie interakcji usera z gnomem
+
   @Post("interaction")
   @UseInterceptors(FileInterceptor("file"))
   @UseGuards(JwtGuard)
