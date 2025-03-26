@@ -32,6 +32,31 @@ export class GnomesController {
   getInteractionCount(@Param("id") gnomeId: string) {
     return this.gnomeService.getInteractionCount(gnomeId);
   }
+  // KRYSTIAN zmieniasz geta na posta i dodajesz uploadFile oks.
+  // @Post("image")
+  // @UseInterceptors(FileInterceptor("file"))
+  // @UseGuards(JwtGuard)
+  // async uploadFile(
+  //   @UploadedFile(
+  //     new ParseFilePipe({
+  //       validators: [
+  //         new MaxFileSizeValidator({ maxSize: 10_000_000 }), // 10MB
+  //         new FileTypeValidator({ fileType: "image/jpeg" }),
+  //       ],
+  //     }),
+  //   )
+  //   file: Express.Multer.File,
+  //   @User() user: JWTUser,
+  //   @Body() body: { gnomeId: string },
+  // ) {
+  //   await this.minioService.createBucketIfNotExists();
+  //   const fileName = await this.minioService.uploadFile(
+  //     file,
+  //     user.id,
+  //     body.gnomeId,
+  //   );
+  //   return fileName;
+  // }
 
   // Wyświetlanie swojej interakcji z gnomem
 
