@@ -1,13 +1,36 @@
 import { JWTUser } from "@/auth/jwt/JWTUser";
 import { JwtGuard } from "@/auth/jwt/jwt.guard";
 import { User } from "@/auth/jwt/jwtuser.decorator";
-import { Body, Controller, Get, Param, Post, UseGuards } from "@nestjs/common";
+import { MinioService } from "@/minio/minio.service";
+import {
+  Body,
+  Controller,
+  Delete,
+  FileTypeValidator,
+  Get,
+  MaxFileSizeValidator,
+  Param,
+  ParseFilePipe,
+  Post,
+  Req,
+  UploadedFile,
+  UseGuards,
+  UseInterceptors,
+} from "@nestjs/common";
+import { FileInterceptor } from "@nestjs/platform-express";
+import { Express } from "express";
+import { Request } from "express";
+import { Multer } from "multer";
 import { CreateGnomeRequest } from "./dto/gnomeCreate.dto";
+import { CreateInteractionRequest } from "./dto/interactionCreate";
 import { GnomesService } from "./gnomes.service";
 
 @Controller("gnomes")
 export class GnomesController {
-  constructor(private readonly gnomeService: GnomesService) {}
+  constructor(
+    private readonly gnomeService: GnomesService,
+    private readonly minioService: MinioService,
+  ) {}
 
   // Pobieranie wszystkich gnomów
 
@@ -32,38 +55,13 @@ export class GnomesController {
   getInteractionCount(@Param("id") gnomeId: string) {
     return this.gnomeService.getInteractionCount(gnomeId);
   }
-  // KRYSTIAN zmieniasz geta na posta i dodajesz uploadFile oks.
-  // @Post("image")
-  // @UseInterceptors(FileInterceptor("file"))
-  // @UseGuards(JwtGuard)
-  // async uploadFile(
-  //   @UploadedFile(
-  //     new ParseFilePipe({
-  //       validators: [
-  //         new MaxFileSizeValidator({ maxSize: 10_000_000 }), // 10MB
-  //         new FileTypeValidator({ fileType: "image/jpeg" }),
-  //       ],
-  //     }),
-  //   )
-  //   file: Express.Multer.File,
-  //   @User() user: JWTUser,
-  //   @Body() body: { gnomeId: string },
-  // ) {
-  //   await this.minioService.createBucketIfNotExists();
-  //   const fileName = await this.minioService.uploadFile(
-  //     file,
-  //     user.id,
-  //     body.gnomeId,
-  //   );
-  //   return fileName;
-  // }
 
   // Wyświetlanie swojej interakcji z gnomem
 
   @Get("@me")
   @UseGuards(JwtGuard)
-  async getMyGnomes(@User() user: JWTUser) {
-    return this.gnomeService.getMyGnomes(user.id);
+  async getMyGnomesInteractions(@User() user: JWTUser) {
+    return this.gnomeService.getMyGnomesInteractions(user.id);
   }
 
   // Tworzenie nowego gnoma
@@ -72,5 +70,53 @@ export class GnomesController {
   @UseGuards(JwtGuard)
   async createGnome(@Body() createGnomeDto: CreateGnomeRequest) {
     return this.gnomeService.createGnome(createGnomeDto);
+  }
+
+  @Post("interaction")
+  @UseInterceptors(FileInterceptor("file"))
+  // @UseGuards(JwtGuard)
+  async uploadFile(
+    @UploadedFile(
+      new ParseFilePipe({
+        validators: [
+          new MaxFileSizeValidator({ maxSize: 10_000_000 }), // 10MB
+          new FileTypeValidator({ fileType: "image/jpeg" }),
+        ],
+      }),
+    )
+    file: Express.Multer.File,
+    @Body() body: CreateInteractionRequest,
+    @Req() req: Request,
+  ) {
+    const user = req.user as { id: string };
+
+    await this.minioService.createBucketIfNotExists();
+
+    const fileName = `${user.id}-${Date.now()}.jpg`;
+
+    await this.minioService.uploadFile(file, fileName);
+
+    const fileUrl = await this.minioService.getFileUrl(fileName);
+
+    const interaction = await this.gnomeService.createInteraction({
+      userId: user.id,
+      interactionDate: body.interactionDate,
+      gnomeId: body.gnomeId,
+      userPicture: fileUrl,
+    });
+
+    return interaction;
+  }
+
+  @Get("image/:fileName")
+  async getFileUrl(@Param("fileName") fileName: string) {
+    const fileUrl = await this.minioService.getFileUrl(fileName);
+    return fileUrl;
+  }
+
+  @Delete("image/:fileName")
+  async deleteFile(@Param("fileName") fileName: string) {
+    await this.minioService.deleteFile(fileName);
+    return fileName;
   }
 }
