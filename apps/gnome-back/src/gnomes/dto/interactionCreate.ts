@@ -2,9 +2,9 @@ import { Type } from "class-transformer";
 import { IsDate, IsNotEmpty, IsNumber, IsString } from "class-validator";
 
 export class CreateInteractionRequest {
-  @IsString()
-  @IsNotEmpty()
-  userId: string;
+  // @IsString()
+  // @IsNotEmpty()
+  // userId: string;
 
   @IsDate()
   @Type(() => Date)
@@ -14,7 +14,7 @@ export class CreateInteractionRequest {
   @IsNotEmpty()
   gnomeId: string;
 
-  @IsString()
-  @IsNotEmpty()
-  userPicture: string;
+  // @IsString()
+  // @IsNotEmpty()
+  // userPicture: string;
 }

@@ -66,7 +66,7 @@ export class GnomesController {
 
   // Tworzenie nowego gnoma
 
-  @Post()
+  @Post("")
   @UseGuards(JwtGuard)
   async createGnome(@Body() createGnomeDto: CreateGnomeRequest) {
     return this.gnomeService.createGnome(createGnomeDto);
@@ -74,7 +74,7 @@ export class GnomesController {
 
   @Post("interaction")
   @UseInterceptors(FileInterceptor("file"))
-  // @UseGuards(JwtGuard)
+  @UseGuards(JwtGuard)
   async uploadFile(
     @UploadedFile(
       new ParseFilePipe({
@@ -98,12 +98,12 @@ export class GnomesController {
 
     const fileUrl = await this.minioService.getFileUrl(fileName);
 
-    const interaction = await this.gnomeService.createInteraction({
-      userId: user.id,
-      interactionDate: body.interactionDate,
-      gnomeId: body.gnomeId,
-      userPicture: fileUrl,
-    });
+    const interaction = await this.gnomeService.createInteraction(
+      user.id,
+      body.interactionDate,
+      body.gnomeId,
+      fileUrl,
+    );
 
     return interaction;
   }

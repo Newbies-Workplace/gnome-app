@@ -50,10 +50,18 @@ export class GnomesService {
     });
   }
 
-  async createInteraction(createInteractionDto: CreateInteractionRequest) {
+  async createInteraction(
+    userId: string,
+    interactionDate: Date,
+    gnomeId: string,
+    userPicture: string,
+  ) {
     return this.prismaService.gnomeInteraction.create({
       data: {
-        ...createInteractionDto,
+        userId,
+        interactionDate,
+        gnomeId,
+        userPicture,
       },
     });
   }
