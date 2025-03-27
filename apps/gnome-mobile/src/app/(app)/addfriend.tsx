@@ -17,15 +17,6 @@ import { SafeAreaView } from "react-native-safe-area-context";
 const FriendsList = ({ friends }) => {
   const navigation = useNavigation();
   const router = useRouter();
-
-  // const handleBackPress = () =>{
-  //   if(navigation.canGoBack()){
-  //     navigation.goBack();
-  //   } else {
-  //     navigation.navigate("gallery");
-  //   }
-  // };
-
   //Header
   useEffect(() => {
     navigation.setOptions({
