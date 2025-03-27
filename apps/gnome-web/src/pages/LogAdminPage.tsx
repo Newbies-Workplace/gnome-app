@@ -1,20 +1,8 @@
-import { type User, signInWithPopup } from "firebase/auth";
-import { href } from "react-router";
 import { LinkButton } from "../components/LinkButton";
 import Navbar from "../components/Navbar";
 import { BgElement } from "../components/bg_element";
-import { auth, provider } from "../firebaseConfig";
 
 export const LogAdminPage = () => {
-  const handleGoogleLogin = async (): Promise<void> => {
-    try {
-      const result = await signInWithPopup(auth, provider);
-      const user: User = result.user; // Dzięki TS masz typy na użytkownika
-      href("/admin");
-    } catch (error) {
-      console.error("Błąd logowania:", error);
-    }
-  };
   return (
     <div className="justify-center items-center flex flex-col">
       <Navbar />
@@ -41,7 +29,7 @@ export const LogAdminPage = () => {
         </div>
         <br />
         <div className="flex flex-row gap-25">
-          <a onClick={handleGoogleLogin} className="cursor-pointer">
+          <a href="" className="cursor-pointer">
             <img
               src='https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_"G"_logo.svg'
               alt="Google"

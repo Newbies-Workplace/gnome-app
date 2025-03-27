@@ -10,6 +10,12 @@ type LinkButtonProps = {
   fWeight?: string;
   width?: string;
   height?: string;
+  text?: string;
+  rounded?: string;
+  justify?: string;
+  items?: string;
+  padding?: string;
+  margin?: string;
 };
 
 export const LinkButton: React.FC<LinkButtonProps> = ({
@@ -20,8 +26,12 @@ export const LinkButton: React.FC<LinkButtonProps> = ({
   color = "#1E201E", // Default background color
   textColor = "#757A75", // Default text color
   fWeight = "normal",
-  width = "w-40",
-  height = "h-12",
+  width = "w-60",
+  height = "h-40",
+  text = "20px",
+  rounded = "25px",
+  justify = "center",
+  items = "center",
 }) => {
   return (
     <div>
@@ -34,8 +44,12 @@ export const LinkButton: React.FC<LinkButtonProps> = ({
             fontWeight: fWeight,
             width: width,
             height: height,
+            fontSize: text,
+            borderRadius: rounded,
+            justifyContent: justify,
+            alignItems: items,
           }}
-          className="rounded-full border-none cursor-pointer m-2 w-40 h-12 flex items-center justify-center inline-flex"
+          className={`order-none cursor-pointer m-2 flex nline-flex`}
         >
           {label}
         </button>
