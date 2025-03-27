@@ -11,31 +11,37 @@ const DistanceTracker = ({
   showDistanceTracker,
 }: DistanceTrackerProps) => {
   const { width } = useWindowDimensions();
-  const trackWidth = width * 0.6;
+  const viewWidth = width * 0.6;
 
   return (
-    <View className="flex-1 justify-start items-start">
+    <View className="flex-1">
       {showDistanceTracker && (
-        <View className="flex-row items-center">
-          <Image
-            source={require("@/assets/images/krasnal.png")}
-            className="mt-10 ml-2"
-          />
+        <>
           <View
-            className={`w-[${trackWidth}px] ml-4 bg-background border rounded-xl p-2 justify-center self-end mb-6`}
+            className="absolute bg-background border rounded-xl p-4 bottom-2 left-2/3"
+            style={{
+              width: viewWidth,
+              transform: [{ translateX: -viewWidth / 2 }],
+            }}
           >
-            <Text className="text-lg text-white font-bold font-Afacad">
+            <Text className="text-lg text-white font-bold">
               Najbliższy krasnal znajduje{" "}
             </Text>
-            <Text className="text-lg text-white font-bold font-Afacad">
+            <Text className="text-lg text-white font-bold">
               się{" "}
-              <Text className="text-lg text-primary font-bold font-Afacad">
+              <Text className="text-lg text-primary font-bold">
                 {distance}m
               </Text>{" "}
               od ciebie
             </Text>
           </View>
-        </View>
+          <View className="absolute left-6 bottom-[-35px]">
+            <Image
+              source={require("@/assets/images/krasnal.png")}
+              className="w-24 h-24" // 100x100 image
+            />
+          </View>
+        </>
       )}
     </View>
   );
