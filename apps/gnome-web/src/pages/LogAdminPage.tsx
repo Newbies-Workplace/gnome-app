@@ -71,17 +71,7 @@ export const LogAdminPage = () => {
         </div>
         <br />
         <div className="absolute bottom-20">
-          <LinkButton
-            to="/admin"
-            label="Zaloguj"
-            px="40"
-            py="20"
-            width="300px"
-            height="50px"
-            color="#D6484A"
-            textColor="#fff"
-            fWeight="Bold"
-          />
+          <LinkButton to="/admin" label="Zaloguj" />
         </div>
       </div>
     </div>
