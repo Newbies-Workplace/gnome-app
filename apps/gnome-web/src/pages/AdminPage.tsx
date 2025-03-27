@@ -14,23 +14,17 @@ export const AdminPage = () => {
         <LinkButton
           to="/admin/addgnome"
           label="Dodaj krasnala do bazy"
-          width="200px"
-          height="150px"
-          text="20px"
+          className="w-[250px] h-[150px] text-center text-[21px] text-[#757A75] bg-[#1E201E] rounded-[15px] flex items-center justify-center"
         />
         <LinkButton
           to="/admin/lostinfo"
           label="Sprawdź ostatnie zgłoszenia"
-          width="200px"
-          height="150px"
-          text="20px"
+          className="w-[250px] h-[150px] text-center text-[21px] text-[#757A75] bg-[#1E201E] rounded-[15px] flex items-center justify-center"
         />
         <LinkButton
           to="/admin/logadmin"
           label="Wyloguj się"
-          width="200px"
-          height="150px"
-          text="20px"
+          className="w-[250px] h-[150px] text-center text-[21px] text-[#757A75] bg-[#1E201E] rounded-[15px] flex items-center justify-center"
         />
       </div>
     </div>

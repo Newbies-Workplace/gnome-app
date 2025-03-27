@@ -14,26 +14,17 @@ export const LostInfoPage = () => {
         <LinkButton
           to="/admin/lostinfo/currentlost"
           label="Od ostatniego logowania zgłoszono 3 krasnali"
-          width="85%"
-          height="50px"
-          rounded="15px"
-          justify="left"
+          className="W-[500px] H-[150px] text-[20px] text-[#757A75] bg-[#1E201E] rounded-[15px]"
         />
         <LinkButton
           to="/admin/lostinfo/currentlost"
           label="Od ostatniego logowania zgłoszono 3 krasnali"
-          width="85%"
-          height="50px"
-          rounded="15px"
-          justify="left"
+          className="W-[500px] H-[150px] text-[20px] text-[#757A75] bg-[#1E201E] rounded-[15px]"
         />
         <LinkButton
           to="/admin/lostinfo/currentlost"
           label="Od ostatniego logowania zgłoszono 3 krasnali"
-          width="85%"
-          height="50px"
-          rounded="15px"
-          justify="left"
+          className="W-[500px] H-[150px] text-[20px] text-[#757A75] bg-[#1E201E] rounded-[15px]"
         />
       </div>
     </div>

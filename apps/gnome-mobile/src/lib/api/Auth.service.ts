@@ -1,5 +1,5 @@
 import { axiosInstance } from "@/lib/api/axios";
-import { UserResponse } from "@repo/shared/responses";
+import type { UserResponse } from "@repo/shared/responses";
 
 const loginWithGoogle = async (googleIdToken: string) => {
   return axiosInstance

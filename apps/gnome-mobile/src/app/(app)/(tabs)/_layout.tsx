@@ -1,9 +1,10 @@
-import { Text } from "@/components/ui/text";
+import HomeTabs from "@/app/(app)/navigator/HomeTabs";
 import { useAuthStore } from "@/store/useAuthStore";
 import { Redirect } from "expo-router";
 import { Tabs } from "expo-router";
+import { StatusBar } from "expo-status-bar";
 import React from "react";
-import { View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 
 export default function AppLayout() {
   const { accessToken, isLoading } = useAuthStore();
@@ -17,26 +18,9 @@ export default function AppLayout() {
   }
 
   return (
-    <Tabs
-      screenOptions={({ route }) => ({
-        tabBarStyle: {
-          backgroundColor: "gray",
-        },
-        tabBarLabelStyle: {
-          color: "white",
-        },
-        tabBarIconStyle: {
-          color: "white",
-        },
-        tabBarActiveTintColor: "red",
-        tabBarInactiveTintColor: "white",
-        tabBarPressColor: "red",
-      })}
-    >
-      <Tabs.Screen name="index" options={{ title: "Główna" }} />
-      <Tabs.Screen name="collection" options={{ title: "Kolekcja" }} />
-      <Tabs.Screen name="friends" options={{ headerShown: false }} />
-      <Tabs.Screen name="gallery" options={{ title: "Galeria" }} />
-    </Tabs>
+    <>
+      <HomeTabs />
+      <StatusBar style="auto" />
+    </>
   );
 }

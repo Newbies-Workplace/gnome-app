@@ -18,8 +18,7 @@ export const AddGnomePage = () => {
         <LinkButton
           to="/admin/infoadd"
           label="Dodaj"
-          width="200px"
-          height="50px"
+          className="w-[200px] h-[50px] text-center text-[21px] text-[#757A75] bg-[#1E201E] rounded-[15px] flex items-center justify-center"
         />
       </div>
     </div>
