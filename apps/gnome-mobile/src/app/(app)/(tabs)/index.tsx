@@ -7,7 +7,8 @@ import { useGnomeStore } from "@/store/useGnomeStore";
 import { useNavigation } from "@react-navigation/native";
 import * as Location from "expo-location";
 import { useRouter } from "expo-router";
-import React, { createRef, useEffect, useRef, useState } from "react";
+import { getDistance } from "geolib";
+import React, { useEffect, useRef, useState } from "react";
 import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
 import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
 
@@ -51,6 +52,11 @@ const MapScreen = () => {
   const { gnomes, fetchGnomes } = useGnomeStore();
   const ref = useRef<MapView>(null);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [userLocation, setUserLocation] = useState<{
+    latitude: number;
+    longitude: number;
+  } | null>(null);
+  const maxDistance = 400; // Maksymalna odległość w metrach
 
   const defaultRegion = {
     latitude: 51.1079,
@@ -80,11 +86,11 @@ const MapScreen = () => {
             distanceInterval: 1,
           },
           (newLocation) => {
+            const { latitude, longitude } = newLocation.coords;
+            setUserLocation({ latitude, longitude });
+
             ref.current?.animateCamera({
-              center: {
-                latitude: newLocation.coords.latitude,
-                longitude: newLocation.coords.longitude,
-              },
+              center: { latitude, longitude },
             });
           },
         );
@@ -101,10 +107,19 @@ const MapScreen = () => {
     };
   }, []);
 
-  let text = "Waiting...";
-  if (errorMsg) {
-    text = errorMsg;
-  }
+  // filtrowanie
+  const filteredGnomes = userLocation
+    ? gnomes.filter((gnome) => {
+        const distance = getDistance(
+          {
+            latitude: userLocation.latitude,
+            longitude: userLocation.longitude,
+          },
+          { latitude: gnome.latitude, longitude: gnome.longitude },
+        );
+        return distance <= maxDistance;
+      })
+    : gnomes;
 
   return (
     <View className="flex-1">
@@ -120,11 +135,11 @@ const MapScreen = () => {
         showsCompass={false}
         showsMyLocationButton={false}
         rotateEnabled={true}
-        minZoomLevel={18}
+        minZoomLevel={17}
         maxZoomLevel={20}
         ref={ref}
       >
-        {gnomes.map((gnome) => (
+        {filteredGnomes.map((gnome) => (
           <Marker
             key={gnome.id}
             coordinate={{
@@ -232,5 +247,4 @@ const MapStyle = [
     stylers: [{ color: "#60d158" }],
   },
 ];
-
 export default MapScreen;
