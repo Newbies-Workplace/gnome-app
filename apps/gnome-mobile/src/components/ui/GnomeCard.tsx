@@ -4,7 +4,6 @@ import {
   type ImageSourcePropType,
   Text,
   TouchableOpacity,
-  View,
 } from "react-native";
 
 interface GnomeCardProps {
@@ -19,9 +18,9 @@ export const GnomeCard: React.FC<GnomeCardProps> = ({
   onClick,
 }) => {
   return (
-    <TouchableOpacity onPress={onClick} className="items-center p-5">
-      <Image className="w-30 h-30 rounded-md mb-2" source={image} />
-      <Text className="w-20 h-7 text-center rounded px-1 text-white font-bold">
+    <TouchableOpacity onPress={onClick} className="items-center p-5 flex-1">
+      <Image className="rounded-md mb-2 aspect-[4/5]" source={image} />
+      <Text className="flex-1 text-center rounded px-1 text-white font-bold w-full text-nowrap">
         {text}
       </Text>
     </TouchableOpacity>
