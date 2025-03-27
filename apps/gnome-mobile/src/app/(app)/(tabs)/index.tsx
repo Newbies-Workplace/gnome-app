@@ -49,10 +49,26 @@ const MapScreen = () => {
   const { replace } = useRouter();
   const ref = createRef<MapView>();
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
-  const [marker, setMarker] = useState({
-    latitude: 51.10894028789954,
-    longitude: 17.03288804137201,
-  });
+  const [markers, setMarkers] = useState([
+    {
+      latitude: 51.09701966184086,
+      longitude: 17.035843526079727,
+      title: "Krasnal Podróżnik",
+      description: "Krasnal wysiadający z autobusu",
+    },
+    {
+      latitude: 51.10894028789954,
+      longitude: 17.03288804137201,
+      title: "Krasnale Syzyfki",
+      description: "Ciągle pchają ten nieszczęsny kamień",
+    },
+    {
+      latitude: 51.10947379220885,
+      longitude: 17.057842134960516,
+      title: "Krasnal Mędruś",
+      description: "Ponoć studenci przychodzą do niego po porady",
+    },
+  ]);
   const [userLocation, setUserLocation] = useState({
     latitude: 51.1079,
     longitude: 17.0385,
@@ -115,46 +131,52 @@ const MapScreen = () => {
 
   useEffect(() => {
     const intervalId = setInterval(() => {
-      const distance = calculateDistance(
+      const calculateDistance = (lat1, lon1, markers) => {
+        const R = 6371; // km
+        const distances = markers.map((marker) => {
+          const dLat = ((marker.latitude - lat1) * Math.PI) / 180;
+          const dLon = ((marker.longitude - lon1) * Math.PI) / 180;
+          const lat1Rad = (lat1 * Math.PI) / 180;
+          const lat2Rad = (marker.latitude * Math.PI) / 180;
+
+          const a =
+            Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+            Math.sin(dLon / 2) *
+              Math.sin(dLon / 2) *
+              Math.cos(lat1Rad) *
+              Math.cos(lat2Rad);
+          const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+          const d = R * c;
+
+          return d;
+        });
+
+        return distances;
+      };
+
+      const distances = calculateDistance(
         userLocation.latitude,
         userLocation.longitude,
-        marker.latitude,
-        marker.longitude,
+        markers,
       );
-      setDistance(Math.round(distance * 1000));
-      if (distance * 1000 <= 50 && distance * 1000 > 5) {
+      const closestMarkerIndex = distances.indexOf(Math.min(...distances));
+      const closestMarkerDistance = distances[closestMarkerIndex] * 1000;
+
+      if (closestMarkerDistance <= 50 && closestMarkerDistance > 5) {
         setShowDistanceTracker(true);
       } else {
         setShowDistanceTracker(false);
       }
-      if (distance * 1000 <= 5) {
+      if (closestMarkerDistance <= 5) {
         setReachedMarker(true);
       } else {
         setReachedMarker(false);
       }
+      setDistance(Math.round(closestMarkerDistance));
     }, 15);
 
     return () => clearInterval(intervalId);
-  }, [userLocation, marker]);
-
-  const calculateDistance = (lat1, lon1, lat2, lon2) => {
-    const R = 6371; // km
-    const dLat = ((lat2 - lat1) * Math.PI) / 180;
-    const dLon = ((lon2 - lon1) * Math.PI) / 180;
-    const lat1Rad = (lat1 * Math.PI) / 180;
-    const lat2Rad = (lat2 * Math.PI) / 180;
-
-    const a =
-      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-      Math.sin(dLon / 2) *
-        Math.sin(dLon / 2) *
-        Math.cos(lat1Rad) *
-        Math.cos(lat2Rad);
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    const d = R * c;
-
-    return d;
-  };
+  }, [userLocation, markers]);
 
   return (
     <View className="flex-1">
@@ -190,59 +212,27 @@ const MapScreen = () => {
           }
         }}
       >
-        <Marker
-          coordinate={{
-            latitude: 51.09701966184086,
-            longitude: 17.035843526079727,
-          }}
-          title="Krasnal Podróżnik"
-          description="Krasnal wysiadający z autobusu"
-        >
-          <Image
-            source={require("@/assets/images/krasnal.png")}
-            style={{ width: 30, height: 30 }}
-          />
-        </Marker>
-        <Marker
-          coordinate={{
-            latitude: 51.10894028789954,
-            longitude: 17.03288804137201,
-          }}
-          title="Krasnale Syzyfki"
-          description="Ciągle pchają ten nieszczęsny kamień"
-        >
-          <Image
-            source={require("@/assets/images/krasnal.png")}
-            style={{ width: 30, height: 30 }}
-          />
-        </Marker>
-        <Marker
-          coordinate={{
-            latitude: 51.10947379220885,
-            longitude: 17.057842134960516,
-          }}
-          title="Krasnal Mędruś"
-          description="Ponoć studenci przychodzą do niego po porady"
-        >
-          <Image
-            source={require("@/assets/images/krasnal.png")}
-            style={{ width: 30, height: 30 }}
-          />
-        </Marker>
+        {markers.map((marker, index) => (
+          <Marker
+            key={index}
+            coordinate={{
+              latitude: marker.latitude,
+              longitude: marker.longitude,
+            }}
+            title={marker.title}
+            description={marker.description}
+          >
+            <Image
+              source={require("@/assets/images/krasnal.png")}
+              style={{ width: 30, height: 30 }}
+            />
+          </Marker>
+        ))}
       </MapView>
 
       <HeaderControls user={user} replace={replace} />
 
-      <View
-        style={{
-          position: "absolute",
-          bottom: 0,
-          left: 0,
-          right: 0,
-          padding: 16,
-          backgroundColor: "transparent",
-        }}
-      >
+      <View className="absolute bottom-0 left-0 right-0 p-4 bg-transparent">
         {reachedMarker ? (
           <DraggableGnome onUnlock={() => Alert.alert("Gnome Unlocked!")} />
         ) : (
