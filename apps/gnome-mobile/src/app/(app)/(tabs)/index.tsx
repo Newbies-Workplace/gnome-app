@@ -1,5 +1,7 @@
 import FriendIcon from "@/assets/icons/add-friend.svg";
 import TeamIcon from "@/assets/icons/team.svg";
+import DistanceTracker from "@/components/ui/DistanceTracker";
+import DraggableGnome from "@/components/ui/DraggableGnome";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Text } from "@/components/ui/text";
 import { useAuthStore } from "@/store/useAuthStore";
@@ -7,7 +9,7 @@ import { useNavigation } from "@react-navigation/native";
 import * as Location from "expo-location";
 import { useRouter } from "expo-router";
 import React, { createRef, useEffect, useState } from "react";
-import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
+import { Alert, Image, StyleSheet, TouchableOpacity, View } from "react-native";
 import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
 
 const HeaderControls = ({ user, replace }) => {
@@ -47,6 +49,17 @@ const MapScreen = () => {
   const { replace } = useRouter();
   const ref = createRef<MapView>();
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [marker, setMarker] = useState({
+    latitude: 51.10894028789954,
+    longitude: 17.03288804137201,
+  });
+  const [userLocation, setUserLocation] = useState({
+    latitude: 51.1079,
+    longitude: 17.0385,
+  });
+  const [distance, setDistance] = useState(0);
+  const [reachedMarker, setReachedMarker] = useState(false);
+  const [showDistanceTracker, setShowDistanceTracker] = useState(false);
 
   const defaultRegion = {
     latitude: 51.1079,
@@ -72,6 +85,10 @@ const MapScreen = () => {
             distanceInterval: 1,
           },
           (newLocation) => {
+            setUserLocation({
+              latitude: newLocation.coords.latitude,
+              longitude: newLocation.coords.longitude,
+            });
             ref.current?.animateToRegion(
               {
                 latitude: newLocation.coords.latitude,
@@ -96,10 +113,48 @@ const MapScreen = () => {
     };
   }, []);
 
-  let text = "Waiting...";
-  if (errorMsg) {
-    text = errorMsg;
-  }
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      const distance = calculateDistance(
+        userLocation.latitude,
+        userLocation.longitude,
+        marker.latitude,
+        marker.longitude,
+      );
+      setDistance(Math.round(distance * 1000));
+      if (distance * 1000 <= 50 && distance * 1000 > 5) {
+        setShowDistanceTracker(true);
+      } else {
+        setShowDistanceTracker(false);
+      }
+      if (distance * 1000 <= 5) {
+        setReachedMarker(true);
+      } else {
+        setReachedMarker(false);
+      }
+    }, 15);
+
+    return () => clearInterval(intervalId);
+  }, [userLocation, marker]);
+
+  const calculateDistance = (lat1, lon1, lat2, lon2) => {
+    const R = 6371; // km
+    const dLat = ((lat2 - lat1) * Math.PI) / 180;
+    const dLon = ((lon2 - lon1) * Math.PI) / 180;
+    const lat1Rad = (lat1 * Math.PI) / 180;
+    const lat2Rad = (lat2 * Math.PI) / 180;
+
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.sin(dLon / 2) *
+        Math.sin(dLon / 2) *
+        Math.cos(lat1Rad) *
+        Math.cos(lat2Rad);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    const d = R * c;
+
+    return d;
+  };
 
   return (
     <View className="flex-1">
@@ -107,8 +162,9 @@ const MapScreen = () => {
         style={styles.map}
         initialRegion={defaultRegion}
         showsUserLocation={true}
+        followsUserLocation={true}
         provider={PROVIDER_GOOGLE}
-        zoomEnabled={false}
+        zoomEnabled={true}
         zoomControlEnabled={false}
         scrollEnabled={false}
         customMapStyle={MapStyle}
@@ -117,6 +173,22 @@ const MapScreen = () => {
         minZoomLevel={18}
         maxZoomLevel={20}
         ref={ref}
+        onRegionChangeComplete={(region) => {
+          if (
+            region.latitude !== userLocation.latitude ||
+            region.longitude !== userLocation.longitude
+          ) {
+            ref.current?.animateToRegion(
+              {
+                latitude: userLocation.latitude,
+                longitude: userLocation.longitude,
+                latitudeDelta: defaultRegion.latitudeDelta,
+                longitudeDelta: defaultRegion.longitudeDelta,
+              },
+              100,
+            );
+          }
+        }}
       >
         <Marker
           coordinate={{
@@ -160,6 +232,26 @@ const MapScreen = () => {
       </MapView>
 
       <HeaderControls user={user} replace={replace} />
+
+      <View
+        style={{
+          position: "absolute",
+          bottom: 0,
+          left: 0,
+          right: 0,
+          padding: 16,
+          backgroundColor: "transparent",
+        }}
+      >
+        {reachedMarker ? (
+          <DraggableGnome onUnlock={() => Alert.alert("Gnome Unlocked!")} />
+        ) : (
+          <DistanceTracker
+            distance={distance}
+            showDistanceTracker={showDistanceTracker}
+          />
+        )}
+      </View>
     </View>
   );
 };

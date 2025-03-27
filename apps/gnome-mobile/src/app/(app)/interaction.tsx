@@ -1,3 +1,4 @@
+import DistanceTracker from "@/components/ui/DistanceTracker";
 import DraggableGnome from "@/components/ui/DraggableGnome";
 import * as Location from "expo-location";
 import React, { useState, useEffect } from "react";
@@ -23,8 +24,8 @@ const App = () => {
   });
 
   const [distance, setDistance] = useState(0);
-  const [reachedMarker, setReachedMarker] = useState(false); // New state variable to track if the user has reached the marker
-  const [showDistanceTracker, setShowDistanceTracker] = useState(false); // New state variable to track if the distance tracker should be shown
+  const [reachedMarker, setReachedMarker] = useState(false);
+  const [showDistanceTracker, setShowDistanceTracker] = useState(false);
 
   const ref = React.createRef<MapView>();
 
@@ -81,15 +82,13 @@ const App = () => {
         marker.latitude,
         marker.longitude,
       );
-      setDistance(Math.round(distance * 1000)); // convert to meters and round to nearest integer
+      setDistance(Math.round(distance * 1000));
       if (distance * 1000 <= 50 && distance * 1000 > 5) {
-        // Check if the user is in a 50m range from the marker
         setShowDistanceTracker(true);
       } else {
         setShowDistanceTracker(false);
       }
       if (distance * 1000 <= 5) {
-        // Check if the user has reached the marker
         setReachedMarker(true);
       } else {
         setReachedMarker(false);
@@ -119,48 +118,44 @@ const App = () => {
   };
 
   return (
-    <View className="flex-1">
-      <View className="flex-1">
-        <MapView
-          provider={PROVIDER_GOOGLE}
-          style={{ flex: 1 }}
-          showsUserLocation={true}
-          followsUserLocation={true}
-          onRegionChangeComplete={(region) => setRegion(region)}
-          initialRegion={region}
-          ref={ref}
-        >
-          <Marker
-            coordinate={marker}
-            title="Marker"
-            description="This is a marker"
+    <View style={{ flex: 1 }}>
+      <MapView
+        provider={PROVIDER_GOOGLE}
+        style={{ flex: 1 }}
+        showsUserLocation={true}
+        followsUserLocation={true}
+        onRegionChangeComplete={(region) => setRegion(region)}
+        initialRegion={region}
+        ref={ref}
+      >
+        <Marker
+          coordinate={marker}
+          title="Marker"
+          description="This is a marker"
+        />
+        <Marker
+          coordinate={userLocation}
+          title="User               Location"
+          description="This is your location"
+        />
+      </MapView>
+      <View
+        style={{
+          position: "absolute",
+          bottom: 0,
+          left: 0,
+          right: 0,
+          padding: 16,
+          backgroundColor: "transparent",
+        }}
+      >
+        {reachedMarker ? (
+          <DraggableGnome onUnlock={() => Alert.alert("Gnome Unlocked!")} />
+        ) : (
+          <DistanceTracker
+            distance={distance}
+            showDistanceTracker={showDistanceTracker}
           />
-          <Marker
-            coordinate={userLocation}
-            title="User  Location"
-            description="This is your location"
-          />
-        </MapView>
-      </View>
-      <View className="flex-1">
-        {showDistanceTracker && (
-          <View className="justify-center items-center bg-background border rounded-xl p-2">
-            <Text className="text-lg text-white text-bold font-Afacad">
-              Najbliższy krasnal znajduje{" "}
-            </Text>
-            <Text className="text-lg text-white text-bold font-Afacad">
-              się{" "}
-              <Text className="text-lg text-primary text-bold font-Afacad">
-                {distance}m
-              </Text>{" "}
-              od ciebie
-            </Text>
-          </View>
-        )}
-        {reachedMarker && (
-          <View>
-            <DraggableGnome onUnlock={() => Alert.alert("Gnome Unlocked!")} />
-          </View>
         )}
       </View>
     </View>
