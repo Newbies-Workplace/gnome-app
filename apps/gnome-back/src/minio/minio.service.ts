@@ -25,17 +25,6 @@ export class MinioService {
     }
   }
 
-  // async uploadFile(file: Express.Multer.File, fileNameString: string) {
-  //   const fileName = `${fileNameString}`;
-  //   await this.minioClient.putObject(
-  //     this.bucketName,
-  //     fileName,
-  //     file.buffer,
-  //     file.size,
-  //   );
-  //   return fileName;
-  // }
-
   async uploadFile(file: Express.Multer.File, fileNameString: string) {
     const fileName = `${fileNameString}`;
     await this.minioClient.fPutObject(this.bucketName, fileName, file.path);
