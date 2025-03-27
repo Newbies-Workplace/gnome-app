@@ -1,20 +1,15 @@
-import { GoogleLogin, GoogleOAuthProvider } from "@react-oauth/google";
-import { jwtDecode } from "jwt-decode";
+import { TokenResponse, useGoogleLogin } from "@react-oauth/google";
 import { useNavigate } from "react-router-dom";
 import { LinkButton } from "../components/LinkButton";
 import Navbar from "../components/Navbar";
 import { BgElement } from "../components/bg_element";
 
-const clientId =
-  "974120314595-pbe28v3m1aqrfhv4560pttgjt3738a4g.apps.googleusercontent.com"; // Wstaw swój Google Client ID
-
 export const LogAdminPage = () => {
   const navigate = useNavigate();
 
-  const handleSuccess = (credentialResponse: { credential?: string }) => {
-    if (credentialResponse.credential) {
-      const decoded = jwtDecode(credentialResponse.credential);
-      console.log("Zalogowano użytkownika:", decoded);
+  const handleSuccess = (credentialResponse: TokenResponse) => {
+    if (credentialResponse.access_token) {
+      console.log("Zalogowano użytkownika:", credentialResponse.access_token);
       navigate("/admin"); // Przekierowanie do /admin po zalogowaniu
     } else {
       console.error("Brak danych uwierzytelniających!");
@@ -24,6 +19,12 @@ export const LogAdminPage = () => {
   const handleFailure = () => {
     console.error("Błąd logowania!");
   };
+
+  const login = useGoogleLogin({
+    flow: "implicit",
+    onSuccess: handleSuccess,
+    onError: handleFailure,
+  });
 
   return (
     <div className="justify-center items-center flex flex-col">
@@ -51,11 +52,15 @@ export const LogAdminPage = () => {
         </div>
         <br />
         <div className="flex flex-row gap-25">
-          <GoogleOAuthProvider clientId={clientId}>
-            <div className="flex justify-center items-center">
-              <GoogleLogin onSuccess={handleSuccess} onError={handleFailure} />
-            </div>
-          </GoogleOAuthProvider>
+          <div className="flex justify-center items-center">
+            <button onClick={() => login()}>
+              <img
+                src='https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_"G"_logo.svg'
+                alt="Login by Google"
+                className="h-10 w-10 ml-2"
+              />
+            </button>
+          </div>
           <a href="">
             <img
               src="https://upload.wikimedia.org/wikipedia/commons/3/31/Apple_logo_white.svg"

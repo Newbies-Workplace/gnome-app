@@ -17,7 +17,7 @@ export const LinkButton: React.FC<LinkButtonProps> = ({
       <Link to={to}>
         <button
           className={cn(
-            `order-none cursor-pointer m-2 flex nline-flex`,
+            "rounded-full border-none cursor-pointer m-2 w-40 h-12 flex items-center justify-center inline-flex",
             className,
           )}
         >

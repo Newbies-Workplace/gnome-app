@@ -6,21 +6,16 @@ export const AddGnomePage = () => {
   return (
     <div>
       <Navbar />
-      <BgElement roundedBr="15px" roundedBl="15px" />
-      <a href="/admin">
-        <img
-          src="../src/images/Back.svg"
-          alt="wróć"
-          className="ml-[40px] mt-[10px]"
-        />
-      </a>
-      <div className=" ml-[40px] mt-[10px]">
+      <div className="flex flex-row items-center">
         <LinkButton
-          to="/admin/infoadd"
-          label="Dodaj"
-          className="w-[200px] h-[50px] text-center text-[21px] text-[#757A75] bg-[#1E201E] rounded-[15px] flex items-center justify-center"
+          to="/admin"
+          label="<"
+          className="text-[40px] -mt-5 mr-auto absolute"
         />
+        <h1 className="text-[60px] text-center mx-auto">Dodawanie krasnala</h1>
       </div>
+      <LinkButton to="/admin/infoadd" label="Dodaj" />
+      <BgElement className="rounded-b-[15px] rounded-tl-[15px]" />
     </div>
   );
 };
