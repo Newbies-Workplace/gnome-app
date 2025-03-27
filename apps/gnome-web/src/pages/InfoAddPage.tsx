@@ -9,12 +9,11 @@ const AddInfoPage: React.FC = () => {
         Dane o nowym krasnoludzie zostały <br /> wprowadzone do bazy.
       </p>
       <div className="flex justify-center">
-        <LinkButton to="/admin" label="Admin" width="200px" height="50px" />
+        <LinkButton to="/admin" label="Admin" className="w-[200px] h-[50px]" />
         <LinkButton
           to="/admin/addgnome"
           label="Dodaj kolejnego"
-          width="200px"
-          height="50px"
+          className="w-[200px] h-[50px] text-center text-[21px] text-[#757A75] bg-[#1E201E] rounded-[15px] flex items-center justify-center"
         />
       </div>
 
