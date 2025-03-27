@@ -1,5 +1,6 @@
 import { AuthService } from "@/lib/api/Auth.service";
-import { UserResponse } from "@repo/shared/responses";
+import { axiosInstance } from "@/lib/api/axios";
+import type { UserResponse } from "@repo/shared/responses";
 import { create } from "zustand/react";
 
 export interface AuthStore {
@@ -30,6 +31,7 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
   login: async (googleIdToken: string) => {
     const response = await AuthService.loginWithGoogle(googleIdToken);
 
+    axiosInstance.defaults.headers.Authorization = `Bearer ${response.access_token}`;
     set({
       accessToken: response.access_token,
       isLoading: false,

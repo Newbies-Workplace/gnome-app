@@ -1,56 +1,147 @@
-import React from "react";
-import { StyleSheet, View } from "react-native";
+import FriendIcon from "@/assets/icons/add-friend.svg";
+import TeamIcon from "@/assets/icons/team.svg";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Text } from "@/components/ui/text";
+import { useAuthStore } from "@/store/useAuthStore";
+import { useGnomeStore } from "@/store/useGnomeStore";
+import { useNavigation } from "@react-navigation/native";
+import * as Location from "expo-location";
+import { useRouter } from "expo-router";
+import React, { createRef, useEffect, useRef, useState } from "react";
+import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
 import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
 
+const GnomePin = require("@/assets/images/krasnal.png");
+
+const HeaderControls = ({ user }) => {
+  const router = useRouter();
+  return (
+    <View className="absolute top-5 left-2 right-2 p-2 flex-row justify-between items-center">
+      <View className="flex flex-row items-center gap-5 w-full justify-between">
+        <TouchableOpacity onPress={() => router.push("/profile")}>
+          <Avatar alt="Your avatar" className="w-16 h-16">
+            <AvatarImage source={{ uri: user.pictureUrl }} />
+            <AvatarFallback>
+              <Text className="text-md">You</Text>
+            </AvatarFallback>
+          </Avatar>
+        </TouchableOpacity>
+        <View className="flex-row">
+          <TouchableOpacity
+            onPress={() => router.push("/addfriend")}
+            className="w-16 h-16 bg-background rounded-full flex justify-center items-center mr-2"
+          >
+            <FriendIcon width={20} height={20} fill="#000" />
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => router.push("/teams")}
+            className="w-16 h-16 bg-background rounded-full flex justify-center items-center"
+          >
+            <TeamIcon width={20} height={20} fill="#000" />
+          </TouchableOpacity>
+        </View>
+      </View>
+    </View>
+  );
+};
+
 const MapScreen = () => {
-  const region = {
-    latitude: 51.1079, // współrzędne Wrocławia
+  const { user } = useAuthStore();
+  const navigation = useNavigation();
+  const { replace } = useRouter();
+  const { gnomes, fetchGnomes } = useGnomeStore();
+  const ref = useRef<MapView>(null);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+
+  const defaultRegion = {
+    latitude: 51.1079,
     longitude: 17.0385,
     latitudeDelta: 0.01,
-    longitudeDelta: 0.03,
+    longitudeDelta: 0.05,
   };
 
+  useEffect(() => {
+    fetchGnomes();
+  }, []);
+
+  useEffect(() => {
+    let subscription: Location.LocationSubscription | null = null;
+
+    (async () => {
+      try {
+        const { status } = await Location.requestForegroundPermissionsAsync();
+        if (status !== "granted") {
+          setErrorMsg("Permission to access location was denied");
+          return;
+        }
+        subscription = await Location.watchPositionAsync(
+          {
+            accuracy: Location.Accuracy.High,
+            timeInterval: 1,
+            distanceInterval: 1,
+          },
+          (newLocation) => {
+            ref.current?.animateCamera({
+              center: {
+                latitude: newLocation.coords.latitude,
+                longitude: newLocation.coords.longitude,
+              },
+              pitch: 25,
+            });
+          },
+        );
+      } catch (error) {
+        console.error("Error getting location:", error);
+        setErrorMsg("Error getting location");
+      }
+    })();
+
+    return () => {
+      if (subscription) {
+        subscription.remove();
+      }
+    };
+  }, []);
+
+  let text = "Waiting...";
+  if (errorMsg) {
+    text = errorMsg;
+  }
+
   return (
-    <View style={styles.container}>
-      {/* Map View */}
-      <View style={styles.mapContainer}>
-        <MapView
-          style={styles.map}
-          region={region}
-          provider={PROVIDER_GOOGLE}
-          zoomEnabled={true}
-          zoomControlEnabled={true}
-          scrollEnabled={true}
-        >
+    <View className="flex-1">
+      <MapView
+        style={styles.map}
+        initialRegion={defaultRegion}
+        showsUserLocation={true}
+        provider={PROVIDER_GOOGLE}
+        zoomEnabled={true}
+        zoomControlEnabled={false}
+        scrollEnabled={false}
+        customMapStyle={MapStyle}
+        showsCompass={false}
+        showsMyLocationButton={false}
+        rotateEnabled={true}
+        minZoomLevel={18}
+        maxZoomLevel={20}
+        ref={ref}
+      >
+        {gnomes.map((gnome) => (
           <Marker
+            key={gnome.id}
             coordinate={{
-              latitude: 51.09701966184086,
-              longitude: 17.035843526079727,
+              latitude: gnome.latitude,
+              longitude: gnome.longitude,
             }}
-            title="Krasnal Podróznik"
-            description="Krasnal wysiadający z autobusu"
-            icon={require("@/assets/images/krasnal.png")}
-          />
-          <Marker
-            coordinate={{
-              latitude: 51.10894028789954,
-              longitude: 17.03288804137201,
-            }}
-            title="Krasnale Syzyfki"
-            description="Ciągle pchają ten nieszczęsny kamień"
-            icon={require("@/assets/images/krasnal.png")}
-          />
-          <Marker
-            coordinate={{
-              latitude: 51.10947379220885,
-              longitude: 17.057842134960516,
-            }}
-            title="Krasnal Mędruś"
-            description="Ponąć studenci przychodzą do niego po porady"
-            icon={require("@/assets/images/krasnal.png")}
-          />
-        </MapView>
-      </View>
+            title={gnome.name}
+            description={gnome.description}
+          >
+            <Image source={GnomePin} style={{ width: 30, height: 30 }} />
+          </Marker>
+        ))}
+      </MapView>
+
+      <HeaderControls user={user} replace={replace} />
     </View>
   );
 };
@@ -66,6 +157,82 @@ const styles = StyleSheet.create({
   map: {
     ...StyleSheet.absoluteFillObject,
   },
+  text: {
+    fontSize: 16,
+    textAlign: "center",
+    marginTop: 20,
+  },
 });
+
+const MapStyle = [
+  { elementType: "geometry", stylers: [{ color: "#1a1d2a" }] },
+  { elementType: "labels.text.fill", stylers: [{ color: "#c0c0c8" }] },
+  { elementType: "labels.text.stroke", stylers: [{ color: "#1a1d2a" }] },
+
+  {
+    featureType: "administrative",
+    elementType: "geometry",
+    stylers: [{ color: "#33354a" }],
+  },
+  {
+    featureType: "administrative.locality",
+    elementType: "labels.text.fill",
+    stylers: [{ color: "#d8d8df" }],
+  },
+
+  {
+    featureType: "road",
+    elementType: "geometry",
+    stylers: [{ color: "#2c2f3e" }],
+  },
+
+  {
+    featureType: "road",
+    elementType: "labels.text.fill",
+    stylers: [{ color: "#b0b0b8" }],
+  },
+  {
+    featureType: "road.highway",
+    elementType: "geometry",
+    stylers: [{ color: "#404354" }],
+  },
+  {
+    featureType: "road.highway",
+    elementType: "labels.text.fill",
+    stylers: [{ color: "#e0e0e6" }],
+  },
+
+  {
+    featureType: "water",
+    elementType: "geometry",
+    stylers: [{ color: "#1f2637" }],
+  },
+  {
+    featureType: "water",
+    elementType: "labels.text.fill",
+    stylers: [{ color: "#5878a5" }],
+  },
+
+  {
+    featureType: "poi",
+    elementType: "geometry",
+    stylers: [{ visibility: "off" }],
+  },
+  {
+    featureType: "poi.business",
+    elementType: "all",
+    stylers: [{ visibility: "off" }],
+  },
+  {
+    featureType: "poi.park",
+    elementType: "geometry",
+    stylers: [{ color: "#1d3c2c" }],
+  },
+  {
+    featureType: "poi.park",
+    elementType: "labels.text.fill",
+    stylers: [{ color: "#60d158" }],
+  },
+];
 
 export default MapScreen;

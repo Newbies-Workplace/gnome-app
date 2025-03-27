@@ -51,7 +51,6 @@ export default function ProfileScreen() {
       headerTitle: "",
       headerStyle: {
         backgroundColor: "#131413",
-        marginBottom: 30,
       },
       headerShadowVisible: false,
       headerShown: true,

@@ -1,24 +1,17 @@
-import { Button } from "@/components/ui/button";
-import { axiosInstance } from "@/lib/api/axios";
-import { useNavigation, useRouter } from "expo-router";
-import React, { useEffect, useState } from "react";
-import { FlatList, Text, TouchableOpacity, View } from "react-native";
+import { GnomeCard } from "@/components/ui/GnomeCard";
+import { useGnomeStore } from "@/store/useGnomeStore";
+import { useNavigation } from "@react-navigation/native";
+import { useRouter } from "expo-router";
+import React, { useEffect } from "react";
+import { FlatList, Text, View } from "react-native";
 
-//Import ikon
-import BackIcon from "@/assets/icons/arrow-left.svg";
-
-const Collection = () => {
-  //Header
-  const navigation = useNavigation();
+const GnomeList = () => {
+  const { gnomes, fetchGnomes, loading, error } = useGnomeStore();
   const router = useRouter();
+  //Header
   useEffect(() => {
+    const navigation = useNavigation();
     navigation.setOptions({
-      headerLeft: () => (
-        <TouchableOpacity className="p-5" onPress={() => router.back()}>
-          <BackIcon className="w-7 h-7"></BackIcon>
-        </TouchableOpacity>
-      ),
-
       headerTitle: () => (
         <View className="text-center">
           <Text className="text-white text-2xl font-bold text-center tracking-wide">
@@ -26,7 +19,6 @@ const Collection = () => {
           </Text>
         </View>
       ),
-
       headerTitleAlign: "center",
       headerStyle: {
         backgroundColor: "#131413",
@@ -34,34 +26,33 @@ const Collection = () => {
       headerShadowVisible: false,
       headerShown: true,
     });
-  }, [navigation, router]);
+  });
 
-  const [krasnale, setKrasnale] = useState([]);
+  useEffect(() => {
+    fetchGnomes();
+  }, []);
 
-  const fetchKrasnale = async () => {
-    try {
-      const response = await axiosInstance.get("/api/rest/v1/gnomes");
-      setKrasnale(response.data);
-    } catch (error) {
-      console.error("Błąd pobierania danych:", error);
-    }
-  };
+  if (loading) return <Text>Ładowanie...</Text>;
+  if (error) return <Text>Błąd: {error}</Text>;
 
   return (
-    <View className="p-5">
-      <Text className="text-2xl font-bold mb-4">Kolekcja</Text>
-      <Button onPress={fetchKrasnale}>
-        <Text className="text-white">Pobierz Krasnale</Text>
-      </Button>
+    <View className="p-5 bg-background">
+      <Text className="text-2xl font-bold mb-4 text-white">Kolekcja</Text>
       <FlatList
-        data={krasnale}
+        contentContainerClassName="pb-8"
+        data={gnomes}
         keyExtractor={(item) => item.id.toString()}
+        numColumns={3}
         renderItem={({ item }) => (
-          <Text className="text-lg py-1">{item.name}</Text>
+          <GnomeCard
+            image={require("@/assets/images/placeholder.png")} // później zdjecia z bazy ;D
+            text={item.name}
+            onClick={() => router.replace("/gnome_detail")}
+          />
         )}
       />
     </View>
   );
 };
 
-export default Collection;
+export default GnomeList;

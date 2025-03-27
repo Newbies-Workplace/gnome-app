@@ -14,12 +14,6 @@ const Gallery = () => {
       <View className="w-full p-5 flex items-center">
         <Button title="Logout" onPress={logout} color="red" />
         <Button
-          title="Profile"
-          onPress={() => {
-            router.push("/profile");
-          }}
-        />
-        <Button
           title="Camera"
           onPress={() => {
             router.push("/camera");
