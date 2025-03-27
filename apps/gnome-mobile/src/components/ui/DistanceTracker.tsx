@@ -19,7 +19,7 @@ const DistanceTracker = ({
         <View className="flex-row items-center">
           <Image
             source={require("@/assets/images/krasnal.png")}
-            className="ml-2"
+            className="mt-10 ml-2"
           />
           <View
             className={`w-[${trackWidth}px] ml-4 bg-background border rounded-xl p-2 justify-center self-end mb-6`}
