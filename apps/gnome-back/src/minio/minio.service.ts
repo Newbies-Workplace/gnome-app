@@ -27,7 +27,16 @@ export class MinioService {
 
   async uploadFile(file: Express.Multer.File, fileNameString: string) {
     const fileName = `${fileNameString}`;
-    await this.minioClient.fPutObject(this.bucketName, fileName, file.path);
+    const filePath = `userGnomes/${fileNameString}`;
+    await this.minioClient.putObject(
+      this.bucketName,
+      filePath,
+      file.buffer,
+      file.size,
+      {
+        "Content-Type": file.mimetype,
+      },
+    );
     return fileName;
   }
 
