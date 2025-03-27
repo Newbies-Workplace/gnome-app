@@ -13,10 +13,27 @@ export class GnomesService {
     return this.prismaService.gnome.findMany();
   }
 
-  async getGnomeData(id: string): Promise<Gnome[]> {
-    return this.prismaService.gnome.findMany({
+  async getGnomeData(id: string): Promise<{ gnome: Gnome; nearest: Gnome[] }> {
+    const gnome = await this.prismaService.gnome.findUnique({
       where: { id },
     });
+
+    const allGnomes = await this.prismaService.gnome.findMany({
+      where: { id: { not: id } },
+    });
+
+    const nearest = allGnomes
+      .map((g) => ({
+        ...g,
+        distance: Math.sqrt(
+          (g.latitude - gnome.latitude) ** 2 +
+            (g.longitude - gnome.longitude) ** 2,
+        ),
+      }))
+      .sort((a, b) => a.distance - b.distance)
+      .slice(0, 3);
+
+    return { gnome, nearest };
   }
 
   async getInteractionCount(gnomeId: string): Promise<number> {
