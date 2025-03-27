@@ -23,14 +23,13 @@ export class GnomesService {
     });
 
     const nearest = allGnomes
-      .map((g) => ({
-        ...g,
-        distance: Math.sqrt(
-          (g.latitude - gnome.latitude) ** 2 +
-            (g.longitude - gnome.longitude) ** 2,
-        ),
-      }))
-      .sort((a, b) => a.distance - b.distance)
+      .sort(
+        (a, b) =>
+          (a.latitude - gnome.latitude) ** 2 +
+          (a.longitude - gnome.longitude) ** 2 -
+          ((b.latitude - gnome.latitude) ** 2 +
+            (b.longitude - gnome.longitude) ** 2),
+      )
       .slice(0, 3);
 
     return { gnome, nearest };
