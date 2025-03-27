@@ -85,7 +85,6 @@ const MapScreen = () => {
                 latitude: newLocation.coords.latitude,
                 longitude: newLocation.coords.longitude,
               },
-              pitch: 25,
             });
           },
         );
