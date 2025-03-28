@@ -1,5 +1,8 @@
 import FriendIcon from "@/assets/icons/add-friend.svg";
+import LocationOffIcon from "@/assets/icons/location-off.svg";
 import TeamIcon from "@/assets/icons/team.svg";
+import DistanceTracker from "@/components/ui/DistanceTracker";
+import DraggableGnome from "@/components/ui/DraggableGnome";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Text } from "@/components/ui/text";
 import { useAuthStore } from "@/store/useAuthStore";
@@ -7,14 +10,53 @@ import { useGnomeStore } from "@/store/useGnomeStore";
 import { useNavigation } from "@react-navigation/native";
 import * as Location from "expo-location";
 import { useRouter } from "expo-router";
+import { getDistance } from "geolib";
 import React, { createRef, useEffect, useRef, useState } from "react";
-import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
+import {
+  Alert,
+  Image,
+  Linking,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
 
 const GnomePin = require("@/assets/images/krasnal.png");
 
-const HeaderControls = ({ user }) => {
+const MIN_TRACKER_DISTANCE = 50;
+const MIN_REACHED_DISTANCE = 5;
+
+const HeaderControls = ({ user, errorMsg, setErrorMsg }) => {
   const router = useRouter();
+  const requestLocationPermission = async () => {
+    try {
+      const { status } = await Location.requestForegroundPermissionsAsync();
+      if (status === "granted") {
+        setErrorMsg(null);
+      } else if (status === "denied") {
+        Alert.alert(
+          "Krasnal kartograf zgubił Cię na mapie!",
+          "Pomóż biednemu krasnalowi! Włącz lokalizację, zanim zacznie pytać smoki o drogę! ",
+          [
+            {
+              text: "Nie chce :(",
+              style: "cancel",
+            },
+            {
+              text: "Już włączam!",
+              onPress: () => {
+                Linking.openSettings();
+              },
+            },
+          ],
+        );
+      }
+    } catch (error) {
+      console.error("Error requesting location permission:", error);
+    }
+  };
+
   return (
     <View className="absolute top-5 left-2 right-2 p-2 flex-row justify-between items-center">
       <View className="flex flex-row items-center gap-5 w-full justify-between">
@@ -27,6 +69,14 @@ const HeaderControls = ({ user }) => {
           </Avatar>
         </TouchableOpacity>
         <View className="flex-row">
+          {errorMsg && (
+            <TouchableOpacity
+              onPress={requestLocationPermission}
+              className="w-16 h-16 bg-primary rounded-full flex justify-center items-center mr-2"
+            >
+              <LocationOffIcon width={20} height={20} fill="#fff" />
+            </TouchableOpacity>
+          )}
           <TouchableOpacity
             onPress={() => router.push("/addfriend")}
             className="w-16 h-16 bg-background rounded-full flex justify-center items-center mr-2"
@@ -52,6 +102,13 @@ const MapScreen = () => {
   const { gnomes, fetchGnomes } = useGnomeStore();
   const ref = useRef<MapView>(null);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [userLocation, setUserLocation] = useState({
+    latitude: 51.1079,
+    longitude: 17.0385,
+  });
+  const [distance, setDistance] = useState(0);
+  const [reachedMarker, setReachedMarker] = useState(false);
+  const [showDistanceTracker, setShowDistanceTracker] = useState(false);
 
   const defaultRegion = {
     latitude: 51.1079,
@@ -81,6 +138,10 @@ const MapScreen = () => {
             distanceInterval: 1,
           },
           (newLocation) => {
+            setUserLocation({
+              latitude: newLocation.coords.latitude,
+              longitude: newLocation.coords.longitude,
+            });
             ref.current?.animateCamera({
               center: {
                 latitude: newLocation.coords.latitude,
@@ -102,10 +163,38 @@ const MapScreen = () => {
     };
   }, []);
 
-  let text = "Waiting...";
-  if (errorMsg) {
-    text = errorMsg;
-  }
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      const distances = gnomes.map((gnome) => {
+        const distance = getDistance(
+          {
+            latitude: userLocation.latitude,
+            longitude: userLocation.longitude,
+          },
+          { latitude: gnome.latitude, longitude: gnome.longitude },
+        );
+
+        return distance;
+      });
+
+      const closestMarkerIndex = distances.indexOf(Math.min(...distances));
+      const closestMarkerDistance = distances[closestMarkerIndex];
+
+      if (closestMarkerDistance <= MIN_TRACKER_DISTANCE) {
+        setShowDistanceTracker(true);
+      } else {
+        setShowDistanceTracker(false);
+      }
+      if (closestMarkerDistance <= MIN_REACHED_DISTANCE) {
+        setReachedMarker(true);
+      } else {
+        setReachedMarker(false);
+      }
+      setDistance(Math.round(closestMarkerDistance));
+    }, 1000);
+
+    return () => clearInterval(intervalId);
+  }, [userLocation, gnomes]);
 
   return (
     <View className="flex-1">
@@ -140,7 +229,19 @@ const MapScreen = () => {
         ))}
       </MapView>
 
-      <HeaderControls user={user} replace={replace} />
+      <HeaderControls
+        user={user}
+        errorMsg={errorMsg}
+        setErrorMsg={setErrorMsg}
+      />
+
+      <View className="absolute bottom-0 left-0 right-0 p-4 bg-transparent">
+        {distance > MIN_REACHED_DISTANCE && distance <= MIN_TRACKER_DISTANCE ? (
+          <DistanceTracker distance={distance} showDistanceTracker={true} />
+        ) : distance <= MIN_REACHED_DISTANCE ? (
+          <DraggableGnome onUnlock={() => replace("/camera")} />
+        ) : null}
+      </View>
     </View>
   );
 };
