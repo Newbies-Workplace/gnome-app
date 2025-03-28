@@ -14,11 +14,12 @@ import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
 
 const GnomePin = require("@/assets/images/krasnal.png");
 
-const HeaderControls = ({ user, replace }) => {
+const HeaderControls = ({ user }) => {
+  const router = useRouter();
   return (
     <View className="absolute top-5 left-2 right-2 p-2 flex-row justify-between items-center">
       <View className="flex flex-row items-center gap-5 w-full justify-between">
-        <TouchableOpacity onPress={() => replace("/profile")}>
+        <TouchableOpacity onPress={() => router.push("/profile")}>
           <Avatar alt="Your avatar" className="w-16 h-16">
             <AvatarImage source={{ uri: user.pictureUrl }} />
             <AvatarFallback>
@@ -28,13 +29,13 @@ const HeaderControls = ({ user, replace }) => {
         </TouchableOpacity>
         <View className="flex-row">
           <TouchableOpacity
-            onPress={() => replace("/addfriend")}
+            onPress={() => router.push("/addfriend")}
             className="w-16 h-16 bg-background rounded-full flex justify-center items-center mr-2"
           >
             <FriendIcon width={20} height={20} fill="#000" />
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={() => replace("/teams")}
+            onPress={() => router.push("/teams")}
             className="w-16 h-16 bg-background rounded-full flex justify-center items-center"
           >
             <TeamIcon width={20} height={20} fill="#000" />
