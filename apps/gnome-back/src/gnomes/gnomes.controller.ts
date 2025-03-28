@@ -20,6 +20,7 @@ import {
 import { FileInterceptor } from "@nestjs/platform-express";
 import { Express } from "express";
 import { Request } from "express";
+import { JWT } from "google-auth-library";
 import { Multer } from "multer";
 import { CreateGnomeRequest } from "./dto/gnomeCreate.dto";
 import { CreateInteractionRequest } from "./dto/interactionCreate";
@@ -58,7 +59,7 @@ export class GnomesController {
 
   // Wyświetlanie swojej interakcji z gnomem
 
-  @Get("@me")
+  @Get("@me/interactions")
   @UseGuards(JwtGuard)
   async getMyGnomesInteractions(@User() user: JWTUser) {
     return this.gnomeService.getMyGnomesInteractions(user.id);
@@ -87,11 +88,9 @@ export class GnomesController {
       }),
     )
     file: Express.Multer.File,
+    @User() user: JWTUser,
     @Body() body: CreateInteractionRequest,
-    @Req() req: Request,
   ) {
-    const user = req.user as { id: string };
-
     await this.minioService.createBucketIfNotExists();
 
     const fileName = `${user.id}-${Date.now()}.jpg`;
@@ -109,17 +108,5 @@ export class GnomesController {
     );
 
     return interaction;
-  }
-
-  @Get("image/:fileName")
-  async getFileUrl(@Param("fileName") fileName: string) {
-    const fileUrl = await this.minioService.getFileUrl(fileName);
-    return fileUrl;
-  }
-
-  @Delete("image/:fileName")
-  async deleteFile(@Param("fileName") fileName: string) {
-    await this.minioService.deleteFile(fileName);
-    return fileName;
   }
 }

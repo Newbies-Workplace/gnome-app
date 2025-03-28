@@ -51,8 +51,4 @@ export class MinioService {
       fileName,
     );
   }
-
-  async deleteFile(fileName: string) {
-    await this.minioClient.removeObject(this.bucketName, fileName);
-  }
 }
