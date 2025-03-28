@@ -1,3 +1,4 @@
+import { Input } from "../components/Input";
 import { LinkButton } from "../components/LinkButton";
 import Navbar from "../components/Navbar";
 import { BgElement } from "../components/bg_element";
@@ -25,11 +26,7 @@ export const AddGnomePage = () => {
             <p className="text-[0,5rem] text-[#757A75]">
               Wprowadź nazwę krasnala
             </p>
-            <input
-              type="text"
-              placeholder="Nazwa"
-              className="bg-[#ffffff] text-[#B3B3B3] w-[500px] h-[50px] rounded-[10px] pl-[25px]"
-            />
+            <Input type="text" placeholder="Nazwa" />
           </div>
         </div>
         <div>

@@ -33,7 +33,8 @@
       },
       "correctness": {
         "useExhaustiveDependencies": "off",
-        "useJsxKeyInIterable": "off"
+        "useJsxKeyInIterable": "off",
+        "noVoidElementsWithChildren": "off"
       }
     }
   },
