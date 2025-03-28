@@ -8,9 +8,10 @@ import { FlatList, Text, View } from "react-native";
 const GnomeList = () => {
   const { gnomes, fetchGnomes, loading, error } = useGnomeStore();
   const router = useRouter();
+  const navigation = useNavigation();
+
   //Header
   useEffect(() => {
-    const navigation = useNavigation();
     navigation.setOptions({
       headerTitle: () => (
         <View className="text-center">
@@ -26,7 +27,7 @@ const GnomeList = () => {
       headerShadowVisible: false,
       headerShown: true,
     });
-  });
+  }, []);
 
   useEffect(() => {
     fetchGnomes();
@@ -47,7 +48,7 @@ const GnomeList = () => {
           <GnomeCard
             image={require("@/assets/images/placeholder.png")} // później zdjecia z bazy ;D
             text={item.name}
-            onClick={() => router.replace("/gnome_detail")}
+            onClick={() => router.push("/gnome_detail")}
           />
         )}
       />

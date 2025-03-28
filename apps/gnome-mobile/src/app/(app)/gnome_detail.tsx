@@ -1,12 +1,29 @@
+import BackIcon from "@/assets/icons/arrow-left.svg";
 import DateIcon from "@/assets/icons/date.svg";
 import FoundIcon from "@/assets/icons/found.svg";
 import { GnomeCard } from "@/components/ui/GnomeCard";
-import React from "react";
+import { useNavigation, useRouter } from "expo-router";
+import React, { useEffect } from "react";
 import { Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
 
 const GnomeScreen = () => {
+  const navigation = useNavigation();
+  const router = useRouter();
+  useEffect(() => {
+    navigation.setOptions({
+      headerLeft: () => (
+        <TouchableOpacity className="p-5" onPress={() => router.back()}>
+          <BackIcon className="w-7 h-7"></BackIcon>
+        </TouchableOpacity>
+      ),
+      headerTitle: "",
+      headerStyle: { backgroundColor: "#131413" },
+      headerShadowVisible: false,
+      headerShown: true,
+    });
+  }, [navigation, router]);
   return (
-    <ScrollView className="bg-background my-2">
+    <ScrollView className="bg-background">
       <View className="p-5 my-2">
         <View className="justify-center items-center">
           <Image source={require("@/assets/icons/gnome-detail.png")} />
@@ -66,17 +83,17 @@ const GnomeScreen = () => {
           <GnomeCard
             image={require("@/assets/images/placeholder.png")}
             text="?"
-            onClick={() => replace("/collection")}
+            onClick={() => router.replace("/collection")}
           />
           <GnomeCard
             image={require("@/assets/images/placeholder.png")}
             text="?"
-            onClick={() => replace("/collection")}
+            onClick={() => router.replace("/collection")}
           />
           <GnomeCard
             image={require("@/assets/images/placeholder.png")}
             text="?"
-            onClick={() => replace("/collection")}
+            onClick={() => router.replace("/collection")}
           />
         </View>
       </View>
