@@ -180,10 +180,7 @@ const MapScreen = () => {
       const closestMarkerIndex = distances.indexOf(Math.min(...distances));
       const closestMarkerDistance = distances[closestMarkerIndex];
 
-      if (
-        closestMarkerDistance <= MIN_TRACKER_DISTANCE &&
-        closestMarkerDistance > MIN_REACHED_DISTANCE
-      ) {
+      if (closestMarkerDistance <= MIN_TRACKER_DISTANCE) {
         setShowDistanceTracker(true);
       } else {
         setShowDistanceTracker(false);
@@ -204,7 +201,8 @@ const MapScreen = () => {
       <MapView
         style={styles.map}
         initialRegion={defaultRegion}
-        showsUserLocation={true}
+        showsUser
+        Location={true}
         provider={PROVIDER_GOOGLE}
         zoomEnabled={true}
         zoomControlEnabled={false}
@@ -234,19 +232,15 @@ const MapScreen = () => {
 
       <HeaderControls
         user={user}
-        replace={replace}
         errorMsg={errorMsg}
         setErrorMsg={setErrorMsg}
       />
 
       <View className="absolute bottom-0 left-0 right-0 p-4 bg-transparent">
-        {reachedMarker ? (
+        {distance > 5 && distance <= 50 ? (
+          <DistanceTracker distance={distance} showDistanceTracker={true} />
+        ) : distance <= 5 ? (
           <DraggableGnome onUnlock={() => replace("/camera")} />
-        ) : showDistanceTracker ? (
-          <DistanceTracker
-            distance={distance}
-            showDistanceTracker={showDistanceTracker}
-          />
         ) : null}
       </View>
     </View>
