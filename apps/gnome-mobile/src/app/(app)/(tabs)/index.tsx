@@ -108,18 +108,17 @@ const MapScreen = () => {
   }, []);
 
   // filtrowanie
-  const filteredGnomes = userLocation
-    ? gnomes.filter((gnome) => {
-        const distance = getDistance(
-          {
-            latitude: userLocation.latitude,
-            longitude: userLocation.longitude,
-          },
-          { latitude: gnome.latitude, longitude: gnome.longitude },
-        );
-        return distance <= maxDistance;
-      })
-    : gnomes;
+  const filteredGnomes = gnomes.filter((gnome) => {
+    const latitude = userLocation?.latitude || defaultRegion.latitude;
+    const longitude = userLocation?.longitude || defaultRegion.longitude;
+
+    const distance = getDistance(
+      { latitude, longitude },
+      { latitude: gnome.latitude, longitude: gnome.longitude },
+    );
+
+    return distance <= maxDistance;
+  });
 
   return (
     <View className="flex-1">
