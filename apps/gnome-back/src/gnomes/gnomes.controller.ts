@@ -95,8 +95,9 @@ export class GnomesController {
     await this.minioService.createBucketIfNotExists();
 
     const fileName = `${user.id}-${Date.now()}.jpg`;
+    const catalogueName = "userGnomes";
 
-    await this.minioService.uploadFile(file, fileName);
+    await this.minioService.uploadFile(file, fileName, catalogueName);
 
     const fileUrl = await this.minioService.getFileUrl(fileName);
 
