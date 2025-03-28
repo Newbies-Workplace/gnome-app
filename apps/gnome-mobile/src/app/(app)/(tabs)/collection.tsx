@@ -13,10 +13,8 @@ const Collection = () => {
   useEffect(() => {
     navigation.setOptions({
       headerTitle: () => (
-        <View style={{ alignItems: "center" }}>
-          <Text style={{ color: "white", fontSize: 20, fontWeight: "bold" }}>
-            Twoja kolekcja
-          </Text>
+        <View className="flex justify-center">
+          <Text className="text-white text-lg font-bold">Twoja kolekcja</Text>
         </View>
       ),
       headerTitleAlign: "center",
@@ -32,21 +30,12 @@ const Collection = () => {
     fetchGnomes();
   }, []);
 
-  if (loading) return <Text>Ładowanie...</Text>;
-  if (error) return <Text>Błąd: {error}</Text>;
+  if (loading) return <Text className="text-white">Ładowanie...</Text>;
+  if (error) return <Text className="text-white">Błąd: {error}</Text>;
 
   return (
-    <View style={{ padding: 20, backgroundColor: "#131413", flex: 1 }}>
-      <Text
-        style={{
-          fontSize: 24,
-          fontWeight: "bold",
-          marginBottom: 16,
-          color: "white",
-        }}
-      >
-        Kolekcja
-      </Text>
+    <View className="p-5 bg-background flex-1">
+      <Text className="text-lg font-bold mb-4 text-white">Kolekcja</Text>
       <FlatList
         contentContainerStyle={{ paddingBottom: 20 }}
         data={gnomes}
@@ -56,7 +45,7 @@ const Collection = () => {
           <GnomeCard
             image={require("@/assets/images/placeholder.png")} // Change later for real images
             text={item.name}
-            onClick={() => router.push(`/collection-pages/${item.id}`)} // Correct navigation
+            onClick={() => router.push(`/collection-pages/${item.id}`)}
           />
         )}
       />
