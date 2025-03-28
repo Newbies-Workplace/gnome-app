@@ -1,19 +1,16 @@
+import { cn } from "../lib/utils.ts";
+
 type BgElementProps = {
-  roundedBr: string;
-  roundedBl: string;
+  className?: string;
 };
 
-export const BgElement: React.FC<BgElementProps> = ({
-  roundedBr,
-  roundedBl,
-}) => {
+export const BgElement: React.FC<BgElementProps> = ({ className }) => {
   return (
     <div
-      className="ml-5 bg-[#333] w-49/50 h-full absolute top-20 transform -z-1"
-      style={{
-        borderBottomRightRadius: roundedBr,
-        borderBottomLeftRadius: roundedBl,
-      }}
+      className={cn(
+        "ml-5 bg-[#333] w-49/50 h-45/50 absolute top-22 transform -z-1",
+        className,
+      )}
     />
   );
 };

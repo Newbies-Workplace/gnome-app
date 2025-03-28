@@ -7,7 +7,26 @@ import { FlatList, Text, View } from "react-native";
 
 const GnomeList = () => {
   const { gnomes, fetchGnomes, loading, error } = useGnomeStore();
-  const { replace } = useRouter();
+  const router = useRouter();
+  //Header
+  useEffect(() => {
+    const navigation = useNavigation();
+    navigation.setOptions({
+      headerTitle: () => (
+        <View className="text-center">
+          <Text className="text-white text-2xl font-bold text-center tracking-wide">
+            Twoja kolekcja
+          </Text>
+        </View>
+      ),
+      headerTitleAlign: "center",
+      headerStyle: {
+        backgroundColor: "#131413",
+      },
+      headerShadowVisible: false,
+      headerShown: true,
+    });
+  });
 
   useEffect(() => {
     fetchGnomes();
@@ -28,7 +47,7 @@ const GnomeList = () => {
           <GnomeCard
             image={require("@/assets/images/placeholder.png")} // później zdjecia z bazy ;D
             text={item.name}
-            onClick={() => replace("/gnome_detail")}
+            onClick={() => router.replace("/gnome_detail")}
           />
         )}
       />
