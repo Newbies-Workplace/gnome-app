@@ -26,10 +26,13 @@ export class MinioService {
   }
 
   async uploadFile(
-    file: Express.Multer.File,
-    fileNameString: string,
-    catalogueName: string,
+    file?: Express.Multer.File,
+    fileNameString?: string,
+    catalogueName?: string,
   ) {
+    if (!file) {
+      return { fileName: null };
+    }
     const fileName = `${fileNameString}`;
     const filePath = `${catalogueName}/${fileNameString}`;
     await this.minioClient.putObject(
@@ -41,14 +44,8 @@ export class MinioService {
         "Content-Type": file.mimetype,
       },
     );
-    return fileName;
+
+    return { fileName: fileName };
   }
 
-  async getFileUrl(fileName: string) {
-    return await this.minioClient.presignedUrl(
-      "GET",
-      this.bucketName,
-      fileName,
-    );
-  }
 }

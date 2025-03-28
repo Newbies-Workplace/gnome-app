@@ -1,11 +1,7 @@
-import { IsNotEmpty, IsString, IsUrl } from "class-validator";
+import { IsNotEmpty, IsOptional, IsString, IsUrl } from "class-validator";
 
 export class UserUpdate {
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   name: string;
-
-  @IsUrl()
-  @IsNotEmpty()
-  pictureUrl: string;
 }
