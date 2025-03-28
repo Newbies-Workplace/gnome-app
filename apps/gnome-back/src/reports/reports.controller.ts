@@ -21,14 +21,8 @@ export class ReportsController {
   @UseGuards(JwtGuard, RoleGuard)
   @Role(["ADMIN"])
   getAllReports() {
+    /* zwraca wszystkie reporty i ich ilosc */
     return this.reportsService.getAllReports();
-  }
-
-  @Get("count")
-  @UseGuards(JwtGuard, RoleGuard)
-  @Role(["ADMIN"])
-  getReportsCount() {
-    return this.reportsService.getReportsCount();
   }
 
   @Post("")

@@ -29,7 +29,7 @@ const DraggableGnome = ({ onUnlock }) => {
   ).current;
 
   return (
-    <View className="flex-1 justify-end items-center pb-10 mb-4">
+    <View className="flex-1 justify-end items-center pb-10">
       <View
         className="flex-row items-center bg-background rounded-full relative"
         style={{ width: trackWidth, height: trackHeight }}

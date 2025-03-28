@@ -6,13 +6,10 @@ import { Report } from "@prisma/client";
 export class ReportsService {
   constructor(private readonly prismaService: PrismaService) {}
 
-  async getAllReports(): Promise<Report[]> {
-    return this.prismaService.report.findMany();
-  }
-
-  async getReportsCount(): Promise<number> {
-    const collection = await this.prismaService.report.findMany();
-    return collection.length;
+  async getAllReports(): Promise<{ reportCount: number; reports: Report[] }> {
+    const reports = await this.prismaService.report.findMany();
+    const reportCount = await reports.length;
+    return { reportCount, reports };
   }
 
   async createReport(

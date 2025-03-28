@@ -5,7 +5,7 @@ export const ReportPage = () => {
   return (
     <div>
       <Navbar />
-      <BgElement roundedBr="15px" roundedBl="15px" />
+      <BgElement className="rounded-b-[15px]" />
       <h1>Zgłoś zaginionego</h1>
     </div>
   );
