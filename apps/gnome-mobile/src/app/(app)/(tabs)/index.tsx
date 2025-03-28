@@ -138,7 +138,7 @@ const MapScreen = () => {
             timeInterval: 1,
             distanceInterval: 1,
           },
-          (newLocation) => {         
+          (newLocation) => {
             const { latitude, longitude } = newLocation.coords;
             setUserLocation({ latitude, longitude });
 
@@ -172,7 +172,7 @@ const MapScreen = () => {
 
     return distance <= maxDistance;
   });
-    
+
   useEffect(() => {
     const intervalId = setInterval(() => {
       const distances = gnomes.map((gnome) => {
