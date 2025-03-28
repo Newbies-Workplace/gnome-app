@@ -191,7 +191,7 @@ const MapScreen = () => {
         setReachedMarker(false);
       }
       setDistance(Math.round(closestMarkerDistance));
-    }, 15);
+    }, 1000);
 
     return () => clearInterval(intervalId);
   }, [userLocation, gnomes]);
@@ -236,9 +236,9 @@ const MapScreen = () => {
       />
 
       <View className="absolute bottom-0 left-0 right-0 p-4 bg-transparent">
-        {distance > 5 && distance <= 50 ? (
+        {distance > MIN_REACHED_DISTANCE && distance <= MIN_TRACKER_DISTANCE ? (
           <DistanceTracker distance={distance} showDistanceTracker={true} />
-        ) : distance <= 5 ? (
+        ) : distance <= MIN_REACHED_DISTANCE ? (
           <DraggableGnome onUnlock={() => replace("/camera")} />
         ) : null}
       </View>
