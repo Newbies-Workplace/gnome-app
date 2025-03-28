@@ -1,18 +1,60 @@
 import FriendIcon from "@/assets/icons/add-friend.svg";
+import LocationOffIcon from "@/assets/icons/location-off.svg";
 import TeamIcon from "@/assets/icons/team.svg";
+import GnomePin from "@/assets/images/krasnal.png";
 import DistanceTracker from "@/components/ui/DistanceTracker";
 import DraggableGnome from "@/components/ui/DraggableGnome";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Text } from "@/components/ui/text";
 import { useAuthStore } from "@/store/useAuthStore";
+import { useGnomeStore } from "@/store/useGnomeStore";
 import { useNavigation } from "@react-navigation/native";
 import * as Location from "expo-location";
 import { useRouter } from "expo-router";
+import { getDistance } from "geolib";
 import React, { createRef, useEffect, useState } from "react";
-import { Alert, Image, StyleSheet, TouchableOpacity, View } from "react-native";
+import {
+  Alert,
+  Image,
+  Linking,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
 
-const HeaderControls = ({ user, replace }) => {
+const MIN_TRACKER_DISTANCE = 50;
+const MIN_REACHED_DISTANCE = 5;
+
+const HeaderControls = ({ user, replace, errorMsg, setErrorMsg }) => {
+  const requestLocationPermission = async () => {
+    try {
+      const { status } = await Location.requestForegroundPermissionsAsync();
+      if (status === "granted") {
+        setErrorMsg(null);
+      } else if (status === "denied") {
+        Alert.alert(
+          "Krasnal kartograf zgubił Cię na mapie!",
+          "Pomóż biednemu krasnalowi! Włącz lokalizację, zanim zacznie pytać smoki o drogę! ",
+          [
+            {
+              text: "Nie chce :(",
+              style: "cancel",
+            },
+            {
+              text: "Już włączam!",
+              onPress: () => {
+                Linking.openSettings();
+              },
+            },
+          ],
+        );
+      }
+    } catch (error) {
+      console.error("Error requesting location permission:", error);
+    }
+  };
+
   return (
     <View className="absolute top-5 left-2 right-2 p-2 flex-row justify-between items-center">
       <View className="flex flex-row items-center gap-5 w-full justify-between">
@@ -25,6 +67,14 @@ const HeaderControls = ({ user, replace }) => {
           </Avatar>
         </TouchableOpacity>
         <View className="flex-row">
+          {errorMsg && (
+            <TouchableOpacity
+              onPress={requestLocationPermission}
+              className="w-16 h-16 bg-primary rounded-full flex justify-center items-center mr-2"
+            >
+              <LocationOffIcon width={20} height={20} fill="#fff" />
+            </TouchableOpacity>
+          )}
           <TouchableOpacity
             onPress={() => replace("/addfriend")}
             className="w-16 h-16 bg-background rounded-full flex justify-center items-center mr-2"
@@ -48,27 +98,8 @@ const MapScreen = () => {
   const navigation = useNavigation();
   const { replace } = useRouter();
   const ref = createRef<MapView>();
+  const { gnomes, fetchGnomes } = useGnomeStore();
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
-  const [markers, setMarkers] = useState([
-    {
-      latitude: 51.09701966184086,
-      longitude: 17.035843526079727,
-      title: "Krasnal Podróżnik",
-      description: "Krasnal wysiadający z autobusu",
-    },
-    {
-      latitude: 51.10894028789954,
-      longitude: 17.03288804137201,
-      title: "Krasnale Syzyfki",
-      description: "Ciągle pchają ten nieszczęsny kamień",
-    },
-    {
-      latitude: 51.10947379220885,
-      longitude: 17.057842134960516,
-      title: "Krasnal Mędruś",
-      description: "Ponoć studenci przychodzą do niego po porady",
-    },
-  ]);
   const [userLocation, setUserLocation] = useState({
     latitude: 51.1079,
     longitude: 17.0385,
@@ -83,6 +114,10 @@ const MapScreen = () => {
     latitudeDelta: 0.01,
     longitudeDelta: 0.05,
   };
+
+  useEffect(() => {
+    fetchGnomes();
+  }, []);
 
   useEffect(() => {
     let subscription: Location.LocationSubscription | null = null;
@@ -105,15 +140,12 @@ const MapScreen = () => {
               latitude: newLocation.coords.latitude,
               longitude: newLocation.coords.longitude,
             });
-            ref.current?.animateToRegion(
-              {
+            ref.current?.animateCamera({
+              center: {
                 latitude: newLocation.coords.latitude,
                 longitude: newLocation.coords.longitude,
-                latitudeDelta: defaultRegion.latitudeDelta,
-                longitudeDelta: defaultRegion.longitudeDelta,
               },
-              100,
-            );
+            });
           },
         );
       } catch (error) {
@@ -131,43 +163,30 @@ const MapScreen = () => {
 
   useEffect(() => {
     const intervalId = setInterval(() => {
-      const calculateDistance = (lat1, lon1, markers) => {
-        const R = 6371; // km
-        const distances = markers.map((marker) => {
-          const dLat = ((marker.latitude - lat1) * Math.PI) / 180;
-          const dLon = ((marker.longitude - lon1) * Math.PI) / 180;
-          const lat1Rad = (lat1 * Math.PI) / 180;
-          const lat2Rad = (marker.latitude * Math.PI) / 180;
+      const distances = gnomes.map((gnome) => {
+        const distance = getDistance(
+          {
+            latitude: userLocation.latitude,
+            longitude: userLocation.longitude,
+          },
+          { latitude: gnome.latitude, longitude: gnome.longitude },
+        );
 
-          const a =
-            Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-            Math.sin(dLon / 2) *
-              Math.sin(dLon / 2) *
-              Math.cos(lat1Rad) *
-              Math.cos(lat2Rad);
-          const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-          const d = R * c;
+        return distance;
+      });
 
-          return d;
-        });
-
-        return distances;
-      };
-
-      const distances = calculateDistance(
-        userLocation.latitude,
-        userLocation.longitude,
-        markers,
-      );
       const closestMarkerIndex = distances.indexOf(Math.min(...distances));
-      const closestMarkerDistance = distances[closestMarkerIndex] * 1000;
+      const closestMarkerDistance = distances[closestMarkerIndex];
 
-      if (closestMarkerDistance <= 50 && closestMarkerDistance > 5) {
+      if (
+        closestMarkerDistance <= MIN_TRACKER_DISTANCE &&
+        closestMarkerDistance > MIN_REACHED_DISTANCE
+      ) {
         setShowDistanceTracker(true);
       } else {
         setShowDistanceTracker(false);
       }
-      if (closestMarkerDistance <= 5) {
+      if (closestMarkerDistance <= MIN_REACHED_DISTANCE) {
         setReachedMarker(true);
       } else {
         setReachedMarker(false);
@@ -176,7 +195,7 @@ const MapScreen = () => {
     }, 15);
 
     return () => clearInterval(intervalId);
-  }, [userLocation, markers]);
+  }, [userLocation, gnomes]);
 
   return (
     <View className="flex-1">
@@ -184,7 +203,6 @@ const MapScreen = () => {
         style={styles.map}
         initialRegion={defaultRegion}
         showsUserLocation={true}
-        followsUserLocation={true}
         provider={PROVIDER_GOOGLE}
         zoomEnabled={true}
         zoomControlEnabled={false}
@@ -192,6 +210,7 @@ const MapScreen = () => {
         customMapStyle={MapStyle}
         showsCompass={false}
         showsMyLocationButton={false}
+        rotateEnabled={true}
         minZoomLevel={18}
         maxZoomLevel={20}
         ref={ref}
@@ -212,35 +231,37 @@ const MapScreen = () => {
           }
         }}
       >
-        {markers.map((marker, index) => (
+        {gnomes.map((gnome) => (
           <Marker
-            key={index}
+            key={gnome.id}
             coordinate={{
-              latitude: marker.latitude,
-              longitude: marker.longitude,
+              latitude: gnome.latitude,
+              longitude: gnome.longitude,
             }}
-            title={marker.title}
-            description={marker.description}
+            title={gnome.name}
+            description={gnome.description}
           >
-            <Image
-              source={require("@/assets/images/krasnal.png")}
-              style={{ width: 30, height: 30 }}
-            />
+            <Image source={GnomePin} style={{ width: 30, height: 30 }} />
           </Marker>
         ))}
       </MapView>
 
-      <HeaderControls user={user} replace={replace} />
+      <HeaderControls
+        user={user}
+        replace={replace}
+        errorMsg={errorMsg}
+        setErrorMsg={setErrorMsg}
+      />
 
       <View className="absolute bottom-0 left-0 right-0 p-4 bg-transparent">
         {reachedMarker ? (
-          <DraggableGnome onUnlock={() => Alert.alert("Gnome Unlocked!")} />
-        ) : (
+          <DraggableGnome onUnlock={() => replace("/camera")} />
+        ) : showDistanceTracker ? (
           <DistanceTracker
             distance={distance}
             showDistanceTracker={showDistanceTracker}
           />
-        )}
+        ) : null}
       </View>
     </View>
   );
