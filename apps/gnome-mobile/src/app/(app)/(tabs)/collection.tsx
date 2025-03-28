@@ -5,16 +5,16 @@ import { useRouter } from "expo-router";
 import React, { useEffect } from "react";
 import { FlatList, Text, View } from "react-native";
 
-const GnomeList = () => {
+const Collection = () => {
   const { gnomes, fetchGnomes, loading, error } = useGnomeStore();
   const router = useRouter();
-  //Header
+  const navigation = useNavigation();
+
   useEffect(() => {
-    const navigation = useNavigation();
     navigation.setOptions({
       headerTitle: () => (
-        <View className="text-center">
-          <Text className="text-white text-2xl font-bold text-center tracking-wide">
+        <View style={{ alignItems: "center" }}>
+          <Text style={{ color: "white", fontSize: 20, fontWeight: "bold" }}>
             Twoja kolekcja
           </Text>
         </View>
@@ -26,7 +26,7 @@ const GnomeList = () => {
       headerShadowVisible: false,
       headerShown: true,
     });
-  });
+  }, [navigation]);
 
   useEffect(() => {
     fetchGnomes();
@@ -36,18 +36,27 @@ const GnomeList = () => {
   if (error) return <Text>Błąd: {error}</Text>;
 
   return (
-    <View className="p-5 bg-background">
-      <Text className="text-2xl font-bold mb-4 text-white">Kolekcja</Text>
+    <View style={{ padding: 20, backgroundColor: "#131413", flex: 1 }}>
+      <Text
+        style={{
+          fontSize: 24,
+          fontWeight: "bold",
+          marginBottom: 16,
+          color: "white",
+        }}
+      >
+        Kolekcja
+      </Text>
       <FlatList
-        contentContainerClassName="pb-8"
+        contentContainerStyle={{ paddingBottom: 20 }}
         data={gnomes}
-        keyExtractor={(item) => item.id.toString()}
+        keyExtractor={(item) => item.id?.toString()}
         numColumns={3}
         renderItem={({ item }) => (
           <GnomeCard
-            image={require("@/assets/images/placeholder.png")} // później zdjecia z bazy ;D
+            image={require("@/assets/images/placeholder.png")} // Change later for real images
             text={item.name}
-            onClick={() => router.replace("/gnome_detail")}
+            onClick={() => router.push(`/collection-pages/${item.id}`)} // Correct navigation
           />
         )}
       />
@@ -55,4 +64,4 @@ const GnomeList = () => {
   );
 };
 
-export default GnomeList;
+export default Collection;
