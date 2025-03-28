@@ -97,18 +97,20 @@ export default function Teams() {
     setUsers([...users, user]);
   };
 
+  const router = useRouter();
   useEffect(() => {
     navigation.setOptions({
       headerLeft: () => (
-        <TouchableOpacity className="p-5" onPress={() => push("/profile")}>
+        <TouchableOpacity className="p-5" onPress={() => router.back()}>
           <ArrowLeft className="w-7 h-7" />
         </TouchableOpacity>
       ),
       headerTitle: "",
       headerStyle: { backgroundColor: "#1E201E" },
       headerShadowVisible: false,
+      headerShown: true,
     });
-  }, [navigation, push]);
+  }, [navigation, router]);
 
   return (
     <SafeAreaView className="flex-1 bg-background px-6 pt-6">

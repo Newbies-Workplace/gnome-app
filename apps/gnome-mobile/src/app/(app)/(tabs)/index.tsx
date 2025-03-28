@@ -11,7 +11,7 @@ import { useNavigation } from "@react-navigation/native";
 import * as Location from "expo-location";
 import { useRouter } from "expo-router";
 import { getDistance } from "geolib";
-import React, { createRef, useEffect, useState } from "react";
+import React, { createRef, useEffect, useRef, useState } from "react";
 import {
   Alert,
   Image,
@@ -27,7 +27,8 @@ const GnomePin = require("@/assets/images/krasnal.png");
 const MIN_TRACKER_DISTANCE = 50;
 const MIN_REACHED_DISTANCE = 5;
 
-const HeaderControls = ({ user, replace, errorMsg, setErrorMsg }) => {
+const HeaderControls = ({ user, errorMsg, setErrorMsg }) => {
+  const router = useRouter();
   const requestLocationPermission = async () => {
     try {
       const { status } = await Location.requestForegroundPermissionsAsync();
@@ -59,7 +60,7 @@ const HeaderControls = ({ user, replace, errorMsg, setErrorMsg }) => {
   return (
     <View className="absolute top-5 left-2 right-2 p-2 flex-row justify-between items-center">
       <View className="flex flex-row items-center gap-5 w-full justify-between">
-        <TouchableOpacity onPress={() => replace("/profile")}>
+        <TouchableOpacity onPress={() => router.push("/profile")}>
           <Avatar alt="Your avatar" className="w-16 h-16">
             <AvatarImage source={{ uri: user.pictureUrl }} />
             <AvatarFallback>
@@ -77,13 +78,13 @@ const HeaderControls = ({ user, replace, errorMsg, setErrorMsg }) => {
             </TouchableOpacity>
           )}
           <TouchableOpacity
-            onPress={() => replace("/addfriend")}
+            onPress={() => router.push("/addfriend")}
             className="w-16 h-16 bg-background rounded-full flex justify-center items-center mr-2"
           >
             <FriendIcon width={20} height={20} fill="#000" />
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={() => replace("/teams")}
+            onPress={() => router.push("/teams")}
             className="w-16 h-16 bg-background rounded-full flex justify-center items-center"
           >
             <TeamIcon width={20} height={20} fill="#000" />
@@ -98,8 +99,8 @@ const MapScreen = () => {
   const { user } = useAuthStore();
   const navigation = useNavigation();
   const { replace } = useRouter();
-  const ref = createRef<MapView>();
   const { gnomes, fetchGnomes } = useGnomeStore();
+  const ref = useRef<MapView>(null);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [userLocation, setUserLocation] = useState({
     latitude: 51.1079,
@@ -215,22 +216,6 @@ const MapScreen = () => {
         minZoomLevel={18}
         maxZoomLevel={20}
         ref={ref}
-        onRegionChangeComplete={(region) => {
-          if (
-            region.latitude !== userLocation.latitude ||
-            region.longitude !== userLocation.longitude
-          ) {
-            ref.current?.animateToRegion(
-              {
-                latitude: userLocation.latitude,
-                longitude: userLocation.longitude,
-                latitudeDelta: defaultRegion.latitudeDelta,
-                longitudeDelta: defaultRegion.longitudeDelta,
-              },
-              100,
-            );
-          }
-        }}
       >
         {gnomes.map((gnome) => (
           <Marker
