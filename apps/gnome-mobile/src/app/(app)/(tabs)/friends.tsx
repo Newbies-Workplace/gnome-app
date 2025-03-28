@@ -43,32 +43,33 @@ const FriendItem = ({ name, avatar, score }) => (
 );
 
 export default function Friends() {
-  const { push } = useRouter();
+  const router = useRouter();
   const navigation = useNavigation();
 
   useEffect(() => {
     navigation.setOptions({
-      headerLeft: () => (
-        <TouchableOpacity className="p-5" onPress={() => navigation.goBack()}>
-          <ArrowLeft className="w-7 h-7" />
-        </TouchableOpacity>
-      ),
       headerRight: () => (
-        <TouchableOpacity className="p-5" onPress={() => push("/addfriend")}>
+        <TouchableOpacity
+          className="p-5"
+          onPress={() => router.push("/addfriend")}
+        >
           <AddUser className="w-7 h-7" />
         </TouchableOpacity>
       ),
-      headerTitle: "",
+      headerTitle: () => (
+        <Text className="text-white text-2xl font-bold text-center tracking-wide">
+          Twoi znajomi
+        </Text>
+      ),
+      headerTitleAlign: "center",
       headerShadowVisible: false,
-      headerStyle: { backgroundColor: "#1E201E" },
+      headerShown: true,
+      headerStyle: { backgroundColor: "#131413" },
     });
-  }, [navigation, push]);
+  }, [navigation, router]);
 
   return (
     <SafeAreaView className="flex-1 bg-background pt-6">
-      <View className="items-center">
-        <Text className="text-white text-xl font-bold">Twoi znajomi</Text>
-      </View>
       <FlatList
         data={friendsData}
         keyExtractor={(item) => item.id}
