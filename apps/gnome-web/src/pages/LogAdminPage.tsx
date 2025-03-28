@@ -29,7 +29,7 @@ export const LogAdminPage = () => {
   return (
     <div className="justify-center items-center flex flex-col">
       <Navbar />
-      <BgElement className="rounded-b-[15px]" />
+      <BgElement className="rounded-b-[15px] rounded-tl-[15px]" />
       <div className="bg-[#1E201E] w-2/5 h-4/5 absolute top-33 transform flex flex-col items-center justify-center rounded-[15px]">
         <p className="text-white text-[30px] mb-4 font-bold absolute top-20">
           Zaloguj się
@@ -71,7 +71,11 @@ export const LogAdminPage = () => {
         </div>
         <br />
         <div className="absolute bottom-20">
-          <LinkButton to="/admin" label="Zaloguj" />
+          <LinkButton
+            to="/admin"
+            label="Zaloguj"
+            className="w-40 h-10 bg-[#D6484A]"
+          />
         </div>
       </div>
     </div>

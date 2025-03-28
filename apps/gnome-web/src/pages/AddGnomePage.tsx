@@ -1,11 +1,13 @@
 import { LinkButton } from "../components/LinkButton";
 import Navbar from "../components/Navbar";
 import { BgElement } from "../components/bg_element";
+import { CircleTracker } from "../components/div_circle";
 
 export const AddGnomePage = () => {
   return (
     <div>
       <Navbar />
+      <CircleTracker className="" label="1" />
       <div className="flex flex-row items-center">
         <a href="/admin">
           <img src="../src/images/Back.svg" alt="Wróć" className="ml-10" />
