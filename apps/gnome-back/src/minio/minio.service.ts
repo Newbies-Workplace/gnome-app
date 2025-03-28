@@ -44,18 +44,8 @@ export class MinioService {
         "Content-Type": file.mimetype,
       },
     );
+
     return { fileName: fileName };
   }
 
-  async getFileUrl(fileName: string) {
-    return await this.minioClient.presignedUrl(
-      "GET",
-      this.bucketName,
-      fileName,
-    );
-  }
-
-  async deleteFile(fileName: string) {
-    await this.minioClient.removeObject(this.bucketName, fileName);
-  }
 }
