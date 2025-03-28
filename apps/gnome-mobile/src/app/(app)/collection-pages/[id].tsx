@@ -62,17 +62,17 @@ const GnomeDetail = () => {
       <View className="flex-row justify-center mt-5">
         <GnomeCard
           image={require("@/assets/images/placeholder.png")}
-          text="← Wróć"
+          text=""
           onClick={() => router.push("/collection")}
         />
         <GnomeCard
           image={require("@/assets/images/placeholder.png")}
-          text="← Wróć"
+          text=""
           onClick={() => router.push("/collection")}
         />
         <GnomeCard
           image={require("@/assets/images/placeholder.png")}
-          text="← Wróć"
+          text=""
           onClick={() => router.push("/collection")}
         />
       </View>
