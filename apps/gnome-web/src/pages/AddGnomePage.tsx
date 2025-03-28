@@ -7,16 +7,18 @@ export const AddGnomePage = () => {
   return (
     <div>
       <Navbar />
-      <div className="flex flex-row items-center">
-        <LinkButton
-          to="/admin"
-          label="<"
-          className="text-[40px] -mt-5 mr-auto absolute"
-        />
-        <h1 className="text-[60px] text-center mx-auto">Dodawanie krasnala</h1>
-      </div>
       <CircleTracker className="" label="1" />
-      <LinkButton to="/admin/infoadd" label="Dodaj" />
+      <div className="flex flex-row items-center">
+        <a href="/admin">
+          <img src="../src/images/Back.svg" alt="Wróć" className="ml-10" />
+        </a>
+        <h1 className="text-[40px] text-center mx-auto">Dodawanie krasnala</h1>
+      </div>
+      <LinkButton
+        to="/admin/infoadd"
+        label="Dodaj"
+        className=" ml-[50px] w-[200px] h-[50px] text-center text-[21px] text-[#757A75] bg-[#1E201E] rounded-[15px] flex items-center justify-center transition-all duration-200 hover:text-[22px] hover:bg-[#444444] hover:text-[#FFFFFF]"
+      />
       <BgElement className="rounded-b-[15px] rounded-tl-[15px]" />
     </div>
   );
