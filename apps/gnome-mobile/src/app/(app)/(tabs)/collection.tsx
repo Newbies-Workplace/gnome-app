@@ -14,7 +14,7 @@ const Collection = () => {
     navigation.setOptions({
       headerTitle: () => (
         <View className="flex justify-center">
-          <Text className="text-white text-lg font-bold">Twoja kolekcja</Text>
+          <Text className="text-white text-2xl font-bold">Twoja kolekcja</Text>
         </View>
       ),
       headerTitleAlign: "center",
@@ -35,15 +35,15 @@ const Collection = () => {
 
   return (
     <View className="p-5 bg-background flex-1">
-      <Text className="text-lg font-bold mb-4 text-white">Kolekcja</Text>
+      <Text className="text-2xl font-bold mb-4 text-white">Kolekcja</Text>
       <FlatList
-        contentContainerStyle={{ paddingBottom: 20 }}
+        contentContainerClassName="pb-8"
         data={gnomes}
         keyExtractor={(item) => item.id?.toString()}
         numColumns={3}
         renderItem={({ item }) => (
           <GnomeCard
-            image={require("@/assets/images/placeholder.png")} // Change later for real images
+            image={require("@/assets/images/placeholder.png")} // później zdjecia z bazy ;D
             text={item.name}
             onClick={() => router.push(`/collection-pages/${item.id}`)}
           />
