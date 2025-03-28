@@ -7,25 +7,33 @@ import { BgElement } from "../components/bg_element";
 export const LogAdminPage = () => {
   const navigate = useNavigate();
 
-  const handleSuccess = (credentialResponse: TokenResponse) => {
-    if (credentialResponse.access_token) {
-      console.log("Zalogowano użytkownika:", credentialResponse.access_token);
-      navigate("/admin"); // Przekierowanie do /admin po zalogowaniu
-    } else {
-      console.error("Brak danych uwierzytelniających!");
-    }
-  };
+  const handleGoogleLogin = useGoogleLogin({
+    onSuccess: async (tokenResponse) => {
+      try {
+        // Send the Google token to the backend
+        const response = await axiosInstance.post("/auth/google", {
+          idToken: tokenResponse.access_token, // Use the access_token as idToken
+        });
 
-  const handleFailure = () => {
-    console.error("Błąd logowania!");
-  };
+        // Handle the response from the backend
+        const { access_token, user } = response.data;
+        console.log("Logged in user:", user);
 
-  const login = useGoogleLogin({
-    flow: "implicit",
-    onSuccess: handleSuccess,
-    onError: handleFailure,
+        // Store the access token (e.g., in localStorage or a global state)
+        localStorage.setItem("access_token", access_token);
+
+        // Navigate to the admin page
+        navigate("/admin");
+      } catch (error) {
+        console.error("Error logging in with Google:", error);
+        alert("Failed to log in. Please try again.");
+      }
+    },
+    onError: () => {
+      console.error("Google login failed!");
+      alert("Google login failed. Please try again.");
+    },
   });
-
   return (
     <div className="justify-center items-center flex flex-col">
       <Navbar />
@@ -53,7 +61,7 @@ export const LogAdminPage = () => {
         <br />
         <div className="flex flex-row gap-25">
           <div className="flex justify-center items-center">
-            <button onClick={() => login()}>
+            <button onClick={handleGoogleLogin}>
               <img
                 src='https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_"G"_logo.svg'
                 alt="Login by Google"
