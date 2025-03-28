@@ -177,73 +177,272 @@ const styles = StyleSheet.create({
 });
 
 const MapStyle = [
-  { elementType: "geometry", stylers: [{ color: "#1a1d2a" }] },
-  { elementType: "labels.text.fill", stylers: [{ color: "#c0c0c8" }] },
-  { elementType: "labels.text.stroke", stylers: [{ color: "#1a1d2a" }] },
-
+  {
+    featureType: "all",
+    elementType: "labels",
+    stylers: [
+      {
+        visibility: "on",
+      },
+    ],
+  },
+  {
+    featureType: "all",
+    elementType: "labels.text.fill",
+    stylers: [
+      {
+        saturation: 36,
+      },
+      {
+        color: "#000000",
+      },
+      {
+        lightness: 40,
+      },
+    ],
+  },
+  {
+    featureType: "all",
+    elementType: "labels.text.stroke",
+    stylers: [
+      {
+        visibility: "on",
+      },
+      {
+        color: "#000000",
+      },
+      {
+        lightness: 16,
+      },
+    ],
+  },
+  {
+    featureType: "all",
+    elementType: "labels.icon",
+    stylers: [
+      {
+        visibility: "off",
+      },
+    ],
+  },
   {
     featureType: "administrative",
-    elementType: "geometry",
-    stylers: [{ color: "#33354a" }],
+    elementType: "geometry.fill",
+    stylers: [
+      {
+        color: "#000000",
+      },
+      {
+        lightness: 20,
+      },
+    ],
+  },
+  {
+    featureType: "administrative",
+    elementType: "geometry.stroke",
+    stylers: [
+      {
+        color: "#000000",
+      },
+      {
+        lightness: 17,
+      },
+      {
+        weight: 1.2,
+      },
+    ],
   },
   {
     featureType: "administrative.locality",
     elementType: "labels.text.fill",
-    stylers: [{ color: "#d8d8df" }],
+    stylers: [
+      {
+        color: "#c4c4c4",
+      },
+    ],
   },
-
   {
-    featureType: "road",
-    elementType: "geometry",
-    stylers: [{ color: "#2c2f3e" }],
-  },
-
-  {
-    featureType: "road",
+    featureType: "administrative.neighborhood",
     elementType: "labels.text.fill",
-    stylers: [{ color: "#b0b0b8" }],
+    stylers: [
+      {
+        color: "#707070",
+      },
+    ],
   },
   {
-    featureType: "road.highway",
+    featureType: "landscape",
     elementType: "geometry",
-    stylers: [{ color: "#404354" }],
+    stylers: [
+      {
+        color: "#000000",
+      },
+      {
+        lightness: 20,
+      },
+    ],
   },
-  {
-    featureType: "road.highway",
-    elementType: "labels.text.fill",
-    stylers: [{ color: "#e0e0e6" }],
-  },
-
-  {
-    featureType: "water",
-    elementType: "geometry",
-    stylers: [{ color: "#1f2637" }],
-  },
-  {
-    featureType: "water",
-    elementType: "labels.text.fill",
-    stylers: [{ color: "#5878a5" }],
-  },
-
   {
     featureType: "poi",
     elementType: "geometry",
-    stylers: [{ visibility: "off" }],
+    stylers: [
+      {
+        color: "#000000",
+      },
+      {
+        lightness: 21,
+      },
+      {
+        visibility: "on",
+      },
+    ],
   },
   {
     featureType: "poi.business",
-    elementType: "all",
-    stylers: [{ visibility: "off" }],
-  },
-  {
-    featureType: "poi.park",
     elementType: "geometry",
-    stylers: [{ color: "#1d3c2c" }],
+    stylers: [
+      {
+        visibility: "on",
+      },
+    ],
   },
   {
-    featureType: "poi.park",
+    featureType: "road.highway",
+    elementType: "geometry.fill",
+    stylers: [
+      {
+        lightness: "0",
+      },
+      {
+        visibility: "on",
+      },
+      {
+        color: "#696262",
+      },
+    ],
+  },
+  {
+    featureType: "road.highway",
+    elementType: "geometry.stroke",
+    stylers: [
+      {
+        visibility: "off",
+      },
+    ],
+  },
+  {
+    featureType: "road.highway",
     elementType: "labels.text.fill",
-    stylers: [{ color: "#60d158" }],
+    stylers: [
+      {
+        visibility: "off",
+      },
+    ],
+  },
+  {
+    featureType: "road.highway",
+    elementType: "labels.text.stroke",
+    stylers: [
+      {
+        visibility: "off",
+      },
+      {
+        hue: "#ff000a",
+      },
+    ],
+  },
+  {
+    featureType: "road.arterial",
+    elementType: "geometry",
+    stylers: [
+      {
+        color: "#000000",
+      },
+      {
+        lightness: 18,
+      },
+    ],
+  },
+  {
+    featureType: "road.arterial",
+    elementType: "geometry.fill",
+    stylers: [
+      {
+        color: "#575757",
+      },
+    ],
+  },
+  {
+    featureType: "road.arterial",
+    elementType: "labels.text.fill",
+    stylers: [
+      {
+        color: "#ffffff",
+      },
+    ],
+  },
+  {
+    featureType: "road.arterial",
+    elementType: "labels.text.stroke",
+    stylers: [
+      {
+        color: "#2c2c2c",
+      },
+    ],
+  },
+  {
+    featureType: "road.local",
+    elementType: "geometry",
+    stylers: [
+      {
+        color: "#000000",
+      },
+      {
+        lightness: 16,
+      },
+    ],
+  },
+  {
+    featureType: "road.local",
+    elementType: "labels.text.fill",
+    stylers: [
+      {
+        color: "#999999",
+      },
+    ],
+  },
+  {
+    featureType: "road.local",
+    elementType: "labels.text.stroke",
+    stylers: [
+      {
+        saturation: "-52",
+      },
+    ],
+  },
+  {
+    featureType: "transit",
+    elementType: "geometry",
+    stylers: [
+      {
+        color: "#000000",
+      },
+      {
+        lightness: 19,
+      },
+    ],
+  },
+  {
+    featureType: "water",
+    elementType: "geometry",
+    stylers: [
+      {
+        color: "#000000",
+      },
+      {
+        lightness: 17,
+      },
+    ],
   },
 ];
 export default MapScreen;
