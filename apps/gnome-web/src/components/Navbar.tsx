@@ -27,7 +27,7 @@ const Navbar = () => {
             <section
               key={index}
               className={cn(
-                `w-full h-full flex justify-center items-center bg-[#444] text-[#dadada] rounded-md`,
+                `w-full h-full flex justify-center items-center bg-[#444] text-[#dadada] rounded-t-[15px]`,
                 `${
                   isActive ||
                   (
