@@ -20,7 +20,7 @@ export class GnomesController {
   // Pobranie danych gnoma
 
   @Get(":id")
-  // @UseGuards(JwtGuard)
+  @UseGuards(JwtGuard)
   getGnomeData(@Param("id") gnomeId: string) {
     return this.gnomeService.getGnomeData(gnomeId);
   }
