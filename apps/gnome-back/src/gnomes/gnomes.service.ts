@@ -13,7 +13,8 @@ export class GnomesService {
     return this.prismaService.gnome.findMany();
   }
 
-  async getGnomeData(id: string): Promise<{ gnome: Gnome; nearest: Gnome[] }> {
+
+  async getGnomeData(id: string): Promise<Gnome & { nearest: Gnome[] }> {
     const gnome = await this.prismaService.gnome.findUnique({
       where: { id },
     });
@@ -32,7 +33,8 @@ export class GnomesService {
       )
       .slice(0, 3);
 
-    return { gnome, nearest };
+    return { ...gnome, nearest };
+
   }
 
   async getInteractionCount(gnomeId: string): Promise<number> {

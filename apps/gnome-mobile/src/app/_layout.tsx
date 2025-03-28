@@ -15,8 +15,7 @@ export default function RootLayout() {
   return (
     <>
       {/* Hide StatusBar to enable full-screen mode */}
-      <StatusBar hidden={true} translucent={true} />
-
+      <StatusBar hidden={false} translucent={false} />
       <Stack
         screenOptions={{
           // Hide the header for this route
