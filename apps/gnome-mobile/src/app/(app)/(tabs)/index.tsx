@@ -201,8 +201,7 @@ const MapScreen = () => {
       <MapView
         style={styles.map}
         initialRegion={defaultRegion}
-        showsUser
-        Location={true}
+        showsUserLocation={true}
         provider={PROVIDER_GOOGLE}
         zoomEnabled={true}
         zoomControlEnabled={false}
