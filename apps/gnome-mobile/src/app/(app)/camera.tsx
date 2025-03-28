@@ -1,18 +1,22 @@
 import { useNavigation, useRouter } from "expo-router";
 import React, { useEffect, useRef, useState } from "react";
-import { Image, Text, TouchableOpacity, View } from "react-native";
-import { Camera, useCameraDevices } from "react-native-vision-camera";
+import {
+  ActivityIndicator,
+  Image,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import {
+  Camera,
+  useCameraDevice,
+  useCameraPermission,
+} from "react-native-vision-camera";
 
 //Import ikon
 import BackIcon from "@/assets/icons/arrow-left.svg";
 
 const CameraScreen = () => {
-  const devices = useCameraDevices();
-  const [device, setDevice] = useState(null);
-  const cameraRef = useRef<Camera>(null);
-  const [hasPermission, setHasPermission] = useState(false);
-  const [flashMode, setFlashMode] = useState("off");
-
   //Header
   const navigation = useNavigation();
   const router = useRouter();
@@ -40,39 +44,24 @@ const CameraScreen = () => {
     });
   });
 
+  const device = useCameraDevice("back");
+  //Nadawanie uprawnień do kamerki
+  const { hasPermission, requestPermission } = useCameraPermission();
+
   useEffect(() => {
-    console.log("Available Devices:", devices);
+    if (!hasPermission) {
+      requestPermission();
+    }
+  }, [hasPermission]);
+
+  if (!hasPermission) {
+    return <ActivityIndicator />;
+  }
+
+  useEffect(() => {
     console.log("Selected Device:", device);
     console.log("Has Permission:", hasPermission);
-  }, [devices, device, hasPermission]);
-
-  useEffect(() => {
-    (async () => {
-      const cameraPermission = await Camera.requestCameraPermission();
-      setHasPermission(cameraPermission === "authorized");
-    })();
-  }, []);
-
-  useEffect(() => {
-    if (devices.back) {
-      setDevice(devices.back);
-    }
-  }, [devices]);
-
-  const takePhoto = async () => {
-    if (cameraRef.current) {
-      const photo = await cameraRef.current.takePhoto();
-      console.log("Photo captured:", photo);
-    }
-  };
-
-  const toggleFlash = () => {
-    setFlashMode((prev) => (prev === "off" ? "on" : "off"));
-  };
-
-  const switchCamera = () => {
-    setDevice((prev) => (prev === devices.back ? devices.front : devices.back));
-  };
+  }, [device, hasPermission]);
 
   return (
     <View className="flex-1 justify-center items-center bg-background relative">
