@@ -45,7 +45,7 @@ const Collection = () => {
           <GnomeCard
             image={require("@/assets/images/placeholder.png")} // później zdjecia z bazy ;D
             text={item.name}
-            onClick={() => router.push(`/collection-pages/${item.id}`)}
+            onClick={() => router.push(`/Gnomes/${item.id}`)}
           />
         )}
       />
