@@ -29,11 +29,15 @@ export const useGnomeStore = create<GnomeState>((set) => ({
   error: null,
 
   fetchGnomes: async () => {
-    set({ loading: true });
+    set({ loading: true, error: null });
     try {
       const data = await GnomesService.getGnomes();
+      console.log("Fetched gnomes:", data); // Log data
+      if (!Array.isArray(data)) throw new Error("Invalid gnome data format");
+
       set({ gnomes: data, loading: false });
     } catch (error) {
+      console.error("Fetch error:", error);
       set({ error: "Failed to load gnomes", loading: false });
     }
   },
