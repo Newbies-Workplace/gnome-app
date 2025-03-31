@@ -1,16 +1,23 @@
 import { Type } from "class-transformer";
-import { IsDate, IsNotEmpty, IsNumber, IsString } from "class-validator";
+import {
+  IsDate,
+  IsLatitude,
+  IsLongitude,
+  IsNotEmpty,
+  IsNumber,
+  IsString,
+} from "class-validator";
 
 export class CreateGnomeRequest {
   @IsString()
   @IsNotEmpty()
   name: string;
 
-  @IsNumber()
+  @IsLatitude()
   @IsNotEmpty()
   latitude: number;
 
-  @IsNumber()
+  @IsLongitude()
   @IsNotEmpty()
   longitude: number;
 
