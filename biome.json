@@ -24,7 +24,8 @@
         "noSvgWithoutTitle": "off",
         "useAltText": "off",
         "useAnchorContent": "off",
-        "useValidAnchor": "off"
+        "useValidAnchor": "off",
+        "noLabelWithoutControl": "off"
       },
       "suspicious": {
         "noExplicitAny": "warn",

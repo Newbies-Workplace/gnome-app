@@ -39,7 +39,7 @@ const Navbar = () => {
                 }`,
               )}
             >
-              <img src={link.img} alt="" className="h-8 w-8 mr-2" />
+              <img src={link.img} alt="???" className="h-8 w-8 mr-2" />
               {link.text}
             </section>
           </a>

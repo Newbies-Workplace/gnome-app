@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-export const fileInput: React.FC = () => {
+export const FileInput: React.FC = () => {
   const [files, setFiles] = useState<File[]>([]);
   const [isDragging, setIsDragging] = useState(false);
 
@@ -32,7 +32,7 @@ export const fileInput: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col items-center">
+    <div className="flex flex-col items-right justify-right ml-10">
       <div
         className={`border-2 border-dashed rounded-lg p-6 w-96 h-48 flex flex-col items-center justify-center ${
           isDragging ? "border-blue-500 bg-blue-100" : "border-gray-400"

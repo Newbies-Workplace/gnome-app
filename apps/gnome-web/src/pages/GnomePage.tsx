@@ -5,7 +5,7 @@ export const GnomePage = () => {
   return (
     <div>
       <Navbar />
-      <BgElement roundedBr="15px" roundedBl="15px" />
+      <BgElement className="rounded-[15px]" />
     </div>
   );
 };
