@@ -9,8 +9,8 @@ import React, { useEffect, useState } from "react";
 import { Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
 
 const GnomeDetail = () => {
-  const { id } = useLocalSearchParams(); // Get gnome ID from URL
-  const { gnomes } = useGnomeStore(); // Fetch gnome list from store
+  const { id } = useLocalSearchParams();
+  const { gnomes } = useGnomeStore();
   const [gnome, setGnome] = useState(null);
   const router = useRouter();
   const navigation = useNavigation();

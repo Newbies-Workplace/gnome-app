@@ -43,9 +43,10 @@ const Collection = () => {
         numColumns={3}
         renderItem={({ item }) => (
           <GnomeCard
-            image={require("@/assets/images/placeholder.png")} // później zdjecia z bazy ;D
+            image={require("@/assets/images/placeholder.png")}
             text={item.name}
             onClick={() => router.push(`/Gnomes/${item.id}`)}
+            interaction={item.interaction}
           />
         )}
       />
