@@ -21,14 +21,29 @@ export class MinioService {
   async createBucketIfNotExists() {
     const bucketExists = await this.minioClient.bucketExists(this.bucketName);
     if (!bucketExists) {
+      const policy = {
+        Version: "2012-10-17",
+        Statement: [
+          {
+            Effect: "Allow",
+            Principal: { AWS: ["*"] },
+            Action: ["s3:GetObject", "s3:PutObject"],
+            Resource: [`arn:aws:s3:::${this.bucketName}/*`],
+          },
+        ],
+      };
       await this.minioClient.makeBucket(this.bucketName, "eu-west-1");
+      await this.minioClient.setBucketPolicy(
+        this.bucketName,
+        JSON.stringify(policy),
+      );
     }
   }
 
   async uploadFile(
-    file?: Express.Multer.File,
-    fileNameString?: string,
-    catalogueName?: string,
+    file: Express.Multer.File,
+    fileNameString: string,
+    catalogueName: string,
   ) {
     if (!file) {
       return { fileName: null };
@@ -45,7 +60,17 @@ export class MinioService {
       },
     );
 
-    return { fileName: fileName };
+    return { fileName: fileName, filePath: filePath };
   }
 
+  async getFileUrl(filePath: string) {
+    const presignedURL = await this.minioClient.presignedUrl(
+      "GET",
+      this.bucketName,
+      filePath,
+    );
+    const URLArray = presignedURL.split("?");
+    const URL = URLArray[0];
+    return URL;
+  }
 }

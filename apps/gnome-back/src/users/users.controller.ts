@@ -54,13 +54,19 @@ export class UsersController {
     )
     file?: Express.Multer.File,
   ) {
+    if (body.name == null && !file) {
+      return false;
+    }
+
     const fileName = `${user.id}.jpg`;
     const catalogueName = "userProfilePictures";
+    if (file) {
+      await this.minioService.createBucketIfNotExists();
+      await this.minioService.uploadFile(file, fileName, catalogueName);
+    }
+    const filePath = `${catalogueName}/${fileName}`;
+    const fileUrl: string = await this.minioService.getFileUrl(filePath);
 
-    await this.minioService.createBucketIfNotExists();
-    await this.minioService.uploadFile(file, fileName, catalogueName);
-
-    const fileUrl: string = await this.minioService.getFileUrl(fileName);
     const changeProfile = await this.usersService.changeUserData(
       user.id,
       body.name,
