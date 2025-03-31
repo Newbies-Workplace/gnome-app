@@ -32,4 +32,7 @@ export class CreateGnomeRequest {
   @IsDate()
   @Type(() => Date)
   creationDate: Date;
+
+  @IsString()
+  funFact: string;
 }

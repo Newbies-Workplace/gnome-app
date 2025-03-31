@@ -38,6 +38,7 @@ model User {
 model Gnome {
   id           String             @id @unique @default(uuid())
   name         String
+  funFact      String
   latitude     Float
   longitude    Float
   location     String
