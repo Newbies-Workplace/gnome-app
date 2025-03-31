@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { LinkButton } from "../components/LinkButton";
 import Navbar from "../components/Navbar";
 import { BgElement } from "../components/bg_element";
+import { axiosInstance } from "../lib/api/axios";
 
 export const LogAdminPage = () => {
   const navigate = useNavigate();
