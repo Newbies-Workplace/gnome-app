@@ -11,7 +11,7 @@ import {
 } from "react-native";
 
 interface GnomeCardProps {
-  image: ImageSourcePropType; // ✅ Fix: Correct type instead of `any`
+  image: ImageSourcePropType;
   text: string;
   onClick: () => void;
   interaction?: { found: boolean; imageUrl?: string };
@@ -29,7 +29,7 @@ export const GnomeCard: React.FC<GnomeCardProps> = ({
       return <CameraIcon width={20} height={20} />;
     if (interaction?.found && !interaction?.imageUrl)
       return <NoCameraIcon width={20} height={20} />;
-    return <AddCameraIcon width={20} height={20} />; // ✅ Fix: Removed unnecessary `else`
+    return <AddCameraIcon width={20} height={20} />;
   };
 
   return (
@@ -38,7 +38,6 @@ export const GnomeCard: React.FC<GnomeCardProps> = ({
       className="relative items-center p-5 flex-1"
     >
       <View className="relative">
-        {/* Apply opacity when found but no image */}
         <Image
           className={`rounded-md mb-2 aspect-[4/5] ${
             interaction?.found && !interaction?.imageUrl ? "opacity-50" : ""
