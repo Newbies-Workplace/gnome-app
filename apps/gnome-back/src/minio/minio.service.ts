@@ -21,7 +21,22 @@ export class MinioService {
   async createBucketIfNotExists() {
     const bucketExists = await this.minioClient.bucketExists(this.bucketName);
     if (!bucketExists) {
+      const policy = {
+        Version: "2012-10-17",
+        Statement: [
+          {
+            Effect: "Allow",
+            Principal: { AWS: ["*"] },
+            Action: ["s3:GetObject", "s3:PutObject"],
+            Resource: [`arn:aws:s3:::${this.bucketName}/*`],
+          },
+        ],
+      };
       await this.minioClient.makeBucket(this.bucketName, "eu-west-1");
+      await this.minioClient.setBucketPolicy(
+        this.bucketName,
+        JSON.stringify(policy),
+      );
     }
   }
 
@@ -30,6 +45,9 @@ export class MinioService {
     fileNameString: string,
     catalogueName: string,
   ) {
+    if (!file) {
+      return { fileName: null };
+    }
     const fileName = `${fileNameString}`;
     const filePath = `${catalogueName}/${fileNameString}`;
     await this.minioClient.putObject(
@@ -41,14 +59,18 @@ export class MinioService {
         "Content-Type": file.mimetype,
       },
     );
-    return fileName;
+
+    return { fileName: fileName, filePath: filePath };
   }
 
-  async getFileUrl(fileName: string) {
-    return await this.minioClient.presignedUrl(
+  async getFileUrl(filePath: string) {
+    const presignedURL = await this.minioClient.presignedUrl(
       "GET",
       this.bucketName,
-      fileName,
+      filePath,
     );
+    const URLArray = presignedURL.split("?");
+    const URL = URLArray[0];
+    return URL;
   }
 }
