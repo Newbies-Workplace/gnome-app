@@ -45,6 +45,7 @@ model Gnome {
   creationDate DateTime
   description  String
   exists       Boolean            @default(true)
+  pictureUrl   String
   interactions GnomeInteraction[]
 }
 
