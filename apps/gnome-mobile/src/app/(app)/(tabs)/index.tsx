@@ -1,13 +1,19 @@
 import FriendIcon from "@/assets/icons/add-friend.svg";
 import TeamIcon from "@/assets/icons/team.svg";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import Compass from "@/components/ui/compass";
 import { Text } from "@/components/ui/text";
 import { useAuthStore } from "@/store/useAuthStore";
-import { useNavigation } from "@react-navigation/native";
 import * as Location from "expo-location";
 import { useRouter } from "expo-router";
 import React, { createRef, useEffect, useState } from "react";
-import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
+import {
+  Dimensions,
+  Image,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
 
 const HeaderControls = ({ user, replace }) => {
@@ -43,7 +49,6 @@ const HeaderControls = ({ user, replace }) => {
 
 const MapScreen = () => {
   const { user } = useAuthStore();
-  const navigation = useNavigation();
   const { replace } = useRouter();
   const ref = createRef<MapView>();
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
@@ -160,9 +165,16 @@ const MapScreen = () => {
       </MapView>
 
       <HeaderControls user={user} replace={replace} />
+
+      {/* Compass component */}
+      <View style={styles.compassContainer}>
+        <Compass />
+      </View>
     </View>
   );
 };
+
+const { width } = Dimensions.get("window");
 
 const styles = StyleSheet.create({
   container: {
@@ -179,6 +191,12 @@ const styles = StyleSheet.create({
     fontSize: 16,
     textAlign: "center",
     marginTop: 20,
+  },
+  compassContainer: {
+    top: 100,
+    left: "55%",
+    transform: [{ translateX: -width / 2 }],
+    zIndex: 10,
   },
 });
 
