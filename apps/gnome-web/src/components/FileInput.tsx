@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-export const DragAndDrop: React.FC = () => {
+export const fileInput: React.FC = () => {
   const [files, setFiles] = useState<File[]>([]);
   const [isDragging, setIsDragging] = useState(false);
 
