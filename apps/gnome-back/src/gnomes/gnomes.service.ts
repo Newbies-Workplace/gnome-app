@@ -1,7 +1,9 @@
+import { JWTUser } from "@/auth/jwt/JWTUser";
 import { PrismaService } from "@/db/prisma.service";
 import { Injectable } from "@nestjs/common";
 import { Gnome } from "@prisma/client";
 import { CreateGnomeRequest } from "./dto/gnomeCreate.dto";
+import { CreateInteractionRequest } from "./dto/interactionCreate";
 
 @Injectable()
 export class GnomesService {
@@ -11,10 +13,26 @@ export class GnomesService {
     return this.prismaService.gnome.findMany();
   }
 
-  async getGnomeData(id: string): Promise<Gnome[]> {
-    return this.prismaService.gnome.findMany({
+  async getGnomeData(id: string): Promise<Gnome & { nearest: Gnome[] }> {
+    const gnome = await this.prismaService.gnome.findUnique({
       where: { id },
     });
+
+    const allGnomes = await this.prismaService.gnome.findMany({
+      where: { id: { not: id } },
+    });
+
+    const nearest = allGnomes
+      .sort(
+        (a, b) =>
+          (a.latitude - gnome.latitude) ** 2 +
+          (a.longitude - gnome.longitude) ** 2 -
+          ((b.latitude - gnome.latitude) ** 2 +
+            (b.longitude - gnome.longitude) ** 2),
+      )
+      .slice(0, 3);
+
+    return { ...gnome, nearest };
   }
 
   async getInteractionCount(gnomeId: string): Promise<number> {
@@ -27,7 +45,7 @@ export class GnomesService {
     return collection.length;
   }
 
-  async getMyGnomes(
+  async getMyGnomesInteractions(
     id: string,
   ): Promise<Array<{ gnomeId: string; interactionDate: Date; gnome: Gnome }>> {
     return this.prismaService.gnomeInteraction.findMany({
@@ -44,6 +62,22 @@ export class GnomesService {
     return this.prismaService.gnome.create({
       data: {
         ...data,
+      },
+    });
+  }
+
+  async createInteraction(
+    userId: string,
+    interactionDate: Date,
+    gnomeId: string,
+    userPicture: string,
+  ) {
+    return this.prismaService.gnomeInteraction.create({
+      data: {
+        userId,
+        interactionDate,
+        gnomeId,
+        userPicture,
       },
     });
   }

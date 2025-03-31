@@ -64,6 +64,7 @@ model GnomeInteraction {
   interactionDate DateTime
   userId          String
   gnomeId         String
+  userPicture     String
 }
 
 model Friendship {

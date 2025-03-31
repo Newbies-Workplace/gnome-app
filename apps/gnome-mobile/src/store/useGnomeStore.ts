@@ -29,12 +29,15 @@ export const useGnomeStore = create<GnomeState>((set) => ({
   error: null,
 
   fetchGnomes: async () => {
-    set({ loading: true });
+    set({ loading: true, error: null });
     try {
       const data = await GnomesService.getGnomes();
-      console.log(data);
+      console.log("Fetched gnomes:", data); // Log data
+      if (!Array.isArray(data)) throw new Error("Invalid gnome data format");
+
       set({ gnomes: data, loading: false });
     } catch (error) {
+      console.error("Fetch error:", error);
       set({ error: "Failed to load gnomes", loading: false });
     }
   },
@@ -46,29 +49,3 @@ export const useGnomeStore = create<GnomeState>((set) => ({
       gnomes: state.gnomes.filter((gnome) => gnome.id !== id),
     })),
 }));
-
-// // import React, { useEffect } from 'react';
-// // import { View, Text, Button } from 'react-native';
-// // import { useGnomeStore } from './useGnomeStore';
-
-// // const GnomeList = () => {
-// //     const { gnomes, fetchGnomes, loading, error } = useGnomeStore();
-
-// //     useEffect(() => {
-// //         fetchGnomes();
-// //     }, []);
-
-// //     if (loading) return <Text>Ładowanie...</Text>;
-// //     if (error) return <Text>Błąd: {error}</Text>;
-
-// //     return (
-// //         <View>
-// //             <Button title="Odśwież gnomy" onPress={fetchGnomes} />
-// //             {gnomes.map((gnome) => (
-// //                 <Text key={gnome.id}>{gnome.nazwa}</Text>
-// //             ))}
-// //         </View>
-// //     );
-// // };
-
-// // export default GnomeList;

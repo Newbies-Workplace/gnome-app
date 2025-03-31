@@ -19,26 +19,26 @@ import PrivacyIcon from "@/assets/icons/privacy.svg";
 import SecurityIcon from "@/assets/icons/security.svg";
 
 function SettingsScreen() {
-  const { replace, push } = useRouter();
   const navigation = useNavigation();
-
+  const router = useRouter();
   useEffect(() => {
     navigation.setOptions({
       headerLeft: () => (
-        <TouchableOpacity className="p-5" onPress={() => push("/profile")}>
+        <TouchableOpacity className="p-5" onPress={() => router.back()}>
           <ArrowLeft className="w-7 h-7" />
         </TouchableOpacity>
       ),
       headerTitle: () => (
-        <Text className="text-white text-xl font-bold text-center">
-          Ustawienia
+        <Text className="text-white text-2xl font-bold text-center tracking-wide">
+          USTAWIENIA
         </Text>
       ),
       headerTitleAlign: "center",
       headerShadowVisible: false,
       headerStyle: { backgroundColor: "#1E201E" },
+      headerShown: true,
     });
-  }, [navigation, push]);
+  }, [navigation, router]);
 
   return (
     <SafeAreaView className="flex-1 bg-background">
