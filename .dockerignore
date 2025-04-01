@@ -1,0 +1,50 @@
+# .dockerignore file for optimal Docker builds
+
+# Node.js specific
+node_modules/
+npm-debug.log
+yarn-debug.log
+
+# Build outputs
+dist/
+build/
+out/
+
+# IDE files
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Version control
+.git/
+.gitignore
+
+# Environment and secrets
+.env*
+*.pem
+*.key
+*.crt
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# Documentation
+*.md
+README*
+
+# Docker files
+Dockerfile*
+docker-compose*
+
+# Project-specific
+.husky/
+.turbo/
+
+# Exclude specific files
+!apps/gnome-back/package.json
+!apps/gnome-back/src/**
+
+# End of file
