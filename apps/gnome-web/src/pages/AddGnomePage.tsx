@@ -2,9 +2,11 @@ import { DatePickerInput } from "../components/DatePickerInput";
 import { FileInput } from "../components/FileInput";
 import { Input } from "../components/Input";
 import { LinkButton } from "../components/LinkButton";
+import MapStyle from "../components/MapStyle";
 import Navbar from "../components/Navbar";
 import { BgElement } from "../components/bg_element";
 import { CircleTracker } from "../components/div_circle";
+import InteractiveMapPicker from "../components/mapPicker/InternalMapPicker";
 
 export const AddGnomePage = () => {
   return (
@@ -50,6 +52,7 @@ export const AddGnomePage = () => {
         </div>
         <div>
           <CircleTracker label="5" text="Wybierz lokalizację krasnala" />
+          <InteractiveMapPicker />
         </div>
         <div className="flex flex-col">
           <CircleTracker label="6" text="Podaj dokładny adres krasnala" />
