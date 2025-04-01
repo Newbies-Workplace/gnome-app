@@ -6,7 +6,7 @@ import React, { useEffect } from "react";
 import { FlatList, Text, View } from "react-native";
 
 const Collection = () => {
-  const { gnomes, fetchGnomes, loading, error } = useGnomeStore();
+  const { gnomes, fetchGnomes, interactions } = useGnomeStore();
   const router = useRouter();
   const navigation = useNavigation();
 
@@ -30,8 +30,13 @@ const Collection = () => {
     fetchGnomes();
   }, []);
 
-  if (loading) return <Text className="text-white">Ładowanie...</Text>;
-  if (error) return <Text className="text-white">Błąd: {error}</Text>;
+  if (gnomes.length === 0) {
+    return (
+      <View className="flex-1 justify-center items-center bg-[#131413]">
+        <Text className="text-white text-lg">Ładowanie...</Text>
+      </View>
+    );
+  }
 
   return (
     <View className="p-5 bg-background flex-1">
@@ -46,7 +51,7 @@ const Collection = () => {
             image={require("@/assets/images/placeholder.png")}
             text={item.name}
             onClick={() => router.push(`/Gnomes/${item.id}`)}
-            interaction={item.interaction}
+            interaction={interactions.find((i) => i.id === item.id)}
           />
         )}
       />

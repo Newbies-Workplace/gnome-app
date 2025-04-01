@@ -10,7 +10,7 @@ import { Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
 
 const GnomeDetail = () => {
   const { id } = useLocalSearchParams();
-  const { gnomes } = useGnomeStore();
+  const { gnomes, interactions } = useGnomeStore(); // Add interactions here
   const [gnome, setGnome] = useState(null);
   const router = useRouter();
   const navigation = useNavigation();
@@ -46,6 +46,8 @@ const GnomeDetail = () => {
     );
   }
 
+  const interaction = interactions.find((i) => i.id === gnome.id);
+
   return (
     <ScrollView className="bg-background p-4">
       <View className="items-center mb-5">
@@ -63,7 +65,10 @@ const GnomeDetail = () => {
       <View className="flex-row items-center mb-2.5">
         <FoundIcon width={20} height={20} />
         <Text className="text-white ml-2.5">
-          Data znalezienia: {gnome.foundDate}
+          Data znalezienia:
+          {interaction
+            ? `${interaction.interactionDate.toLocaleString()}`
+            : " Krasnal jeszcze nie znaleziony"}
         </Text>
       </View>
 
