@@ -5,6 +5,7 @@ import { Camera, useCameraDevices } from "react-native-vision-camera";
 
 //Import ikon
 import BackIcon from "@/assets/icons/arrow-left.svg";
+import axios from "axios";
 
 const CameraScreen = () => {
   const { gnomeid } = useLocalSearchParams<{ gnomeid: string }>();
@@ -62,33 +63,26 @@ const CameraScreen = () => {
       console.log("Photo captured:", photo);
       sendInteractionData(
         closestGnome.gnome.id,
-        closestGnome.gnome.name,
-        data.uri,
+        user.id, // Dodałem user.id jako argument
+        photo.uri, // Przekazuje uri zdjęcia
       );
     }
   };
 
-  const sendInteractionData = async (gnomeId, userPictureUri) => {
-    const userId = user.id; // Zakładając, że masz dostęp do użytkownika
+  const sendInteractionData = async (gnomeId, userId, userPictureUri) => {
     const interactionDate = new Date().toISOString();
 
-    const response = await fetch("", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
+    try {
+      const response = await axios.post("http://localhost:3000/", {
         userId,
         gnomeId,
         interactionDate,
         userPicture: userPictureUri,
-      }),
-    });
+      });
 
-    if (response.ok) {
       console.log("Interaction data sent successfully");
-    } else {
-      console.error("Failed to send interaction data");
+    } catch (error) {
+      console.error("Failed to send interaction data", error);
     }
   };
 
