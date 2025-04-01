@@ -35,6 +35,7 @@ export class AuthController {
     @Response() res,
     @Request() req,
   ) {
+    const FRONTEND_URL = process.env.FRONTEND_URL;
     const token = await this.authService.googleAuth(user);
     req.user = user; // to do roli zeby sprawdzac
     res.cookie("access_token", token, {
@@ -42,10 +43,10 @@ export class AuthController {
     });
 
     if (req.user.role === "ADMIN") {
-      return res.redirect("http://localhost:5173/admin");
+      return res.redirect(`${FRONTEND_URL}/admin`);
     }
 
-    return res.redirect("http://localhost:5173/");
+    return res.redirect(`${FRONTEND_URL}`);
   }
 
   @Post("google")
