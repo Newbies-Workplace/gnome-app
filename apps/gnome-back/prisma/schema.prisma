@@ -38,12 +38,14 @@ model User {
 model Gnome {
   id           String             @id @unique @default(uuid())
   name         String
+  funFact      String
   latitude     Float
   longitude    Float
   location     String
   creationDate DateTime
   description  String
   exists       Boolean            @default(true)
+  pictureUrl   String
   interactions GnomeInteraction[]
 }
 
