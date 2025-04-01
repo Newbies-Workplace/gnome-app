@@ -9,7 +9,15 @@ services:
       - '9001:9001'
     volumes:
       - 'minio_data:/data'
-
+  gnome-mobile:
+    build:
+      context: ./apps/gnome-mobile
+    restart: unless-stopped
+    init: true
+    ports:
+      - "3001:3000"
+    env_file:
+      - ./apps/gnome-mobile/.env
   gnome-db:
     image: postgres:15.3
     restart: unless-stopped
