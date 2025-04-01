@@ -1,4 +1,4 @@
-import { useNavigation, useRouter } from "expo-router";
+import { useLocalSearchParams, useNavigation, useRouter } from "expo-router";
 import React, { useEffect, useRef, useState } from "react";
 import { Image, Text, TouchableOpacity, View } from "react-native";
 import { Camera, useCameraDevices } from "react-native-vision-camera";
@@ -7,6 +7,7 @@ import { Camera, useCameraDevices } from "react-native-vision-camera";
 import BackIcon from "@/assets/icons/arrow-left.svg";
 
 const CameraScreen = () => {
+  const { gnomeid } = useLocalSearchParams<{ gnomeid: string }>();
   const devices = useCameraDevices();
   const [device, setDevice] = useState(null);
   const cameraRef = useRef<Camera>(null);
@@ -16,6 +17,8 @@ const CameraScreen = () => {
   //Header
   const navigation = useNavigation();
   const router = useRouter();
+
+  console.log("Closest gnome in camera: ", gnomeid);
 
   useEffect(() => {
     navigation.setOptions({
@@ -41,12 +44,6 @@ const CameraScreen = () => {
   });
 
   useEffect(() => {
-    console.log("Available Devices:", devices);
-    console.log("Selected Device:", device);
-    console.log("Has Permission:", hasPermission);
-  }, [devices, device, hasPermission]);
-
-  useEffect(() => {
     (async () => {
       const cameraPermission = await Camera.requestCameraPermission();
       setHasPermission(cameraPermission === "authorized");
@@ -63,6 +60,35 @@ const CameraScreen = () => {
     if (cameraRef.current) {
       const photo = await cameraRef.current.takePhoto();
       console.log("Photo captured:", photo);
+      sendInteractionData(
+        closestGnome.gnome.id,
+        closestGnome.gnome.name,
+        data.uri,
+      );
+    }
+  };
+
+  const sendInteractionData = async (gnomeId, userPictureUri) => {
+    const userId = user.id; // Zakładając, że masz dostęp do użytkownika
+    const interactionDate = new Date().toISOString();
+
+    const response = await fetch("", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        userId,
+        gnomeId,
+        interactionDate,
+        userPicture: userPictureUri,
+      }),
+    });
+
+    if (response.ok) {
+      console.log("Interaction data sent successfully");
+    } else {
+      console.error("Failed to send interaction data");
     }
   };
 

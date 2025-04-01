@@ -11,7 +11,13 @@ import { useNavigation } from "@react-navigation/native";
 import * as Location from "expo-location";
 import { useRouter } from "expo-router";
 import { getDistance } from "geolib";
-import React, { createRef, useEffect, useRef, useState } from "react";
+import React, {
+  createRef,
+  useDebugValue,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import {
   Alert,
   Image,
@@ -25,7 +31,7 @@ import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
 const GnomePin = require("@/assets/images/krasnal.png");
 
 const MIN_TRACKER_DISTANCE = 50;
-const MIN_REACHED_DISTANCE = 5;
+const MIN_REACHED_DISTANCE = 15;
 
 const HeaderControls = ({ user, errorMsg, setErrorMsg }) => {
   const router = useRouter();
@@ -110,6 +116,7 @@ const MapScreen = () => {
   const [distance, setDistance] = useState<number>();
   const [reachedMarker, setReachedMarker] = useState(false);
   const [showDistanceTracker, setShowDistanceTracker] = useState(false);
+  const [closestGnomeId, setClosestGnomeId] = useState<string>();
 
   const defaultRegion = {
     latitude: 51.1079,
@@ -180,23 +187,37 @@ const MapScreen = () => {
         { latitude: gnome.latitude, longitude: gnome.longitude },
       );
 
-      return distance;
+      return { gnome, distance };
     });
 
-    const closestMarkerIndex = distances.indexOf(Math.min(...distances));
-    const closestMarkerDistance = distances[closestMarkerIndex];
+    // Znajdź najbliższego gnoma
+    const closestGnome = distances.reduce((closest, current) => {
+      if (!closest || current.distance < closest.distance) {
+        return current;
+      }
+      return closest;
+    }, null);
 
-    if (closestMarkerDistance <= MIN_TRACKER_DISTANCE) {
+    if (closestGnome) {
+      setClosestGnomeId(closestGnome.gnome.id);
+    }
+
+    if (closestGnome && closestGnome.distance <= MIN_TRACKER_DISTANCE) {
       setShowDistanceTracker(true);
     } else {
       setShowDistanceTracker(false);
     }
-    if (closestMarkerDistance <= MIN_REACHED_DISTANCE) {
+
+    if (closestGnome && closestGnome.distance <= MIN_REACHED_DISTANCE) {
       setReachedMarker(true);
     } else {
       setReachedMarker(false);
     }
-    setDistance(Math.round(closestMarkerDistance));
+
+    // Ustaw odległość do najbliższego gnoma
+    if (closestGnome) {
+      setDistance(Math.round(closestGnome.distance));
+    }
   }, [userLocation, gnomes]);
 
   return (
@@ -240,11 +261,14 @@ const MapScreen = () => {
 
       <View className="absolute bottom-0 left-0 right-0 p-4 bg-transparent">
         {distance !== undefined &&
+          closestGnomeId !== undefined &&
           (distance > MIN_REACHED_DISTANCE &&
           distance <= MIN_TRACKER_DISTANCE ? (
             <DistanceTracker distance={distance} showDistanceTracker={true} />
           ) : distance <= MIN_REACHED_DISTANCE ? (
-            <DraggableGnome onUnlock={() => replace("/camera")} />
+            <DraggableGnome
+              onUnlock={() => replace(`/camera?gnomeid=${closestGnomeId}`)}
+            />
           ) : null)}
       </View>
     </View>
