@@ -7,22 +7,8 @@ import {
   useMapEvents,
 } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
-
-// -------Use when import to file---------
-// import { MapPicker } from "../components/mapPicker/MapPicker";
-// import { useState } from "react";
-
-// const defaultPosition = { lat: 51.1079, lng: 17.0385 }; // Default position (Wrocław, Poland)
-// const [selectedPosition, setSelectedPosition] = useState(defaultPosition);
-
-// const handlePositionChange = (position: { lat: number; lng: number }) => {
-//   setSelectedPosition(position);
-// };
-
-// <MapPicker
-//   defaultPosition={defaultPosition}
-//   onPositionChange={handlePositionChange}
-// />
+import { LatLng, icon } from "leaflet"; // Import `icon` from Leaflet
+import MapPin from "../images/Map pin.svg"; // Import your custom pin SVG
 
 interface MapPickerProps {
   defaultPosition: { lat: number; lng: number };
@@ -35,15 +21,21 @@ export const MapPicker: React.FC<MapPickerProps> = ({
 }) => {
   const [markerPosition, setMarkerPosition] = useState(defaultPosition);
 
-  // Component to handle map click events
+  // Create a custom icon for the marker
+  const customIcon = icon({
+    iconUrl: MapPin, // Path to your custom pin SVG
+    iconSize: [40, 40], // Size of the icon
+    iconAnchor: [20, 40], // Anchor point of the icon (center bottom)
+  });
+
   const MapClickHandler = () => {
     useMapEvents({
-      click: (e) => {
+      click: (e: { latlng: LatLng }) => {
         setMarkerPosition(e.latlng); // Update marker position on map click
         onPositionChange(e.latlng); // Notify parent component of the new position
       },
     });
-    return null; // This component does not render anything
+    return null;
   };
 
   return (
@@ -54,11 +46,11 @@ export const MapPicker: React.FC<MapPickerProps> = ({
       className="h-96 w-3/4 rounded-lg shadow-lg"
     >
       <TileLayer
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        url="https://mt1.google.com/vt/lyrs=m&x={x}&y={y}&z={z}"
+        attribution='&copy; <a href="https://www.google.com/maps">Google Maps</a>'
       />
       <MapClickHandler />
-      <Marker position={markerPosition}>
+      <Marker position={markerPosition} icon={customIcon}>
         <Popup>
           Wybrana lokalizacja: <br />
           {markerPosition.lat.toFixed(4)}, {markerPosition.lng.toFixed(4)}
