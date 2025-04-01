@@ -249,7 +249,7 @@ const MapScreen = () => {
             <DraggableGnome onUnlock={() => replace("/camera")} />
           ) : null)}
       </View>
-      <View style={styles.compassContainer}>
+      <View className="absolute top-[100px] left-1/2 -translate-x-1/2 z-50">
         <Compass />
       </View>
     </View>
@@ -273,12 +273,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     textAlign: "center",
     marginTop: 20,
-  },
-  compassContainer: {
-    top: 100,
-    left: "55%",
-    transform: [{ translateX: -width / 2 }],
-    zIndex: 10,
   },
 });
 

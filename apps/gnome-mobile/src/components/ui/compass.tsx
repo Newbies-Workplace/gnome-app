@@ -113,10 +113,7 @@ const Compass: React.FC = () => {
 
 const styles = StyleSheet.create({
   container: {
-    position: "absolute",
-    top: 0,
-    left: "50%",
-    transform: [{ translateX: -width / 2 }],
+    alignSelf: "center",
     width: width - 40,
     height: 40,
     backgroundColor: "#1E201E",

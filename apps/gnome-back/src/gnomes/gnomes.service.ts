@@ -58,10 +58,17 @@ export class GnomesService {
     });
   }
 
-  async createGnome(data: CreateGnomeRequest) {
+  async createGnome(data: CreateGnomeRequest, pictureUrl: string) {
     return this.prismaService.gnome.create({
       data: {
-        ...data,
+        name: data.name,
+        latitude: data.latitude,
+        longitude: data.longitude,
+        location: data.location,
+        description: data.description,
+        creationDate: data.creationDate,
+        pictureUrl: pictureUrl,
+        funFact: data.funFact,
       },
     });
   }

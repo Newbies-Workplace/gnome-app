@@ -2,6 +2,8 @@ import { JWTUser } from "@/auth/jwt/JWTUser";
 import { JwtGuard } from "@/auth/jwt/jwt.guard";
 import { User } from "@/auth/jwt/jwtuser.decorator";
 import { MinioService } from "@/minio/minio.service";
+import { Role } from "@/role/role.decorator";
+import { RoleGuard } from "@/roleguard/role.guard";
 import {
   Body,
   Controller,
@@ -68,19 +70,42 @@ export class GnomesController {
   // Tworzenie nowego gnoma
 
   @Post("")
-  @UseGuards(JwtGuard)
-  async createGnome(@Body() createGnomeDto: CreateGnomeRequest) {
-    return this.gnomeService.createGnome(createGnomeDto);
+  @UseGuards(JwtGuard, RoleGuard)
+  @Role(["ADMIN"])
+  @UseInterceptors(FileInterceptor("file"))
+  async createGnome(
+    @UploadedFile(
+      new ParseFilePipe({
+        fileIsRequired: false,
+        validators: [
+          new MaxFileSizeValidator({ maxSize: 10_000_000 }),
+          new FileTypeValidator({ fileType: "image/jpeg" }),
+        ],
+      }),
+    )
+    file: Express.Multer.File,
+    @Body() createGnomeDto: CreateGnomeRequest,
+  ) {
+    await this.minioService.createBucketIfNotExists();
+    const fileName = `${createGnomeDto.name}.jpg`;
+    const catalogueName = `defaultGnomePictures`;
+    const filePath = `${catalogueName}/${fileName}`;
+    await this.minioService.uploadFile(file, fileName, catalogueName);
+    const fileUrl = await this.minioService.getFileUrl(filePath);
+
+    const gnomeCreate = this.gnomeService.createGnome(createGnomeDto, fileUrl);
+    return gnomeCreate;
   }
 
   // Tworzenie interakcji usera z gnomem
 
   @Post("interaction")
-  @UseInterceptors(FileInterceptor("file"))
   @UseGuards(JwtGuard)
+  @UseInterceptors(FileInterceptor("file"))
   async uploadFile(
     @UploadedFile(
       new ParseFilePipe({
+        fileIsRequired: false,
         validators: [
           new MaxFileSizeValidator({ maxSize: 10_000_000 }), // 10MB
           new FileTypeValidator({ fileType: "image/jpeg" }),
@@ -93,12 +118,21 @@ export class GnomesController {
   ) {
     await this.minioService.createBucketIfNotExists();
 
-    const fileName = `${user.id}-${Date.now()}.jpg`;
+    const fileName = `${user.id}-${body.gnomeId}.jpg`;
     const catalogueName = "userGnomes";
-
+    const filePath = `${catalogueName}/${fileName}`;
     await this.minioService.uploadFile(file, fileName, catalogueName);
+    const gnomeName = (await this.gnomeService.getGnomeData(body.gnomeId)).name;
 
-    const fileUrl = await this.minioService.getFileUrl(fileName);
+    let fileUrl: string;
+
+    if (file) {
+      fileUrl = await this.minioService.getFileUrl(filePath);
+    } else {
+      fileUrl = await this.minioService.getFileUrl(
+        `defaultGnomePictures/${gnomeName}.jpg`,
+      );
+    }
 
     const interaction = await this.gnomeService.createInteraction(
       user.id,
