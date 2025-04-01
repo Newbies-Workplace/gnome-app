@@ -68,6 +68,7 @@ export class GnomesService {
         description: data.description,
         creationDate: data.creationDate,
         pictureUrl: pictureUrl,
+        funFact: data.funFact,
       },
     });
   }
