@@ -22,7 +22,7 @@ const FriendsList = ({ friends }) => {
     navigation.setOptions({
       headerLeft: () => (
         <TouchableOpacity className="p-5" onPress={() => router.back()}>
-          <BackIcon className="w-7 h-7"></BackIcon>
+          <BackIcon className="w-7 h-7" />
         </TouchableOpacity>
       ),
       headerTitle: () => (
