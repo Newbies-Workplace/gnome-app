@@ -5,7 +5,7 @@ import { useRouter } from "expo-router";
 import React, { useEffect } from "react";
 import { FlatList, Text, View } from "react-native";
 
-const GnomeList = () => {
+const Collection = () => {
   const { gnomes, fetchGnomes, loading, error } = useGnomeStore();
   const router = useRouter();
   const navigation = useNavigation();
@@ -14,10 +14,8 @@ const GnomeList = () => {
   useEffect(() => {
     navigation.setOptions({
       headerTitle: () => (
-        <View className="text-center">
-          <Text className="text-white text-2xl font-bold text-center tracking-wide">
-            Twoja kolekcja
-          </Text>
+        <View className="flex justify-center">
+          <Text className="text-white text-2xl font-bold">Twoja kolekcja</Text>
         </View>
       ),
       headerTitleAlign: "center",
@@ -27,28 +25,28 @@ const GnomeList = () => {
       headerShadowVisible: false,
       headerShown: true,
     });
-  }, []);
+  }, [navigation]);
 
   useEffect(() => {
     fetchGnomes();
   }, []);
 
-  if (loading) return <Text>Ładowanie...</Text>;
-  if (error) return <Text>Błąd: {error}</Text>;
+  if (loading) return <Text className="text-white">Ładowanie...</Text>;
+  if (error) return <Text className="text-white">Błąd: {error}</Text>;
 
   return (
-    <View className="p-5 bg-background">
+    <View className="p-5 bg-background flex-1">
       <Text className="text-2xl font-bold mb-4 text-white">Kolekcja</Text>
       <FlatList
         contentContainerClassName="pb-8"
         data={gnomes}
-        keyExtractor={(item) => item.id.toString()}
+        keyExtractor={(item) => item.id?.toString()}
         numColumns={3}
         renderItem={({ item }) => (
           <GnomeCard
             image={require("@/assets/images/placeholder.png")} // później zdjecia z bazy ;D
             text={item.name}
-            onClick={() => router.push("/gnome_detail")}
+            onClick={() => router.push(`/Gnomes/${item.id}`)}
           />
         )}
       />
@@ -56,4 +54,4 @@ const GnomeList = () => {
   );
 };
 
-export default GnomeList;
+export default Collection;
