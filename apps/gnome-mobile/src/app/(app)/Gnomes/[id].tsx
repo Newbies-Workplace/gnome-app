@@ -78,7 +78,7 @@ const GnomeDetail = () => {
 
       <Text className="text-white mb-2.5">{gnome.description}</Text>
 
-      <Text className="text-white text-bold text-xl font-afacad my-2">
+      <Text className="text-white font-bold text-xl font-afacad my-2">
         Ciekawostka:
       </Text>
       <Text className="text-white font-afacad my-2">{gnome.funFact}</Text>
