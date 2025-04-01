@@ -32,17 +32,17 @@ export const FileInput: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col items-right justify-right ml-10">
+    <div className="flex flex-row items-right justify-right ml-[60px]">
       <div
         className={`border-2 border-dashed rounded-lg p-6 w-96 h-48 flex flex-col items-center justify-center ${
-          isDragging ? "border-blue-500 bg-blue-100" : "border-gray-400"
+          isDragging ? "border-[#1E201E] bg-[#fff]" : "border-gray-400"
         }`}
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
       >
-        <p className="text-gray-600">
-          Drag and drop files here, or click to select files
+        <p className="text-[#757A75] text-center">
+          Przeciągnij i upuść pliki tutaj lub wybierz je klikając poniżej
         </p>
         <input
           type="file"
@@ -51,23 +51,41 @@ export const FileInput: React.FC = () => {
           className="hidden"
           id="fileInput"
         />
-        <label
-          htmlFor="fileInput"
-          className="mt-2 px-4 py-2 bg-blue-500 text-white rounded cursor-pointer hover:bg-blue-600"
-        >
-          Select Files
-        </label>
+        <div className="flex flex-row items-center justify-center mt-2 gap-2">
+          <button
+            onClick={() => document.getElementById("fileInput")?.click()}
+            className={`mt-4 px-4 py-2 h-[40px] w-[100px] ${
+              files.length >= 4
+                ? "bg-gray-400 cursor-not-allowed"
+                : "bg-[#D6484A] hover:bg-[#D96466]"
+            } text-white rounded-[15px]`}
+            disabled={files.length >= 4}
+          >
+            Wybierz
+          </button>
+          <button
+            onClick={() => setFiles([])}
+            className="mt-4 px-4 py-2 h-[40px] w-[100px] bg-[#D6484A] text-white rounded-[15px] cursor-pointer hover:bg-[#D96466]"
+          >
+            Wyczyść
+          </button>
+        </div>
       </div>
 
-      <div className="mt-4 w-96">
-        <h3 className="text-lg font-bold">Selected Files:</h3>
+      <div className="-mt-1 w-96 ml-5">
+        {files.length > 0 && <h3 className="text-lg">Wybrane pliki:</h3>}
         <ul className="list-disc pl-5">
-          {files.map((file, index) => (
-            <li key={index} className="text-gray-700">
+          {files.slice(0, 4).map((file, index) => (
+            <li key={index} className="text-[#A7A7A7]">
               {file.name}
             </li>
           ))}
         </ul>
+        {files.length >= 4 && (
+          <p className="text-[#A7A7A7] mt-2">
+            Nie możesz dodać więcej niż 4 pliki
+          </p>
+        )}
       </div>
     </div>
   );

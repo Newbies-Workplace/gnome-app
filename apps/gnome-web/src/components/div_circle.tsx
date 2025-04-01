@@ -12,7 +12,7 @@ export const CircleTracker: React.FC<CircleProps> = ({
   text,
 }) => {
   return (
-    <div className="flex flex-row items-center gap-2 mt-15">
+    <div className="flex flex-row items-center gap-2 mt-15 relative">
       <div
         className={cn(
           "w-[50px] h-[50px] rounded-full bg-[#1E201E] items-center text-center justify-center flex text-[21px] text-[#757A75]",

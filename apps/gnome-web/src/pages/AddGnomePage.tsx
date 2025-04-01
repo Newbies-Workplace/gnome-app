@@ -10,7 +10,7 @@ export const AddGnomePage = () => {
   return (
     <div>
       <Navbar />
-      <BgElement className="rounded-b-[15px] rounded-tl-[15px] h-300" />
+      <BgElement className="rounded-b-[15px] rounded-tl-[15px] h-360" />
       <div>
         <a href="/admin">
           <img
@@ -21,11 +21,11 @@ export const AddGnomePage = () => {
         </a>
       </div>
       <h1 className="text-[40px] text-center mx-auto">Dodawanie krasnala</h1>
-      <div className="items-left justify-left flex flex-col ml-30 mt-10 ">
+      <div className="items-left justify-left flex flex-col ml-40 mt-10 ">
         <div className="flex flex-col justify-center gap-10">
           <div className="flex flex-col">
             <CircleTracker label="1" text="Wprowadź nazwę krasnala" />
-            <Input type="text" placeholder="Nazwa" className="ml-[50px]" />
+            <Input type="text" placeholder="Nazwa" className="ml-[60px]" />
           </div>
         </div>
         <div>
@@ -35,33 +35,35 @@ export const AddGnomePage = () => {
         <div className="flex flex-col">
           <CircleTracker label="3" text="Wybierz datę powstania krasnala" />
           <DatePickerInput
-            className="ml-[50px]"
+            className="ml-[60px] "
             onChange={(): void => {
               throw new Error("Function not implemented.");
             }}
           />
         </div>
-        <div>
-          <CircleTracker label="4" text="Opis" />
+        <div className="flex flex-col">
+          <CircleTracker label="4" text="Opisz krasnala" />
+          <textarea
+            className="bg-[#ffffff] text-[#B3B3B3] w-[500px] h-[150px] rounded-[10px] pl-[25px] pt-[15px] ml-[60px]"
+            placeholder="Opis"
+          />
         </div>
         <div>
           <CircleTracker label="5" text="Wybierz lokalizację krasnala" />
         </div>
         <div className="flex flex-col">
           <CircleTracker label="6" text="Podaj dokładny adres krasnala" />
-          <Input type="text" placeholder="Adres" className="ml-[50px]" />
+          <Input type="text" placeholder="Adres" className="ml-[60px]" />
         </div>
-        <div className="flex flex-row">
-          <CircleTracker label="7" />
-          <div className="flex ml-10">
-            <LinkButton
-              to="/admin/infoadd"
-              label="Dodaj"
-              className=" ml-10 w-[200px] h-[50px] text-center text-[21px] text-[#fff] bg-[#D6484A] 
-                rounded-[30px] flex items-center justify-center transition-all duration-200 hover:text-[22px] 
+        <div className="flex flex-row mt-10">
+          <CircleTracker label="7" className="-mt-15" />
+          <LinkButton
+            to="/admin/infoadd"
+            label="Dodaj"
+            className="w-[200px] h-[50px] ml-[60px] text-center text-[21px] text-[#fff] bg-[#D6484A] 
+                rounded-[25px] flex items-center justify-center transition-all duration-200 hover:text-[22px] 
                 hover:bg-[#D96466] hover:text-[#FFFFFF]"
-            />
-          </div>
+          />
         </div>
       </div>
     </div>

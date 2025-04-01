@@ -24,12 +24,12 @@ export const DatePickerInput: React.FC<DatePickerInputProps> = ({
 
   return (
     <div className={`flex flex-col ${className}`}>
-      {label && <label className="mb-2 text-gray-300">{label}</label>}
+      {label && <label className=" text-[#757A75]">{label}</label>}
       <DatePicker
         selected={date}
         onChange={handleDateChange}
         dateFormat="yyyy-MM-dd"
-        className="bg-[#1E201E] border-2 border-[#FFF] text-white w-full h-10 rounded-[15px] pl-3"
+        className="bg-[#ffffff] text-[#B3B3B3] w-[500px] h-[50px] rounded-[10px] pl-[25px]"
         placeholderText="Wybierz datę"
       />
     </div>
