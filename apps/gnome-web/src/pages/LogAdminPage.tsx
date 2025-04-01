@@ -9,11 +9,12 @@ export const LogAdminPage = () => {
   const navigate = useNavigate();
 
   const handleGoogleLogin = useGoogleLogin({
+    flow: "auth-code",
     onSuccess: async (tokenResponse) => {
       try {
         // Send the Google token to the backend
         const response = await axiosInstance.post("/auth/google", {
-          idToken: tokenResponse.access_token, // Use the access_token as idToken
+          idToken: tokenResponse.code, // Use the access_token as idToken
         });
 
         // Handle the response from the backend

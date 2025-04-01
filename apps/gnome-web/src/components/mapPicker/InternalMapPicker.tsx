@@ -1,64 +1,68 @@
 "use client";
 
-import PinIcon from "@/assets/pin.svg";
-import { LatLngLiteral } from "leaflet";
-import Image from "next/image";
-import React from "react";
+import { LatLngLiteral, icon } from "leaflet";
+import React, { useState } from "react";
 import { MapContainer, TileLayer, useMapEvents } from "react-leaflet";
 // @ts-ignore
-import { Marker, MarkerLayer } from "react-leaflet-marker";
+import { Marker } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 
-interface MapPickerProps {
-  value?: LatLngLiteral;
-  onChange: (value: LatLngLiteral) => void;
-}
+const InteractiveMapPicker: React.FC = () => {
+  const defaultPosition: LatLngLiteral = { lat: 51.1079, lng: 17.0385 }; // Default position (Wrocław, Poland)
+  const [selectedPosition, setSelectedPosition] =
+    useState<LatLngLiteral | null>(null);
 
-const InternalMapPicker: React.FC<MapPickerProps> = ({ value, onChange }) => {
+  const handlePositionChange = (position: LatLngLiteral) => {
+    setSelectedPosition(position);
+  };
+
   return (
-    <div className={"size-full"}>
+    <div className="size-full">
       <MapContainer
-        className={"h-96 rounded-2xl"}
-        center={
-          value ?? {
-            lat: 51.08549,
-            lng: 17.0104,
-          }
-        }
+        className="h-96 rounded-2xl"
+        center={defaultPosition}
         zoom={13}
         scrollWheelZoom
       >
         <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-
-        <MapMarker onChange={onChange} value={value} />
+        <MapMarker value={selectedPosition} onChange={handlePositionChange} />
       </MapContainer>
+      <div className="text-center mt-4">
+        {selectedPosition && (
+          <p className="text-lg">
+            Wybrana lokalizacja: {selectedPosition.lat.toFixed(4)},{" "}
+            {selectedPosition.lng.toFixed(4)}
+          </p>
+        )}
+      </div>
     </div>
   );
 };
 
 interface MapMarkerProps {
-  value?: LatLngLiteral;
+  value?: LatLngLiteral | null;
   onChange: (value: LatLngLiteral) => void;
 }
 
 const MapMarker: React.FC<MapMarkerProps> = ({ value, onChange }) => {
+  // Create a custom icon for the marker
+  const customIcon = icon({
+    iconUrl: "../src/images/Map_pin.svg", // Path to your custom pin SVG
+    iconSize: [40, 40], // Size of the icon
+    iconAnchor: [20, 40], // Anchor point of the icon (center bottom)
+  });
+
   useMapEvents({
     click(e) {
-      onChange(e.latlng);
+      onChange(e.latlng); // Update position on map click
     },
   });
 
   if (!value) {
-    return null;
+    return null; // Render nothing if no position is selected
   }
 
-  return (
-    <MarkerLayer>
-      <Marker position={value} size={[64, 64]} placement={"top"}>
-        <Image src={PinIcon} alt={"pin"} />
-      </Marker>
-    </MarkerLayer>
-  );
+  return <Marker position={value} icon={customIcon} />;
 };
 
-export default InternalMapPicker;
+export default InteractiveMapPicker;
