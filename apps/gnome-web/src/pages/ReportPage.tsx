@@ -4,12 +4,13 @@ import { LinkButton } from "../components/LinkButton";
 import Navbar from "../components/Navbar";
 import { BgElement } from "../components/bg_element";
 import { CircleTracker } from "../components/div_circle";
+import InteractiveMapPicker from "../components/mapPicker/InternalMapPicker";
 
 export const ReportPage = () => {
   return (
     <div>
       <Navbar />
-      <BgElement className="rounded-b-[15px] rounded-tl-[15px] rounded-tr-[15px] h-360" />
+      <BgElement className="rounded-b-[15px] rounded-tl-[15px] rounded-tr-[15px] h-390" />
       <div>
         <a href="/admin">
           <img
@@ -43,6 +44,9 @@ export const ReportPage = () => {
             label="3"
             text="Wskaż poprzednią lokalizacje krasnala:"
           />
+          <div className=" h-[390px] w-[500px] ml-[60px] w-96 h-48">
+            <InteractiveMapPicker />
+          </div>
         </div>
         <div className="flex flex-col">
           <CircleTracker
@@ -63,8 +67,8 @@ export const ReportPage = () => {
             <LinkButton
               to="/admin/infoadd"
               label="Zgłoś"
-              className="w-[200px] h-[50px] ml-[8px] text-center text-[21px] text-[#fff] bg-[#D6484A] 
-                rounded-[30px] flex items-center justify-center transition-all duration-200 hover:text-[22px] 
+              className="w-[200px] h-[50px] ml-1 text-center text-[21px] text-[#fff] bg-[#D6484A] 
+                rounded-[20px] flex items-center justify-center transition-all duration-200 hover:text-[22px] 
                 hover:bg-[#D96466] hover:text-[#FFFFFF]"
             />
           </div>

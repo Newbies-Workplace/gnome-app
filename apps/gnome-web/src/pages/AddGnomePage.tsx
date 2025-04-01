@@ -2,7 +2,6 @@ import { DatePickerInput } from "../components/DatePickerInput";
 import { FileInput } from "../components/FileInput";
 import { Input } from "../components/Input";
 import { LinkButton } from "../components/LinkButton";
-import MapStyle from "../components/MapStyle";
 import Navbar from "../components/Navbar";
 import { BgElement } from "../components/bg_element";
 import { CircleTracker } from "../components/div_circle";
@@ -12,7 +11,7 @@ export const AddGnomePage = () => {
   return (
     <div>
       <Navbar />
-      <BgElement className="rounded-b-[15px] rounded-tl-[15px] h-360" />
+      <BgElement className="rounded-b-[15px] rounded-tl-[15px] h-450" />
       <div>
         <a href="/admin">
           <img
@@ -52,7 +51,9 @@ export const AddGnomePage = () => {
         </div>
         <div>
           <CircleTracker label="5" text="Wybierz lokalizację krasnala" />
-          <InteractiveMapPicker />
+          <div className=" h-[390px] w-[500px] ml-[60px] w-96 h-48">
+            <InteractiveMapPicker />
+          </div>
         </div>
         <div className="flex flex-col">
           <CircleTracker label="6" text="Podaj dokładny adres krasnala" />
@@ -63,8 +64,8 @@ export const AddGnomePage = () => {
           <LinkButton
             to="/admin/infoadd"
             label="Dodaj"
-            className="w-[200px] h-[50px] ml-[60px] text-center text-[21px] text-[#fff] bg-[#D6484A] 
-                rounded-[25px] flex items-center justify-center transition-all duration-200 hover:text-[22px] 
+            className="w-[200px] h-[50px] ml-1 text-center text-[21px] text-[#fff] bg-[#D6484A] 
+                rounded-[20px] flex items-center justify-center transition-all duration-200 hover:text-[22px] 
                 hover:bg-[#D96466] hover:text-[#FFFFFF]"
           />
         </div>

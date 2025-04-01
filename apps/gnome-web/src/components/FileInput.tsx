@@ -34,7 +34,7 @@ export const FileInput: React.FC = () => {
   return (
     <div className="flex flex-row items-right justify-right ml-[60px]">
       <div
-        className={`border-2 border-dashed rounded-lg p-6 w-96 h-48 flex flex-col items-center justify-center ${
+        className={`border-2 border-dashed rounded-lg p-6 w-[500px] h-48 flex flex-col items-center justify-center ${
           isDragging ? "border-[#1E201E] bg-[#fff]" : "border-gray-400"
         }`}
         onDragOver={handleDragOver}

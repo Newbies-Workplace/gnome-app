@@ -29,7 +29,7 @@ const InteractiveMapPicker: React.FC = () => {
       </MapContainer>
       <div className="text-center mt-4">
         {selectedPosition && (
-          <p className="text-lg">
+          <p className="text-[#B3B3B3] text-bold">
             Wybrana lokalizacja: {selectedPosition.lat.toFixed(4)},{" "}
             {selectedPosition.lng.toFixed(4)}
           </p>
