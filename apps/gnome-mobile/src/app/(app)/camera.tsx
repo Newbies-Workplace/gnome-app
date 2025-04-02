@@ -40,6 +40,19 @@ const CameraScreen = () => {
           </Text>
         </View>
       ),
+      headerRight: () => (
+        <TouchableOpacity
+          className="p-5"
+          onPress={() => {
+            addInteraction(gnomeid, undefined);
+            router.push("/collection");
+          }}
+        >
+          <Text className="text-white text-lg font-bold text-center tracking-wide">
+            Pomiń
+          </Text>
+        </TouchableOpacity>
+      ),
       headerTitleAlign: "center",
       headerStyle: {
         backgroundColor: "#131413",
@@ -70,6 +83,7 @@ const CameraScreen = () => {
       });
       const photoUrl = `file://${photo.path}`;
       await addInteraction(gnomeid, photoUrl);
+      router.push("/collection");
     }
   };
 
