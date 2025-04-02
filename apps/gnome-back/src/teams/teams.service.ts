@@ -21,11 +21,14 @@ export class TeamsService {
   }
 
   async getTeamWithMemberId(userId: string) {
-    return this.prisma.team.findMany({
+    // Używamy findFirst, aby znaleźć drużynę z użytkownikiem o podanym userId
+    const team = await this.prisma.team.findFirst({
       include: {
         members: {
           select: {
             userId: true,
+            id: true,
+            teamId: true,
           },
         },
       },
@@ -37,20 +40,43 @@ export class TeamsService {
         },
       },
     });
+
+    if (!team) {
+      return null;
+    }
+
+    const members = team.members.map((member) => ({
+      userId: member.userId,
+    }));
+
+    return {
+      id: team.id,
+      leader: team.leader,
+      members: members,
+    };
   }
-  async createTeam(leaderId: string, memberIds: string[]) {
-    return this.prisma.team.create({
+  async createTeam(leaderId: string, members: string[]) {
+    const createTeam = await this.prisma.team.create({
       data: {
         leader: leaderId, // Lider zespołu ustawiany jako pierwszy członek
         members: {
-          create: memberIds.map((userId) => ({
+          create: members.map((userId) => ({
             user: {
               connect: { id: userId }, // Przypisujemy członków przez ich id
             },
           })),
         },
       },
+      include: {
+        members: {
+          select: {
+            userId: true,
+          },
+        },
+      },
     });
+
+    return createTeam;
   }
 
   async deleteTeam(teamId: string) {

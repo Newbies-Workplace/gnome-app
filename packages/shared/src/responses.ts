@@ -67,6 +67,12 @@ export interface ReportResponse {
   reportAuthor: string;
 }
 
+export interface SearchForFriendResponse {
+  id: string;
+  name: string;
+  pictureUrl: string;
+}
+
 export interface FriendsResponse {
   id: string;
   senderId: string;
@@ -75,8 +81,6 @@ export interface FriendsResponse {
 }
 
 export interface TeamMembersResponse {
-  id: string;
-  teamId: string;
   userId: string;
 }
 

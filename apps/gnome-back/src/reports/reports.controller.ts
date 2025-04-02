@@ -27,8 +27,10 @@ export class ReportsController {
   }
 
   @Post("")
-  createReport(@Body() body: CreateReportRequest) {
-    return this.reportsService.createReport(
+  async createReport(
+    @Body() body: CreateReportRequest,
+  ): Promise<ApiResponse<ReportResponse>> {
+    const createReport = await this.reportsService.createReport(
       body.gnomeName,
       body.pictureUrl,
       body.latitude,
@@ -36,26 +38,45 @@ export class ReportsController {
       body.location,
       body.reportAuthor,
     );
+
+    return {
+      success: true,
+      data: createReport,
+    };
   }
 
   @Get(":id")
   @UseGuards(JwtGuard, RoleGuard)
   @Role(["ADMIN"])
-  getUniqueReport(@Param("id") id: string) {
-    return this.reportsService.getUniqueReport(id);
+  async getUniqueReport(
+    @Param("id") id: string,
+  ): Promise<ApiResponse<ReportResponse>> {
+    const uniqueReport = await this.reportsService.getUniqueReport(id);
+
+    return {
+      success: true,
+      data: uniqueReport,
+    };
   }
 
   @Delete(":id")
   @UseGuards(JwtGuard, RoleGuard)
   @Role(["ADMIN"])
-  deleteReport(@Param("id") id: string) {
-    return this.reportsService.deleteReport(id);
+  async deleteReport(
+    @Param("id") id: string,
+  ): Promise<ApiResponse<ReportResponse>> {
+    const deletedReport = await this.reportsService.deleteReport(id);
+
+    return {
+      success: true,
+      data: deletedReport,
+    };
   }
 
   @Delete("")
   @UseGuards(JwtGuard, RoleGuard)
   @Role(["ADMIN"])
-  deleteAllReports() {
+  deleteAllReports(): Promise<number> {
     /* zwraca liczbe usunietych zgloszen */
     return this.reportsService.deleteAllReports();
   }

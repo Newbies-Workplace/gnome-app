@@ -12,6 +12,7 @@ import {
   Query,
   UseGuards,
 } from "@nestjs/common";
+import { ApiResponse, TeamResponse } from "@repo/shared/responses";
 import { TeamsService } from "./teams.service";
 
 @Controller("teams")
@@ -20,22 +21,39 @@ export class TeamsController {
 
   @Get("@me") // GET /teams/@me
   @UseGuards(JwtGuard)
-  async getMyTeam(@User() user: JWTUser) {
-    console.log(user.id);
-    return this.teamsService.getTeamWithMemberId(user.id);
+  async getMyTeam(@User() user: JWTUser): Promise<ApiResponse<TeamResponse>> {
+    const getTeam = await this.teamsService.getTeamWithMemberId(user.id);
+    return {
+      success: true,
+      data: getTeam,
+    };
   }
 
   @Get(":id") // GET /teams/:id
   @UseGuards(JwtGuard)
-  findOne(@Param("id") id: string) {
-    return this.teamsService.getTeam(id);
+  async findOne(@Param("id") id: string): Promise<ApiResponse<TeamResponse>> {
+    const getTeamById = await this.teamsService.getTeam(id);
+    return {
+      success: true,
+      data: getTeamById,
+    };
   }
 
   @Post() // POST /teams
   @UseGuards(JwtGuard)
-  async create(@Body() team: { members: string[] }, @User() user: JWTUser) {
+  async create(
+    @Body() team: { members: string[] },
+    @User() user: JWTUser,
+  ): Promise<ApiResponse<TeamResponse>> {
     const leaderId = user.id;
-    return this.teamsService.createTeam(leaderId, team.members);
+    const createTeam = await this.teamsService.createTeam(
+      leaderId,
+      team.members,
+    );
+    return {
+      success: true,
+      data: createTeam,
+    };
   }
 
   @Delete(":id") // DELETE /teams/:id

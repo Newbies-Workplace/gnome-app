@@ -69,7 +69,7 @@ export class GnomesController {
 
   // Pobieranie interakcji gnomów
 
-  @Get(":id/interactions")
+  @Get(":id/interaction/count")
   @UseGuards(JwtGuard)
   async getInteractionCount(@Param("id") gnomeId: string): Promise<number> {
     const interactionCount = this.gnomeService.getInteractionCount(gnomeId);
