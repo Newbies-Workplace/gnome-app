@@ -28,7 +28,7 @@ import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
 const GnomePin = require("@/assets/images/krasnal.png");
 
 const MIN_TRACKER_DISTANCE = 50;
-const MIN_REACHED_DISTANCE = 15;
+const MIN_REACHED_DISTANCE = 10;
 
 const HeaderControls = ({ user, errorMsg, setErrorMsg }) => {
   const router = useRouter();
