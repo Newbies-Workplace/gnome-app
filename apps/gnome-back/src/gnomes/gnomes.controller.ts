@@ -148,9 +148,12 @@ export class GnomesController {
           );
         }),
       );
-      await Promise.all(interactions);
-      return interactions;
+      const resolvedInteractions = await Promise.all(interactions);
+      return resolvedInteractions.filter(
+        (interaction) => interaction.userId === user.id,
+      );
     }
+
     const interaction = await this.gnomeService.createInteraction(
       user.id,
       body.interactionDate,
