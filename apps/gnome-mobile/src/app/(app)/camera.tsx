@@ -1,4 +1,8 @@
-import { useNavigation, useRouter } from "expo-router";
+import BackIcon from "@/assets/icons/arrow-left.svg";
+import { axiosInstance } from "@/lib/api/axios";
+import { useGnomeStore } from "@/store/useGnomeStore";
+import axios from "axios";
+import { useLocalSearchParams, useNavigation, useRouter } from "expo-router";
 import React, { useEffect, useRef, useState } from "react";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import {
@@ -8,10 +12,9 @@ import {
   useCameraDevices,
 } from "react-native-vision-camera";
 
-//Import ikon
-import BackIcon from "@/assets/icons/arrow-left.svg";
-
 const CameraScreen = () => {
+  const { addInteraction } = useGnomeStore();
+  const { gnomeid } = useLocalSearchParams<{ gnomeid: string }>();
   const devices = useCameraDevices();
   const [device, setDevice] = useState<CameraDevice | null>(null);
   const cameraRef = useRef<Camera>(null);
@@ -21,6 +24,7 @@ const CameraScreen = () => {
   //Header
   const navigation = useNavigation();
   const router = useRouter();
+  console.log("Closest gnome in camera: ", gnomeid);
 
   useEffect(() => {
     navigation.setOptions({
@@ -36,6 +40,19 @@ const CameraScreen = () => {
           </Text>
         </View>
       ),
+      headerRight: () => (
+        <TouchableOpacity
+          className="p-5"
+          onPress={() => {
+            addInteraction(gnomeid, undefined);
+            router.push("/collection");
+          }}
+        >
+          <Text className="text-white text-lg font-bold text-center tracking-wide">
+            Pomiń
+          </Text>
+        </TouchableOpacity>
+      ),
       headerTitleAlign: "center",
       headerStyle: {
         backgroundColor: "#131413",
@@ -44,12 +61,6 @@ const CameraScreen = () => {
       headerShown: true,
     });
   });
-
-  useEffect(() => {
-    console.log("Available Devices:", devices);
-    console.log("Selected Device:", device);
-    console.log("Has Permission:", hasPermission);
-  }, [devices, device, hasPermission]);
 
   useEffect(() => {
     (async () => {
@@ -71,7 +82,8 @@ const CameraScreen = () => {
         flash: flashMode,
       });
       const photoUrl = `file://${photo.path}`;
-      console.log("Photo captured:", photoUrl);
+      await addInteraction(gnomeid, photoUrl);
+      router.push("/collection");
     }
   };
 
