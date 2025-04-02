@@ -11,6 +11,7 @@ export interface Gnome {
   creationDate: Date;
   description: string;
   exists: boolean;
+  pictureUrl: string;
 }
 
 interface Interaction {
@@ -19,7 +20,6 @@ interface Interaction {
   gnomeId: string;
   userId: string;
   userPicture: string;
-  gnome: Gnome;
 }
 
 interface GnomeState {
@@ -68,7 +68,7 @@ export const useGnomeStore = create<GnomeState>((set) => ({
       if (!user) {
         throw new Error("User is not authenticated");
       }
-      const data = await GnomesService.getMyGnomesInteractions(user.id);
+      const data = await GnomesService.getMyGnomesInteractions();
       console.log("Fetched interactions:", data); // Log data
       if (!Array.isArray(data))
         throw new Error("Invalid interaction data format");

@@ -47,21 +47,34 @@ const GnomeDetail = () => {
       </View>
     );
   }
+  const getImageSource = () => {
+    if (interaction?.found && interaction?.userPicture)
+      return (
+        <Image
+          source={{ uri: interaction.userPicture }}
+          style={{ width: 379, height: 455 }}
+        />
+      );
+    if (interaction?.found)
+      return (
+        <Image
+          source={{ uri: gnome.pictureUrl }}
+          style={{ width: 379, height: 455 }}
+        />
+      );
+    return (
+      <Image
+        source={require("@/assets/images/placeholder.png")}
+        style={{ width: 379, height: 455 }}
+      />
+    );
+  };
 
   const interaction = interactions.find((i) => i.gnomeId === gnome.id);
 
   return (
     <ScrollView className="bg-background p-4">
-      <View className="items-center mb-5">
-        <Image
-          style={{ width: 379, height: 455 }}
-          source={
-            interaction?.userPicture
-              ? { uri: interaction.userPicture }
-              : require("@/assets/images/placeholder.png")
-          }
-        />
-      </View>
+      <View className="items-center mb-5">{getImageSource()}</View>
       <Text className="text-center text-white text-3xl font-bold mb-2.5">
         {gnome.name}
       </Text>
@@ -76,7 +89,7 @@ const GnomeDetail = () => {
         <Text className="text-white ml-2.5">
           Data znalezienia:
           {interaction
-            ? `${interaction.interactionDate.toLocaleString()}` // Assuming interactionDate is a Date object
+            ? `${interaction.interactionDate.toLocaleString()}`
             : " Krasnal jeszcze nie znaleziony"}
         </Text>
       </View>
