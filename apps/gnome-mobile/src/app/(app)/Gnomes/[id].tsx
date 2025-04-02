@@ -4,6 +4,7 @@ import FoundIcon from "@/assets/icons/found.svg";
 import { GnomeCard } from "@/components/ui/GnomeCard";
 import { useGnomeStore } from "@/store/useGnomeStore";
 import { useNavigation } from "@react-navigation/native";
+import { useRoute } from "@react-navigation/native";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
@@ -14,6 +15,7 @@ const GnomeDetail = () => {
   const [gnome, setGnome] = useState(null);
   const router = useRouter();
   const navigation = useNavigation();
+  const route = useRoute();
 
   useEffect(() => {
     navigation.setOptions({
@@ -46,12 +48,19 @@ const GnomeDetail = () => {
     );
   }
 
-  const interaction = interactions.find((i) => i.id === gnome.id);
+  const interaction = interactions.find((i) => i.gnomeId === gnome.id);
 
   return (
     <ScrollView className="bg-background p-4">
       <View className="items-center mb-5">
-        <Image source={require("@/assets/icons/gnome-detail.png")} />
+        <Image
+          style={{ width: 379, height: 455 }}
+          source={
+            interaction?.userPicture
+              ? { uri: interaction.userPicture }
+              : require("@/assets/images/placeholder.png")
+          }
+        />
       </View>
       <Text className="text-center text-white text-3xl font-bold mb-2.5">
         {gnome.name}
@@ -67,7 +76,7 @@ const GnomeDetail = () => {
         <Text className="text-white ml-2.5">
           Data znalezienia:
           {interaction
-            ? `${interaction.interactionDate.toLocaleString()}`
+            ? `${interaction.interactionDate.toLocaleString()}` // Assuming interactionDate is a Date object
             : " Krasnal jeszcze nie znaleziony"}
         </Text>
       </View>

@@ -6,7 +6,8 @@ import React, { useEffect } from "react";
 import { FlatList, Text, View } from "react-native";
 
 const Collection = () => {
-  const { gnomes, fetchGnomes, interactions } = useGnomeStore();
+  const { gnomes, fetchGnomes, interactions, fetchMyInteractions } =
+    useGnomeStore();
   const router = useRouter();
   const navigation = useNavigation();
 
@@ -29,6 +30,7 @@ const Collection = () => {
 
   useEffect(() => {
     fetchGnomes();
+    fetchMyInteractions(); // Fetch interactions when component mounts
   }, []);
 
   if (gnomes.length === 0) {
@@ -47,14 +49,20 @@ const Collection = () => {
         data={gnomes}
         keyExtractor={(item) => item.id?.toString()}
         numColumns={3}
-        renderItem={({ item }) => (
-          <GnomeCard
-            image={require("@/assets/images/placeholder.png")}
-            text={item.name}
-            onClick={() => router.push(`/Gnomes/${item.id}`)}
-            interaction={interactions.find((i) => i.id === item.id)}
-          />
-        )}
+        renderItem={({ item }) => {
+          const interaction = interactions.find((i) => i.id === item.id);
+          return (
+            <GnomeCard
+              image={require("@/assets/images/placeholder.png")}
+              text={item.name}
+              onClick={() => router.push(`/Gnomes/${item.id}`)}
+              interaction={{
+                found: interaction !== undefined,
+                userPicture: interaction?.userPicture,
+              }}
+            />
+          );
+        }}
       />
     </View>
   );

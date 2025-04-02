@@ -13,14 +13,14 @@ interface GnomeCardProps {
   image: ImageSourcePropType;
   text: string;
   onClick: () => void;
-  interaction?: { found: boolean; imageUrl?: string };
+  interaction?: { found: boolean; imageUrl?: string; userPicture?: string };
 }
 
 export const GnomeCard: React.FC<GnomeCardProps> = ({
   image,
   text,
   onClick,
-  interaction = { found: false, imageUrl: "" },
+  interaction,
 }) => {
   // Determine which icon to show
   const getIcon = () => {
@@ -41,7 +41,9 @@ export const GnomeCard: React.FC<GnomeCardProps> = ({
           className={`rounded-md mb-2 aspect-[4/5] ${
             interaction?.found && !interaction?.imageUrl ? "opacity-50" : ""
           }`}
-          source={image}
+          source={
+            interaction?.userPicture ? { uri: interaction.userPicture } : image
+          }
         />
         {/* Top Right Icon */}
         <View className="absolute top-1 left-1">{getIcon()}</View>
