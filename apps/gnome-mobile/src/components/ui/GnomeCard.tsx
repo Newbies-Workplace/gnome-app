@@ -1,5 +1,4 @@
 import CameraIcon from "@/assets/icons/camera.svg";
-import Locked from "@/assets/icons/locked.svg";
 import NoCameraIcon from "@/assets/icons/no-camera.svg";
 import React from "react";
 import {
@@ -29,7 +28,7 @@ export const GnomeCard: React.FC<GnomeCardProps> = ({
       return <CameraIcon width={20} height={20} />;
     if (interaction?.found && !interaction?.imageUrl)
       return <NoCameraIcon width={20} height={20} />;
-    return <Locked width={20} height={20} />;
+    return null;
   };
 
   return (
