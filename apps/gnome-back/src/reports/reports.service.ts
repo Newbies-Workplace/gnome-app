@@ -1,15 +1,21 @@
 import { PrismaService } from "@/db/prisma.service";
 import { Injectable } from "@nestjs/common";
 import { Report } from "@prisma/client";
+import { ApiResponse, ReportResponse } from "@repo/shared/responses";
 
 @Injectable()
 export class ReportsService {
   constructor(private readonly prismaService: PrismaService) {}
 
-  async getAllReports(): Promise<{ reportCount: number; reports: Report[] }> {
+  async getAllReports(): Promise<
+    ApiResponse<{ reportCount: number; reports: ReportResponse[] }>
+  > {
     const reports = await this.prismaService.report.findMany();
     const reportCount = await reports.length;
-    return { reportCount, reports };
+    return {
+      success: true,
+      data: { reportCount, reports },
+    };
   }
 
   async createReport(

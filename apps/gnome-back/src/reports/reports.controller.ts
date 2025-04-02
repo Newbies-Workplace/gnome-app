@@ -17,6 +17,7 @@ import {
 } from "@nestjs/common";
 import { FileTypeValidator, MaxFileSizeValidator } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
+import { ApiResponse, ReportResponse } from "@repo/shared/responses";
 import { CreateReportRequest } from "./dto/CreateReportRequest.dto";
 import { ReportsService } from "./reports.service";
 @Controller("reports")
@@ -28,9 +29,9 @@ export class ReportsController {
   @Get("")
   @UseGuards(JwtGuard, RoleGuard)
   @Role(["ADMIN"])
-  getAllReports() {
-    /* zwraca wszystkie reporty i ich ilosc */
-    return this.reportsService.getAllReports();
+  async getAllReports() {
+    const allReports = await this.reportsService.getAllReports();
+    return allReports;
   }
   @Post("")
   @UseInterceptors(FileInterceptor("file"))

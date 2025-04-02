@@ -2,8 +2,8 @@ import { GoogleUser } from "@/auth/types/GoogleUser";
 import { PrismaService } from "@/db/prisma.service";
 import { BadRequestException, Injectable } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
+import { GoogleUserResponse } from "@repo/shared/responses";
 import { OAuth2Client } from "google-auth-library";
-import { GoogleUserType } from "./google/GoogleUserType";
 
 @Injectable()
 export class AuthService {
@@ -14,15 +14,13 @@ export class AuthService {
   constructor(
     private jwtService: JwtService,
     private prismaService: PrismaService,
-  ) {
-    console.log("JwtService Config:", this.jwtService);
-  }
+  ) {}
 
   generateJWT(payload) {
     return this.jwtService.sign(payload);
   }
 
-  async googleAuth(user: GoogleUserType) {
+  async googleAuth(user: GoogleUserResponse) {
     let userExists = await this.prismaService.user.findFirst({
       where: {
         email: user.email,
@@ -40,7 +38,7 @@ export class AuthService {
       });
     }
 
-    return this.jwtService.sign({
+    return await this.jwtService.sign({
       user: {
         id: userExists.id,
         name: userExists.name,
