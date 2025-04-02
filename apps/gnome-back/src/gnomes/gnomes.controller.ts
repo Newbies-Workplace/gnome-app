@@ -71,7 +71,6 @@ export class GnomesController {
 
   // Pobieranie interakcji gnomów
 
-
   @Get(":id/interactions/count")
   @UseGuards(JwtGuard)
   async getInteractionCount(@Param("id") gnomeId: string): Promise<number> {
@@ -116,7 +115,7 @@ export class GnomesController {
   ): Promise<ApiResponse<GnomeResponse>> {
     await this.minioService.createBucketIfNotExists();
     const fileName = `${createGnomeDto.name}.jpg`;
-    const catalogueName = `defaultGnomePictures`;
+    const catalogueName = "defaultGnomePictures";
     const filePath = `${catalogueName}/${fileName}`;
     await this.minioService.uploadFile(file, fileName, catalogueName);
     const fileUrl = await this.minioService.getFileUrl(filePath);
@@ -193,11 +192,9 @@ export class GnomesController {
       fileUrl,
     );
 
-
     return {
       success: true,
       data: interaction,
     };
-
   }
 }
