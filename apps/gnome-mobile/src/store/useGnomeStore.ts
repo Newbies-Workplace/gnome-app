@@ -2,7 +2,7 @@ import { GnomesService } from "@/lib/api/Gnomes.service";
 import { useAuthStore } from "@/store/useAuthStore";
 import { create } from "zustand";
 
-interface Gnome {
+export interface Gnome {
   id: string;
   name: string;
   latitude: number;
@@ -14,8 +14,9 @@ interface Gnome {
 }
 
 interface Interaction {
-  id: string;
+  gnomeId: string;
   interactionDate: Date;
+  gnome: Gnome;
 }
 
 interface GnomeState {
@@ -27,19 +28,19 @@ interface GnomeState {
   fetchGnomes: () => Promise<void>;
   addGnome: (gnome: Gnome) => void;
   removeGnome: (id: string) => void;
-  fetchInteractions: (gnomeId: string) => Promise<void>;
+  fetchMyInteractions: () => Promise<void>;
 }
 
 export const useGnomeStore = create<GnomeState>((set) => ({
   gnomes: [],
-  interactions: [], // Add interactions property
+  interactions: [],
   loading: false,
   error: null,
 
   fetchGnomes: async () => {
     set({ loading: true, error: null });
     try {
-      const data = await GnomesService.getGnomes();
+      const data = await (GnomesService as any).getGnomes();
       console.log("Fetched gnomes:", data); // Log data
       if (!Array.isArray(data)) throw new Error("Invalid gnome data format");
 
@@ -57,14 +58,20 @@ export const useGnomeStore = create<GnomeState>((set) => ({
       gnomes: state.gnomes.filter((gnome) => gnome.id !== id),
     })),
 
-  fetchInteractions: async (gnomeId) => {
+  fetchMyInteractions: async () => {
     set({ loading: true, error: null });
     try {
       const { user } = useAuthStore.getState();
-      const gnomes = await GnomesService.getGnomes();
-      const gnome = gnomes.find((gnome) => gnome.id === gnomeId);
-      const interactions = gnomes.filter((gnome) => gnome.id === gnomeId);
-      set({ interactions: interactions, loading: false });
+      const userId = user?.id;
+      if (!userId) {
+        throw new Error("User  is not authenticated");
+      }
+      const data = await (GnomesService as any).getMyGnomesInteractions(userId);
+      console.log("Fetched interactions:", data); // Log data
+      if (!Array.isArray(data))
+        throw new Error("Invalid interaction data format");
+
+      set({ interactions: data, loading: false });
     } catch (error) {
       console.error("Fetch error:", error);
       set({ error: "Failed to load interactions", loading: false });
