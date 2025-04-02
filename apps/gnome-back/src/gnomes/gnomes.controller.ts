@@ -21,6 +21,7 @@ import {
   UseInterceptors,
 } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
+import { Team } from "@prisma/client";
 import {
   ApiResponse,
   GnomeIdResponse,
@@ -168,21 +169,23 @@ export class GnomesController {
     }
 
     const team = await this.teamsService.getTeamWithMemberId(user.id);
-    if (team && team.length > 0) {
-      const interactions = team.flatMap((teamMember) =>
-        teamMember.members.map((member) => {
-          return this.gnomeService.createInteraction(
-            member.userId,
-            body.interactionDate,
-            body.gnomeId,
-            fileUrl,
-          );
-        }),
-      );
+    if (team && team.members.length > 1) {
+      const interactions = await team.members.map((member) => {
+        return this.gnomeService.createInteraction(
+          member.userId,
+          body.interactionDate,
+          body.gnomeId,
+          fileUrl,
+        );
+      });
       const resolvedInteractions = await Promise.all(interactions);
-      return resolvedInteractions.filter(
+      const filteredInteractions = resolvedInteractions.filter(
         (interaction) => interaction.userId === user.id,
       );
+      return {
+        success: true,
+        data: filteredInteractions[0],
+      };
     }
 
     const interaction = await this.gnomeService.createInteraction(

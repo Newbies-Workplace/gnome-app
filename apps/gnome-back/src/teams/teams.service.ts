@@ -6,7 +6,7 @@ export class TeamsService {
   constructor(private readonly prisma: PrismaService) {}
 
   async getTeam(id: string) {
-    return this.prisma.team.findUnique({
+    const getTeam = await this.prisma.team.findUnique({
       include: {
         members: {
           select: {
@@ -18,10 +18,13 @@ export class TeamsService {
         id: id,
       },
     });
+    if (!getTeam) {
+      return null;
+    }
+    return getTeam;
   }
 
   async getTeamWithMemberId(userId: string) {
-    // Używamy findFirst, aby znaleźć drużynę z użytkownikiem o podanym userId
     const team = await this.prisma.team.findFirst({
       include: {
         members: {
@@ -40,7 +43,6 @@ export class TeamsService {
         },
       },
     });
-
     if (!team) {
       return null;
     }

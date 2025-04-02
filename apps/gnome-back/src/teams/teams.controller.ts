@@ -23,6 +23,12 @@ export class TeamsController {
   @UseGuards(JwtGuard)
   async getMyTeam(@User() user: JWTUser): Promise<ApiResponse<TeamResponse>> {
     const getTeam = await this.teamsService.getTeamWithMemberId(user.id);
+    if (!getTeam) {
+      return {
+        success: false,
+        error: "Nie znaleziono zespołu",
+      };
+    }
     return {
       success: true,
       data: getTeam,
@@ -33,6 +39,12 @@ export class TeamsController {
   @UseGuards(JwtGuard)
   async findOne(@Param("id") id: string): Promise<ApiResponse<TeamResponse>> {
     const getTeamById = await this.teamsService.getTeam(id);
+    if (!getTeamById) {
+      return {
+        success: false,
+        error: "Nie znaleziono zespołu",
+      };
+    }
     return {
       success: true,
       data: getTeamById,
