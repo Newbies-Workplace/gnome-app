@@ -6,6 +6,7 @@ import {
   Controller,
   Delete,
   Get,
+  NotFoundException,
   Param,
   Post,
   Put,
@@ -13,6 +14,7 @@ import {
   UseGuards,
 } from "@nestjs/common";
 import { ApiResponse, TeamResponse } from "@repo/shared/responses";
+import { NotFoundError } from "rxjs";
 import { TeamsService } from "./teams.service";
 
 @Controller("teams")
@@ -24,10 +26,7 @@ export class TeamsController {
   async getMyTeam(@User() user: JWTUser): Promise<ApiResponse<TeamResponse>> {
     const getTeam = await this.teamsService.getTeamWithMemberId(user.id);
     if (!getTeam) {
-      return {
-        success: false,
-        error: "Nie znaleziono zespołu",
-      };
+      throw new NotFoundException("Nie znaleziono zespołu");
     }
     return {
       success: true,
@@ -40,10 +39,7 @@ export class TeamsController {
   async findOne(@Param("id") id: string): Promise<ApiResponse<TeamResponse>> {
     const getTeamById = await this.teamsService.getTeam(id);
     if (!getTeamById) {
-      return {
-        success: false,
-        error: "Nie znaleziono zespołu",
-      };
+      throw new NotFoundException("Nie znaleziono zespołu");
     }
     return {
       success: true,
