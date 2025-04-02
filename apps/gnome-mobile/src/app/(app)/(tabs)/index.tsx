@@ -4,6 +4,7 @@ import TeamIcon from "@/assets/icons/team.svg";
 import DistanceTracker from "@/components/ui/DistanceTracker";
 import DraggableGnome from "@/components/ui/DraggableGnome";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import Compass from "@/components/ui/compass";
 import { Text } from "@/components/ui/text";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useGnomeStore } from "@/store/useGnomeStore";
@@ -11,9 +12,11 @@ import { useNavigation } from "@react-navigation/native";
 import * as Location from "expo-location";
 import { useRouter } from "expo-router";
 import { getDistance } from "geolib";
+
 import React, { createRef, useEffect, useRef, useState } from "react";
 import {
   Alert,
+  Dimensions,
   Image,
   Linking,
   StyleSheet,
@@ -97,7 +100,6 @@ const HeaderControls = ({ user, errorMsg, setErrorMsg }) => {
 
 const MapScreen = () => {
   const { user } = useAuthStore();
-  const navigation = useNavigation();
   const { replace } = useRouter();
   const { gnomes, fetchGnomes } = useGnomeStore();
   const ref = useRef<MapView>(null);
@@ -247,9 +249,14 @@ const MapScreen = () => {
             <DraggableGnome onUnlock={() => replace("/camera")} />
           ) : null)}
       </View>
+      <View className="absolute top-[100px] left-1/2 -translate-x-1/2 z-50">
+        <Compass />
+      </View>
     </View>
   );
 };
+
+const { width } = Dimensions.get("window");
 
 const styles = StyleSheet.create({
   container: {
