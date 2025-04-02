@@ -113,7 +113,7 @@ export class GnomesController {
   ): Promise<ApiResponse<GnomeResponse>> {
     await this.minioService.createBucketIfNotExists();
     const fileName = `${createGnomeDto.name}.jpg`;
-    const catalogueName = `defaultGnomePictures`;
+    const catalogueName = "defaultGnomePictures";
     const filePath = `${catalogueName}/${fileName}`;
     await this.minioService.uploadFile(file, fileName, catalogueName);
     const fileUrl = await this.minioService.getFileUrl(filePath);
