@@ -1,3 +1,4 @@
+import LoadingScreen from "@/components/LoadingScreen";
 import { GnomeCard } from "@/components/ui/GnomeCard";
 import { useGnomeStore } from "@/store/useGnomeStore";
 import { useNavigation } from "@react-navigation/native";
@@ -31,7 +32,7 @@ const Collection = () => {
     fetchGnomes();
   }, []);
 
-  if (loading) return <Text className="text-white">Ładowanie...</Text>;
+  if (loading) return <LoadingScreen />;
   if (error) return <Text className="text-white">Błąd: {error}</Text>;
 
   return (
