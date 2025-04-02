@@ -2,6 +2,7 @@ import { JWTUser } from "@/auth/jwt/JWTUser";
 import { PrismaService } from "@/db/prisma.service";
 import { Injectable } from "@nestjs/common";
 import { Gnome } from "@prisma/client";
+import { GnomeIdResponse, InteractionResponse } from "@repo/shared/responses";
 import { CreateGnomeRequest } from "./dto/gnomeCreate.dto";
 import { CreateInteractionRequest } from "./dto/interactionCreate";
 
@@ -13,7 +14,7 @@ export class GnomesService {
     return this.prismaService.gnome.findMany();
   }
 
-  async getGnomeData(id: string): Promise<Gnome & { nearest: Gnome[] }> {
+  async getGnomeData(id: string): Promise<GnomeIdResponse> {
     const gnome = await this.prismaService.gnome.findUnique({
       where: { id },
     });
@@ -45,14 +46,10 @@ export class GnomesService {
     return collection.length;
   }
 
-  async getMyGnomesInteractions(
-    id: string,
-  ): Promise<Array<{ gnomeId: string; interactionDate: Date; gnome: Gnome }>> {
+  async getMyGnomesInteractions(id: string): Promise<InteractionResponse[]> {
     return this.prismaService.gnomeInteraction.findMany({
       where: { userId: id },
-      select: {
-        gnomeId: true,
-        interactionDate: true,
+      include: {
         gnome: true,
       },
     });
@@ -79,7 +76,7 @@ export class GnomesService {
     gnomeId: string,
     userPicture: string,
   ) {
-    return this.prismaService.gnomeInteraction.create({
+    const createGnome = await this.prismaService.gnomeInteraction.create({
       data: {
         userId,
         interactionDate,
@@ -87,5 +84,16 @@ export class GnomesService {
         userPicture,
       },
     });
+
+    const findGnome = await this.prismaService.gnome.findUnique({
+      where: {
+        id: gnomeId,
+      },
+    });
+
+    return {
+      ...createGnome,
+      gnome: findGnome,
+    };
   }
 }

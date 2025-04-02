@@ -20,6 +20,12 @@ import {
   UseInterceptors,
 } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
+import {
+  ApiResponse,
+  GnomeIdResponse,
+  GnomeResponse,
+  InteractionResponse,
+} from "@repo/shared/responses";
 import { Express } from "express";
 import { Request } from "express";
 import { JWT } from "google-auth-library";
@@ -39,32 +45,51 @@ export class GnomesController {
 
   @Get("")
   @UseGuards(JwtGuard)
-  getAllGnomes() {
-    return this.gnomeService.getAllGnomes();
+  async getAllGnomes(): Promise<ApiResponse<GnomeResponse[]>> {
+    const gnomes = await this.gnomeService.getAllGnomes();
+    return {
+      success: true,
+      data: gnomes,
+    };
   }
 
   // Pobranie danych gnoma
 
   @Get(":id")
   @UseGuards(JwtGuard)
-  getGnomeData(@Param("id") gnomeId: string) {
-    return this.gnomeService.getGnomeData(gnomeId);
+  async getGnomeData(
+    @Param("id") gnomeId: string,
+  ): Promise<ApiResponse<GnomeIdResponse>> {
+    const gnomeData = await this.gnomeService.getGnomeData(gnomeId);
+    return {
+      success: true,
+      data: gnomeData,
+    };
   }
 
   // Pobieranie interakcji gnomów
 
   @Get(":id/interactions")
   @UseGuards(JwtGuard)
-  getInteractionCount(@Param("id") gnomeId: string) {
-    return this.gnomeService.getInteractionCount(gnomeId);
+  async getInteractionCount(@Param("id") gnomeId: string): Promise<number> {
+    const interactionCount = this.gnomeService.getInteractionCount(gnomeId);
+    return interactionCount;
   }
 
   // Wyświetlanie swojej interakcji z gnomem
 
   @Get("@me/interactions")
   @UseGuards(JwtGuard)
-  async getMyGnomesInteractions(@User() user: JWTUser) {
-    return this.gnomeService.getMyGnomesInteractions(user.id);
+  async getMyGnomesInteractions(
+    @User() user: JWTUser,
+  ): Promise<ApiResponse<InteractionResponse[]>> {
+    const interaction = await this.gnomeService.getMyGnomesInteractions(
+      user.id,
+    );
+    return {
+      success: true,
+      data: interaction,
+    };
   }
 
   // Tworzenie nowego gnoma
@@ -85,7 +110,7 @@ export class GnomesController {
     )
     file: Express.Multer.File,
     @Body() createGnomeDto: CreateGnomeRequest,
-  ) {
+  ): Promise<ApiResponse<GnomeResponse>> {
     await this.minioService.createBucketIfNotExists();
     const fileName = `${createGnomeDto.name}.jpg`;
     const catalogueName = `defaultGnomePictures`;
@@ -93,8 +118,14 @@ export class GnomesController {
     await this.minioService.uploadFile(file, fileName, catalogueName);
     const fileUrl = await this.minioService.getFileUrl(filePath);
 
-    const gnomeCreate = this.gnomeService.createGnome(createGnomeDto, fileUrl);
-    return gnomeCreate;
+    const gnomeCreate = await this.gnomeService.createGnome(
+      createGnomeDto,
+      fileUrl,
+    );
+    return {
+      success: true,
+      data: gnomeCreate,
+    };
   }
 
   // Tworzenie interakcji usera z gnomem
@@ -115,7 +146,7 @@ export class GnomesController {
     file: Express.Multer.File,
     @User() user: JWTUser,
     @Body() body: CreateInteractionRequest,
-  ) {
+  ): Promise<ApiResponse<InteractionResponse>> {
     await this.minioService.createBucketIfNotExists();
 
     const fileName = `${user.id}-${body.gnomeId}.jpg`;
@@ -141,6 +172,9 @@ export class GnomesController {
       fileUrl,
     );
 
-    return interaction;
+    return {
+      success: true,
+      data: interaction,
+    };
   }
 }

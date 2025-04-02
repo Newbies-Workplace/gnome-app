@@ -10,6 +10,7 @@ import {
   Post,
   UseGuards,
 } from "@nestjs/common";
+import { ApiResponse, ReportResponse } from "@repo/shared/responses";
 import { CreateReportRequest } from "./dto/CreateReportRequest.dto";
 import { ReportsService } from "./reports.service";
 
@@ -20,9 +21,9 @@ export class ReportsController {
   @Get("")
   @UseGuards(JwtGuard, RoleGuard)
   @Role(["ADMIN"])
-  getAllReports() {
-    /* zwraca wszystkie reporty i ich ilosc */
-    return this.reportsService.getAllReports();
+  async getAllReports() {
+    const allReports = await this.reportsService.getAllReports();
+    return allReports;
   }
 
   @Post("")
