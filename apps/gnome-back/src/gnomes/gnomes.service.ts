@@ -1,7 +1,7 @@
 import { JWTUser } from "@/auth/jwt/JWTUser";
 import { PrismaService } from "@/db/prisma.service";
 import { Injectable } from "@nestjs/common";
-import { Gnome } from "@prisma/client";
+import { Gnome, GnomeInteraction } from "@prisma/client";
 import { CreateGnomeRequest } from "./dto/gnomeCreate.dto";
 import { CreateInteractionRequest } from "./dto/interactionCreate";
 
@@ -47,12 +47,10 @@ export class GnomesService {
 
   async getMyGnomesInteractions(
     id: string,
-  ): Promise<Array<{ gnomeId: string; interactionDate: Date; gnome: Gnome }>> {
+  ): Promise<GnomeInteraction[] & { gnome: Gnome }[]> {
     return this.prismaService.gnomeInteraction.findMany({
       where: { userId: id },
-      select: {
-        gnomeId: true,
-        interactionDate: true,
+      include: {
         gnome: true,
       },
     });
