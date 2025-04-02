@@ -47,6 +47,7 @@ export class GnomesService {
   }
 
   async getMyGnomesInteractions(id: string): Promise<InteractionResponse[]> {
+
     return this.prismaService.gnomeInteraction.findMany({
       where: { userId: id },
       include: {
