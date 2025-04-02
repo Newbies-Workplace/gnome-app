@@ -79,7 +79,11 @@ const CameraScreen = () => {
       console.log("Photo captured:", photoUrl);
       const form = new FormData();
       const interactionDate = new Date().toISOString();
-      form.append("file", photoUrl);
+      form.append("file", {
+        uri: photoUrl,
+        name: "photo.jpg",
+        type: "image/jpeg",
+      } as any);
       form.append("interactionDate", interactionDate);
       form.append("gnomeId", gnomeid);
 
