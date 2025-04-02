@@ -7,7 +7,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Compass from "@/components/ui/compass";
 import { Text } from "@/components/ui/text";
 import { useAuthStore } from "@/store/useAuthStore";
-import { useGnomeStore } from "@/store/useGnomeStore";
+import { Gnome, useGnomeStore } from "@/store/useGnomeStore";
 import { useNavigation } from "@react-navigation/native";
 import * as Location from "expo-location";
 import { useRouter } from "expo-router";
@@ -30,7 +30,17 @@ const GnomePin = require("@/assets/images/krasnal.png");
 const MIN_TRACKER_DISTANCE = 50;
 const MIN_REACHED_DISTANCE = 10;
 
-const HeaderControls = ({ user, errorMsg, setErrorMsg }) => {
+interface HeaderControlsProps {
+  user: { pictureUrl: string }; // Adjust the type based on your user object structure
+  errorMsg: string | null;
+  setErrorMsg: (msg: string | null) => void;
+}
+
+const HeaderControls: React.FC<HeaderControlsProps> = ({
+  user,
+  errorMsg,
+  setErrorMsg,
+}) => {
   const router = useRouter();
   const requestLocationPermission = async () => {
     try {
@@ -100,7 +110,7 @@ const HeaderControls = ({ user, errorMsg, setErrorMsg }) => {
 
 const MapScreen = () => {
   const { user } = useAuthStore();
-  const { replace } = useRouter();
+  const { navigate } = useRouter();
   const { gnomes, fetchGnomes } = useGnomeStore();
   const ref = useRef<MapView>(null);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
@@ -187,12 +197,18 @@ const MapScreen = () => {
     });
 
     // Znajdź najbliższego gnoma
-    const closestGnome = distances.reduce((closest, current) => {
-      if (!closest || current.distance < closest.distance) {
-        return current;
-      }
-      return closest;
-    }, null);
+    const closestGnome = distances.reduce<{
+      gnome: Gnome;
+      distance: number;
+    } | null>(
+      (closest, current) => {
+        if (!closest || current.distance < closest.distance) {
+          return current;
+        }
+        return closest;
+      },
+      null as { gnome: Gnome; distance: number } | null,
+    );
 
     if (closestGnome) {
       setClosestGnomeId(closestGnome.gnome.id);
@@ -246,11 +262,13 @@ const MapScreen = () => {
         ))}
       </MapView>
 
-      <HeaderControls
-        user={user}
-        errorMsg={errorMsg}
-        setErrorMsg={setErrorMsg}
-      />
+      {user && (
+        <HeaderControls
+          user={user}
+          errorMsg={errorMsg}
+          setErrorMsg={setErrorMsg}
+        />
+      )}
 
       <View className="absolute bottom-0 left-0 right-0 p-4 bg-transparent">
         {distance !== undefined &&
@@ -259,7 +277,7 @@ const MapScreen = () => {
             <DistanceTracker distance={distance} showDistanceTracker={true} />
           ) : distance <= MIN_REACHED_DISTANCE ? (
             <DraggableGnome
-              onUnlock={() => replace(`/camera?gnomeid=${closestGnomeId}`)}
+              onUnlock={() => navigate(`/camera?gnomeid=${closestGnomeId}`)}
             />
           ) : null)}
       </View>
@@ -269,8 +287,6 @@ const MapScreen = () => {
     </View>
   );
 };
-
-const { width } = Dimensions.get("window");
 
 const styles = StyleSheet.create({
   container: {

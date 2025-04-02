@@ -1,3 +1,6 @@
+import BackIcon from "@/assets/icons/arrow-left.svg";
+import { axiosInstance } from "@/lib/api/axios";
+import { useGnomeStore } from "@/store/useGnomeStore";
 import axios from "axios";
 import { useLocalSearchParams, useNavigation, useRouter } from "expo-router";
 import React, { useEffect, useRef, useState } from "react";
@@ -9,18 +12,8 @@ import {
   useCameraDevices,
 } from "react-native-vision-camera";
 
-//Import ikon
-import BackIcon from "@/assets/icons/arrow-left.svg";
-import { axiosInstance } from "@/lib/api/axios";
-
-const api = axios.create({
-  baseURL: "http://localhost:3000", // Podmień na swój backend
-  headers: {
-    "Content-Type": "application/json",
-  },
-});
-
 const CameraScreen = () => {
+  const { addInteraction } = useGnomeStore();
   const { gnomeid } = useLocalSearchParams<{ gnomeid: string }>();
   const devices = useCameraDevices();
   const [device, setDevice] = useState<CameraDevice | null>(null);
@@ -76,30 +69,7 @@ const CameraScreen = () => {
         flash: flashMode,
       });
       const photoUrl = `file://${photo.path}`;
-      console.log("Photo captured:", photoUrl);
-      const form = new FormData();
-      const interactionDate = new Date().toISOString();
-      form.append("file", {
-        uri: photoUrl,
-        name: "photo.jpg",
-        type: "image/jpeg",
-      } as any);
-      form.append("interactionDate", interactionDate);
-      form.append("gnomeId", gnomeid);
-
-      const url = "api/rest/v1/gnomes/interaction";
-      const headers = {
-        "Content-Type": "multipart/form-data",
-      };
-
-      axiosInstance
-        .post(url, form, { headers })
-        .then((response) => {
-          console.log(response.data);
-        })
-        .catch((error) => {
-          console.error(error);
-        });
+      await addInteraction(gnomeid, photoUrl);
     }
   };
 
