@@ -1,4 +1,5 @@
-import { useNavigation, useRouter } from "expo-router";
+import axios from "axios";
+import { useLocalSearchParams, useNavigation, useRouter } from "expo-router";
 import React, { useEffect, useRef, useState } from "react";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import {
@@ -10,8 +11,17 @@ import {
 
 //Import ikon
 import BackIcon from "@/assets/icons/arrow-left.svg";
+import { axiosInstance } from "@/lib/api/axios";
+
+const api = axios.create({
+  baseURL: "http://localhost:3000", // Podmień na swój backend
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
 
 const CameraScreen = () => {
+  const { gnomeid } = useLocalSearchParams<{ gnomeid: string }>();
   const devices = useCameraDevices();
   const [device, setDevice] = useState<CameraDevice | null>(null);
   const cameraRef = useRef<Camera>(null);
@@ -21,6 +31,7 @@ const CameraScreen = () => {
   //Header
   const navigation = useNavigation();
   const router = useRouter();
+  console.log("Closest gnome in camera: ", gnomeid);
 
   useEffect(() => {
     navigation.setOptions({
@@ -46,12 +57,6 @@ const CameraScreen = () => {
   });
 
   useEffect(() => {
-    console.log("Available Devices:", devices);
-    console.log("Selected Device:", device);
-    console.log("Has Permission:", hasPermission);
-  }, [devices, device, hasPermission]);
-
-  useEffect(() => {
     (async () => {
       const cameraPermission = await Camera.requestCameraPermission();
       setHasPermission(cameraPermission === "granted");
@@ -72,6 +77,25 @@ const CameraScreen = () => {
       });
       const photoUrl = `file://${photo.path}`;
       console.log("Photo captured:", photoUrl);
+      const form = new FormData();
+      const interactionDate = new Date().toISOString();
+      form.append("file", photoUrl);
+      form.append("interactionDate", interactionDate);
+      form.append("gnomeId", gnomeid);
+
+      const url = "api/rest/v1/gnomes/interaction";
+      const headers = {
+        "Content-Type": "multipart/form-data",
+      };
+
+      axiosInstance
+        .post(url, form, { headers })
+        .then((response) => {
+          console.log(response.data);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
     }
   };
 
