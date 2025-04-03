@@ -2,9 +2,8 @@ import { JWTUser } from "@/auth/jwt/JWTUser";
 import { PrismaService } from "@/db/prisma.service";
 import { Injectable } from "@nestjs/common";
 import { Gnome } from "@prisma/client";
-import { GnomeIdResponse, InteractionResponse } from "@repo/shared/responses";
-import { CreateGnomeRequest } from "./dto/gnomeCreate.dto";
-import { CreateInteractionRequest } from "./dto/interactionCreate";
+import { CreateGnomeRequest } from "@repo/shared/requests";
+import { GnomeIdResponse } from "@repo/shared/responses";
 
 @Injectable()
 export class GnomesService {
