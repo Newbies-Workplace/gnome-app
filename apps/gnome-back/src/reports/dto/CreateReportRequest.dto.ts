@@ -12,17 +12,13 @@ export class CreateReportRequest {
   @IsNotEmpty()
   gnomeName: string;
 
-  @IsUrl()
-  @IsNotEmpty()
-  pictureUrl: string;
-
   @IsLatitude()
   @IsNotEmpty()
-  latitude: number;
+  latitude: string;
 
   @IsLongitude()
   @IsNotEmpty()
-  longitude: number;
+  longitude: string;
 
   @IsString()
   @IsNotEmpty()
