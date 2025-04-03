@@ -2,20 +2,24 @@ import ArrowLeft from "@/assets/icons/arrow-left.svg";
 import DateIcon from "@/assets/icons/date.svg";
 import FoundIcon from "@/assets/icons/found.svg";
 import { GnomeCard } from "@/components/ui/GnomeCard";
+import { GnomesService } from "@/lib/api/Gnomes.service";
 import { useGnomeStore } from "@/store/useGnomeStore";
 import { useNavigation } from "@react-navigation/native";
 import { useRoute } from "@react-navigation/native";
-import { useLocalSearchParams, useRouter } from "expo-router";
+import dayjs from "dayjs";
+import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
 
 const GnomeDetail = () => {
-  const { id } = useLocalSearchParams();
-  const { gnomes, interactions } = useGnomeStore(); // Add interactions here
+  const { gnomes, interactions } = useGnomeStore();
   const [gnome, setGnome] = useState(null);
+  const [nearestGnomes, setNearestGnomes] = useState([]);
   const router = useRouter();
   const navigation = useNavigation();
   const route = useRoute();
+
+  const id = route.params?.id;
 
   useEffect(() => {
     navigation.setOptions({
@@ -40,6 +44,14 @@ const GnomeDetail = () => {
     }
   }, [id, gnomes]);
 
+  useEffect(() => {
+    if (gnome) {
+      GnomesService.getNearestGnomes(gnome.id.toString())
+        .then((nearest) => setNearestGnomes(nearest))
+        .catch((error) => console.error(error));
+    }
+  }, [gnome, GnomesService]);
+
   if (!gnome) {
     return (
       <View className="flex-1 justify-center items-center bg-[#131413]">
@@ -47,6 +59,7 @@ const GnomeDetail = () => {
       </View>
     );
   }
+
   const getImageSource = () => {
     if (interaction?.found && interaction?.userPicture)
       return (
@@ -87,17 +100,17 @@ const GnomeDetail = () => {
       <View className="flex-row items-center mb-2.5">
         <FoundIcon width={20} height={20} />
         <Text className="text-white ml-2.5">
-          Data znalezienia:
+          Data znalezienia:{" "}
           {interaction
-            ? `${interaction.interactionDate.toLocaleString()}`
-            : " Krasnal jeszcze nie znaleziony"}
+            ? dayjs(interaction.interactionDate).format("DD-MM-YYYY")
+            : "Krasnal jeszcze nie znaleziony"}
         </Text>
       </View>
 
       <View className="flex-row items-center mb-2.5">
         <DateIcon width={20} height={20} />
         <Text className="text-white ml-2.5">
-          Data postawienia: {gnome.creationDate}
+          Data postawienia: {dayjs(gnome.creationDate).format("DD-MM-YYYY")}
         </Text>
       </View>
 
@@ -111,21 +124,36 @@ const GnomeDetail = () => {
       <Text className="text-white font-afacad my-2">{gnome.funFact}</Text>
 
       <View className="flex-row justify-center mt-5">
-        <GnomeCard
-          image={require("@/assets/images/placeholder.png")}
-          text="?"
-          onClick={() => router.push("/collection")}
-        />
-        <GnomeCard
-          image={require("@/assets/images/placeholder.png")}
-          text="?"
-          onClick={() => router.push("/collection")}
-        />
-        <GnomeCard
-          image={require("@/assets/images/placeholder.png")}
-          text="?"
-          onClick={() => router.push("/collection")}
-        />
+        {Object.keys(nearestGnomes).length > 0 ? (
+          <>
+            <GnomeCard
+              key={0}
+              image={require("@/assets/images/placeholder.png")}
+              text={nearestGnomes.nearest[0].name}
+              onClick={() =>
+                router.push(`/Gnomes/${nearestGnomes.nearest[0].id}`)
+              }
+            />
+            <GnomeCard
+              key={1}
+              image={require("@/assets/images/placeholder.png")}
+              text={nearestGnomes.nearest[1].name}
+              onClick={() =>
+                router.push(`/Gnomes/${nearestGnomes.nearest[1].id}`)
+              }
+            />
+            <GnomeCard
+              key={2}
+              image={require("@/assets/images/placeholder.png")}
+              text={nearestGnomes.nearest[2].name}
+              onClick={() =>
+                router.push(`/Gnomes/${nearestGnomes.nearest[2].id}`)
+              }
+            />
+          </>
+        ) : (
+          <Text>No gnomes found</Text>
+        )}
       </View>
     </ScrollView>
   );
