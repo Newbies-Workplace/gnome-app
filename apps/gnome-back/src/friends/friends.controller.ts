@@ -6,6 +6,7 @@ import {
   Controller,
   Delete,
   Get,
+  NotFoundException,
   Param,
   Post,
   Query,
@@ -18,8 +19,6 @@ import {
   SendFriendRequest,
 } from "@repo/shared/requests";
 import {
-  FriendAcceptResponse,
-  FriendDeleteResponse,
   FriendSearchResponse,
   FriendsResponse,
   UserResponse,
@@ -37,6 +36,9 @@ export class FriendsController {
   ): Promise<FriendSearchResponse[]> {
     /* search/?name="wartosc" */
     const searchForFriend = await this.friendsService.searchForFriend(name);
+    if (searchForFriend.length === 0) {
+      throw new NotFoundException("Nie znaleziono znajomego");
+    }
     return searchForFriend;
   }
 
@@ -46,6 +48,9 @@ export class FriendsController {
     const findPendingRequests = await this.friendsService.findPendingRequests(
       user.id,
     );
+    if (findPendingRequests.length === 0) {
+      throw new NotFoundException("Brak zaproszeń");
+    }
     return findPendingRequests;
   }
 
@@ -53,6 +58,9 @@ export class FriendsController {
   @UseGuards(JwtGuard)
   async findUserFriends(@User() user: JWTUser): Promise<FriendsResponse[]> {
     const myFriends = await this.friendsService.findUserFriends(user.id);
+    if (myFriends.length === 0) {
+      throw new NotFoundException("Nie masz jeszcze znajomych");
+    }
     return myFriends;
   }
 
@@ -66,6 +74,10 @@ export class FriendsController {
       user.id,
       body.friendId,
     );
+    if (!inviteFriend) {
+      throw new NotFoundException("Nie można wysłać zaproszenia");
+    }
+
     return inviteFriend;
   }
 
@@ -74,7 +86,7 @@ export class FriendsController {
   async acceptFriendRequest(
     @User() user: JWTUser,
     @Body() body: AcceptFriendRequest,
-  ): Promise<FriendAcceptResponse> {
+  ) {
     console.log(user.id);
     console.log(body.senderId);
     const acceptFriend = await this.friendsService.acceptFriendRequest(
@@ -86,14 +98,20 @@ export class FriendsController {
 
   @Delete("@me") // usun znajomego
   @UseGuards(JwtGuard)
-  async deleteFriend(
-    @User() user: JWTUser,
-    @Body() body: DeleteFriend,
-  ): Promise<FriendDeleteResponse> {
+  async deleteFriend(@User() user: JWTUser, @Body() body: DeleteFriend) {
     const deleteFriend = await this.friendsService.deleteFriend(
       user.id,
       body.friendId,
     );
     return deleteFriend;
+  }
+  @Delete("@me/invitation") // odrzucenie zaproszenia
+  @UseGuards(JwtGuard)
+  async deleteFriendRequest(@User() user: JWTUser, @Body() body: DeleteFriend) {
+    const deleteFriendRequest = await this.friendsService.cancelInvitaion(
+      user.id,
+      body.friendId,
+    );
+    return deleteFriendRequest;
   }
 }

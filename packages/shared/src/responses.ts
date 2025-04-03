@@ -33,7 +33,7 @@ export interface GnomeResponse {
   creationDate: Date;
   description: string;
   exists: boolean;
-  pictureUrl?: string;
+  pictureUrl: string;
 }
 
 export interface GnomeIdResponse {
@@ -80,23 +80,6 @@ export interface FriendsResponse {
   senderId: string;
   receiverId: string;
   status: Status;
-}
-
-export interface FriendNewResponse {
-  id: string;
-  status: Status;
-  senderId: string;
-  receiverId: string;
-}
-
-export interface FriendAcceptResponse {
-  updatedFriendship: Prisma.BatchPayload;
-  newFriendship: FriendNewResponse;
-}
-
-export interface FriendDeleteResponse {
-  deleteFriendship: Prisma.BatchPayload;
-  cancelInvitation: Prisma.BatchPayload;
 }
 
 export interface TeamMembersResponse {

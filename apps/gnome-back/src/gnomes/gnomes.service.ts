@@ -1,6 +1,6 @@
 import { JWTUser } from "@/auth/jwt/JWTUser";
 import { PrismaService } from "@/db/prisma.service";
-import { Injectable } from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 import { Gnome } from "@prisma/client";
 import { CreateGnomeRequest } from "@repo/shared/requests";
 import { GnomeIdResponse } from "@repo/shared/responses";
@@ -17,6 +17,9 @@ export class GnomesService {
     const gnome = await this.prismaService.gnome.findUnique({
       where: { id },
     });
+    if (!gnome) {
+      return undefined;
+    }
 
     const allGnomes = await this.prismaService.gnome.findMany({
       where: { id: { not: id } },
@@ -31,7 +34,6 @@ export class GnomesService {
             (b.longitude - gnome.longitude) ** 2),
       )
       .slice(0, 3);
-
     return { ...gnome, nearest };
   }
 
@@ -41,7 +43,6 @@ export class GnomesService {
         gnomeId,
       },
     });
-
     return collection.length;
   }
 

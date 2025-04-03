@@ -1,5 +1,9 @@
 import { PrismaService } from "@/db/prisma.service";
-import { BadRequestException, Injectable } from "@nestjs/common";
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from "@nestjs/common";
 import { Prisma, TeamMembership } from "@prisma/client";
 @Injectable()
 export class TeamsService {
@@ -19,7 +23,7 @@ export class TeamsService {
       },
     });
     if (!getTeam) {
-      return null;
+      throw new NotFoundException("Nie ma takiego zespołu");
     }
     return getTeam;
   }
@@ -44,7 +48,7 @@ export class TeamsService {
       },
     });
     if (!team) {
-      return null;
+      throw new NotFoundException("Nie jesteś w zespole");
     }
 
     const members = team.members.map((member) => ({
@@ -88,7 +92,10 @@ export class TeamsService {
     return createTeam;
   }
 
-  async deleteTeam(teamId: string) {
+  async deleteTeam(user: string, teamId: string) {
+    if ((await this.getTeam(teamId)).leader !== user) {
+      throw new BadRequestException("Nie możesz usunąć tej drużyny");
+    }
     return this.prisma.$transaction([
       this.prisma.teamMembership.deleteMany({
         where: { teamId },
@@ -99,19 +106,41 @@ export class TeamsService {
     ]);
   }
   async updateTeam(
+    userId: string,
     teamId: string,
     newLeaderId?: string,
     newMemberIds?: string[],
   ) {
+    const allTeams = await this.prisma.team.findMany();
+    if (!allTeams.length) {
+      return null;
+    }
+    const team = allTeams.find((team) => team.id === teamId);
+    if (!team) {
+      throw new NotFoundException("Nie ma takiego zespołu");
+    }
+
+    if (team.leader !== userId) {
+      throw new BadRequestException("Nie jesteś liderem zespołu");
+    }
     return this.prisma.$transaction(async (prisma) => {
       if (newMemberIds) {
-        // Usuwamy starych członków
-        await prisma.teamMembership.deleteMany({
-          where: { teamId },
+        const allUsersWithTeam = await this.prisma.teamMembership.findMany({
+          where: {
+            userId: {
+              in: newMemberIds,
+            },
+          },
         });
-
         // Dodajemy nowych członków
-        await prisma.teamMembership.createMany({
+        if (
+          allUsersWithTeam.some((membership) =>
+            newMemberIds.includes(membership.userId),
+          )
+        ) {
+          throw new BadRequestException("Użytkownik jest już w drużynie");
+        }
+        await this.prisma.teamMembership.createMany({
           data: newMemberIds.map((userId) => ({
             teamId,
             userId,
@@ -121,7 +150,7 @@ export class TeamsService {
 
       // Aktualizujemy lidera, jeśli podano nowy
       if (newLeaderId) {
-        await prisma.team.update({
+        await this.prisma.team.update({
           where: { id: teamId },
           data: { leader: newLeaderId },
         });

@@ -12,6 +12,7 @@ import {
   FileTypeValidator,
   Get,
   MaxFileSizeValidator,
+  NotFoundException,
   Param,
   ParseFilePipe,
   Post,
@@ -51,6 +52,9 @@ export class GnomesController {
   @UseGuards(JwtGuard)
   async getAllGnomes(): Promise<GnomeResponse[]> {
     const gnomes = await this.gnomeService.getAllGnomes();
+    if (!gnomes) {
+      throw new NotFoundException("Nie znaleziono gnomów");
+    }
     return gnomes;
   }
 
@@ -60,6 +64,9 @@ export class GnomesController {
   @UseGuards(JwtGuard)
   async getGnomeData(@Param("id") gnomeId: string): Promise<GnomeIdResponse> {
     const gnomeData = await this.gnomeService.getGnomeData(gnomeId);
+    if (!gnomeData) {
+      throw new NotFoundException("Nie znaleziono gnoma");
+    }
     return gnomeData;
   }
 
@@ -69,6 +76,10 @@ export class GnomesController {
   @UseGuards(JwtGuard)
   async getInteractionCount(@Param("id") gnomeId: string): Promise<number> {
     const interactionCount = this.gnomeService.getInteractionCount(gnomeId);
+    const findGnome = await this.gnomeService.getGnomeData(gnomeId);
+    if (!findGnome) {
+      throw new NotFoundException("Nie znaleziono gnoma");
+    }
     return interactionCount;
   }
 
@@ -82,6 +93,7 @@ export class GnomesController {
     const interaction = await this.gnomeService.getMyGnomesInteractions(
       user.id,
     );
+    /* Tutaj nie wyrzucalem errora bo lepsza bedzie pusta lista, wygodniej dla mobilki (tak mi sie zdaje) */
     return interaction;
   }
 

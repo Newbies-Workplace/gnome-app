@@ -1,7 +1,11 @@
 import { PrismaService } from "@/db/prisma.service";
-import { Injectable } from "@nestjs/common";
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from "@nestjs/common";
 import { Friendship } from "@prisma/client";
-import { FriendSearchResponse } from "@repo/shared/responses";
+import { FriendSearchResponse, FriendsResponse } from "@repo/shared/responses";
 
 @Injectable()
 export class FriendsService {
@@ -56,20 +60,64 @@ export class FriendsService {
     });
   }
 
-  async sendFriendRequest(senderId: string, receiverId: string) {
+  async findFriendship(
+    senderId: string,
+    receiverId: string,
+  ): Promise<FriendsResponse[] | null> {
+    return this.prismaService.friendship.findMany({
+      where: {
+        OR: [
+          { senderId: senderId, receiverId: receiverId },
+          { senderId: receiverId, receiverId: senderId },
+        ],
+      },
+    });
+  }
+  async sendFriendRequest(
+    senderId: string,
+    receiverId: string,
+  ): Promise<FriendsResponse | null> {
     if (senderId !== receiverId) {
-      return this.prismaService.friendship.create({
+      const findFriend = await this.prismaService.user.findUnique({
+        where: {
+          id: receiverId,
+        },
+      });
+      if (!findFriend) {
+        throw new NotFoundException("Nie znaleziono użytkownika");
+      }
+      const findFriendship = await this.findFriendship(senderId, receiverId);
+      const friendshipStatus = findFriendship.map(
+        (friendship) => friendship.status,
+      );
+
+      if (friendshipStatus.includes("ACTIVE")) {
+        throw new BadRequestException("Już jesteście znajomymi");
+      }
+      if (friendshipStatus.includes("PENDING")) {
+        throw new BadRequestException("Już wysłałeś zaproszenie");
+      }
+
+      const inviteFriend = await this.prismaService.friendship.create({
         data: {
           senderId: senderId,
           receiverId: receiverId,
         },
       });
-    }
-    throw new Error("Can't invite yourself");
-  }
 
+      return inviteFriend;
+    }
+    throw new BadRequestException("Nie możesz zaprosić siebie");
+  }
   async acceptFriendRequest(senderId: string, receiverId: string) {
     return await this.prismaService.$transaction(async (prisma) => {
+      const findFriendship = await this.findFriendship(senderId, receiverId);
+      const friendshipStatus = findFriendship.map(
+        (friendship) => friendship.status,
+      );
+      if (!friendshipStatus.includes("PENDING")) {
+        throw new BadRequestException("Nie masz zaproszenia do znajomych");
+      }
       const updatedFriendship = await prisma.friendship.updateMany({
         where: {
           senderId: senderId,
@@ -81,10 +129,6 @@ export class FriendsService {
         },
       });
 
-      if (updatedFriendship.count === 0) {
-        throw new Error("Invalid invite");
-      }
-
       const newFriendship = await prisma.friendship.create({
         data: {
           senderId: receiverId,
@@ -92,23 +136,44 @@ export class FriendsService {
           status: "ACTIVE",
         },
       });
-      if (senderId !== receiverId) {
-        return { updatedFriendship, newFriendship };
-      }
-      throw new Error("Can't accept yourself");
+
+      return { updatedFriendship, newFriendship };
     });
   }
-  async deleteFriend(senderId: string, receiverId: string) {
+
+  async cancelInvitaion(senderId: string, receiverId: string) {
     return this.prismaService.$transaction(async (prisma) => {
-      const cancelInvitation = await prisma.friendship.deleteMany({
+      const findFriendship = await this.findFriendship(senderId, receiverId);
+      const friendshipStatus = findFriendship.map(
+        (friendship) => friendship.status,
+      );
+      if (!friendshipStatus.includes("PENDING")) {
+        throw new BadRequestException("Nie masz zaproszenia do znajomych");
+      }
+      const cancelOutgoingInvitation = await prisma.friendship.deleteMany({
         where: {
+          senderId: senderId,
+          receiverId: receiverId,
           status: "PENDING",
-          OR: [
-            { senderId: senderId, receiverId: receiverId },
-            { senderId: receiverId, receiverId: senderId },
-          ],
         },
       });
+      const cancelIncomingInvitation = await prisma.friendship.deleteMany({
+        where: {
+          senderId: receiverId,
+          receiverId: senderId,
+          status: "PENDING",
+        },
+      });
+      return { cancelOutgoingInvitation, cancelIncomingInvitation };
+    });
+  }
+
+  async deleteFriend(senderId: string, receiverId: string) {
+    return this.prismaService.$transaction(async (prisma) => {
+      const findFriendship = await this.findFriendship(senderId, receiverId);
+      const friendshipStatus = findFriendship.map(
+        (friendship) => friendship.status,
+      );
 
       const deleteFriendship = await prisma.friendship.deleteMany({
         where: {
@@ -120,7 +185,7 @@ export class FriendsService {
         },
       });
 
-      return { deleteFriendship, cancelInvitation };
+      return { deleteFriendship };
     });
   }
 }

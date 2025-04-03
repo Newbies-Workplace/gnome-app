@@ -6,6 +6,7 @@ import {
   Controller,
   Delete,
   Get,
+  NotFoundException,
   Param,
   Post,
   UseGuards,
@@ -23,6 +24,7 @@ export class ReportsController {
   @Role(["ADMIN"])
   async getAllReports() {
     const allReports = await this.reportsService.getAllReports();
+
     return allReports;
   }
 
@@ -38,7 +40,6 @@ export class ReportsController {
       body.location,
       body.reportAuthor,
     );
-
     return createReport;
   }
 
@@ -55,16 +56,17 @@ export class ReportsController {
   @UseGuards(JwtGuard, RoleGuard)
   @Role(["ADMIN"])
   async deleteReport(@Param("id") id: string): Promise<ReportResponse> {
+    await this.reportsService.getUniqueReport(id);
     const deletedReport = await this.reportsService.deleteReport(id);
-
     return deletedReport;
   }
 
   @Delete("")
   @UseGuards(JwtGuard, RoleGuard)
   @Role(["ADMIN"])
-  deleteAllReports(): Promise<number> {
+  async deleteAllReports(): Promise<number> {
     /* zwraca liczbe usunietych zgloszen */
-    return this.reportsService.deleteAllReports();
+    await this.reportsService.getAllReports();
+    return await this.reportsService.deleteAllReports();
   }
 }

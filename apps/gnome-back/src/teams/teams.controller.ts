@@ -25,9 +25,7 @@ export class TeamsController {
   @UseGuards(JwtGuard)
   async getMyTeam(@User() user: JWTUser): Promise<TeamResponse> {
     const getTeam = await this.teamsService.getTeamWithMemberId(user.id);
-    if (!getTeam) {
-      throw new NotFoundException("Nie znaleziono zespołu");
-    }
+
     return getTeam;
   }
 
@@ -35,9 +33,7 @@ export class TeamsController {
   @UseGuards(JwtGuard)
   async findOne(@Param("id") id: string): Promise<TeamResponse> {
     const getTeamById = await this.teamsService.getTeam(id);
-    if (!getTeamById) {
-      throw new NotFoundException("Nie znaleziono zespołu");
-    }
+
     return getTeamById;
   }
 
@@ -58,22 +54,29 @@ export class TeamsController {
 
   @Delete(":id") // DELETE /teams/:id
   @UseGuards(JwtGuard)
-  async deleteTeam(@Param("id") teamId: string) {
-    await this.teamsService.deleteTeam(teamId);
+  async deleteTeam(@User() user: JWTUser, @Param("id") teamId: string) {
+    await this.teamsService.getTeam(teamId);
+    await this.teamsService.deleteTeam(user.id, teamId);
     return { message: "Team usunięty" };
   }
 
   @Put(":id") // PUT /teams/:id
   @UseGuards(JwtGuard)
   async updateTeam(
+    @User() user: JWTUser,
     @Param("id") teamId: string,
     @Body() body: { newLeaderId?: string; newMemberIds?: string[] },
   ) {
+    await this.teamsService.getTeam(teamId);
     await this.teamsService.updateTeam(
+      user.id,
       teamId,
       body.newLeaderId,
       body.newMemberIds,
     );
+    if (body.newLeaderId == null && body.newMemberIds == null) {
+      throw new BadRequestException("Nic do zaaktualizowania");
+    }
     return { message: "Team zaktualizowany" };
   }
 }
