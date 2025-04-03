@@ -7,8 +7,14 @@ import React, { useEffect } from "react";
 import { FlatList, Text, View } from "react-native";
 
 const Collection = () => {
-  const { gnomes, fetchGnomes, interactions, fetchMyInteractions } =
-    useGnomeStore();
+  const {
+    gnomes,
+    fetchGnomes,
+    interactions,
+    fetchMyInteractions,
+    loading,
+    error,
+  } = useGnomeStore();
   const router = useRouter();
   const navigation = useNavigation();
 
@@ -34,22 +40,21 @@ const Collection = () => {
     fetchMyInteractions(); // Fetch interactions when component mounts
   }, []);
 
-if (loading) {
-  return <LoadingScreen />;
-}
+  if (loading) {
+    return <LoadingScreen />;
+  }
 
-if (error) {
-  return <Text className="text-white">Błąd: {error}</Text>;
-}
+  if (error) {
+    return <Text className="text-white">Błąd: {error}</Text>;
+  }
 
-if (gnomes.length === 0) {
-  return (
-    <View className="flex-1 justify-center items-center bg-[#131413]">
-      <Text className="text-white text-lg">Ładowanie...</Text>
-    </View>
-  );
-}
-
+  if (gnomes.length === 0) {
+    return (
+      <View className="flex-1 justify-center items-center bg-[#131413]">
+        <Text className="text-white text-lg">Ładowanie...</Text>
+      </View>
+    );
+  }
 
   return (
     <View className="p-5 bg-background flex-1">
