@@ -30,11 +30,12 @@ export const FileInput: React.FC = () => {
       setFiles((prevFiles) => [...prevFiles, ...selectedFiles]);
     }
   };
-
+  // `bg-[#ffffff] text-[#B3B3B3] w-full sm:w-[300px] md:w-[400px] lg:w-[500px]
+  //         h-[40px] sm:h-[45px] md:h-[50px] rounded-[10px] pl-[25px]`,
   return (
-    <div className="flex flex-row items-right justify-right ml-[60px]">
+    <div className="w-[60%] min-w-[500px] flex flex-row items-right justify-right ml-[60px]">
       <div
-        className={`border-2 border-dashed rounded-lg p-6 w-[500px] h-48 flex flex-col items-center justify-center ${
+        className={`border-2 border-dashed rounded-lg p-6 min-w-[300px] w-[50%] h-48 flex flex-col items-center justify-center ${
           isDragging ? "border-[#1E201E] bg-[#fff]" : "border-gray-400"
         }`}
         onDragOver={handleDragOver}
@@ -72,7 +73,7 @@ export const FileInput: React.FC = () => {
         </div>
       </div>
 
-      <div className="-mt-1 w-96 ml-5">
+      <div className="-mt-1 w-[50%] ml-5">
         {files.length > 0 && <h3 className="text-lg">Wybrane pliki:</h3>}
         <ul className="list-disc pl-5">
           {files.slice(0, 4).map((file, index) => (

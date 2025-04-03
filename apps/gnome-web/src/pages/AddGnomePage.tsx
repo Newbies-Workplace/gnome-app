@@ -11,7 +11,7 @@ export const AddGnomePage = () => {
   return (
     <div>
       <Navbar />
-      <BgElement className="rounded-b-[15px] rounded-tl-[15px] h-450" />
+      <BgElement className="rounded-b-[15px] rounded-tl-[15px] h-95/50 sm:h-95/50 md:h-95/50 lg:h-95/50" />
       <div>
         <a href="/admin">
           <img
@@ -36,7 +36,7 @@ export const AddGnomePage = () => {
         <div className="flex flex-col">
           <CircleTracker label="3" text="Wybierz datę powstania krasnala" />
           <DatePickerInput
-            className="ml-[60px] "
+            className="ml-[60px]"
             onChange={(): void => {
               throw new Error("Function not implemented.");
             }}
@@ -45,7 +45,7 @@ export const AddGnomePage = () => {
         <div className="flex flex-col">
           <CircleTracker label="4" text="Opisz krasnala" />
           <textarea
-            className="bg-[#ffffff] text-[#B3B3B3] w-[500px] h-[150px] rounded-[10px] pl-[25px] pt-[15px] ml-[60px]"
+            className="bg-[#ffffff] text-[#B3B3B3] min-w-75 w-[30%] h-[150px] rounded-[10px] pl-[25px] pt-[15px] ml-[60px]"
             placeholder="Opis"
           />
         </div>

@@ -10,7 +10,7 @@ export const ReportPage = () => {
   return (
     <div>
       <Navbar />
-      <BgElement className="rounded-b-[15px] rounded-tl-[15px] rounded-tr-[15px] h-390" />
+      <BgElement className="rounded-b-[15px] rounded-tl-[15px] rounded-tr-[15px] sm:h-80/50 md:h-80/50 lg:h-80/50" />
       <div>
         <a href="/admin">
           <img
@@ -44,7 +44,7 @@ export const ReportPage = () => {
             label="3"
             text="Wskaż poprzednią lokalizacje krasnala:"
           />
-          <div className=" h-[390px] w-[500px] ml-[60px] w-96 h-48">
+          <div className=" h-[250px] w-[400px] ml-[60px]">
             <InteractiveMapPicker />
           </div>
         </div>

@@ -6,8 +6,14 @@ import { MapContainer, TileLayer, useMapEvents } from "react-leaflet";
 // @ts-ignore
 import { Marker } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
+import { cn } from "../../lib/utils.ts";
+import { MapPicker } from "./MapPicker";
 
-const InteractiveMapPicker: React.FC = () => {
+type MapPickerProps = {
+  className?: string;
+};
+
+const InteractiveMapPicker: React.FC<MapPickerProps> = ({ className }) => {
   const defaultPosition: LatLngLiteral = { lat: 51.1079, lng: 17.0385 }; // Default position (Wrocław, Poland)
   const [selectedPosition, setSelectedPosition] =
     useState<LatLngLiteral | null>(null);
@@ -17,14 +23,20 @@ const InteractiveMapPicker: React.FC = () => {
   };
 
   return (
-    <div className="size-full">
+    <div className="">
       <MapContainer
-        className="h-96 rounded-2xl"
+        className={cn(
+          "rounded-2xl w-[300px] h-[250px] sm:w-[300px] md:w-[400px] lg:w-[500px] sm:h-[250px] md:h-[300px] lg:h-[400px]",
+          className,
+        )}
         center={defaultPosition}
         zoom={13}
         scrollWheelZoom
       >
-        <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+        <TileLayer
+          url="https://mt1.google.com/vt/lyrs=m&x={x}&y={y}&z={z}"
+          attribution='&copy; <a href="https://www.google.com/maps">Google Maps</a>'
+        />
         <MapMarker value={selectedPosition} onChange={handlePositionChange} />
       </MapContainer>
       <div className="text-center mt-4">
