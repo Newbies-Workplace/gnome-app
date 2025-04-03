@@ -90,7 +90,7 @@ const GnomeDetail = () => {
         <Text className="text-white ml-2.5">
           Data znalezienia:{" "}
           {interaction
-            ? dayjs(interaction.interactionDate).format("DD-MM-YY")
+            ? dayjs(interaction.interactionDate).format("DD-MM-YYYY")
             : "Krasnal jeszcze nie znaleziony"}
         </Text>
       </View>
