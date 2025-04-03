@@ -10,8 +10,8 @@ import {
   Post,
   UseGuards,
 } from "@nestjs/common";
+import { CreateReportRequest } from "@repo/shared/requests";
 import { ReportResponse } from "@repo/shared/responses";
-import { CreateReportRequest } from "./dto/CreateReportRequest.dto";
 import { ReportsService } from "./reports.service";
 
 @Controller("reports")

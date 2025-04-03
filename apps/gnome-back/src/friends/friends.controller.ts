@@ -13,15 +13,17 @@ import {
 } from "@nestjs/common";
 import { Friendship } from "@prisma/client";
 import {
+  AcceptFriendRequest,
+  DeleteFriend,
+  SendFriendRequest,
+} from "@repo/shared/requests";
+import {
   FriendAcceptResponse,
   FriendDeleteResponse,
   FriendSearchResponse,
   FriendsResponse,
   UserResponse,
 } from "@repo/shared/responses";
-import { AcceptFriendRequest } from "./dto/AcceptRequest.dto";
-import { DeleteFriend } from "./dto/DeleteFriend.dto";
-import { SendFriendRequest } from "./dto/SendRequest.dto";
 import { FriendsService } from "./friends.service";
 
 @Controller("friends")

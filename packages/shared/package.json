@@ -9,7 +9,8 @@
     "lint:ci": "biome ci ./src"
   },
   "exports": {
-    "./responses": "./src/responses.ts"
+    "./responses": "./src/responses.ts",
+    "./requests": "./dist/requests.js"
   },
   "devDependencies": {
     "typescript": "latest"

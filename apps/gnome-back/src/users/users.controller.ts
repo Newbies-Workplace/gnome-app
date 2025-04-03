@@ -23,8 +23,8 @@ import {
 } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { User as PrismaUser } from "@prisma/client";
+import { UserUpdate } from "@repo/shared/requests";
 import { UserPatchResponse } from "@repo/shared/responses";
-import { UserUpdate } from "./dto/UserUpdate.dto";
 
 @Controller("users")
 export class UsersController {
