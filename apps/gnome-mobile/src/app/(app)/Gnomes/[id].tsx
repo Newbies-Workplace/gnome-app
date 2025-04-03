@@ -6,17 +6,19 @@ import { useGnomeStore } from "@/store/useGnomeStore";
 import { useNavigation } from "@react-navigation/native";
 import { useRoute } from "@react-navigation/native";
 import dayjs from "dayjs";
-import { useLocalSearchParams, useRouter } from "expo-router";
+import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
 
 const GnomeDetail = () => {
-  const { id } = useLocalSearchParams();
-  const { gnomes, interactions } = useGnomeStore(); // Add interactions here
+  const { gnomes, interactions } = useGnomeStore();
   const [gnome, setGnome] = useState(null);
+  const [nearestGnomes, setNearestGnomes] = useState([]);
   const router = useRouter();
   const navigation = useNavigation();
   const route = useRoute();
+
+  const id = route.params?.id;
 
   useEffect(() => {
     navigation.setOptions({
@@ -41,6 +43,22 @@ const GnomeDetail = () => {
     }
   }, [id, gnomes]);
 
+  useEffect(() => {
+    if (gnome) {
+      const allGnomes = gnomes.filter((g) => g.id !== gnome.id);
+      const nearest = allGnomes
+        .sort(
+          (a, b) =>
+            (a.latitude - gnome.latitude) ** 2 +
+            (a.longitude - gnome.longitude) ** 2 -
+            ((b.latitude - gnome.latitude) ** 2 +
+              (b.longitude - gnome.longitude) ** 2),
+        )
+        .slice(0, 3);
+      setNearestGnomes(nearest);
+    }
+  }, [gnome, gnomes]);
+
   if (!gnome) {
     return (
       <View className="flex-1 justify-center items-center bg-[#131413]">
@@ -48,6 +66,7 @@ const GnomeDetail = () => {
       </View>
     );
   }
+
   const getImageSource = () => {
     if (interaction?.found && interaction?.userPicture)
       return (
@@ -112,21 +131,14 @@ const GnomeDetail = () => {
       <Text className="text-white font-afacad my-2">{gnome.funFact}</Text>
 
       <View className="flex-row justify-center mt-5">
-        <GnomeCard
-          image={require("@/assets/images/placeholder.png")}
-          text="?"
-          onClick={() => router.push("/collection")}
-        />
-        <GnomeCard
-          image={require("@/assets/images/placeholder.png")}
-          text="?"
-          onClick={() => router.push("/collection")}
-        />
-        <GnomeCard
-          image={require("@/assets/images/placeholder.png")}
-          text="?"
-          onClick={() => router.push("/collection")}
-        />
+        {nearestGnomes.map((gnome) => (
+          <GnomeCard
+            key={gnome.id}
+            image={require("@/assets/images/placeholder.png")}
+            text={gnome.name}
+            onClick={() => router.push(`/Gnomes/${gnome.id}`)}
+          />
+        ))}
       </View>
     </ScrollView>
   );
