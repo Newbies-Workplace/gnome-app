@@ -4,8 +4,8 @@ import FoundIcon from "@/assets/icons/found.svg";
 import { GnomeCard } from "@/components/ui/GnomeCard";
 import { useGnomeStore } from "@/store/useGnomeStore";
 import { useNavigation } from "@react-navigation/native";
-import dayjs from "dayjs";
 import { useRoute } from "@react-navigation/native";
+import dayjs from "dayjs";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
@@ -88,7 +88,10 @@ const GnomeDetail = () => {
       <View className="flex-row items-center mb-2.5">
         <FoundIcon width={20} height={20} />
         <Text className="text-white ml-2.5">
-          Data znalezienia: {dayjs(gnome.foundDate).format("DD-MM-YYYY")}
+          Data znalezienia:{" "}
+          {interaction
+            ? dayjs(interaction.interactionDate).format("DD-MM-YY")
+            : "Krasnal jeszcze nie znaleziony"}
         </Text>
       </View>
 
