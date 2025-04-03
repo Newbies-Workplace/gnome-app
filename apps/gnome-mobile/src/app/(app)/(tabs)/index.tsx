@@ -142,6 +142,7 @@ const MapScreen = () => {
 
   useEffect(() => {
     let subscription: Location.LocationSubscription | null = null;
+    let headingSubscription: Location.LocationSubscription | null = null;
 
     (async () => {
       try {
@@ -165,6 +166,15 @@ const MapScreen = () => {
             });
           },
         );
+        headingSubscription = await Location.watchHeadingAsync(
+          (headingData) => {
+            if (ref.current) {
+              ref.current.animateCamera({
+                heading: headingData.trueHeading,
+              });
+            }
+          },
+        );
       } catch (error) {
         console.error("Error getting location:", error);
         setErrorMsg("Error getting location");
@@ -174,6 +184,9 @@ const MapScreen = () => {
     return () => {
       if (subscription) {
         subscription.remove();
+      }
+      if (headingSubscription) {
+        headingSubscription.remove();
       }
     };
   }, []);
