@@ -47,6 +47,10 @@ export const useAuthStore = create<AuthStore>()(
     }),
     {
       name: "auth-storage",
+      partialize: (state) =>
+        Object.fromEntries(
+          Object.entries(state).filter(([key]) => !["isLoading"].includes(key)),
+        ),
       storage: createJSONStorage(() => AsyncStorage),
     },
   ),

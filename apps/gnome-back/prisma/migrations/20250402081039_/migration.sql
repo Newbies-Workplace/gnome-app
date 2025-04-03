@@ -37,12 +37,14 @@ CREATE TABLE "User" (
 CREATE TABLE "Gnome" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
+    "funFact" TEXT NOT NULL,
     "latitude" DOUBLE PRECISION NOT NULL,
     "longitude" DOUBLE PRECISION NOT NULL,
     "location" TEXT NOT NULL,
     "creationDate" TIMESTAMP(3) NOT NULL,
     "description" TEXT NOT NULL,
     "exists" BOOLEAN NOT NULL DEFAULT true,
+    "pictureUrl" TEXT NOT NULL,
 
     CONSTRAINT "Gnome_pkey" PRIMARY KEY ("id")
 );
@@ -66,6 +68,7 @@ CREATE TABLE "GnomeInteraction" (
     "interactionDate" TIMESTAMP(3) NOT NULL,
     "userId" TEXT NOT NULL,
     "gnomeId" TEXT NOT NULL,
+    "userPicture" TEXT NOT NULL,
 
     CONSTRAINT "GnomeInteraction_pkey" PRIMARY KEY ("id")
 );

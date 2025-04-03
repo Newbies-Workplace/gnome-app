@@ -4,6 +4,7 @@ import TeamIcon from "@/assets/icons/team.svg";
 import DistanceTracker from "@/components/ui/DistanceTracker";
 import DraggableGnome from "@/components/ui/DraggableGnome";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import Compass from "@/components/ui/compass";
 import { Text } from "@/components/ui/text";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useGnomeStore } from "@/store/useGnomeStore";
@@ -11,9 +12,11 @@ import { useNavigation } from "@react-navigation/native";
 import * as Location from "expo-location";
 import { useRouter } from "expo-router";
 import { getDistance } from "geolib";
+
 import React, { createRef, useEffect, useRef, useState } from "react";
 import {
   Alert,
+  Dimensions,
   Image,
   Linking,
   StyleSheet,
@@ -97,7 +100,6 @@ const HeaderControls = ({ user, errorMsg, setErrorMsg }) => {
 
 const MapScreen = () => {
   const { user } = useAuthStore();
-  const navigation = useNavigation();
   const { replace } = useRouter();
   const { gnomes, fetchGnomes } = useGnomeStore();
   const ref = useRef<MapView>(null);
@@ -107,7 +109,7 @@ const MapScreen = () => {
     latitude: 51.1079,
     longitude: 17.0385,
   });
-  const [distance, setDistance] = useState(0);
+  const [distance, setDistance] = useState<number>();
   const [reachedMarker, setReachedMarker] = useState(false);
   const [showDistanceTracker, setShowDistanceTracker] = useState(false);
 
@@ -162,48 +164,41 @@ const MapScreen = () => {
 
   // filtrowanie
   const filteredGnomes = gnomes.filter((gnome) => {
-    const latitude = userLocation?.latitude || defaultRegion.latitude;
-    const longitude = userLocation?.longitude || defaultRegion.longitude;
-
-    const distance = getDistance(
-      { latitude, longitude },
-      { latitude: gnome.latitude, longitude: gnome.longitude },
-    );
+    const distance = getDistance(userLocation, {
+      latitude: gnome.latitude,
+      longitude: gnome.longitude,
+    });
 
     return distance <= maxDistance;
   });
 
   useEffect(() => {
-    const intervalId = setInterval(() => {
-      const distances = gnomes.map((gnome) => {
-        const distance = getDistance(
-          {
-            latitude: userLocation.latitude,
-            longitude: userLocation.longitude,
-          },
-          { latitude: gnome.latitude, longitude: gnome.longitude },
-        );
+    const distances = gnomes.map((gnome) => {
+      const distance = getDistance(
+        {
+          latitude: userLocation.latitude,
+          longitude: userLocation.longitude,
+        },
+        { latitude: gnome.latitude, longitude: gnome.longitude },
+      );
 
-        return distance;
-      });
+      return distance;
+    });
 
-      const closestMarkerIndex = distances.indexOf(Math.min(...distances));
-      const closestMarkerDistance = distances[closestMarkerIndex];
+    const closestMarkerIndex = distances.indexOf(Math.min(...distances));
+    const closestMarkerDistance = distances[closestMarkerIndex];
 
-      if (closestMarkerDistance <= MIN_TRACKER_DISTANCE) {
-        setShowDistanceTracker(true);
-      } else {
-        setShowDistanceTracker(false);
-      }
-      if (closestMarkerDistance <= MIN_REACHED_DISTANCE) {
-        setReachedMarker(true);
-      } else {
-        setReachedMarker(false);
-      }
-      setDistance(Math.round(closestMarkerDistance));
-    }, 1000);
-
-    return () => clearInterval(intervalId);
+    if (closestMarkerDistance <= MIN_TRACKER_DISTANCE) {
+      setShowDistanceTracker(true);
+    } else {
+      setShowDistanceTracker(false);
+    }
+    if (closestMarkerDistance <= MIN_REACHED_DISTANCE) {
+      setReachedMarker(true);
+    } else {
+      setReachedMarker(false);
+    }
+    setDistance(Math.round(closestMarkerDistance));
   }, [userLocation, gnomes]);
 
   return (
@@ -246,15 +241,22 @@ const MapScreen = () => {
       />
 
       <View className="absolute bottom-0 left-0 right-0 p-4 bg-transparent">
-        {distance > MIN_REACHED_DISTANCE && distance <= MIN_TRACKER_DISTANCE ? (
-          <DistanceTracker distance={distance} showDistanceTracker={true} />
-        ) : distance <= MIN_REACHED_DISTANCE ? (
-          <DraggableGnome onUnlock={() => replace("/camera")} />
-        ) : null}
+        {distance !== undefined &&
+          (distance > MIN_REACHED_DISTANCE &&
+          distance <= MIN_TRACKER_DISTANCE ? (
+            <DistanceTracker distance={distance} showDistanceTracker={true} />
+          ) : distance <= MIN_REACHED_DISTANCE ? (
+            <DraggableGnome onUnlock={() => replace("/camera")} />
+          ) : null)}
+      </View>
+      <View className="absolute top-[100px] left-1/2 -translate-x-1/2 z-50">
+        <Compass />
       </View>
     </View>
   );
 };
+
+const { width } = Dimensions.get("window");
 
 const styles = StyleSheet.create({
   container: {
