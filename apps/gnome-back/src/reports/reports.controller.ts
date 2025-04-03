@@ -92,6 +92,3 @@ export class ReportsController {
     return this.reportsService.deleteAllReports();
   }
 }
-function getUniqueReport(arg0: any, id: any, string: any) {
-  throw new Error("Function not implemented.");
-}
