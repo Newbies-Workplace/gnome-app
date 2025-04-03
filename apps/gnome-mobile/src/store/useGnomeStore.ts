@@ -12,21 +12,33 @@ export interface Gnome {
   creationDate: Date;
   description: string;
   exists: boolean;
+  pictureUrl: string;
+}
+
+interface Interaction {
+  id: string;
+  interactionDate: Date;
+  gnomeId: string;
+  userId: string;
+  userPicture: string;
 }
 
 interface GnomeState {
   gnomes: Gnome[];
+  interactions: Interaction[];
   loading: boolean;
   error: string | null;
 
   fetchGnomes: () => Promise<void>;
   addGnome: (gnome: Gnome) => void;
   removeGnome: (id: string) => void;
+  fetchMyInteractions: () => Promise<void>;
   addInteraction: (gnomeId: string, photoUrl?: string) => Promise<void>;
 }
 
 export const useGnomeStore = create<GnomeState>((set) => ({
   gnomes: [],
+  interactions: [],
   loading: false,
   error: null,
 
@@ -49,6 +61,25 @@ export const useGnomeStore = create<GnomeState>((set) => ({
     set((state) => ({
       gnomes: state.gnomes.filter((gnome) => gnome.id !== id),
     })),
+
+  fetchMyInteractions: async () => {
+    set({ loading: true, error: null });
+    try {
+      const { user } = useAuthStore.getState();
+      if (!user) {
+        throw new Error("User is not authenticated");
+      }
+      const data = await GnomesService.getMyGnomesInteractions();
+      console.log("Fetched interactions:", data); // Log data
+      if (!Array.isArray(data))
+        throw new Error("Invalid interaction data format");
+
+      set({ interactions: data, loading: false });
+    } catch (error) {
+      console.error("Fetch error:", error);
+      set({ error: "Failed to load interactions", loading: false });
+    }
+  },
 
   addInteraction: async (gnomeId, photoUrl) => {
     console.log("Photo captured:", photoUrl);
