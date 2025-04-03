@@ -1,13 +1,13 @@
 import { PrismaService } from "@/db/prisma.service";
 import { Injectable } from "@nestjs/common";
 import { Friendship } from "@prisma/client";
-import { SearchForFriendResponse } from "@repo/shared/responses";
+import { FriendSearchResponse } from "@repo/shared/responses";
 
 @Injectable()
 export class FriendsService {
   constructor(private readonly prismaService: PrismaService) {}
 
-  async searchForFriend(name: string): Promise<SearchForFriendResponse[]> {
+  async searchForFriend(name: string): Promise<FriendSearchResponse[]> {
     return this.prismaService.user.findMany({
       where: {
         name: {

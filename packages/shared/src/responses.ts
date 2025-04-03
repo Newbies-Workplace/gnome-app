@@ -1,12 +1,14 @@
-export interface ApiResponse<T> {
-  success: boolean;
-  data?: T;
-  error?: string;
-}
+import { Prisma, Status } from "@prisma/client";
 
 export interface UserResponse {
   id: string;
   email: string;
+  name: string;
+  pictureUrl: string;
+}
+
+export interface UserPatchResponse {
+  id: string;
   name: string;
   pictureUrl: string;
 }
@@ -44,7 +46,7 @@ export interface GnomeIdResponse {
   creationDate: Date;
   description: string;
   exists: boolean;
-  pictureUrl: string;
+  pictureUrl?: string;
   nearest: GnomeResponse[];
 }
 
@@ -53,21 +55,21 @@ export interface InteractionResponse {
   gnomeId: string;
   userId: string;
   interactionDate: Date;
-  userPicture: string;
+  userPicture?: string;
   gnome: GnomeResponse;
 }
 
 export interface ReportResponse {
   id: string;
   gnomeName: string;
-  pictureUrl: string;
+  pictureUrl?: string;
   latitude: number;
   longitude: number;
   location: string;
   reportAuthor: string;
 }
 
-export interface SearchForFriendResponse {
+export interface FriendSearchResponse {
   id: string;
   name: string;
   pictureUrl: string;
@@ -77,7 +79,24 @@ export interface FriendsResponse {
   id: string;
   senderId: string;
   receiverId: string;
-  status: string;
+  status: Status;
+}
+
+export interface FriendNewResponse {
+  id: string;
+  status: Status;
+  senderId: string;
+  receiverId: string;
+}
+
+export interface FriendAcceptResponse {
+  updatedFriendship: Prisma.BatchPayload;
+  newFriendship: FriendNewResponse;
+}
+
+export interface FriendDeleteResponse {
+  deleteFriendship: Prisma.BatchPayload;
+  cancelInvitation: Prisma.BatchPayload;
 }
 
 export interface TeamMembersResponse {

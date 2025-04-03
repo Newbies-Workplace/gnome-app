@@ -13,9 +13,10 @@ import {
 } from "@nestjs/common";
 import { Friendship } from "@prisma/client";
 import {
-  ApiResponse,
+  FriendAcceptResponse,
+  FriendDeleteResponse,
+  FriendSearchResponse,
   FriendsResponse,
-  SearchForFriendResponse,
   UserResponse,
 } from "@repo/shared/responses";
 import { AcceptFriendRequest } from "./dto/AcceptRequest.dto";
@@ -31,39 +32,26 @@ export class FriendsController {
   @UseGuards(JwtGuard)
   async searchForFriend(
     @Query("name") name: string,
-  ): Promise<ApiResponse<SearchForFriendResponse[]>> {
+  ): Promise<FriendSearchResponse[]> {
     /* search/?name="wartosc" */
     const searchForFriend = await this.friendsService.searchForFriend(name);
-    return {
-      success: true,
-      data: searchForFriend,
-    };
+    return searchForFriend;
   }
 
   @Get("@me/pending") // zaproszenia oczekujace zatwierdzenia
   @UseGuards(JwtGuard)
-  async findPendingRequests(
-    @User() user: JWTUser,
-  ): Promise<ApiResponse<FriendsResponse[]>> {
+  async findPendingRequests(@User() user: JWTUser): Promise<FriendsResponse[]> {
     const findPendingRequests = await this.friendsService.findPendingRequests(
       user.id,
     );
-    return {
-      success: true,
-      data: findPendingRequests,
-    };
+    return findPendingRequests;
   }
 
   @Get("@me") // znajomi
   @UseGuards(JwtGuard)
-  async findUserFriends(
-    @User() user: JWTUser,
-  ): Promise<ApiResponse<FriendsResponse[]>> {
+  async findUserFriends(@User() user: JWTUser): Promise<FriendsResponse[]> {
     const myFriends = await this.friendsService.findUserFriends(user.id);
-    return {
-      success: true,
-      data: myFriends,
-    };
+    return myFriends;
   }
 
   @Post("@me/invitation") // zaproszenie znajomego
@@ -71,15 +59,12 @@ export class FriendsController {
   async sendFriendRequest(
     @User() user: JWTUser,
     @Body() body: SendFriendRequest,
-  ): Promise<ApiResponse<FriendsResponse>> {
+  ): Promise<FriendsResponse> {
     const inviteFriend = await this.friendsService.sendFriendRequest(
       user.id,
       body.friendId,
     );
-    return {
-      success: true,
-      data: inviteFriend,
-    };
+    return inviteFriend;
   }
 
   @Post("@me/accept") // zaakceptowanie zaproszenia do znajomych
@@ -87,16 +72,14 @@ export class FriendsController {
   async acceptFriendRequest(
     @User() user: JWTUser,
     @Body() body: AcceptFriendRequest,
-  ): Promise<ApiResponse<FriendsResponse>> {
+  ): Promise<FriendAcceptResponse> {
     console.log(user.id);
     console.log(body.senderId);
     const acceptFriend = await this.friendsService.acceptFriendRequest(
       body.senderId,
       user.id,
     );
-    return {
-      success: true,
-    };
+    return acceptFriend;
   }
 
   @Delete("@me") // usun znajomego
@@ -104,13 +87,11 @@ export class FriendsController {
   async deleteFriend(
     @User() user: JWTUser,
     @Body() body: DeleteFriend,
-  ): Promise<ApiResponse<FriendsResponse>> {
+  ): Promise<FriendDeleteResponse> {
     const deleteFriend = await this.friendsService.deleteFriend(
       user.id,
       body.friendId,
     );
-    return {
-      success: true,
-    };
+    return deleteFriend;
   }
 }

@@ -23,7 +23,6 @@ import {
 import { FileInterceptor } from "@nestjs/platform-express";
 import { Team } from "@prisma/client";
 import {
-  ApiResponse,
   GnomeIdResponse,
   GnomeResponse,
   InteractionResponse,
@@ -48,26 +47,18 @@ export class GnomesController {
 
   @Get("")
   @UseGuards(JwtGuard)
-  async getAllGnomes(): Promise<ApiResponse<GnomeResponse[]>> {
+  async getAllGnomes(): Promise<GnomeResponse[]> {
     const gnomes = await this.gnomeService.getAllGnomes();
-    return {
-      success: true,
-      data: gnomes,
-    };
+    return gnomes;
   }
 
   // Pobranie danych gnoma
 
   @Get(":id")
   @UseGuards(JwtGuard)
-  async getGnomeData(
-    @Param("id") gnomeId: string,
-  ): Promise<ApiResponse<GnomeIdResponse>> {
+  async getGnomeData(@Param("id") gnomeId: string): Promise<GnomeIdResponse> {
     const gnomeData = await this.gnomeService.getGnomeData(gnomeId);
-    return {
-      success: true,
-      data: gnomeData,
-    };
+    return gnomeData;
   }
 
   // Pobieranie interakcji gnomów
@@ -85,14 +76,11 @@ export class GnomesController {
   @UseGuards(JwtGuard)
   async getMyGnomesInteractions(
     @User() user: JWTUser,
-  ): Promise<ApiResponse<InteractionResponse[]>> {
+  ): Promise<InteractionResponse[]> {
     const interaction = await this.gnomeService.getMyGnomesInteractions(
       user.id,
     );
-    return {
-      success: true,
-      data: interaction,
-    };
+    return interaction;
   }
 
   // Tworzenie nowego gnoma
@@ -113,7 +101,7 @@ export class GnomesController {
     )
     file: Express.Multer.File,
     @Body() createGnomeDto: CreateGnomeRequest,
-  ): Promise<ApiResponse<GnomeResponse>> {
+  ): Promise<GnomeResponse> {
     await this.minioService.createBucketIfNotExists();
     const fileName = `${createGnomeDto.name}.jpg`;
     const catalogueName = "defaultGnomePictures";
@@ -125,10 +113,7 @@ export class GnomesController {
       createGnomeDto,
       fileUrl,
     );
-    return {
-      success: true,
-      data: gnomeCreate,
-    };
+    return gnomeCreate;
   }
 
   // Tworzenie interakcji usera z gnomem
@@ -149,7 +134,7 @@ export class GnomesController {
     file: Express.Multer.File,
     @User() user: JWTUser,
     @Body() body: CreateInteractionRequest,
-  ): Promise<ApiResponse<InteractionResponse>> {
+  ): Promise<InteractionResponse> {
     await this.minioService.createBucketIfNotExists();
 
     const fileName = `${user.id}-${body.gnomeId}.jpg`;
@@ -182,10 +167,7 @@ export class GnomesController {
       const filteredInteractions = resolvedInteractions.filter(
         (interaction) => interaction.userId === user.id,
       );
-      return {
-        success: true,
-        data: filteredInteractions[0],
-      };
+      return filteredInteractions[0];
     }
 
     const interaction = await this.gnomeService.createInteraction(
@@ -195,9 +177,6 @@ export class GnomesController {
       fileUrl,
     );
 
-    return {
-      success: true,
-      data: interaction,
-    };
+    return interaction;
   }
 }

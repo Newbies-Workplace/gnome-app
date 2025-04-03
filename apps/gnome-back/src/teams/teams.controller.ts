@@ -2,6 +2,7 @@ import { JwtGuard } from "@/auth/jwt/jwt.guard";
 import { JWTUser } from "@/auth/jwt/jwtuser";
 import { User } from "@/auth/jwt/jwtuser.decorator";
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -13,8 +14,7 @@ import {
   Query,
   UseGuards,
 } from "@nestjs/common";
-import { ApiResponse, TeamResponse } from "@repo/shared/responses";
-import { NotFoundError } from "rxjs";
+import { TeamResponse } from "@repo/shared/responses";
 import { TeamsService } from "./teams.service";
 
 @Controller("teams")
@@ -23,28 +23,22 @@ export class TeamsController {
 
   @Get("@me") // GET /teams/@me
   @UseGuards(JwtGuard)
-  async getMyTeam(@User() user: JWTUser): Promise<ApiResponse<TeamResponse>> {
+  async getMyTeam(@User() user: JWTUser): Promise<TeamResponse> {
     const getTeam = await this.teamsService.getTeamWithMemberId(user.id);
     if (!getTeam) {
       throw new NotFoundException("Nie znaleziono zespołu");
     }
-    return {
-      success: true,
-      data: getTeam,
-    };
+    return getTeam;
   }
 
   @Get(":id") // GET /teams/:id
   @UseGuards(JwtGuard)
-  async findOne(@Param("id") id: string): Promise<ApiResponse<TeamResponse>> {
+  async findOne(@Param("id") id: string): Promise<TeamResponse> {
     const getTeamById = await this.teamsService.getTeam(id);
     if (!getTeamById) {
       throw new NotFoundException("Nie znaleziono zespołu");
     }
-    return {
-      success: true,
-      data: getTeamById,
-    };
+    return getTeamById;
   }
 
   @Post() // POST /teams
@@ -52,16 +46,14 @@ export class TeamsController {
   async create(
     @Body() team: { members: string[] },
     @User() user: JWTUser,
-  ): Promise<ApiResponse<TeamResponse>> {
+  ): Promise<TeamResponse> {
     const leaderId = user.id;
     const createTeam = await this.teamsService.createTeam(
       leaderId,
       team.members,
     );
-    return {
-      success: true,
-      data: createTeam,
-    };
+
+    return createTeam;
   }
 
   @Delete(":id") // DELETE /teams/:id

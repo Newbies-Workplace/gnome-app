@@ -10,7 +10,7 @@ import {
   Post,
   UseGuards,
 } from "@nestjs/common";
-import { ApiResponse, ReportResponse } from "@repo/shared/responses";
+import { ReportResponse } from "@repo/shared/responses";
 import { CreateReportRequest } from "./dto/CreateReportRequest.dto";
 import { ReportsService } from "./reports.service";
 
@@ -29,7 +29,7 @@ export class ReportsController {
   @Post("")
   async createReport(
     @Body() body: CreateReportRequest,
-  ): Promise<ApiResponse<ReportResponse>> {
+  ): Promise<ReportResponse> {
     const createReport = await this.reportsService.createReport(
       body.gnomeName,
       body.pictureUrl,
@@ -39,38 +39,25 @@ export class ReportsController {
       body.reportAuthor,
     );
 
-    return {
-      success: true,
-      data: createReport,
-    };
+    return createReport;
   }
 
   @Get(":id")
   @UseGuards(JwtGuard, RoleGuard)
   @Role(["ADMIN"])
-  async getUniqueReport(
-    @Param("id") id: string,
-  ): Promise<ApiResponse<ReportResponse>> {
+  async getUniqueReport(@Param("id") id: string): Promise<ReportResponse> {
     const uniqueReport = await this.reportsService.getUniqueReport(id);
 
-    return {
-      success: true,
-      data: uniqueReport,
-    };
+    return uniqueReport;
   }
 
   @Delete(":id")
   @UseGuards(JwtGuard, RoleGuard)
   @Role(["ADMIN"])
-  async deleteReport(
-    @Param("id") id: string,
-  ): Promise<ApiResponse<ReportResponse>> {
+  async deleteReport(@Param("id") id: string): Promise<ReportResponse> {
     const deletedReport = await this.reportsService.deleteReport(id);
 
-    return {
-      success: true,
-      data: deletedReport,
-    };
+    return deletedReport;
   }
 
   @Delete("")

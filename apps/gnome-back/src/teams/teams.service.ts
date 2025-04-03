@@ -1,6 +1,6 @@
 import { PrismaService } from "@/db/prisma.service";
-import { Injectable } from "@nestjs/common";
-import { TeamMembership } from "@prisma/client";
+import { BadRequestException, Injectable } from "@nestjs/common";
+import { Prisma, TeamMembership } from "@prisma/client";
 @Injectable()
 export class TeamsService {
   constructor(private readonly prisma: PrismaService) {}
@@ -58,22 +58,29 @@ export class TeamsService {
     };
   }
   async createTeam(leaderId: string, members: string[]) {
+    const existingTeam = await this.prisma.team.findFirst({
+      where: {
+        OR: [{ leader: leaderId }, { members: { some: { userId: leaderId } } }],
+      },
+    });
+
+    if (existingTeam) {
+      throw new BadRequestException("Nie można stworzyć drużyny");
+    }
     const createTeam = await this.prisma.team.create({
       data: {
-        leader: leaderId, // Lider zespołu ustawiany jako pierwszy członek
+        leader: leaderId,
         members: {
           create: members.map((userId) => ({
             user: {
-              connect: { id: userId }, // Przypisujemy członków przez ich id
+              connect: { id: userId },
             },
           })),
         },
       },
       include: {
         members: {
-          select: {
-            userId: true,
-          },
+          select: { userId: true },
         },
       },
     });
