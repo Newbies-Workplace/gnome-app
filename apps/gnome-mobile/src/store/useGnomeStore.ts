@@ -62,7 +62,6 @@ export const useGnomeStore = create<GnomeState>((set) => ({
       gnomes: state.gnomes.filter((gnome) => gnome.id !== id),
     })),
 
-
   fetchMyInteractions: async () => {
     set({ loading: true, error: null });
     try {
@@ -80,6 +79,7 @@ export const useGnomeStore = create<GnomeState>((set) => ({
       console.error("Fetch error:", error);
       set({ error: "Failed to load interactions", loading: false });
     }
+  },
 
   addInteraction: async (gnomeId, photoUrl) => {
     console.log("Photo captured:", photoUrl);
@@ -99,6 +99,5 @@ export const useGnomeStore = create<GnomeState>((set) => ({
     };
 
     await axiosInstance.post(url, form, { headers });
-
   },
 }));
