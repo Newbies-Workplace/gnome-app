@@ -2,6 +2,7 @@ import ArrowLeft from "@/assets/icons/arrow-left.svg";
 import DateIcon from "@/assets/icons/date.svg";
 import FoundIcon from "@/assets/icons/found.svg";
 import { GnomeCard } from "@/components/ui/GnomeCard";
+import { GnomesService } from "@/lib/api/Gnomes.service";
 import { useGnomeStore } from "@/store/useGnomeStore";
 import { useNavigation } from "@react-navigation/native";
 import { useRoute } from "@react-navigation/native";
@@ -45,19 +46,11 @@ const GnomeDetail = () => {
 
   useEffect(() => {
     if (gnome) {
-      const allGnomes = gnomes.filter((g) => g.id !== gnome.id);
-      const nearest = allGnomes
-        .sort(
-          (a, b) =>
-            (a.latitude - gnome.latitude) ** 2 +
-            (a.longitude - gnome.longitude) ** 2 -
-            ((b.latitude - gnome.latitude) ** 2 +
-              (b.longitude - gnome.longitude) ** 2),
-        )
-        .slice(0, 3);
-      setNearestGnomes(nearest);
+      GnomesService.getNearestGnomes(gnome.id.toString())
+        .then((nearest) => setNearestGnomes(nearest))
+        .catch((error) => console.error(error));
     }
-  }, [gnome, gnomes]);
+  }, [gnome, GnomesService]);
 
   if (!gnome) {
     return (
@@ -131,14 +124,36 @@ const GnomeDetail = () => {
       <Text className="text-white font-afacad my-2">{gnome.funFact}</Text>
 
       <View className="flex-row justify-center mt-5">
-        {nearestGnomes.map((gnome) => (
-          <GnomeCard
-            key={gnome.id}
-            image={require("@/assets/images/placeholder.png")}
-            text={gnome.name}
-            onClick={() => router.push(`/Gnomes/${gnome.id}`)}
-          />
-        ))}
+        {Object.keys(nearestGnomes).length > 0 ? (
+          <>
+            <GnomeCard
+              key={0}
+              image={require("@/assets/images/placeholder.png")}
+              text={nearestGnomes.nearest[0].name}
+              onClick={() =>
+                router.push(`/Gnomes/${nearestGnomes.nearest[0].id}`)
+              }
+            />
+            <GnomeCard
+              key={1}
+              image={require("@/assets/images/placeholder.png")}
+              text={nearestGnomes.nearest[1].name}
+              onClick={() =>
+                router.push(`/Gnomes/${nearestGnomes.nearest[1].id}`)
+              }
+            />
+            <GnomeCard
+              key={2}
+              image={require("@/assets/images/placeholder.png")}
+              text={nearestGnomes.nearest[2].name}
+              onClick={() =>
+                router.push(`/Gnomes/${nearestGnomes.nearest[2].id}`)
+              }
+            />
+          </>
+        ) : (
+          <Text>No gnomes found</Text>
+        )}
       </View>
     </ScrollView>
   );
