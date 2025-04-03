@@ -21,6 +21,11 @@ import {
   UseInterceptors,
 } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
+import { Team } from "@prisma/client";
+import {
+  CreateGnomeRequest,
+  CreateInteractionRequest,
+} from "@repo/shared/requests";
 import {
   ApiResponse,
   GnomeIdResponse,
@@ -31,8 +36,6 @@ import { Express } from "express";
 import { Request } from "express";
 import { JWT } from "google-auth-library";
 import { Multer } from "multer";
-import { CreateGnomeRequest } from "./dto/gnomeCreate.dto";
-import { CreateInteractionRequest } from "./dto/interactionCreate";
 import { GnomesService } from "./gnomes.service";
 
 @Controller("gnomes")

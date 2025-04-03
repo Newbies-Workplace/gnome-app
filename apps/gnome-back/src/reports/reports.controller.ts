@@ -17,8 +17,8 @@ import {
 } from "@nestjs/common";
 import { FileTypeValidator, MaxFileSizeValidator } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
+import { CreateReportRequest } from "@repo/shared/requests";
 import { ApiResponse, ReportResponse } from "@repo/shared/responses";
-import { CreateReportRequest } from "./dto/CreateReportRequest.dto";
 import { ReportsService } from "./reports.service";
 @Controller("reports")
 export class ReportsController {
@@ -59,8 +59,8 @@ export class ReportsController {
       await this.minioService.uploadFile(file, fileName, catalogueName);
       fileUrl = await this.minioService.getFileUrl(filePath);
     }
-    const latitude = Number.parseFloat(body.latitude);
-    const longitude = Number.parseFloat(body.longitude);
+    const latitude = body.latitude;
+    const longitude = body.longitude;
     return this.reportsService.createReport(
       body.gnomeName,
       fileUrl,
