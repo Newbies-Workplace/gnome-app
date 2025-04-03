@@ -1,3 +1,4 @@
+import LoadingScreen from "@/components/LoadingScreen";
 import { GnomeCard } from "@/components/ui/GnomeCard";
 import { useGnomeStore } from "@/store/useGnomeStore";
 import { useNavigation } from "@react-navigation/native";
@@ -33,13 +34,22 @@ const Collection = () => {
     fetchMyInteractions(); // Fetch interactions when component mounts
   }, []);
 
-  if (gnomes.length === 0) {
-    return (
-      <View className="flex-1 justify-center items-center bg-[#131413]">
-        <Text className="text-white text-lg">Ładowanie...</Text>
-      </View>
-    );
-  }
+if (loading) {
+  return <LoadingScreen />;
+}
+
+if (error) {
+  return <Text className="text-white">Błąd: {error}</Text>;
+}
+
+if (gnomes.length === 0) {
+  return (
+    <View className="flex-1 justify-center items-center bg-[#131413]">
+      <Text className="text-white text-lg">Ładowanie...</Text>
+    </View>
+  );
+}
+
 
   return (
     <View className="p-5 bg-background flex-1">

@@ -4,6 +4,7 @@ import { User } from "@/auth/jwt/jwtuser.decorator";
 import { MinioService } from "@/minio/minio.service";
 import { Role } from "@/role/role.decorator";
 import { RoleGuard } from "@/roleguard/role.guard";
+import { TeamsService } from "@/teams/teams.service";
 import {
   Body,
   Controller,
@@ -33,6 +34,7 @@ export class GnomesController {
   constructor(
     private readonly gnomeService: GnomesService,
     private readonly minioService: MinioService,
+    private readonly teamsService: TeamsService,
   ) {}
 
   // Pobieranie wszystkich gnomów
@@ -134,13 +136,30 @@ export class GnomesController {
       );
     }
 
+    const team = await this.teamsService.getTeamWithMemberId(user.id);
+    if (team && team.length > 0) {
+      const interactions = team.flatMap((teamMember) =>
+        teamMember.members.map((member) => {
+          return this.gnomeService.createInteraction(
+            member.userId,
+            body.interactionDate,
+            body.gnomeId,
+            fileUrl,
+          );
+        }),
+      );
+      const resolvedInteractions = await Promise.all(interactions);
+      return resolvedInteractions.filter(
+        (interaction) => interaction.userId === user.id,
+      );
+    }
+
     const interaction = await this.gnomeService.createInteraction(
       user.id,
       body.interactionDate,
       body.gnomeId,
       fileUrl,
     );
-
     return interaction;
   }
 }
