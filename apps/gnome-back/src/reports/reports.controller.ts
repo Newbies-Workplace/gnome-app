@@ -1,4 +1,6 @@
+import { JWTUser } from "@/auth/jwt/JWTUser";
 import { JwtGuard } from "@/auth/jwt/jwt.guard";
+import { MinioService } from "@/minio/minio.service";
 import { Role } from "@/role/role.decorator";
 import { RoleGuard } from "@/roleguard/role.guard";
 import {
@@ -7,16 +9,22 @@ import {
   Delete,
   Get,
   Param,
+  ParseFilePipe,
   Post,
+  UploadedFile,
   UseGuards,
+  UseInterceptors,
 } from "@nestjs/common";
+import { FileTypeValidator, MaxFileSizeValidator } from "@nestjs/common";
+import { FileInterceptor } from "@nestjs/platform-express";
 import { CreateReportRequest } from "./dto/CreateReportRequest.dto";
 import { ReportsService } from "./reports.service";
-
 @Controller("reports")
 export class ReportsController {
-  constructor(private readonly reportsService: ReportsService) {}
-
+  constructor(
+    private readonly minioService: MinioService,
+    private readonly reportsService: ReportsService,
+  ) {}
   @Get("")
   @UseGuards(JwtGuard, RoleGuard)
   @Role(["ADMIN"])
@@ -24,14 +32,39 @@ export class ReportsController {
     /* zwraca wszystkie reporty i ich ilosc */
     return this.reportsService.getAllReports();
   }
-
   @Post("")
-  createReport(@Body() body: CreateReportRequest) {
+  @UseInterceptors(FileInterceptor("file"))
+  async createReport(
+    @Body() body: CreateReportRequest,
+    @UploadedFile(
+      new ParseFilePipe({
+        fileIsRequired: false,
+        validators: [
+          new MaxFileSizeValidator({ maxSize: 10_000_000 }), // 10MB
+          new FileTypeValidator({ fileType: "image/jpeg" }),
+        ],
+      }),
+    )
+    file: Express.Multer.File,
+  ) {
+    await this.minioService.createBucketIfNotExists();
+
+    let fileUrl = null;
+    if (file) {
+      const fileName = `xd.jpg`;
+      const catalogueName = `reportImages`;
+      const filePath = `${catalogueName}/${fileName}`;
+
+      await this.minioService.uploadFile(file, fileName, catalogueName);
+      fileUrl = await this.minioService.getFileUrl(filePath);
+    }
+    const latitude = Number.parseFloat(body.latitude);
+    const longitude = Number.parseFloat(body.longitude);
     return this.reportsService.createReport(
       body.gnomeName,
-      body.pictureUrl,
-      body.latitude,
-      body.longitude,
+      fileUrl,
+      latitude,
+      longitude,
       body.location,
       body.reportAuthor,
     );
@@ -58,4 +91,7 @@ export class ReportsController {
     /* zwraca liczbe usunietych zgloszen */
     return this.reportsService.deleteAllReports();
   }
+}
+function getUniqueReport(arg0: any, id: any, string: any) {
+  throw new Error("Function not implemented.");
 }
