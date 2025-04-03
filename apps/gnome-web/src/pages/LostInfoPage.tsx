@@ -6,7 +6,7 @@ export const LostInfoPage = () => {
   return (
     <div>
       <Navbar />
-      <BgElement className="rounded-b-[15px]" />
+      <BgElement className="rounded-b-[15px] rounded-l-[15px]" />
       <header className="text-[40px] text-center">
         Od ostatniego logowania zgłoszono 3 krasnali
       </header>

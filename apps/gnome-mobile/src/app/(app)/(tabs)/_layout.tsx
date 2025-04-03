@@ -1,4 +1,5 @@
 import HomeTabs from "@/app/(app)/navigator/HomeTabs";
+import LoadingScreen from "@/components/LoadingScreen";
 import { useAuthStore } from "@/store/useAuthStore";
 import { Redirect } from "expo-router";
 import { Tabs } from "expo-router";
@@ -10,7 +11,7 @@ export default function AppLayout() {
   const { accessToken, isLoading } = useAuthStore();
 
   if (isLoading) {
-    return <Text>Loading</Text>;
+    return <LoadingScreen />;
   }
 
   if (!accessToken) {

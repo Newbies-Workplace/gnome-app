@@ -15,7 +15,11 @@ export const CircleTracker: React.FC<CircleProps> = ({
     <div className="flex flex-row items-center gap-2 mt-15 relative">
       <div
         className={cn(
-          "w-[50px] h-[50px] rounded-full bg-[#1E201E] items-center text-center justify-center flex text-[21px] text-[#757A75]",
+          `rounded-full bg-[#1E201E] items-center text-center justify-center flex text-[#757A75]
+          w-[30px] h-[30px] text-[18px] 
+          sm:w-[30px] sm:h-[30px] sm:text-[18px] 
+          md:w-[40px] md:h-[40px] md:text-[20px] 
+          lg:w-[50px] lg:h-[50px] lg:text-[22px]`,
           className,
         )}
       >
