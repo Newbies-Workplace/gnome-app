@@ -1,41 +1,8 @@
-import { TokenResponse, useGoogleLogin } from "@react-oauth/google";
-import { useNavigate } from "react-router-dom";
 import { LinkButton } from "../components/LinkButton";
 import Navbar from "../components/Navbar";
 import { BgElement } from "../components/bg_element";
-import { axiosInstance } from "../lib/api/axios";
 
 export const LogAdminPage = () => {
-  const navigate = useNavigate();
-
-  const handleGoogleLogin = useGoogleLogin({
-    flow: "auth-code",
-    onSuccess: async (tokenResponse) => {
-      try {
-        // Send the Google token to the backend
-        const response = await axiosInstance.post("/auth/google", {
-          idToken: tokenResponse.code, // Use the access_token as idToken
-        });
-
-        // Handle the response from the backend
-        const { access_token, user } = response.data;
-        console.log("Logged in user:", user);
-
-        // Store the access token (e.g., in localStorage or a global state)
-        localStorage.setItem("access_token", access_token);
-
-        // Navigate to the admin page
-        navigate("/admin");
-      } catch (error) {
-        console.error("Error logging in with Google:", error);
-        alert("Failed to log in. Please try again.");
-      }
-    },
-    onError: () => {
-      console.error("Google login failed!");
-      alert("Google login failed. Please try again.");
-    },
-  });
   return (
     <div>
       <Navbar />
@@ -64,7 +31,12 @@ export const LogAdminPage = () => {
           <br />
           <div className="flex flex-row gap-25">
             <div className="flex justify-center items-center">
-              <button onClick={handleGoogleLogin}>
+              <button
+                onClick={() => {
+                  window.location.href =
+                    "http://localhost:3000/api/rest/v1/auth/google/redirect";
+                }}
+              >
                 <img
                   src='https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_"G"_logo.svg'
                   alt="Login by Google"

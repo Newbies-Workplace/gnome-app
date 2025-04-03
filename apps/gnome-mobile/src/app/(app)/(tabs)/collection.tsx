@@ -1,3 +1,4 @@
+import LoadingScreen from "@/components/LoadingScreen";
 import { GnomeCard } from "@/components/ui/GnomeCard";
 import { useGnomeStore } from "@/store/useGnomeStore";
 import { useNavigation } from "@react-navigation/native";
@@ -5,18 +6,24 @@ import { useRouter } from "expo-router";
 import React, { useEffect } from "react";
 import { FlatList, Text, View } from "react-native";
 
-const GnomeList = () => {
-  const { gnomes, fetchGnomes, loading, error } = useGnomeStore();
+const Collection = () => {
+  const {
+    gnomes,
+    fetchGnomes,
+    interactions,
+    fetchMyInteractions,
+    loading,
+    error,
+  } = useGnomeStore();
   const router = useRouter();
+  const navigation = useNavigation();
+
   //Header
   useEffect(() => {
-    const navigation = useNavigation();
     navigation.setOptions({
       headerTitle: () => (
-        <View className="text-center">
-          <Text className="text-white text-2xl font-bold text-center tracking-wide">
-            Twoja kolekcja
-          </Text>
+        <View className="flex justify-center">
+          <Text className="text-white text-2xl font-bold">Twoja kolekcja</Text>
         </View>
       ),
       headerTitleAlign: "center",
@@ -26,33 +33,54 @@ const GnomeList = () => {
       headerShadowVisible: false,
       headerShown: true,
     });
-  });
+  }, [navigation]);
 
   useEffect(() => {
     fetchGnomes();
+    fetchMyInteractions(); // Fetch interactions when component mounts
   }, []);
 
-  if (loading) return <Text>Ładowanie...</Text>;
-  if (error) return <Text>Błąd: {error}</Text>;
+  if (loading) {
+    return <LoadingScreen />;
+  }
+
+  if (error) {
+    return <Text className="text-white">Błąd: {error}</Text>;
+  }
+
+  if (gnomes.length === 0) {
+    return (
+      <View className="flex-1 justify-center items-center bg-[#131413]">
+        <Text className="text-white text-lg">Ładowanie...</Text>
+      </View>
+    );
+  }
 
   return (
-    <View className="p-5 bg-background">
+    <View className="p-5 bg-background flex-1">
       <Text className="text-2xl font-bold mb-4 text-white">Kolekcja</Text>
       <FlatList
         contentContainerClassName="pb-8"
         data={gnomes}
-        keyExtractor={(item) => item.id.toString()}
+        keyExtractor={(item) => item.id?.toString()}
         numColumns={3}
-        renderItem={({ item }) => (
-          <GnomeCard
-            image={require("@/assets/images/placeholder.png")} // później zdjecia z bazy ;D
-            text={item.name}
-            onClick={() => router.replace("/gnome_detail")}
-          />
-        )}
+        renderItem={({ item }) => {
+          const interaction = interactions.find((i) => i.id === item.id);
+          return (
+            <GnomeCard
+              image={require("@/assets/images/placeholder.png")}
+              text={item.name}
+              onClick={() => router.push(`/Gnomes/${item.id}`)}
+              interaction={{
+                found: interaction !== undefined,
+                userPicture: interaction?.userPicture,
+              }}
+            />
+          );
+        }}
       />
     </View>
   );
 };
 
-export default GnomeList;
+export default Collection;

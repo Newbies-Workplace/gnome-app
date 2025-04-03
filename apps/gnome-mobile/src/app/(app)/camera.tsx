@@ -1,27 +1,36 @@
-import { useNavigation, useRouter } from "expo-router";
-import React, { useEffect, useRef, useState } from "react";
-import { Image, Text, TouchableOpacity, View } from "react-native";
-import { Camera, useCameraDevices } from "react-native-vision-camera";
-
-//Import ikon
 import BackIcon from "@/assets/icons/arrow-left.svg";
+import { axiosInstance } from "@/lib/api/axios";
+import { useGnomeStore } from "@/store/useGnomeStore";
+import axios from "axios";
+import { useLocalSearchParams, useNavigation, useRouter } from "expo-router";
+import React, { useEffect, useRef, useState } from "react";
+import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  Camera,
+  CameraDevice,
+  CameraRuntimeError,
+  useCameraDevices,
+} from "react-native-vision-camera";
 
 const CameraScreen = () => {
+  const { addInteraction } = useGnomeStore();
+  const { gnomeid } = useLocalSearchParams<{ gnomeid: string }>();
   const devices = useCameraDevices();
-  const [device, setDevice] = useState(null);
+  const [device, setDevice] = useState<CameraDevice | null>(null);
   const cameraRef = useRef<Camera>(null);
   const [hasPermission, setHasPermission] = useState(false);
-  const [flashMode, setFlashMode] = useState("off");
+  const [flashMode, setFlashMode] = useState<"off" | "on" | "auto">("off");
 
   //Header
   const navigation = useNavigation();
   const router = useRouter();
+  console.log("Closest gnome in camera: ", gnomeid);
 
   useEffect(() => {
     navigation.setOptions({
       headerLeft: () => (
         <TouchableOpacity className="p-5" onPress={() => router.back()}>
-          <BackIcon className="w-7 h-7"></BackIcon>
+          <BackIcon className="w-7 h-7" />
         </TouchableOpacity>
       ),
       headerTitle: () => (
@@ -30,6 +39,19 @@ const CameraScreen = () => {
             Znalazłeś krasnala?{"\n"}Zrób mu zdjęcie!
           </Text>
         </View>
+      ),
+      headerRight: () => (
+        <TouchableOpacity
+          className="p-5"
+          onPress={() => {
+            addInteraction(gnomeid, undefined);
+            router.push("/collection");
+          }}
+        >
+          <Text className="text-white text-lg font-bold text-center tracking-wide">
+            Pomiń
+          </Text>
+        </TouchableOpacity>
       ),
       headerTitleAlign: "center",
       headerStyle: {
@@ -41,50 +63,56 @@ const CameraScreen = () => {
   });
 
   useEffect(() => {
-    console.log("Available Devices:", devices);
-    console.log("Selected Device:", device);
-    console.log("Has Permission:", hasPermission);
-  }, [devices, device, hasPermission]);
-
-  useEffect(() => {
     (async () => {
       const cameraPermission = await Camera.requestCameraPermission();
-      setHasPermission(cameraPermission === "authorized");
+      setHasPermission(cameraPermission === "granted");
     })();
   }, []);
 
   useEffect(() => {
-    if (devices.back) {
-      setDevice(devices.back);
+    if (backCamera) {
+      setDevice(backCamera);
     }
   }, [devices]);
 
+  // Robienie zdj
   const takePhoto = async () => {
     if (cameraRef.current) {
-      const photo = await cameraRef.current.takePhoto();
-      console.log("Photo captured:", photo);
+      const photo = await cameraRef.current.takePhoto({
+        flash: flashMode,
+      });
+      const photoUrl = `file://${photo.path}`;
+      await addInteraction(gnomeid, photoUrl);
+      router.push("/collection");
     }
   };
 
+  // Przełączenie flasha
   const toggleFlash = () => {
     setFlashMode((prev) => (prev === "off" ? "on" : "off"));
   };
 
+  // Zmiana kierunku kamery
+  const backCamera = devices.find((device) => device.position === "back");
+  const frontCamera = devices.find((device) => device.position === "front");
+
   const switchCamera = () => {
-    setDevice((prev) => (prev === devices.back ? devices.front : devices.back));
+    setDevice((prev) =>
+      prev?.position === "back" ? (frontCamera ?? prev) : (backCamera ?? prev),
+    );
   };
 
   return (
     <View className="flex-1 justify-center items-center bg-background relative">
-      <View className="w-[90%] h-[80%] rounded-2xl border-4 border-red-500 overflow-hidden bg-black flex justify-center items-center">
+      <View className="w-[90%] h-[80%] rounded-2xl border-4 border-red-500 overflow-hidden flex justify-center items-center">
         {device && hasPermission ? (
           <Camera
+            style={StyleSheet.absoluteFill}
             ref={cameraRef}
             className="flex-1"
             device={device}
             isActive={true}
             photo={true}
-            flashMode={flashMode}
           />
         ) : (
           <View className="flex-1 justify-center items-center">
