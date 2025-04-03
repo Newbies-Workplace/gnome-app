@@ -4,16 +4,19 @@ import FoundIcon from "@/assets/icons/found.svg";
 import { GnomeCard } from "@/components/ui/GnomeCard";
 import { useGnomeStore } from "@/store/useGnomeStore";
 import { useNavigation } from "@react-navigation/native";
+import { useRoute } from "@react-navigation/native";
+import dayjs from "dayjs";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
 
 const GnomeDetail = () => {
-  const { id } = useLocalSearchParams(); // Get gnome ID from URL
-  const { gnomes } = useGnomeStore(); // Fetch gnome list from store
+  const { id } = useLocalSearchParams();
+  const { gnomes, interactions } = useGnomeStore(); // Add interactions here
   const [gnome, setGnome] = useState(null);
   const router = useRouter();
   const navigation = useNavigation();
+  const route = useRoute();
 
   useEffect(() => {
     navigation.setOptions({
@@ -45,12 +48,34 @@ const GnomeDetail = () => {
       </View>
     );
   }
+  const getImageSource = () => {
+    if (interaction?.found && interaction?.userPicture)
+      return (
+        <Image
+          source={{ uri: interaction.userPicture }}
+          style={{ width: 379, height: 455 }}
+        />
+      );
+    if (interaction?.found)
+      return (
+        <Image
+          source={{ uri: gnome.pictureUrl }}
+          style={{ width: 379, height: 455 }}
+        />
+      );
+    return (
+      <Image
+        source={require("@/assets/images/placeholder.png")}
+        style={{ width: 379, height: 455 }}
+      />
+    );
+  };
+
+  const interaction = interactions.find((i) => i.gnomeId === gnome.id);
 
   return (
     <ScrollView className="bg-background p-4">
-      <View className="items-center mb-5">
-        <Image source={require("@/assets/icons/gnome-detail.png")} />
-      </View>
+      <View className="items-center mb-5">{getImageSource()}</View>
       <Text className="text-center text-white text-3xl font-bold mb-2.5">
         {gnome.name}
       </Text>
@@ -63,20 +88,28 @@ const GnomeDetail = () => {
       <View className="flex-row items-center mb-2.5">
         <FoundIcon width={20} height={20} />
         <Text className="text-white ml-2.5">
-          Data znalezienia: {gnome.foundDate}
+          Data znalezienia:{" "}
+          {interaction
+            ? dayjs(interaction.interactionDate).format("DD-MM-YY")
+            : "Krasnal jeszcze nie znaleziony"}
         </Text>
       </View>
 
       <View className="flex-row items-center mb-2.5">
         <DateIcon width={20} height={20} />
         <Text className="text-white ml-2.5">
-          Data postawienia: {gnome.creationDate}
+          Data postawienia: {dayjs(gnome.creationDate).format("DD-MM-YYYY")}
         </Text>
       </View>
 
       <View className="border-b border-primary my-2.5 w-4/5 self-center" />
 
       <Text className="text-white mb-2.5">{gnome.description}</Text>
+
+      <Text className="text-white font-bold text-xl font-afacad my-2">
+        Ciekawostka:
+      </Text>
+      <Text className="text-white font-afacad my-2">{gnome.funFact}</Text>
 
       <View className="flex-row justify-center mt-5">
         <GnomeCard
