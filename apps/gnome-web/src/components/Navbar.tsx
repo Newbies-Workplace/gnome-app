@@ -14,7 +14,7 @@ const Navbar = () => {
   return (
     <header
       className={
-        "ml-5 text-[#dadada] py-2 text-center h-24 w-49/50 flex flex-row justify-center items-center"
+        "ml-[1%] text-[#dadada] py-2 text-center h-24 w-[98%] flex flex-row justify-center items-center"
       }
     >
       {links.map((link, index) => {
