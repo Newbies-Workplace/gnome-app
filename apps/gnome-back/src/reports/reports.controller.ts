@@ -34,7 +34,6 @@ export class ReportsController {
   }
   @Post("")
   @UseInterceptors(FileInterceptor("file"))
-  @UseInterceptors(FileInterceptor("file"))
   async createReport(
     @Body() body: CreateReportRequest,
     @UploadedFile(
