@@ -1,7 +1,6 @@
 import { JWTUser } from "@/auth/jwt/JWTUser";
 import { JwtGuard } from "@/auth/jwt/jwt.guard";
 import { User } from "@/auth/jwt/jwtuser.decorator";
-import { GnomesService } from "@/gnomes/gnomes.service";
 import {
   Body,
   Controller,
