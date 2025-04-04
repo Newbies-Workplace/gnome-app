@@ -6,23 +6,14 @@ import {
   Controller,
   Delete,
   Get,
-  NotFoundException,
   Param,
   Post,
   Query,
   UseGuards,
 } from "@nestjs/common";
-import { Friendship } from "@prisma/client";
-import {
-  AcceptFriendRequest,
-  DeleteFriend,
-  SendFriendRequest,
-} from "@repo/shared/requests";
-import {
-  FriendSearchResponse,
-  FriendsResponse,
-  UserResponse,
-} from "@repo/shared/responses";
+import { AcceptFriendRequest } from "./dto/AcceptRequest.dto";
+import { DeleteFriend } from "./dto/DeleteFriend.dto";
+import { SendFriendRequest } from "./dto/SendRequest.dto";
 import { FriendsService } from "./friends.service";
 
 @Controller("friends")
@@ -31,87 +22,43 @@ export class FriendsController {
 
   @Get("search") // wyszukiwanie znajomego
   @UseGuards(JwtGuard)
-  async searchForFriend(
-    @Query("name") name: string,
-  ): Promise<FriendSearchResponse[]> {
+  async searchForFriend(@Query("name") name: string) {
     /* search/?name="wartosc" */
-    const searchForFriend = await this.friendsService.searchForFriend(name);
-    if (searchForFriend.length === 0) {
-      throw new NotFoundException("Nie znaleziono znajomego");
-    }
-    return searchForFriend;
+    return this.friendsService.searchForFriend(name);
   }
 
   @Get("@me/pending") // zaproszenia oczekujace zatwierdzenia
   @UseGuards(JwtGuard)
-  async findPendingRequests(@User() user: JWTUser): Promise<FriendsResponse[]> {
-    const findPendingRequests = await this.friendsService.findPendingRequests(
-      user.id,
-    );
-    if (findPendingRequests.length === 0) {
-      throw new NotFoundException("Brak zaproszeń");
-    }
-    return findPendingRequests;
+  findPendingRequests(@User() user: JWTUser) {
+    return this.friendsService.findPendingRequests(user.id);
   }
 
   @Get("@me") // znajomi
   @UseGuards(JwtGuard)
-  async findUserFriends(@User() user: JWTUser): Promise<FriendsResponse[]> {
-    const myFriends = await this.friendsService.findUserFriends(user.id);
-    if (myFriends.length === 0) {
-      throw new NotFoundException("Nie masz jeszcze znajomych");
-    }
-    return myFriends;
+  findUserFriends(@User() user: JWTUser) {
+    return this.friendsService.findUserFriends(user.id);
   }
 
   @Post("@me/invitation") // zaproszenie znajomego
   @UseGuards(JwtGuard)
-  async sendFriendRequest(
-    @User() user: JWTUser,
-    @Body() body: SendFriendRequest,
-  ): Promise<FriendsResponse> {
-    const inviteFriend = await this.friendsService.sendFriendRequest(
-      user.id,
-      body.friendId,
-    );
-    if (!inviteFriend) {
-      throw new NotFoundException("Nie można wysłać zaproszenia");
-    }
-
-    return inviteFriend;
+  sendFriendRequest(@User() user: JWTUser, @Body() body: SendFriendRequest) {
+    return this.friendsService.sendFriendRequest(user.id, body.friendId);
   }
 
   @Post("@me/accept") // zaakceptowanie zaproszenia do znajomych
   @UseGuards(JwtGuard)
-  async acceptFriendRequest(
+  acceptFriendRequest(
     @User() user: JWTUser,
     @Body() body: AcceptFriendRequest,
   ) {
     console.log(user.id);
     console.log(body.senderId);
-    const acceptFriend = await this.friendsService.acceptFriendRequest(
-      body.senderId,
-      user.id,
-    );
-    return acceptFriend;
+    return this.friendsService.acceptFriendRequest(body.senderId, user.id);
   }
 
   @Delete("@me") // usun znajomego
   @UseGuards(JwtGuard)
-  async deleteFriend(@User() user: JWTUser, @Body() body: DeleteFriend) {
-    const deleteFriend = await this.friendsService.deleteFriend(
-      user.id,
-      body.friendId,
-    );
-    return deleteFriend;
-  }
-  @Delete("@me/invitation") // odrzucenie zaproszenia
-  @UseGuards(JwtGuard)
-  async deleteFriendRequest(@User() user: JWTUser, @Body() body: DeleteFriend) {
-    const deleteFriendRequest = await this.friendsService.cancelInvitaion(
-      user.id,
-      body.friendId,
-    );
-    return deleteFriendRequest;
+  deleteFriend(@User() user: JWTUser, @Body() body: DeleteFriend) {
+    return this.friendsService.deleteFriend(user.id, body.friendId);
   }
 }

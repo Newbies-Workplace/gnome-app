@@ -1,21 +1,14 @@
 import { PrismaService } from "@/db/prisma.service";
-import { Injectable, NotFoundException } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { Report } from "@prisma/client";
-import { ReportResponse } from "@repo/shared/responses";
 
 @Injectable()
 export class ReportsService {
   constructor(private readonly prismaService: PrismaService) {}
 
-  async getAllReports(): Promise<{
-    reportCount: number;
-    reports: ReportResponse[];
-  }> {
+  async getAllReports(): Promise<{ reportCount: number; reports: Report[] }> {
     const reports = await this.prismaService.report.findMany();
     const reportCount = await reports.length;
-    if (reportCount < 1) {
-      throw new NotFoundException("Brak reportów");
-    }
     return { reportCount, reports };
   }
 
@@ -40,16 +33,11 @@ export class ReportsService {
   }
 
   async getUniqueReport(id: string): Promise<Report | null> {
-    const uniqueReport = await this.prismaService.report.findUnique({
+    return this.prismaService.report.findUnique({
       where: {
         id: id,
       },
     });
-    if (!uniqueReport) {
-      throw new NotFoundException("Nie znaleziono zgłoszenia");
-    }
-
-    return uniqueReport;
   }
 
   async deleteReport(id: string) {

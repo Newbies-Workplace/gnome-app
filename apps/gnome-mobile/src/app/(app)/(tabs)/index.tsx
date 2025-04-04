@@ -25,8 +25,10 @@ import {
   View,
 } from "react-native";
 import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
+import { runOnRuntime } from "react-native-reanimated";
 
-const GnomePin = require("@/assets/images/krasnal.png");
+import GnomePin from "@/assets/images/GnomePin.svg";
+import GnomePinCatch from "@/assets/images/GnomePinCatch.svg";
 
 const MIN_TRACKER_DISTANCE = 50;
 const MIN_REACHED_DISTANCE = 15;
@@ -112,7 +114,8 @@ const HeaderControls: React.FC<HeaderControlsProps> = ({
 const MapScreen = () => {
   const { user } = useAuthStore();
   const { navigate } = useRouter();
-  const { gnomes, fetchGnomes } = useGnomeStore();
+  const { gnomes, fetchGnomes, interactions, fetchMyInteractions } =
+    useGnomeStore();
   const ref = useRef<MapView>(null);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const maxDistance = 400; // Maksymalna odległość w metrach
@@ -134,10 +137,12 @@ const MapScreen = () => {
 
   useEffect(() => {
     fetchGnomes();
+    fetchMyInteractions();
   }, []);
 
   useEffect(() => {
     let subscription: Location.LocationSubscription | null = null;
+    let headingSubscription: Location.LocationSubscription | null = null;
 
     (async () => {
       try {
@@ -161,6 +166,15 @@ const MapScreen = () => {
             });
           },
         );
+        headingSubscription = await Location.watchHeadingAsync(
+          (headingData) => {
+            if (ref.current) {
+              ref.current.animateCamera({
+                heading: headingData.trueHeading,
+              });
+            }
+          },
+        );
       } catch (error) {
         console.error("Error getting location:", error);
         setErrorMsg("Error getting location");
@@ -170,6 +184,9 @@ const MapScreen = () => {
     return () => {
       if (subscription) {
         subscription.remove();
+      }
+      if (headingSubscription) {
+        headingSubscription.remove();
       }
     };
   }, []);
@@ -250,6 +267,7 @@ const MapScreen = () => {
       >
         {filteredGnomes.map((gnome) => (
           <Marker
+            className=""
             key={gnome.id}
             coordinate={{
               latitude: gnome.latitude,
@@ -258,7 +276,13 @@ const MapScreen = () => {
             title={gnome.name}
             description={gnome.description}
           >
-            <Image source={GnomePin} style={{ width: 30, height: 30 }} />
+            {interactions.find(
+              (interactions) => interactions.gnomeId === gnome.id,
+            ) !== undefined ? (
+              <GnomePinCatch />
+            ) : (
+              <GnomePin />
+            )}
           </Marker>
         ))}
       </MapView>

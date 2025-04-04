@@ -11,7 +11,8 @@ import {
   UseGuards,
 } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
-import { GoogleUserResponse, UserResponse } from "@repo/shared/responses";
+import { UserResponse } from "@repo/shared/responses";
+import { GoogleUserType } from "./google/GoogleUserType";
 import { GoogleGuard } from "./google/google.guard";
 import { User } from "./jwt/jwtuser.decorator";
 
@@ -30,7 +31,7 @@ export class AuthController {
   @Get("google/callback")
   @UseGuards(GoogleGuard)
   async googleAuthRedirect(
-    @User() user: GoogleUserResponse,
+    @User() user: GoogleUserType,
     @Response() res,
     @Request() req,
   ) {

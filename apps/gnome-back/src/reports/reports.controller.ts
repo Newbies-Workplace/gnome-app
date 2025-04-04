@@ -8,7 +8,6 @@ import {
   Controller,
   Delete,
   Get,
-  NotFoundException,
   Param,
   ParseFilePipe,
   Post,
@@ -18,8 +17,7 @@ import {
 } from "@nestjs/common";
 import { FileTypeValidator, MaxFileSizeValidator } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
-import { CreateReportRequest } from "@repo/shared/requests";
-import { ReportResponse } from "@repo/shared/responses";
+import { CreateReportRequest } from "./dto/CreateReportRequest.dto";
 import { ReportsService } from "./reports.service";
 @Controller("reports")
 export class ReportsController {
@@ -30,10 +28,9 @@ export class ReportsController {
   @Get("")
   @UseGuards(JwtGuard, RoleGuard)
   @Role(["ADMIN"])
-  async getAllReports() {
-    const allReports = await this.reportsService.getAllReports();
-
-    return allReports;
+  getAllReports() {
+    /* zwraca wszystkie reporty i ich ilosc */
+    return this.reportsService.getAllReports();
   }
   @Post("")
   @UseInterceptors(FileInterceptor("file"))
@@ -49,20 +46,20 @@ export class ReportsController {
       }),
     )
     file: Express.Multer.File,
-  ): Promise<ReportResponse> {
+  ) {
     await this.minioService.createBucketIfNotExists();
 
-    let fileUrl: string;
+    let fileUrl = null;
     if (file) {
-      const fileName = `${Date.now()}.jpg`;
-      const catalogueName = "reportImages";
+      const fileName = `xd.jpg`;
+      const catalogueName = `reportImages`;
       const filePath = `${catalogueName}/${fileName}`;
 
       await this.minioService.uploadFile(file, fileName, catalogueName);
       fileUrl = await this.minioService.getFileUrl(filePath);
     }
-    const latitude = body.latitude;
-    const longitude = body.longitude;
+    const latitude = Number.parseFloat(body.latitude);
+    const longitude = Number.parseFloat(body.longitude);
     return this.reportsService.createReport(
       body.gnomeName,
       fileUrl,
@@ -76,27 +73,22 @@ export class ReportsController {
   @Get(":id")
   @UseGuards(JwtGuard, RoleGuard)
   @Role(["ADMIN"])
-  async getUniqueReport(@Param("id") id: string): Promise<ReportResponse> {
-    const uniqueReport = await this.reportsService.getUniqueReport(id);
-
-    return uniqueReport;
+  getUniqueReport(@Param("id") id: string) {
+    return this.reportsService.getUniqueReport(id);
   }
 
   @Delete(":id")
   @UseGuards(JwtGuard, RoleGuard)
   @Role(["ADMIN"])
-  async deleteReport(@Param("id") id: string): Promise<ReportResponse> {
-    await this.reportsService.getUniqueReport(id);
-    const deletedReport = await this.reportsService.deleteReport(id);
-    return deletedReport;
+  deleteReport(@Param("id") id: string) {
+    return this.reportsService.deleteReport(id);
   }
 
   @Delete("")
   @UseGuards(JwtGuard, RoleGuard)
   @Role(["ADMIN"])
-  async deleteAllReports(): Promise<number> {
+  deleteAllReports() {
     /* zwraca liczbe usunietych zgloszen */
-    await this.reportsService.getAllReports();
-    return await this.reportsService.deleteAllReports();
+    return this.reportsService.deleteAllReports();
   }
 }
