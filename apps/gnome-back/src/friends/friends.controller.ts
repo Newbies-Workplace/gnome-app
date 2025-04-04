@@ -1,6 +1,7 @@
 import { JWTUser } from "@/auth/jwt/JWTUser";
 import { JwtGuard } from "@/auth/jwt/jwt.guard";
 import { User } from "@/auth/jwt/jwtuser.decorator";
+import { GnomesService } from "@/gnomes/gnomes.service";
 import {
   Body,
   Controller,
@@ -33,7 +34,7 @@ export class FriendsController {
     return this.friendsService.findPendingRequests(user.id);
   }
 
-  @Get("@me") // znajomi
+  @Get("@me") // znajomi + ich interakcje
   @UseGuards(JwtGuard)
   findUserFriends(@User() user: JWTUser) {
     return this.friendsService.findUserFriends(user.id);
