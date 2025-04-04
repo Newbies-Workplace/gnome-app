@@ -7,19 +7,23 @@ import { MapContainer, TileLayer, useMapEvents } from "react-leaflet";
 import { Marker } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import { cn } from "../../lib/utils.ts";
-import { MapPicker } from "./MapPicker";
 
 type MapPickerProps = {
   className?: string;
+  onPositionChange: (position: LatLngLiteral) => void; // Callback to pass position to parent
 };
 
-const InteractiveMapPicker: React.FC<MapPickerProps> = ({ className }) => {
+const InteractiveMapPicker: React.FC<MapPickerProps> = ({
+  className,
+  onPositionChange,
+}) => {
   const defaultPosition: LatLngLiteral = { lat: 51.1079, lng: 17.0385 }; // Default position (Wrocław, Poland)
   const [selectedPosition, setSelectedPosition] =
     useState<LatLngLiteral | null>(null);
 
   const handlePositionChange = (position: LatLngLiteral) => {
     setSelectedPosition(position);
+    onPositionChange(position); // Pass the position to the parent component
   };
 
   return (
@@ -57,7 +61,6 @@ interface MapMarkerProps {
 }
 
 const MapMarker: React.FC<MapMarkerProps> = ({ value, onChange }) => {
-  // Create a custom icon for the marker
   const customIcon = icon({
     iconUrl: "../src/images/Map_pin.svg", // Path to your custom pin SVG
     iconSize: [40, 40], // Size of the icon
