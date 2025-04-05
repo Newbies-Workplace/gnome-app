@@ -33,7 +33,7 @@ export class FriendsController {
     return this.friendsService.findPendingRequests(user.id);
   }
 
-  @Get("@me") // znajomi
+  @Get("@me") // znajomi + ich interakcje
   @UseGuards(JwtGuard)
   findUserFriends(@User() user: JWTUser) {
     return this.friendsService.findUserFriends(user.id);
