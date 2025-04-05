@@ -4,6 +4,7 @@ import { User } from "@/auth/jwt/jwtuser.decorator";
 import { MinioService } from "@/minio/minio.service";
 import { UsersService } from "@/users/users.service";
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -22,7 +23,8 @@ import {
 } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { User as PrismaUser } from "@prisma/client";
-import { UserUpdate } from "./dto/UserUpdate.dto";
+import { UserUpdate } from "@repo/shared/requests";
+import { UserPatchResponse } from "@repo/shared/responses";
 
 @Controller("users")
 export class UsersController {
@@ -53,9 +55,9 @@ export class UsersController {
       }),
     )
     file?: Express.Multer.File,
-  ) {
+  ): Promise<UserPatchResponse> {
     if (body.name == null && !file) {
-      return false;
+      throw new BadRequestException("Nic do zaaktualizowania");
     }
 
     const fileName = `${user.id}.jpg`;

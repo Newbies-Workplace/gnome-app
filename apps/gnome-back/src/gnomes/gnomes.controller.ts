@@ -12,6 +12,7 @@ import {
   FileTypeValidator,
   Get,
   MaxFileSizeValidator,
+  NotFoundException,
   Param,
   ParseFilePipe,
   Post,
@@ -21,12 +22,20 @@ import {
   UseInterceptors,
 } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
+import { Team } from "@prisma/client";
+import {
+  CreateGnomeRequest,
+  CreateInteractionRequest,
+} from "@repo/shared/requests";
+import {
+  GnomeIdResponse,
+  GnomeResponse,
+  InteractionResponse,
+} from "@repo/shared/responses";
 import { Express } from "express";
 import { Request } from "express";
 import { JWT } from "google-auth-library";
 import { Multer } from "multer";
-import { CreateGnomeRequest } from "./dto/gnomeCreate.dto";
-import { CreateInteractionRequest } from "./dto/interactionCreate";
 import { GnomesService } from "./gnomes.service";
 
 @Controller("gnomes")
@@ -41,32 +50,51 @@ export class GnomesController {
 
   @Get("")
   @UseGuards(JwtGuard)
-  getAllGnomes() {
-    return this.gnomeService.getAllGnomes();
+  async getAllGnomes(): Promise<GnomeResponse[]> {
+    const gnomes = await this.gnomeService.getAllGnomes();
+    if (!gnomes) {
+      throw new NotFoundException("Nie znaleziono gnomów");
+    }
+    return gnomes;
   }
 
   // Pobranie danych gnoma
 
   @Get(":id")
   @UseGuards(JwtGuard)
-  getGnomeData(@Param("id") gnomeId: string) {
-    return this.gnomeService.getGnomeData(gnomeId);
+  async getGnomeData(@Param("id") gnomeId: string): Promise<GnomeIdResponse> {
+    const gnomeData = await this.gnomeService.getGnomeData(gnomeId);
+    if (!gnomeData) {
+      throw new NotFoundException("Nie znaleziono gnoma");
+    }
+    return gnomeData;
   }
 
   // Pobieranie interakcji gnomów
 
   @Get(":id/interactions/count")
   @UseGuards(JwtGuard)
-  getInteractionCount(@Param("id") gnomeId: string) {
-    return this.gnomeService.getInteractionCount(gnomeId);
+  async getInteractionCount(@Param("id") gnomeId: string): Promise<number> {
+    const interactionCount = this.gnomeService.getInteractionCount(gnomeId);
+    const findGnome = await this.gnomeService.getGnomeData(gnomeId);
+    if (!findGnome) {
+      throw new NotFoundException("Nie znaleziono gnoma");
+    }
+    return interactionCount;
   }
 
   // Wyświetlanie swojej interakcji z gnomem
 
   @Get("@me/interactions")
   @UseGuards(JwtGuard)
-  async getMyGnomesInteractions(@User() user: JWTUser) {
-    return this.gnomeService.getMyGnomesInteractions(user.id);
+  async getMyGnomesInteractions(
+    @User() user: JWTUser,
+  ): Promise<InteractionResponse[]> {
+    const interaction = await this.gnomeService.getMyGnomesInteractions(
+      user.id,
+    );
+    /* Tutaj nie wyrzucalem errora bo lepsza bedzie pusta lista, wygodniej dla mobilki (tak mi sie zdaje) */
+    return interaction;
   }
 
   // Tworzenie nowego gnoma
@@ -87,15 +115,18 @@ export class GnomesController {
     )
     file: Express.Multer.File,
     @Body() createGnomeDto: CreateGnomeRequest,
-  ) {
+  ): Promise<GnomeResponse> {
     await this.minioService.createBucketIfNotExists();
     const fileName = `${createGnomeDto.name}.jpg`;
-    const catalogueName = `defaultGnomePictures`;
+    const catalogueName = "defaultGnomePictures";
     const filePath = `${catalogueName}/${fileName}`;
     await this.minioService.uploadFile(file, fileName, catalogueName);
     const fileUrl = await this.minioService.getFileUrl(filePath);
 
-    const gnomeCreate = this.gnomeService.createGnome(createGnomeDto, fileUrl);
+    const gnomeCreate = await this.gnomeService.createGnome(
+      createGnomeDto,
+      fileUrl,
+    );
     return gnomeCreate;
   }
 
@@ -117,7 +148,7 @@ export class GnomesController {
     file: Express.Multer.File,
     @User() user: JWTUser,
     @Body() body: CreateInteractionRequest,
-  ) {
+  ): Promise<InteractionResponse> {
     await this.minioService.createBucketIfNotExists();
 
     const fileName = `${user.id}-${body.gnomeId}.jpg`;
@@ -137,21 +168,20 @@ export class GnomesController {
     }
 
     const team = await this.teamsService.getTeamWithMemberId(user.id);
-    if (team && team.length > 0) {
-      const interactions = team.flatMap((teamMember) =>
-        teamMember.members.map((member) => {
-          return this.gnomeService.createInteraction(
-            member.userId,
-            body.interactionDate,
-            body.gnomeId,
-            fileUrl,
-          );
-        }),
-      );
+    if (team && team.members.length > 1) {
+      const interactions = await team.members.map((member) => {
+        return this.gnomeService.createInteraction(
+          member.userId,
+          body.interactionDate,
+          body.gnomeId,
+          fileUrl,
+        );
+      });
       const resolvedInteractions = await Promise.all(interactions);
-      return resolvedInteractions.filter(
+      const filteredInteractions = resolvedInteractions.filter(
         (interaction) => interaction.userId === user.id,
       );
+      return filteredInteractions[0];
     }
 
     const interaction = await this.gnomeService.createInteraction(
@@ -160,6 +190,7 @@ export class GnomesController {
       body.gnomeId,
       fileUrl,
     );
+
     return interaction;
   }
 }
