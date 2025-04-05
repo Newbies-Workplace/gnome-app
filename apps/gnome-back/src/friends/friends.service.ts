@@ -1,4 +1,5 @@
 import { PrismaService } from "@/db/prisma.service";
+import { GnomesService } from "@/gnomes/gnomes.service";
 import {
   BadRequestException,
   Injectable,
@@ -9,7 +10,10 @@ import { FriendSearchResponse, FriendsResponse } from "@repo/shared/responses";
 
 @Injectable()
 export class FriendsService {
-  constructor(private readonly prismaService: PrismaService) {}
+  constructor(
+    private readonly prismaService: PrismaService,
+    private readonly gnomesService: GnomesService,
+  ) {}
 
   async searchForFriend(name: string): Promise<FriendSearchResponse[]> {
     return this.prismaService.user.findMany({
@@ -35,29 +39,27 @@ export class FriendsService {
       },
     });
   }
-  async findUserFriends(senderId: string): Promise<Friendship[]> {
-    return this.prismaService.friendship.findMany({
+  async findUserFriends(
+    senderId: string,
+  ): Promise<(Friendship & { interactions: number })[]> {
+    const friends = await this.prismaService.friendship.findMany({
       where: {
         senderId: senderId,
         status: "ACTIVE",
       },
-      include: {
-        sender: {
-          select: {
-            id: true,
-            name: true,
-            pictureUrl: true,
-          },
-        },
-        receiver: {
-          select: {
-            id: true,
-            name: true,
-            pictureUrl: true,
-          },
-        },
-      },
     });
+
+    return Promise.all(
+      friends.map(async (friend) => {
+        const interactions = await this.gnomesService.getInteractionCount(
+          friend.receiverId,
+        );
+        return {
+          ...friend,
+          interactions,
+        };
+      }),
+    );
   }
 
   async findFriendship(

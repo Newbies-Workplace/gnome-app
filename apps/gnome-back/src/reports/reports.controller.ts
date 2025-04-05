@@ -1,4 +1,6 @@
+import { JWTUser } from "@/auth/jwt/JWTUser";
 import { JwtGuard } from "@/auth/jwt/jwt.guard";
+import { MinioService } from "@/minio/minio.service";
 import { Role } from "@/role/role.decorator";
 import { RoleGuard } from "@/roleguard/role.guard";
 import {
@@ -8,17 +10,23 @@ import {
   Get,
   NotFoundException,
   Param,
+  ParseFilePipe,
   Post,
+  UploadedFile,
   UseGuards,
+  UseInterceptors,
 } from "@nestjs/common";
+import { FileTypeValidator, MaxFileSizeValidator } from "@nestjs/common";
+import { FileInterceptor } from "@nestjs/platform-express";
 import { CreateReportRequest } from "@repo/shared/requests";
 import { ReportResponse } from "@repo/shared/responses";
 import { ReportsService } from "./reports.service";
-
 @Controller("reports")
 export class ReportsController {
-  constructor(private readonly reportsService: ReportsService) {}
-
+  constructor(
+    private readonly minioService: MinioService,
+    private readonly reportsService: ReportsService,
+  ) {}
   @Get("")
   @UseGuards(JwtGuard, RoleGuard)
   @Role(["ADMIN"])
@@ -27,20 +35,42 @@ export class ReportsController {
 
     return allReports;
   }
-
   @Post("")
+  @UseInterceptors(FileInterceptor("file"))
   async createReport(
     @Body() body: CreateReportRequest,
-  ): Promise<ReportResponse> {
-    const createReport = await this.reportsService.createReport(
+    @UploadedFile(
+      new ParseFilePipe({
+        fileIsRequired: false,
+        validators: [
+          new MaxFileSizeValidator({ maxSize: 10_000_000 }), // 10MB
+          new FileTypeValidator({ fileType: "image/jpeg" }),
+        ],
+      }),
+    )
+    file: Express.Multer.File,
+  ) {
+    await this.minioService.createBucketIfNotExists();
+
+    let fileUrl = null;
+    if (file) {
+      const fileName = `${Date.now()}.jpg`;
+      const catalogueName = "reportImages";
+      const filePath = `${catalogueName}/${fileName}`;
+
+      await this.minioService.uploadFile(file, fileName, catalogueName);
+      fileUrl = await this.minioService.getFileUrl(filePath);
+    }
+    const latitude = body.latitude;
+    const longitude = body.longitude;
+    return this.reportsService.createReport(
       body.gnomeName,
-      body.pictureUrl,
-      body.latitude,
-      body.longitude,
+      fileUrl,
+      latitude,
+      longitude,
       body.location,
       body.reportAuthor,
     );
-    return createReport;
   }
 
   @Get(":id")

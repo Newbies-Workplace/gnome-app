@@ -54,7 +54,7 @@ export class FriendsController {
     return findPendingRequests;
   }
 
-  @Get("@me") // znajomi
+  @Get("@me") // znajomi + ich interakcje
   @UseGuards(JwtGuard)
   async findUserFriends(@User() user: JWTUser): Promise<FriendsResponse[]> {
     const myFriends = await this.friendsService.findUserFriends(user.id);
