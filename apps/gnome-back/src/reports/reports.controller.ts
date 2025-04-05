@@ -52,7 +52,7 @@ export class ReportsController {
   ) {
     await this.minioService.createBucketIfNotExists();
 
-    let fileUrl = null;
+    let fileUrl: string;
     if (file) {
       const fileName = `${Date.now()}.jpg`;
       const catalogueName = "reportImages";
