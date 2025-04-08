@@ -28,9 +28,7 @@ export class TeamsService {
     return getTeam;
   }
 
-  async getTeamWithMemberId(
-    userId: string,
-  ): Promise<{
+  async getTeamWithMemberId(userId: string): Promise<{
     id: string;
     members: { userId: string }[];
     leader: string;

@@ -76,7 +76,7 @@ const GnomeDetail = () => {
           style={{ width: 379, height: 455 }}
         />
       );
-    if (!!interaction)
+    if (interaction)
       return (
         <Image
           source={{ uri: gnome.pictureUrl }}

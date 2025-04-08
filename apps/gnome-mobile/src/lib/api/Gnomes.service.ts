@@ -13,7 +13,7 @@ const getGnomes = async (): Promise<GnomeResponse[]> => {
 
 const getMyGnomesInteractions = async (): Promise<InteractionResponse[]> => {
   return await axiosInstance
-    .get(`api/rest/v1/gnomes/@me/interactions`)
+    .get("api/rest/v1/gnomes/@me/interactions")
     .then((response) => response.data);
 };
 
