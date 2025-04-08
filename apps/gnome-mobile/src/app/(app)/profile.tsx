@@ -1,3 +1,11 @@
+import AchievementsIcon from "@/assets/icons/achievements.svg";
+import BackIcon from "@/assets/icons/arrow-left.svg";
+import FriendsIcon from "@/assets/icons/friends.svg";
+import LastSeenIcon from "@/assets/icons/last-seen.svg";
+import LogoutIcon from "@/assets/icons/log-out.svg";
+import QuestsIcon from "@/assets/icons/quests.svg";
+import SettingsIcon from "@/assets/icons/settings.svg";
+import ShareIcon from "@/assets/icons/share-right.svg";
 import { GnomeCard } from "@/components/ui/GnomeCard";
 import {
   ProfileButton,
@@ -12,16 +20,6 @@ import React from "react";
 import { useEffect } from "react";
 import { Alert, Share, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-
-// import ikon
-import AchievementsIcon from "@/assets/icons/achievements.svg";
-import BackIcon from "@/assets/icons/arrow-left.svg";
-import FriendsIcon from "@/assets/icons/friends.svg";
-import LastSeenIcon from "@/assets/icons/last-seen.svg";
-import LogoutIcon from "@/assets/icons/log-out.svg";
-import QuestsIcon from "@/assets/icons/quests.svg";
-import SettingsIcon from "@/assets/icons/settings.svg";
-import ShareIcon from "@/assets/icons/share-right.svg";
 
 export default function ProfileScreen() {
   const { logout, user } = useAuthStore();

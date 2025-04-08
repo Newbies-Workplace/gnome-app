@@ -1,14 +1,12 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Text } from "@/components/ui/text";
-import { useAuthStore } from "@/store/useAuthStore";
 import { useRouter } from "expo-router";
 import React from "react";
 import { Image, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function SignInScreen() {
-  const { login } = useAuthStore();
   const { replace } = useRouter();
 
   return (
@@ -22,17 +20,14 @@ export default function SignInScreen() {
           Zarejestruj się
         </Text>
         <Input
-          type="text"
           className="border rounded-3xl border-white border-t-10 bg-background mb-4 h-full mx-auto text-white w-full"
           placeholder="Nazwa Użytkownika"
         />
         <Input
-          type="text"
           className="border rounded-3xl border-white border-t-10 bg-background mb-4 h-full mx-auto text-white w-full"
           placeholder="Email"
         />
         <Input
-          type="text"
           className="border rounded-3xl border-white  bg-background mb-4 h-full mx-auto text-white w-full"
           placeholder="Hasło"
         />
@@ -63,7 +58,6 @@ export default function SignInScreen() {
               Akceptuje politykę prywatności
             </Text>
           </Text>
-          <Button onPress={() => replace("/test")} />
         </View>
       </View>
     </SafeAreaView>

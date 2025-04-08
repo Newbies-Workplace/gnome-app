@@ -4,22 +4,27 @@ import FoundIcon from "@/assets/icons/found.svg";
 import { GnomeCard } from "@/components/ui/GnomeCard";
 import { GnomesService } from "@/lib/api/Gnomes.service";
 import { useGnomeStore } from "@/store/useGnomeStore";
-import { useNavigation } from "@react-navigation/native";
-import { useRoute } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
+import { GnomeResponse } from "@repo/shared/responses";
 import dayjs from "dayjs";
 import { useRouter } from "expo-router";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
 
 const GnomeDetail = () => {
+  const route = useRoute();
+  const gnomeId = route.params?.id;
+
   const { gnomes, interactions } = useGnomeStore();
-  const [gnome, setGnome] = useState(null);
-  const [nearestGnomes, setNearestGnomes] = useState([]);
+  const [gnome, setGnome] = useState<GnomeResponse>();
+  const [nearestGnomes, setNearestGnomes] = useState<GnomeResponse[]>([]);
   const router = useRouter();
   const navigation = useNavigation();
-  const route = useRoute();
 
-  const id = route.params?.id;
+  const interaction = useMemo(
+    () => interactions.find((i) => i.gnomeId === gnomeId),
+    [interactions],
+  );
 
   useEffect(() => {
     navigation.setOptions({
@@ -38,19 +43,22 @@ const GnomeDetail = () => {
   }, [navigation]);
 
   useEffect(() => {
-    if (id) {
-      const foundGnome = gnomes.find((g) => g.id.toString() === id);
-      setGnome(foundGnome);
+    if (gnomeId) {
+      const foundGnome = gnomes.find((g) => g.id === gnomeId);
+
+      if (foundGnome) {
+        setGnome(foundGnome);
+      }
     }
-  }, [id, gnomes]);
+  }, [gnomeId, gnomes]);
 
   useEffect(() => {
     if (gnome) {
-      GnomesService.getNearestGnomes(gnome.id.toString())
-        .then((nearest) => setNearestGnomes(nearest))
+      GnomesService.getGnomeById(gnome.id)
+        .then((gnome) => setNearestGnomes(gnome.nearest))
         .catch((error) => console.error(error));
     }
-  }, [gnome, GnomesService]);
+  }, [gnome]);
 
   if (!gnome) {
     return (
@@ -61,14 +69,14 @@ const GnomeDetail = () => {
   }
 
   const getImageSource = () => {
-    if (interaction?.found && interaction?.userPicture)
+    if (!!interaction && interaction?.userPicture)
       return (
         <Image
           source={{ uri: interaction.userPicture }}
           style={{ width: 379, height: 455 }}
         />
       );
-    if (interaction?.found)
+    if (!!interaction)
       return (
         <Image
           source={{ uri: gnome.pictureUrl }}
@@ -82,8 +90,6 @@ const GnomeDetail = () => {
       />
     );
   };
-
-  const interaction = interactions.find((i) => i.gnomeId === gnome.id);
 
   return (
     <ScrollView className="bg-background p-4">
@@ -129,26 +135,20 @@ const GnomeDetail = () => {
             <GnomeCard
               key={0}
               image={require("@/assets/images/placeholder.png")}
-              text={nearestGnomes.nearest[0].name}
-              onClick={() =>
-                router.push(`/Gnomes/${nearestGnomes.nearest[0].id}`)
-              }
+              text={nearestGnomes[0].name}
+              onClick={() => router.push(`/Gnomes/${nearestGnomes[0].id}`)}
             />
             <GnomeCard
               key={1}
               image={require("@/assets/images/placeholder.png")}
-              text={nearestGnomes.nearest[1].name}
-              onClick={() =>
-                router.push(`/Gnomes/${nearestGnomes.nearest[1].id}`)
-              }
+              text={nearestGnomes[1].name}
+              onClick={() => router.push(`/Gnomes/${nearestGnomes[1].id}`)}
             />
             <GnomeCard
               key={2}
               image={require("@/assets/images/placeholder.png")}
-              text={nearestGnomes.nearest[2].name}
-              onClick={() =>
-                router.push(`/Gnomes/${nearestGnomes.nearest[2].id}`)
-              }
+              text={nearestGnomes[2].name}
+              onClick={() => router.push(`/Gnomes/${nearestGnomes[2].id}`)}
             />
           </>
         ) : (

@@ -8,7 +8,6 @@ import { TeamsService } from "@/teams/teams.service";
 import {
   Body,
   Controller,
-  Delete,
   FileTypeValidator,
   Get,
   MaxFileSizeValidator,
@@ -16,13 +15,11 @@ import {
   Param,
   ParseFilePipe,
   Post,
-  Req,
   UploadedFile,
   UseGuards,
   UseInterceptors,
 } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
-import { Team } from "@prisma/client";
 import {
   CreateGnomeRequest,
   CreateInteractionRequest,
@@ -33,9 +30,6 @@ import {
   InteractionResponse,
 } from "@repo/shared/responses";
 import { Express } from "express";
-import { Request } from "express";
-import { JWT } from "google-auth-library";
-import { Multer } from "multer";
 import { GnomesService } from "./gnomes.service";
 
 @Controller("gnomes")
@@ -90,11 +84,7 @@ export class GnomesController {
   async getMyGnomesInteractions(
     @User() user: JWTUser,
   ): Promise<InteractionResponse[]> {
-    const interaction = await this.gnomeService.getMyGnomesInteractions(
-      user.id,
-    );
-    /* Tutaj nie wyrzucalem errora bo lepsza bedzie pusta lista, wygodniej dla mobilki (tak mi sie zdaje) */
-    return interaction;
+    return this.gnomeService.getMyGnomesInteractions(user.id);
   }
 
   // Tworzenie nowego gnoma
@@ -169,7 +159,7 @@ export class GnomesController {
 
     const team = await this.teamsService.getTeamWithMemberId(user.id);
     if (team && team.members.length > 1) {
-      const interactions = await team.members.map((member) => {
+      const interactions = team.members.map((member) => {
         return this.gnomeService.createInteraction(
           member.userId,
           body.interactionDate,

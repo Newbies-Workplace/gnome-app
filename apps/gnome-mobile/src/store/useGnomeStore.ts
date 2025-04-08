@@ -1,36 +1,17 @@
 import { GnomesService } from "@/lib/api/Gnomes.service";
 import { axiosInstance } from "@/lib/api/axios";
 import { useAuthStore } from "@/store/useAuthStore";
+import { GnomeResponse, InteractionResponse } from "@repo/shared/responses";
 import { create } from "zustand";
 
-export interface Gnome {
-  id: string;
-  name: string;
-  latitude: number;
-  longitude: number;
-  location: string;
-  creationDate: Date;
-  description: string;
-  exists: boolean;
-  pictureUrl: string;
-}
-
-interface Interaction {
-  id: string;
-  interactionDate: Date;
-  gnomeId: string;
-  userId: string;
-  userPicture: string;
-}
-
 interface GnomeState {
-  gnomes: Gnome[];
-  interactions: Interaction[];
+  gnomes: GnomeResponse[];
+  interactions: InteractionResponse[];
   loading: boolean;
   error: string | null;
 
   fetchGnomes: () => Promise<void>;
-  addGnome: (gnome: Gnome) => void;
+  addGnome: (gnome: GnomeResponse) => void;
   removeGnome: (id: string) => void;
   fetchMyInteractions: () => Promise<void>;
   addInteraction: (gnomeId: string, photoUrl?: string) => Promise<void>;

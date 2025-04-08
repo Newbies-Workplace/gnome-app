@@ -1,5 +1,3 @@
-import { Prisma, Status } from "@prisma/client";
-
 export interface UserResponse {
   id: string;
   email: string;
@@ -56,7 +54,6 @@ export interface InteractionResponse {
   userId: string;
   interactionDate: Date;
   userPicture?: string;
-  gnome: GnomeResponse;
 }
 
 export interface ReportResponse {
@@ -74,6 +71,8 @@ export interface FriendSearchResponse {
   name: string;
   pictureUrl: string;
 }
+
+export type Status = "ACTIVE" | "PENDING";
 
 export interface FriendsResponse {
   id: string;

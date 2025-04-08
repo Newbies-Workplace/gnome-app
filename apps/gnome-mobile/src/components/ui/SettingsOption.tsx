@@ -1,13 +1,11 @@
+import ArrowRight from "@/assets/icons/arrow-right.svg";
 import { Text } from "@/components/ui/text";
 import type React from "react";
 import { TouchableOpacity, View } from "react-native";
 
-// Import ikon jako komponenty
-import ArrowRight from "@/assets/icons/arrow-right.svg";
-
 interface SettingsOptionProps {
   text: string;
-  image: React.FC<React.SVGProps<SVGSVGElement>>;
+  image: React.FC<React.SVGProps>;
   onClick: () => void;
   extraText?: string;
   customClass?: string;

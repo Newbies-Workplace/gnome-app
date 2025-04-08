@@ -1,9 +1,8 @@
-import { GnomesService } from "@/lib/api/Gnomes.service";
 import { useAuthStore } from "@/store/useAuthStore";
 import { FontAwesome } from "@expo/vector-icons";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import { useRouter } from "expo-router";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import {
   Alert,
   Image,
@@ -17,8 +16,6 @@ import { SafeAreaView } from "react-native-safe-area-context";
 export default function SignInScreen() {
   const { login } = useAuthStore();
   const { replace } = useRouter();
-  const [loading, setLoading] = useState(true);
-  const [text, setText] = useState("");
 
   useEffect(() => {
     GoogleSignin.configure({
