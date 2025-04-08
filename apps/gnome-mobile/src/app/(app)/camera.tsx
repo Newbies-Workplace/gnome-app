@@ -3,6 +3,7 @@ import { useGnomeStore } from "@/store/useGnomeStore";
 import { useLocalSearchParams, useNavigation, useRouter } from "expo-router";
 import React, { useEffect, useRef, useState } from "react";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import {
   Camera,
   CameraDevice,
@@ -21,7 +22,6 @@ const CameraScreen = () => {
   //Header
   const navigation = useNavigation();
   const router = useRouter();
-  console.log("Closest gnome in camera: ", gnomeid);
 
   useEffect(() => {
     navigation.setOptions({
@@ -100,8 +100,8 @@ const CameraScreen = () => {
   };
 
   return (
-    <View className="flex-1 justify-center items-center bg-background relative">
-      <View className="w-[90%] h-[80%] rounded-2xl border-4 border-red-500 overflow-hidden flex justify-center items-center">
+    <SafeAreaView className="flex-1 items-center bg-background p-4">
+      <View className=" w-full h-[80%] rounded-2xl border-4 border-red-500 overflow-hidden flex justify-center items-center p-4">
         {device && hasPermission ? (
           <Camera
             style={StyleSheet.absoluteFill}
@@ -147,7 +147,7 @@ const CameraScreen = () => {
           />
         </TouchableOpacity>
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 
