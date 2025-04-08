@@ -61,7 +61,7 @@ export const ReportPage = () => {
     <div>
       {console.log("Rendering Navbar and BgElement")} {/* Debugging log */}
       <Navbar />
-      <BgElement className="rounded-b-[15px] rounded-tl-[15px] rounded-tr-[15px] sm:h-80/50 md:h-80/50 lg:h-80/50" />
+      <BgElement className="rounded-b-[15px] rounded-tl-[15px] rounded-tr-[15px] h-80/50 sm:h-80/50 md:h-80/50 lg:h-80/50" />
       <div>
         <a href="/admin">
           <img

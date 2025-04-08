@@ -1,15 +1,13 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet } from "react-native";
 import Collection from "../(tabs)/collection";
 import Friends from "../(tabs)/friends";
-import Image from "../(tabs)/gallery";
 import Home from "../(tabs)/index";
 
 //Ikony do tabsów
 import NavFriendsIcon from "@/assets/icons/NavFriends.svg";
 import NavHomeIcon from "@/assets/icons/NavHome.svg";
-import NavImageIcon from "@/assets/icons/NavImage.svg";
 import NavMushroomIcon from "@/assets/icons/NavMushroom.svg";
 
 const Tab = createBottomTabNavigator();
@@ -69,20 +67,6 @@ const HomeTabs = () => {
           ),
         }}
       />
-      <Tab.Screen
-        name="Galeria"
-        component={Image}
-        options={{
-          headerShown: false,
-          tabBarIcon: ({ color, size = 25, focused }) => (
-            <NavImageIcon
-              color={focused ? "#FFF" : color}
-              height={size}
-              width={size}
-            />
-          ),
-        }}
-      />
     </Tab.Navigator>
   );
 };
@@ -92,7 +76,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#222",
     borderTopWidth: 0,
   },
-
   activeTab: {
     backgroundColor: "#D6484A",
     borderRadius: 40,

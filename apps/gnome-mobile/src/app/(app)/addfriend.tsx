@@ -2,7 +2,7 @@ import ArrowLeft from "@/assets/icons/arrow-left.svg";
 import BackIcon from "@/assets/icons/arrow-left.svg";
 import SearchIcon from "@/assets/icons/search.svg";
 import { Text } from "@/components/ui/text";
-import { useNavigation, useRoute } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 import { useRouter } from "expo-router";
 import React, { useState, useEffect } from "react";
 import {

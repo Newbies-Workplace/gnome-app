@@ -28,7 +28,11 @@ export class TeamsService {
     return getTeam;
   }
 
-  async getTeamWithMemberId(userId: string) {
+  async getTeamWithMemberId(userId: string): Promise<{
+    id: string;
+    members: { userId: string }[];
+    leader: string;
+  } | null> {
     const team = await this.prisma.team.findFirst({
       include: {
         members: {
@@ -48,7 +52,7 @@ export class TeamsService {
       },
     });
     if (!team) {
-      throw new NotFoundException("Nie jesteś w zespole");
+      return null;
     }
 
     const members = team.members.map((member) => ({

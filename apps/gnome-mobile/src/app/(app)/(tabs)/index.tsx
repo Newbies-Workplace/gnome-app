@@ -1,34 +1,29 @@
 import FriendIcon from "@/assets/icons/add-friend.svg";
 import LocationOffIcon from "@/assets/icons/location-off.svg";
 import TeamIcon from "@/assets/icons/team.svg";
-import LoadingScreen from "@/components/LoadingScreen";
+import GnomePin from "@/assets/images/GnomePin.svg";
+import GnomePinCatch from "@/assets/images/GnomePinCatch.svg";
+import { MapStyle } from "@/components/map-styles";
 import DistanceTracker from "@/components/ui/DistanceTracker";
 import DraggableGnome from "@/components/ui/DraggableGnome";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Compass from "@/components/ui/compass";
 import { Text } from "@/components/ui/text";
 import { useAuthStore } from "@/store/useAuthStore";
-import { Gnome, useGnomeStore } from "@/store/useGnomeStore";
-import { useNavigation } from "@react-navigation/native";
+import { useGnomeStore } from "@/store/useGnomeStore";
+import { GnomeResponse } from "@repo/shared/responses";
 import * as Location from "expo-location";
 import { useRouter } from "expo-router";
 import { getDistance } from "geolib";
-
-import React, { createRef, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Alert,
-  Dimensions,
-  Image,
   Linking,
   StyleSheet,
   TouchableOpacity,
   View,
 } from "react-native";
-import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
-import { runOnRuntime } from "react-native-reanimated";
-
-import GnomePin from "@/assets/images/GnomePin.svg";
-import GnomePinCatch from "@/assets/images/GnomePinCatch.svg";
+import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
 
 const MIN_TRACKER_DISTANCE = 50;
 const MIN_REACHED_DISTANCE = 15;
@@ -77,31 +72,32 @@ const HeaderControls: React.FC<HeaderControlsProps> = ({
     <View className="absolute top-5 left-2 right-2 p-2 flex-row justify-between items-center">
       <View className="flex flex-row items-center gap-5 w-full justify-between">
         <TouchableOpacity onPress={() => router.push("/profile")}>
-          <Avatar alt="Your avatar" className="w-16 h-16">
+          <Avatar alt="Your avatar" className="w-10 h-10">
             <AvatarImage source={{ uri: user.pictureUrl }} />
             <AvatarFallback>
               <Text className="text-md">You</Text>
             </AvatarFallback>
           </Avatar>
         </TouchableOpacity>
+
         <View className="flex-row">
           {errorMsg && (
             <TouchableOpacity
               onPress={requestLocationPermission}
-              className="w-16 h-16 bg-primary rounded-full flex justify-center items-center mr-2"
+              className="w-10 h-10 bg-primary rounded-full flex justify-center items-center mr-2"
             >
               <LocationOffIcon width={20} height={20} fill="#fff" />
             </TouchableOpacity>
           )}
           <TouchableOpacity
             onPress={() => router.push("/addfriend")}
-            className="w-16 h-16 bg-background rounded-full flex justify-center items-center mr-2"
+            className="w-10 h-10 bg-background rounded-full flex justify-center items-center mr-2"
           >
             <FriendIcon width={20} height={20} fill="#000" />
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => router.push("/teams")}
-            className="w-16 h-16 bg-background rounded-full flex justify-center items-center"
+            className="w-10 h-10 bg-background rounded-full flex justify-center items-center"
           >
             <TeamIcon width={20} height={20} fill="#000" />
           </TouchableOpacity>
@@ -216,17 +212,14 @@ const MapScreen = () => {
 
     // Znajdź najbliższego gnoma
     const closestGnome = distances.reduce<{
-      gnome: Gnome;
+      gnome: GnomeResponse;
       distance: number;
-    } | null>(
-      (closest, current) => {
-        if (!closest || current.distance < closest.distance) {
-          return current;
-        }
-        return closest;
-      },
-      null as { gnome: Gnome; distance: number } | null,
-    );
+    } | null>((closest, current) => {
+      if (!closest || current.distance < closest.distance) {
+        return current;
+      }
+      return closest;
+    }, null);
 
     if (closestGnome) {
       setClosestGnomeId(closestGnome.gnome.id);
@@ -306,7 +299,8 @@ const MapScreen = () => {
             />
           ) : null)}
       </View>
-      <View className="absolute top-[100px] left-1/2 -translate-x-1/2 z-50">
+
+      <View className="absolute top-20 left-1/2 -translate-x-1/2 z-50">
         <Compass />
       </View>
     </View>
@@ -331,273 +325,4 @@ const styles = StyleSheet.create({
   },
 });
 
-const MapStyle = [
-  {
-    featureType: "all",
-    elementType: "labels",
-    stylers: [
-      {
-        visibility: "on",
-      },
-    ],
-  },
-  {
-    featureType: "all",
-    elementType: "labels.text.fill",
-    stylers: [
-      {
-        saturation: 36,
-      },
-      {
-        color: "#000000",
-      },
-      {
-        lightness: 40,
-      },
-    ],
-  },
-  {
-    featureType: "all",
-    elementType: "labels.text.stroke",
-    stylers: [
-      {
-        visibility: "on",
-      },
-      {
-        color: "#000000",
-      },
-      {
-        lightness: 16,
-      },
-    ],
-  },
-  {
-    featureType: "all",
-    elementType: "labels.icon",
-    stylers: [
-      {
-        visibility: "off",
-      },
-    ],
-  },
-  {
-    featureType: "administrative",
-    elementType: "geometry.fill",
-    stylers: [
-      {
-        color: "#000000",
-      },
-      {
-        lightness: 20,
-      },
-    ],
-  },
-  {
-    featureType: "administrative",
-    elementType: "geometry.stroke",
-    stylers: [
-      {
-        color: "#000000",
-      },
-      {
-        lightness: 17,
-      },
-      {
-        weight: 1.2,
-      },
-    ],
-  },
-  {
-    featureType: "administrative.locality",
-    elementType: "labels.text.fill",
-    stylers: [
-      {
-        color: "#c4c4c4",
-      },
-    ],
-  },
-  {
-    featureType: "administrative.neighborhood",
-    elementType: "labels.text.fill",
-    stylers: [
-      {
-        color: "#707070",
-      },
-    ],
-  },
-  {
-    featureType: "landscape",
-    elementType: "geometry",
-    stylers: [
-      {
-        color: "#000000",
-      },
-      {
-        lightness: 20,
-      },
-    ],
-  },
-  {
-    featureType: "poi",
-    elementType: "geometry",
-    stylers: [
-      {
-        color: "#000000",
-      },
-      {
-        lightness: 21,
-      },
-      {
-        visibility: "on",
-      },
-    ],
-  },
-  {
-    featureType: "poi.business",
-    elementType: "geometry",
-    stylers: [
-      {
-        visibility: "on",
-      },
-    ],
-  },
-  {
-    featureType: "road.highway",
-    elementType: "geometry.fill",
-    stylers: [
-      {
-        lightness: "0",
-      },
-      {
-        visibility: "on",
-      },
-      {
-        color: "#696262",
-      },
-    ],
-  },
-  {
-    featureType: "road.highway",
-    elementType: "geometry.stroke",
-    stylers: [
-      {
-        visibility: "off",
-      },
-    ],
-  },
-  {
-    featureType: "road.highway",
-    elementType: "labels.text.fill",
-    stylers: [
-      {
-        visibility: "off",
-      },
-    ],
-  },
-  {
-    featureType: "road.highway",
-    elementType: "labels.text.stroke",
-    stylers: [
-      {
-        visibility: "off",
-      },
-      {
-        hue: "#ff000a",
-      },
-    ],
-  },
-  {
-    featureType: "road.arterial",
-    elementType: "geometry",
-    stylers: [
-      {
-        color: "#000000",
-      },
-      {
-        lightness: 18,
-      },
-    ],
-  },
-  {
-    featureType: "road.arterial",
-    elementType: "geometry.fill",
-    stylers: [
-      {
-        color: "#575757",
-      },
-    ],
-  },
-  {
-    featureType: "road.arterial",
-    elementType: "labels.text.fill",
-    stylers: [
-      {
-        color: "#ffffff",
-      },
-    ],
-  },
-  {
-    featureType: "road.arterial",
-    elementType: "labels.text.stroke",
-    stylers: [
-      {
-        color: "#2c2c2c",
-      },
-    ],
-  },
-  {
-    featureType: "road.local",
-    elementType: "geometry",
-    stylers: [
-      {
-        color: "#000000",
-      },
-      {
-        lightness: 16,
-      },
-    ],
-  },
-  {
-    featureType: "road.local",
-    elementType: "labels.text.fill",
-    stylers: [
-      {
-        color: "#999999",
-      },
-    ],
-  },
-  {
-    featureType: "road.local",
-    elementType: "labels.text.stroke",
-    stylers: [
-      {
-        saturation: "-52",
-      },
-    ],
-  },
-  {
-    featureType: "transit",
-    elementType: "geometry",
-    stylers: [
-      {
-        color: "#000000",
-      },
-      {
-        lightness: 19,
-      },
-    ],
-  },
-  {
-    featureType: "water",
-    elementType: "geometry",
-    stylers: [
-      {
-        color: "#000000",
-      },
-      {
-        lightness: 17,
-      },
-    ],
-  },
-];
 export default MapScreen;

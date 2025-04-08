@@ -57,29 +57,26 @@ const Collection = () => {
   }
 
   return (
-    <View className="p-5 bg-background flex-1">
-      <Text className="text-2xl font-bold mb-4 text-white">Kolekcja</Text>
-      <FlatList
-        contentContainerClassName="pb-8"
-        data={gnomes}
-        keyExtractor={(item) => item.id?.toString()}
-        numColumns={3}
-        renderItem={({ item }) => {
-          const interaction = interactions.find((i) => i.id === item.id);
-          return (
-            <GnomeCard
-              image={require("@/assets/images/placeholder.png")}
-              text={item.name}
-              onClick={() => router.push(`/Gnomes/${item.id}`)}
-              interaction={{
-                found: interaction !== undefined,
-                userPicture: interaction?.userPicture,
-              }}
-            />
-          );
-        }}
-      />
-    </View>
+    <FlatList
+      data={gnomes}
+      className={"bg-background"}
+      keyExtractor={(item) => item.id?.toString()}
+      numColumns={3}
+      renderItem={({ item }) => {
+        const interaction = interactions.find((i) => i.gnomeId === item.id);
+        return (
+          <GnomeCard
+            image={item.pictureUrl}
+            text={item.name}
+            onClick={() => router.push(`/gnomes/${item.id}`)}
+            interaction={{
+              found: !!interaction,
+              userPicture: interaction?.userPicture,
+            }}
+          />
+        );
+      }}
+    />
   );
 };
 

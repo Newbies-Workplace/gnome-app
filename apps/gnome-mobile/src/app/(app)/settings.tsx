@@ -1,12 +1,3 @@
-import { SettingsOption } from "@/components/ui/SettingsOption";
-import { Text } from "@/components/ui/text";
-import { useNavigation } from "@react-navigation/native";
-import { useRouter } from "expo-router";
-import React, { useEffect } from "react";
-import { TouchableOpacity, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-
-// Import ikon jako komponenty SVG
 import ArrowLeft from "@/assets/icons/arrow-left.svg";
 import ZadajPytanieIcon from "@/assets/icons/askquestion.svg";
 import DesignIcon from "@/assets/icons/design.svg";
@@ -17,10 +8,18 @@ import ModeIcon from "@/assets/icons/mode.svg";
 import NotificationsIcon from "@/assets/icons/notifications.svg";
 import PrivacyIcon from "@/assets/icons/privacy.svg";
 import SecurityIcon from "@/assets/icons/security.svg";
+import { SettingsOption } from "@/components/ui/SettingsOption";
+import { Text } from "@/components/ui/text";
+import { useNavigation } from "@react-navigation/native";
+import { useRouter } from "expo-router";
+import React, { useEffect } from "react";
+import { TouchableOpacity, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 function SettingsScreen() {
   const navigation = useNavigation();
   const router = useRouter();
+
   useEffect(() => {
     navigation.setOptions({
       headerLeft: () => (
@@ -48,41 +47,41 @@ function SettingsScreen() {
         <SettingsOption
           text="Motyw"
           image={ModeIcon}
-          onClick={() => replace("/theme")}
+          onClick={() => router.replace("/theme")}
           customClass="mb-8"
         />
         {/* 3 przyciski */}
         <SettingsOption
           text="Powiadomienia"
           image={NotificationsIcon}
-          onClick={() => replace("/notifications")}
+          onClick={() => router.replace("/notifications")}
         />
         <SettingsOption
           text="Prywatność"
           image={PrivacyIcon}
-          onClick={() => replace("/privacy")}
+          onClick={() => router.replace("/privacy")}
         />
         <SettingsOption
           text="Bezpieczeństwo"
           image={SecurityIcon}
-          onClick={() => replace("/security")}
+          onClick={() => router.replace("/security")}
           customClass="mb-8"
         />
         {/* 3 przyciski */}
         <SettingsOption
           text="Główne"
           image={MainIcon}
-          onClick={() => replace("/main")}
+          onClick={() => router.replace("/main")}
         />
         <SettingsOption
           text="Wygląd"
           image={DesignIcon}
-          onClick={() => replace("/appearance")}
+          onClick={() => router.replace("/appearance")}
         />
         <SettingsOption
           text="Język"
           image={LanguageIcon}
-          onClick={() => replace("/language")}
+          onClick={() => router.replace("/language")}
           extraText="Polski"
           customClass="mb-8"
         />
@@ -90,12 +89,12 @@ function SettingsScreen() {
         <SettingsOption
           text="Zadaj pytanie"
           image={ZadajPytanieIcon}
-          onClick={() => replace("/ask")}
+          onClick={() => router.replace("/ask")}
         />
         <SettingsOption
           text="FAQ"
           image={FAQIcon}
-          onClick={() => replace("/faq")}
+          onClick={() => router.replace("/faq")}
         />
       </View>
     </SafeAreaView>

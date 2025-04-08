@@ -1,19 +1,23 @@
 import { axiosInstance } from "@/lib/api/axios";
-import type { Gnome } from "@/store/useGnomeStore";
+import {
+  GnomeIdResponse,
+  GnomeResponse,
+  InteractionResponse,
+} from "@repo/shared/responses";
 
-const getGnomes = async (): Promise<Gnome[]> => {
+const getGnomes = async (): Promise<GnomeResponse[]> => {
   return await axiosInstance
     .get("api/rest/v1/gnomes")
     .then((response) => response.data);
 };
 
-const getMyGnomesInteractions = async () => {
+const getMyGnomesInteractions = async (): Promise<InteractionResponse[]> => {
   return await axiosInstance
-    .get(`api/rest/v1/gnomes/@me/interactions`)
+    .get("api/rest/v1/gnomes/@me/interactions")
     .then((response) => response.data);
 };
 
-const getNearestGnomes = async (id: string): Promise<Gnome[]> => {
+const getGnomeById = async (id: string): Promise<GnomeIdResponse> => {
   return await axiosInstance
     .get(`api/rest/v1/gnomes/${id}`)
     .then((response) => {
@@ -25,5 +29,5 @@ const getNearestGnomes = async (id: string): Promise<Gnome[]> => {
 export const GnomesService = {
   getGnomes,
   getMyGnomesInteractions,
-  getNearestGnomes,
+  getGnomeById,
 };

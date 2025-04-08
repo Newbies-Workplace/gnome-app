@@ -1,14 +1,11 @@
 import BackIcon from "@/assets/icons/arrow-left.svg";
-import { axiosInstance } from "@/lib/api/axios";
 import { useGnomeStore } from "@/store/useGnomeStore";
-import axios from "axios";
 import { useLocalSearchParams, useNavigation, useRouter } from "expo-router";
 import React, { useEffect, useRef, useState } from "react";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import {
   Camera,
   CameraDevice,
-  CameraRuntimeError,
   useCameraDevices,
 } from "react-native-vision-camera";
 

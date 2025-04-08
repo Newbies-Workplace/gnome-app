@@ -1,6 +1,5 @@
-import { JWTUser } from "@/auth/jwt/JWTUser";
 import { PrismaService } from "@/db/prisma.service";
-import { Injectable, NotFoundException } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { Gnome } from "@prisma/client";
 import { CreateGnomeRequest } from "@repo/shared/requests";
 import { GnomeIdResponse } from "@repo/shared/responses";
@@ -49,9 +48,6 @@ export class GnomesService {
   async getMyGnomesInteractions(id: string) {
     return this.prismaService.gnomeInteraction.findMany({
       where: { userId: id },
-      include: {
-        gnome: true,
-      },
     });
   }
 

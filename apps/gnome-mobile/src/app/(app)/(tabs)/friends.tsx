@@ -1,5 +1,4 @@
 import AddUser from "@/assets/icons/add-user.svg";
-import ArrowLeft from "@/assets/icons/arrow-left.svg";
 import Mushroom from "@/assets/icons/mushroom.svg";
 import { Text } from "@/components/ui/text";
 import { useNavigation } from "@react-navigation/native";
@@ -29,7 +28,11 @@ const friendsData = [
   },
 ];
 
-const FriendItem = ({ name, avatar, score }) => (
+const FriendItem = ({
+  name,
+  avatar,
+  score,
+}: { name: string; avatar: string; score: string }) => (
   <View className="px-6 ml-4 mr-4 flex flex-row items-center justify-between py-2">
     <View className="flex flex-row items-center">
       <Image source={{ uri: avatar }} className="w-10 h-10 rounded-full mr-4" />

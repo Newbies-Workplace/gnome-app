@@ -1,16 +1,12 @@
 import CameraIcon from "@/assets/icons/camera.svg";
 import NoCameraIcon from "@/assets/icons/no-camera.svg";
 import React from "react";
-import {
-  Image,
-  ImageSourcePropType,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { Image, Text, TouchableOpacity, View } from "react-native";
+
+const placeholder = require("@/assets/images/placeholder.png");
 
 interface GnomeCardProps {
-  image: ImageSourcePropType;
+  image: string;
   text: string;
   onClick: () => void;
   interaction?: { found: boolean; imageUrl?: string; userPicture?: string };
@@ -30,25 +26,29 @@ export const GnomeCard: React.FC<GnomeCardProps> = ({
       return <NoCameraIcon width={20} height={20} />;
     return null;
   };
+
   const getImageSource = () => {
     if (interaction?.found && interaction?.userPicture)
-      return <Image source={{ uri: interaction.userPicture }} />;
-    if (interaction?.found && !interaction?.userPicture)
-      return <Image source={{ uri: gnome.pictureUrl }} />;
-    return <Image source={require("@/assets/images/placeholder.png")} />;
+      return { uri: interaction.userPicture };
+    if (interaction?.found && !interaction?.userPicture) return { uri: image };
+    return placeholder;
   };
 
   return (
     <TouchableOpacity
       onPress={onClick}
-      className="relative items-center p-5 flex-1"
+      className="flex-1 flex-col items-center h-48 p-2"
     >
-      <View className="relative">
-        {getImageSource()}
+      <View className={"items-center w-full"}>
+        <Image source={getImageSource()} className={"w-full h-40 rounded-xl"} />
+
         <View className="absolute top-1 left-1">{getIcon()}</View>
       </View>
 
-      <Text className="flex-1 text-center rounded px-1 text-white font-bold w-full text-nowrap">
+      <Text
+        className="text-center rounded px-1 text-white font-bold"
+        numberOfLines={1}
+      >
         {text}
       </Text>
     </TouchableOpacity>
