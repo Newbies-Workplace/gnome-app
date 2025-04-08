@@ -129,8 +129,8 @@ const MapScreen = () => {
   const [closestGnomeId, setClosestGnomeId] = useState<string>();
 
   const defaultRegion = {
-    latitude: 51.1079,
-    longitude: 17.0385,
+    latitude: 51.109967,
+    longitude: 17.031843,
     latitudeDelta: 0.01,
     longitudeDelta: 0.05,
   };
