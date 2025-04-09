@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
@@ -17,19 +17,12 @@ export const DatePickerInput: React.FC<DatePickerInputProps> = ({
   placeholder,
   className = "",
 }) => {
-  const [date, setDate] = useState<Date | null>(selectedDate || null);
-
-  const handleDateChange = (selectedDate: Date | null) => {
-    setDate(selectedDate);
-    onChange(selectedDate);
-  };
-
   return (
     <div className={`flex flex-col ${className}`}>
       {label && <label className=" text-[#757A75]">{label}</label>}
       <DatePicker
-        selected={date}
-        onChange={handleDateChange}
+        selected={selectedDate}
+        onChange={onChange}
         dateFormat="yyyy-MM-dd"
         className="bg-[#ffffff] text-[#B3B3B3] min-w-75 w-[30%] h-15 rounded-[10px] pl-[25px]"
         placeholderText={placeholder ?? "Wybierz datę"}

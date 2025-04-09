@@ -64,7 +64,7 @@ export const AddGnomePage = () => {
       <div>
         <a href="/admin">
           <img
-            src="../src/images/Back.svg"
+            src="/Back.svg"
             alt="Wróć"
             className="ml-15 mt-5 absolute h-[30px] w-[30px]"
           />
@@ -105,8 +105,10 @@ export const AddGnomePage = () => {
               render={({ field }) => (
                 <DatePickerInput
                   className="ml-[60px]"
-                  selectedDate={new Date(field.value)}
-                  onChange={(date: Date | null) => field.onChange(date?.toISOString())}
+                  selectedDate={field.value as unknown as Date}
+                  onChange={(date: Date | null) =>
+                    field.onChange(date?.toISOString())
+                  }
                   placeholder="Data powstania"
                 />
               )}

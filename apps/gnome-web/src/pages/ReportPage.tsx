@@ -1,3 +1,4 @@
+import { axiosInstance } from "@/lib/api/axios";
 import { Controller, useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { FileInput } from "../components/FileInput";
@@ -6,7 +7,6 @@ import Navbar from "../components/Navbar";
 import { BgElement } from "../components/bg_element";
 import { CircleTracker } from "../components/div_circle";
 import InteractiveMapPicker from "../components/mapPicker/InternalMapPicker";
-import {axiosInstance} from "@/lib/api/axios"
 
 type FormValues = {
   name: string;
@@ -65,7 +65,7 @@ export const ReportPage = () => {
       <div>
         <a href="/admin">
           <img
-            src="../src/images/Back.svg"
+            src="/Back.svg"
             alt="Wróć"
             className="ml-15 mt-5 absolute h-[30px] w-[30px]"
           />

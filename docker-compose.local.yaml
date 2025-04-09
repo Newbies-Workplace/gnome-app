@@ -16,8 +16,11 @@ services:
     build:
       context: .
       target: gnome-web
+      args:
+        VITE_PUBLIC_API_URL: ${VITE_PUBLIC_API_URL}
+        VITE_PUBLIC_GOOGLE_WEB_CLIENT_ID: ${VITE_PUBLIC_GOOGLE_WEB_CLIENT_ID}
     ports:
-      - '5173:5173'
+      - '8080:8080'
     restart: unless-stopped
     env_file:
       - apps/gnome-web/.env

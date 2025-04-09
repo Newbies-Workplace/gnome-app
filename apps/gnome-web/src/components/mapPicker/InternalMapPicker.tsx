@@ -62,7 +62,7 @@ interface MapMarkerProps {
 
 const MapMarker: React.FC<MapMarkerProps> = ({ value, onChange }) => {
   const customIcon = icon({
-    iconUrl: "../src/images/Map_pin.svg", // Path to your custom pin SVG
+    iconUrl: "/Map_pin.svg", // Path to your custom pin SVG
     iconSize: [40, 40], // Size of the icon
     iconAnchor: [20, 40], // Anchor point of the icon (center bottom)
   });
