@@ -25,6 +25,9 @@ import {
 } from "react-native";
 import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
 
+// Maksymalna odległość w metrach
+const MAX_GNOME_RENDER_DISTANCE = 400;
+
 const MIN_TRACKER_DISTANCE = 50;
 const MIN_REACHED_DISTANCE = 15;
 
@@ -69,7 +72,7 @@ const HeaderControls: React.FC<HeaderControlsProps> = ({
   };
 
   return (
-    <View className="absolute top-5 left-2 right-2 p-2 flex-row justify-between items-center">
+    <View className="flex-row justify-between items-center">
       <View className="flex flex-row items-center gap-5 w-full justify-between">
         <TouchableOpacity onPress={() => router.push("/profile")}>
           <Avatar alt="Your avatar" className="w-10 h-10">
@@ -114,14 +117,11 @@ const MapScreen = () => {
     useGnomeStore();
   const ref = useRef<MapView>(null);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
-  const maxDistance = 400; // Maksymalna odległość w metrach
   const [userLocation, setUserLocation] = useState({
     latitude: 51.109967,
     longitude: 17.031843,
   });
   const [distance, setDistance] = useState<number>();
-  const [reachedMarker, setReachedMarker] = useState(false);
-  const [showDistanceTracker, setShowDistanceTracker] = useState(false);
   const [closestGnomeId, setClosestGnomeId] = useState<string>();
 
   const defaultRegion = {
@@ -194,7 +194,7 @@ const MapScreen = () => {
       longitude: gnome.longitude,
     });
 
-    return distance <= maxDistance;
+    return distance <= MAX_GNOME_RENDER_DISTANCE;
   });
 
   useEffect(() => {
@@ -225,16 +225,6 @@ const MapScreen = () => {
       setClosestGnomeId(closestGnome.gnome.id);
     }
 
-    if (closestGnome && closestGnome.distance <= MIN_REACHED_DISTANCE) {
-      setShowDistanceTracker(true);
-    } else {
-      setShowDistanceTracker(false);
-    }
-    if (closestGnome && closestGnome.distance <= MIN_REACHED_DISTANCE) {
-      setReachedMarker(true);
-    } else {
-      setReachedMarker(false);
-    }
     if (closestGnome) {
       setDistance(Math.round(closestGnome.distance));
     }
@@ -242,6 +232,18 @@ const MapScreen = () => {
 
   return (
     <View className="flex-1">
+      <View className="absolute top-10 left-1/2 -translate-x-1/2 px-10 gap-2 z-10">
+        {user && (
+          <HeaderControls
+            user={user}
+            errorMsg={errorMsg}
+            setErrorMsg={setErrorMsg}
+          />
+        )}
+
+        <Compass />
+      </View>
+
       <MapView
         style={styles.map}
         initialRegion={defaultRegion}
@@ -254,6 +256,12 @@ const MapScreen = () => {
         showsCompass={false}
         showsMyLocationButton={false}
         rotateEnabled={true}
+        mapPadding={{
+          top: 60,
+          right: 5,
+          bottom: 60,
+          left: 5,
+        }}
         minZoomLevel={17}
         maxZoomLevel={20}
         ref={ref}
@@ -280,14 +288,6 @@ const MapScreen = () => {
         ))}
       </MapView>
 
-      {user && (
-        <HeaderControls
-          user={user}
-          errorMsg={errorMsg}
-          setErrorMsg={setErrorMsg}
-        />
-      )}
-
       <View className="absolute bottom-0 left-0 right-0 p-4 bg-transparent">
         {distance !== undefined &&
           (distance > MIN_REACHED_DISTANCE &&
@@ -298,10 +298,6 @@ const MapScreen = () => {
               onUnlock={() => navigate(`/camera?gnomeid=${closestGnomeId}`)}
             />
           ) : null)}
-      </View>
-
-      <View className="absolute top-20 left-1/2 -translate-x-1/2 z-50">
-        <Compass />
       </View>
     </View>
   );

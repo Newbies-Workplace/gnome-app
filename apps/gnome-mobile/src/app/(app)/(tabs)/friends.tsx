@@ -33,7 +33,7 @@ const FriendItem = ({
   avatar,
   score,
 }: { name: string; avatar: string; score: string }) => (
-  <View className="px-6 ml-4 mr-4 flex flex-row items-center justify-between py-2">
+  <View className="px-4 flex flex-row items-center justify-between py-2">
     <View className="flex flex-row items-center">
       <Image source={{ uri: avatar }} className="w-10 h-10 rounded-full mr-4" />
       <Text className="text-white text-lg font-semibold">{name}</Text>
@@ -72,7 +72,10 @@ export default function Friends() {
   }, [navigation, router]);
 
   return (
-    <SafeAreaView className="flex-1 bg-background pt-6">
+    <SafeAreaView
+      className="flex-1 bg-background"
+      edges={["left", "right", "bottom"]}
+    >
       <FlatList
         data={friendsData}
         keyExtractor={(item) => item.id}

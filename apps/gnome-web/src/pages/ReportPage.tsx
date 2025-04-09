@@ -6,6 +6,7 @@ import Navbar from "../components/Navbar";
 import { BgElement } from "../components/bg_element";
 import { CircleTracker } from "../components/div_circle";
 import InteractiveMapPicker from "../components/mapPicker/InternalMapPicker";
+import {axiosInstance} from "@/lib/api/axios"
 
 type FormValues = {
   name: string;
@@ -36,9 +37,9 @@ export const ReportPage = () => {
 
       // Append the file(s) to the FormData
       if (data.file && data.file.length > 0) {
-        Array.from(data.file).forEach((file) => {
+        for (const file of Array.from(data.file)) {
           formData.append("file", file);
-        });
+        }
       }
 
       // Send the form data to the backend
@@ -59,7 +60,6 @@ export const ReportPage = () => {
 
   return (
     <div>
-      {console.log("Rendering Navbar and BgElement")} {/* Debugging log */}
       <Navbar />
       <BgElement className="rounded-b-[15px] rounded-tl-[15px] rounded-tr-[15px] h-80/50 sm:h-80/50 md:h-80/50 lg:h-80/50" />
       <div>
@@ -146,8 +146,8 @@ export const ReportPage = () => {
             <CircleTracker label="7" className="-mt-15" />
             <button
               type="submit"
-              className="w-[200px] h-[50px] ml-1 text-center text-[21px] text-[#fff] bg-[#D6484A] 
-                rounded-[20px] flex items-center justify-center transition-all duration-200 hover:text-[22px] 
+              className="w-[200px] h-[50px] ml-1 text-center text-[21px] text-[#fff] bg-[#D6484A]
+                rounded-[20px] flex items-center justify-center transition-all duration-200 hover:text-[22px]
                 hover:bg-[#D96466] hover:text-[#FFFFFF]"
             >
               Zgłoś

@@ -1,0 +1,47 @@
+services:
+  gnome-back:
+    build:
+      context: .
+      target: gnome-back
+    ports:
+      - '3000:3000'
+    restart: unless-stopped
+    env_file:
+      - apps/gnome-back/.env
+    depends_on:
+      - minio
+      - gnome-db
+
+  gnome-web:
+    build:
+      context: .
+      target: gnome-web
+    ports:
+      - '5173:5173'
+    restart: unless-stopped
+    env_file:
+      - apps/gnome-web/.env
+
+  minio:
+    image: docker.io/bitnami/minio:2022
+    environment:
+      MINIO_ROOT_USER: minio
+      MINIO_ROOT_PASSWORD: supersecret
+    ports:
+      - '9000:9000'
+      - '9001:9001'
+    volumes:
+      - 'minio_data:/data'
+
+  gnome-db:
+    image: postgres:15.3
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: gnome
+      POSTGRES_PASSWORD: gnome
+    ports:
+      - "5432:5432"
+
+volumes:
+  minio_data:
+    driver: local
