@@ -1,14 +1,15 @@
-import { LinkButton } from "../components/LinkButton";
+import {LinkButton} from "../components/LinkButton";
 import Navbar from "../components/Navbar";
-import { BgElement } from "../components/bg_element";
+import {BgElement} from "../components/bg_element";
 
 export const LogAdminPage = () => {
   return (
     <div>
-      <Navbar />
-      <BgElement className="rounded-b-[15px] rounded-tl-[15px]" />
+      <Navbar/>
+      <BgElement className="rounded-b-[15px] rounded-tl-[15px]"/>
       <div className="justify-center items-center flex flex-col">
-        <div className="bg-[#1E201E] w-2/5 h-4/5 absolute top-33 transform flex flex-col items-center justify-center rounded-[15px]">
+        <div
+          className="bg-[#1E201E] w-2/5 h-4/5 absolute top-33 transform flex flex-col items-center justify-center rounded-[15px]">
           <p className="text-white text-[30px] mb-4 font-bold absolute top-20">
             Zaloguj się
           </p>
@@ -17,24 +18,24 @@ export const LogAdminPage = () => {
             placeholder="Login"
             className="bg-[#1E201E] border-2 border-[#FFF] text-white w-1/2 h-20 rounded-[15px] pl-3"
           />
-          <br />
+          <br/>
           <input
             type="password"
             placeholder="Hasło"
             className="bg-[#1E201E] border-2 border-[#FFF] text-white w-1/2 h-20 rounded-[15px] pl-3"
           />
-          <br />
+          <br/>
           <div className="flex flex-row w-17/32 justify-center gap-13">
-            <hr className="w-2/5" />
-            <hr className="w-2/5" />
+            <hr className="w-2/5"/>
+            <hr className="w-2/5"/>
           </div>
-          <br />
+          <br/>
           <div className="flex flex-row gap-25">
             <div className="flex justify-center items-center">
               <button
                 onClick={() => {
                   window.location.href =
-                    "http://localhost:3000/api/rest/v1/auth/google/redirect";
+                    import.meta.env.VITE_PUBLIC_API_URL + "/auth/google/redirect";
                 }}
               >
                 <img
@@ -52,7 +53,7 @@ export const LogAdminPage = () => {
               />
             </a>
           </div>
-          <br />
+          <br/>
           <div className="absolute bottom-20">
             <LinkButton
               to="/admin"

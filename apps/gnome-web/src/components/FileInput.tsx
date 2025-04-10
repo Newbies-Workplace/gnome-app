@@ -1,7 +1,11 @@
 import React, { useState } from "react";
 
-export const FileInput: React.FC = () => {
-  const [files, setFiles] = useState<File[]>([]);
+export interface FileInputProps {
+  files: FileList;
+  onChange: (files: File[]) => void;
+}
+
+export const FileInput: React.FC<FileInputProps> = ({files, onChange}) => {
   const [isDragging, setIsDragging] = useState(false);
 
   const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
@@ -19,7 +23,7 @@ export const FileInput: React.FC = () => {
 
     if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
       const droppedFiles = Array.from(e.dataTransfer.files);
-      setFiles((prevFiles) => [...prevFiles, ...droppedFiles]);
+      onChange([...files, ...droppedFiles]);
       e.dataTransfer.clearData();
     }
   };
@@ -27,7 +31,7 @@ export const FileInput: React.FC = () => {
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       const selectedFiles = Array.from(e.target.files);
-      setFiles((prevFiles) => [...prevFiles, ...selectedFiles]);
+      onChange([...files, ...selectedFiles]);
     }
   };
   // `bg-[#ffffff] text-[#B3B3B3] w-full sm:w-[300px] md:w-[400px] lg:w-[500px]
@@ -65,7 +69,7 @@ export const FileInput: React.FC = () => {
             Wybierz
           </button>
           <button
-            onClick={() => setFiles([])}
+            onClick={() => onChange([])}
             className="mt-4 px-4 py-2 h-[40px] w-[100px] bg-[#D6484A] text-white rounded-[15px] cursor-pointer hover:bg-[#D96466]"
           >
             Wyczyść
@@ -76,7 +80,7 @@ export const FileInput: React.FC = () => {
       <div className="-mt-1 w-[50%] ml-5">
         {files.length > 0 && <h3 className="text-lg">Wybrane pliki:</h3>}
         <ul className="list-disc pl-5">
-          {files.slice(0, 4).map((file, index) => (
+          {[...files].slice(0, 4).map((file, index) => (
             <li key={index} className="text-[#A7A7A7]">
               {file.name}
             </li>

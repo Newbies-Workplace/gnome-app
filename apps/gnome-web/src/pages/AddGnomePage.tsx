@@ -36,9 +36,9 @@ export const AddGnomePage = () => {
 
       // Append the file(s) to the FormData
       if (data.file && data.file.length > 0) {
-        Array.from(data.file).forEach((file) => {
+        for (const file of Array.from(data.file)) {
           formData.append("file", file);
-        });
+        }
       }
 
       // Send the form data to the backend
@@ -64,7 +64,7 @@ export const AddGnomePage = () => {
       <div>
         <a href="/admin">
           <img
-            src="../src/images/Back.svg"
+            src="/Back.svg"
             alt="Wróć"
             className="ml-15 mt-5 absolute h-[30px] w-[30px]"
           />
@@ -105,8 +105,10 @@ export const AddGnomePage = () => {
               render={({ field }) => (
                 <DatePickerInput
                   className="ml-[60px]"
-                  selected={field.value}
-                  onChange={(date: Date) => field.onChange(date.toISOString())}
+                  selectedDate={field.value as unknown as Date}
+                  onChange={(date: Date | null) =>
+                    field.onChange(date?.toISOString())
+                  }
                   placeholder="Data powstania"
                 />
               )}
@@ -144,8 +146,8 @@ export const AddGnomePage = () => {
             <CircleTracker label="7" className="-mt-15" />
             <button
               type="submit"
-              className="w-[200px] h-[50px] ml-1 text-center text-[21px] text-[#fff] bg-[#D6484A] 
-                rounded-[20px] flex items-center justify-center transition-all duration-200 hover:text-[22px] 
+              className="w-[200px] h-[50px] ml-1 text-center text-[21px] text-[#fff] bg-[#D6484A]
+                rounded-[20px] flex items-center justify-center transition-all duration-200 hover:text-[22px]
                 hover:bg-[#D96466] hover:text-[#FFFFFF]"
             >
               Dodaj

@@ -5,10 +5,10 @@ const Navbar = () => {
   const location = useLocation();
 
   const links = [
-    { href: "/", img: "../src/images/Home.svg", text: "Strona Główna" },
-    { href: "/gnomes/test", img: "../src/images/gnome.svg", text: "Lista" },
-    { href: "/report", img: "../src/images/Zglos.svg", text: "Zgłoś" },
-    { href: "/admin/logadmin", img: "../src/images/Admin.svg", text: "Admin" },
+    { href: "/", img: "/Home.svg", text: "Strona Główna" },
+    { href: "/gnomes/test", img: "/Gnome.svg", text: "Lista" },
+    { href: "/report", img: "/Zglos.svg", text: "Zgłoś" },
+    { href: "/admin/logadmin", img: "/Admin.svg", text: "Admin" },
   ];
 
   return (

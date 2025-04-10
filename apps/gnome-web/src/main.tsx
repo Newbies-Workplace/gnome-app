@@ -11,8 +11,7 @@ import { LogAdminPage } from "./pages/LogAdminPage.tsx";
 import { LostInfoPage } from "./pages/LostInfoPage.tsx";
 import { ReportPage } from "./pages/ReportPage.tsx";
 
-const clientId =
-  "974120314595-pbe28v3m1aqrfhv4560pttgjt3738a4g.apps.googleusercontent.com";
+const clientId = import.meta.env.VITE_PUBLIC_GOOGLE_WEB_CLIENT_ID;
 
 createRoot(document.getElementById("root")!).render(
   <GoogleOAuthProvider clientId={clientId}>

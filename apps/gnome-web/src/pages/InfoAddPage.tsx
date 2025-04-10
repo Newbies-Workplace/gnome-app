@@ -4,7 +4,7 @@ import { LinkButton } from "../components/LinkButton";
 const AddInfoPage: React.FC = () => {
   return (
     <div className="justify-center items-center flex flex-col mt-70">
-      <img src="../src/images/Check_circle.svg" alt="checked" />
+      <img src="/Check_circle.svg" alt="checked" />
       <p className="text-[35px] text-center mt-8">
         Dane o nowym krasnoludzie zostały <br /> wprowadzone do bazy.
       </p>

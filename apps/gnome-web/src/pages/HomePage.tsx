@@ -30,7 +30,7 @@ export const HomePage = () => {
                   </a>
                   <a href="/report">
                     <img
-                      src="../src/images/SwimmingSuteGnome.svg"
+                      src="/SwimmingSuteGnome.svg"
                       alt="Wróć"
                       className="absolute h-[60px] w-[60px] -mt-3"
                     />
@@ -40,7 +40,7 @@ export const HomePage = () => {
             </div>
             <div>
               <img
-                src="../src/images/Red_gnome.svg"
+                src="/Red_gnome.svg"
                 alt="Red gnome"
                 className="ml-40 invisible lg:w-[80%] lg:h-[80%] lg:visible max-w-150"
               />
@@ -57,11 +57,7 @@ export const HomePage = () => {
             </label>
           </div>
           <div className="z-1 items-right justify-right ml-auto -mr-6 -mt-40 flex">
-            <img
-              src="../src/images/Hand.svg"
-              alt="Hand"
-              className="w-260 h-260"
-            />
+            <img src="/Hand.svg" alt="Hand" className="w-260 h-260" />
           </div>
         </div>
       </div>
