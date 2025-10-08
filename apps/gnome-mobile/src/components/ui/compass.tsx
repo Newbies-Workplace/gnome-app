@@ -83,22 +83,18 @@ const Compass: React.FC = () => {
             const position =
               ((i - totalMarkers / 2) * COMPASS_WIDTH) / totalMarkers;
 
+            const isMainDirection = ["N", "S", "W", "E"].includes(
+              String(label),
+            );
+
             return (
               <SvgText
                 key={i}
                 x={position % (COMPASS_WIDTH * 3)}
-                y="30"
-                fill={
-                  ["N", "S", "W", "E"].includes(String(label))
-                    ? "white"
-                    : "gray"
-                }
-                fontSize="14"
-                fontWeight={
-                  ["N", "S", "W", "E"].includes(String(label))
-                    ? "bold"
-                    : "normal"
-                }
+                y={isMainDirection ? 28 : 25}
+                fill={isMainDirection ? "white" : "gray"}
+                fontSize={isMainDirection ? 20 : 12}
+                fontWeight={isMainDirection ? "bold" : "normal"}
                 textAnchor="middle"
               >
                 {label}
@@ -115,9 +111,9 @@ const styles = StyleSheet.create({
   container: {
     alignSelf: "center",
     width: width - 32,
-    height: 40,
+    height: 24,
     backgroundColor: "#1E201E",
-    borderRadius: 4,
+    borderRadius: 15,
     justifyContent: "center",
     alignItems: "center",
     overflow: "hidden",

@@ -1,5 +1,5 @@
+import { JWTUser } from "@/auth/jwt/JWTUser";
 import { JwtGuard } from "@/auth/jwt/jwt.guard";
-import { JWTUser } from "@/auth/jwt/jwtuser";
 import { User } from "@/auth/jwt/jwtuser.decorator";
 import {
   BadRequestException,

@@ -1,14 +1,12 @@
+import NavFriendsIcon from "@/assets/icons/NavFriends.svg";
+import NavHomeIcon from "@/assets/icons/NavHome.svg";
+import NavMushroomIcon from "@/assets/icons/NavMushroom.svg";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import React from "react";
 import { StyleSheet } from "react-native";
 import Collection from "../(tabs)/collection";
 import Friends from "../(tabs)/friends";
 import Home from "../(tabs)/index";
-
-//Ikony do tabsów
-import NavFriendsIcon from "@/assets/icons/NavFriends.svg";
-import NavHomeIcon from "@/assets/icons/NavHome.svg";
-import NavMushroomIcon from "@/assets/icons/NavMushroom.svg";
 
 const Tab = createBottomTabNavigator();
 
@@ -21,7 +19,9 @@ const HomeTabs = () => {
           tabBarStyle: styles.tabBarStyle,
           tabBarLabelPosition: "beside-icon",
           tabBarActiveTintColor: "#FFFFFF",
-          tabBarItemStyle: navigation.isFocused() ? styles.activeTab : null,
+          tabBarItemStyle: navigation.isFocused()
+            ? styles.activeTab
+            : styles.inactiveTab,
         };
       }}
     >
@@ -73,13 +73,23 @@ const HomeTabs = () => {
 
 const styles = StyleSheet.create({
   tabBarStyle: {
+    elevation: 0,
+    position: "absolute",
+    bottom: 10,
+    marginHorizontal: 10,
+    borderRadius: 20,
+
     backgroundColor: "#222",
     borderTopWidth: 0,
   },
   activeTab: {
     backgroundColor: "#D6484A",
-    borderRadius: 40,
-    margin: 5,
+    borderRadius: 12,
+    margin: 8,
+  },
+  inactiveTab: {
+    borderRadius: 12,
+    margin: 8,
   },
 });
 
