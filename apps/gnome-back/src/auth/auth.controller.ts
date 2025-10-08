@@ -1,26 +1,20 @@
 import { AuthService } from "@/auth/auth.service";
-import { GoogleAuthRequest } from "@/auth/dto/GoogleAuth.request";
 import { UsersService } from "@/users/users.service";
-import {
-  Body,
-  Controller,
-  Get,
-  Post,
-  Request,
-  Response,
-  UseGuards,
-} from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import { GoogleUserResponse, UserResponse } from "@repo/shared/responses";
-import { GoogleGuard } from "./google/google.guard";
-import { User } from "./jwt/jwtuser.decorator";
+import { GoogleGuard } from "./guards/google.guard";
+import { User } from "./decorators/jwt-user.decorator";
+import { GoogleAuthRequest } from "./dto/google-auth.request.dto";
+import { UserRole } from "@prisma/client";
+import { Body, Controller, Get, Post, Res, UseGuards } from "@nestjs/common";
+import { Response } from "express";
 
 @Controller("auth")
 export class AuthController {
   constructor(
     private readonly authService: AuthService,
     private readonly usersService: UsersService,
-    private readonly jwtService: JwtService,
+    private readonly jwtService: JwtService
   ) {}
 
   @Get("google/redirect")
@@ -31,19 +25,19 @@ export class AuthController {
   @UseGuards(GoogleGuard)
   async googleAuthRedirect(
     @User() user: GoogleUserResponse,
-    @Response() res,
-    @Request() req,
+    @Res() res: Response
   ) {
     const FRONTEND_URL = process.env.FRONTEND_URL;
     const token = await this.authService.googleAuth(user);
-    req.user = user; // to do roli zeby sprawdzac
     res.cookie("access_token", token, {
-      maxAge: 60 * 60 * 100000,
+      httpOnly: true,
+      secure: true,
+      sameSite: "none",
+      maxAge: 60 * 60 * 1000, // 1 hour
     });
 
-    if (req.user.role === "ADMIN") {
+    if (user.role.includes(UserRole.ADMIN))
       return res.redirect(`${FRONTEND_URL}/admin`);
-    }
 
     return res.redirect(`${FRONTEND_URL}`);
   }

@@ -1,6 +1,6 @@
-import { JWTUser } from "@/auth/jwt/JWTUser";
-import { JwtGuard } from "@/auth/jwt/jwt.guard";
-import { User } from "@/auth/jwt/jwtuser.decorator";
+import { JwtUser } from "@/auth/types/jwt-user";
+import { JwtGuard } from "@/auth/guards/jwt.guard";
+import { User } from "@/auth/decorators/jwt-user.decorator";
 import { MinioService } from "@/minio/minio.service";
 import { Role } from "@/role/role.decorator";
 import { RoleGuard } from "@/roleguard/role.guard";
@@ -37,7 +37,7 @@ export class GnomesController {
   constructor(
     private readonly gnomeService: GnomesService,
     private readonly minioService: MinioService,
-    private readonly teamsService: TeamsService,
+    private readonly teamsService: TeamsService
   ) {}
 
   // Pobieranie wszystkich gnomów
@@ -82,7 +82,7 @@ export class GnomesController {
   @Get("@me/interactions")
   @UseGuards(JwtGuard)
   async getMyGnomesInteractions(
-    @User() user: JWTUser,
+    @User() user: JwtUser
   ): Promise<InteractionResponse[]> {
     return this.gnomeService.getMyGnomesInteractions(user.id);
   }
@@ -101,10 +101,10 @@ export class GnomesController {
           new MaxFileSizeValidator({ maxSize: 10_000_000 }),
           new FileTypeValidator({ fileType: "image/jpeg" }),
         ],
-      }),
+      })
     )
     file: Express.Multer.File,
-    @Body() createGnomeDto: CreateGnomeRequest,
+    @Body() createGnomeDto: CreateGnomeRequest
   ): Promise<GnomeResponse> {
     await this.minioService.createBucketIfNotExists();
     const fileName = `${createGnomeDto.name}.jpg`;
@@ -115,7 +115,7 @@ export class GnomesController {
 
     const gnomeCreate = await this.gnomeService.createGnome(
       createGnomeDto,
-      fileUrl,
+      fileUrl
     );
     return gnomeCreate;
   }
@@ -133,11 +133,11 @@ export class GnomesController {
           new MaxFileSizeValidator({ maxSize: 10_000_000 }), // 10MB
           new FileTypeValidator({ fileType: "image/jpeg" }),
         ],
-      }),
+      })
     )
     file: Express.Multer.File,
-    @User() user: JWTUser,
-    @Body() body: CreateInteractionRequest,
+    @User() user: JwtUser,
+    @Body() body: CreateInteractionRequest
   ): Promise<InteractionResponse> {
     await this.minioService.createBucketIfNotExists();
 
@@ -153,7 +153,7 @@ export class GnomesController {
       fileUrl = await this.minioService.getFileUrl(filePath);
     } else {
       fileUrl = await this.minioService.getFileUrl(
-        `defaultGnomePictures/${gnomeName}.jpg`,
+        `defaultGnomePictures/${gnomeName}.jpg`
       );
     }
 
@@ -164,12 +164,12 @@ export class GnomesController {
           member.userId,
           body.interactionDate,
           body.gnomeId,
-          fileUrl,
+          fileUrl
         );
       });
       const resolvedInteractions = await Promise.all(interactions);
       const filteredInteractions = resolvedInteractions.filter(
-        (interaction) => interaction.userId === user.id,
+        (interaction) => interaction.userId === user.id
       );
       return filteredInteractions[0];
     }
@@ -178,7 +178,7 @@ export class GnomesController {
       user.id,
       body.interactionDate,
       body.gnomeId,
-      fileUrl,
+      fileUrl
     );
 
     return interaction;

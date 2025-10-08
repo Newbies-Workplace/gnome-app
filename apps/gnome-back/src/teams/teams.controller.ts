@@ -1,13 +1,12 @@
-import { JWTUser } from "@/auth/jwt/JWTUser";
-import { JwtGuard } from "@/auth/jwt/jwt.guard";
-import { User } from "@/auth/jwt/jwtuser.decorator";
+import { JwtUser } from "@/auth/types/jwt-user";
+import { JwtGuard } from "@/auth/guards/jwt.guard";
+import { User } from "@/auth/decorators/jwt-user.decorator";
 import {
   BadRequestException,
   Body,
   Controller,
   Delete,
   Get,
-  NotFoundException,
   Param,
   Post,
   Put,
@@ -23,7 +22,7 @@ export class TeamsController {
 
   @Get("@me") // GET /teams/@me
   @UseGuards(JwtGuard)
-  async getMyTeam(@User() user: JWTUser): Promise<TeamResponse> {
+  async getMyTeam(@User() user: JwtUser): Promise<TeamResponse> {
     const getTeam = await this.teamsService.getTeamWithMemberId(user.id);
 
     return getTeam;
@@ -41,12 +40,12 @@ export class TeamsController {
   @UseGuards(JwtGuard)
   async create(
     @Body() team: { members: string[] },
-    @User() user: JWTUser,
+    @User() user: JwtUser
   ): Promise<TeamResponse> {
     const leaderId = user.id;
     const createTeam = await this.teamsService.createTeam(
       leaderId,
-      team.members,
+      team.members
     );
 
     return createTeam;
@@ -54,7 +53,7 @@ export class TeamsController {
 
   @Delete(":id") // DELETE /teams/:id
   @UseGuards(JwtGuard)
-  async deleteTeam(@User() user: JWTUser, @Param("id") teamId: string) {
+  async deleteTeam(@User() user: JwtUser, @Param("id") teamId: string) {
     await this.teamsService.getTeam(teamId);
     await this.teamsService.deleteTeam(user.id, teamId);
     return { message: "Team usunięty" };
@@ -63,16 +62,16 @@ export class TeamsController {
   @Put(":id") // PUT /teams/:id
   @UseGuards(JwtGuard)
   async updateTeam(
-    @User() user: JWTUser,
+    @User() user: JwtUser,
     @Param("id") teamId: string,
-    @Body() body: { newLeaderId?: string; newMemberIds?: string[] },
+    @Body() body: { newLeaderId?: string; newMemberIds?: string[] }
   ) {
     await this.teamsService.getTeam(teamId);
     await this.teamsService.updateTeam(
       user.id,
       teamId,
       body.newLeaderId,
-      body.newMemberIds,
+      body.newMemberIds
     );
     if (body.newLeaderId == null && body.newMemberIds == null) {
       throw new BadRequestException("Nic do zaaktualizowania");

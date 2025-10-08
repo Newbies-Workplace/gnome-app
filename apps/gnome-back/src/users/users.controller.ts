@@ -1,6 +1,6 @@
-import { JWTUser } from "@/auth/jwt/JWTUser";
-import { JwtGuard } from "@/auth/jwt/jwt.guard";
-import { User } from "@/auth/jwt/jwtuser.decorator";
+import { JwtUser } from "@/auth/types/jwt-user";
+import { JwtGuard } from "@/auth/guards/jwt.guard";
+import { User } from "@/auth/decorators/jwt-user.decorator";
 import { MinioService } from "@/minio/minio.service";
 import { UsersService } from "@/users/users.service";
 import {
@@ -30,12 +30,12 @@ import { UserPatchResponse } from "@repo/shared/responses";
 export class UsersController {
   constructor(
     private readonly usersService: UsersService,
-    private readonly minioService?: MinioService,
+    private readonly minioService?: MinioService
   ) {}
 
   @Get("@me") // moj profil
   @UseGuards(JwtGuard)
-  async getMe(@User() user: JWTUser): Promise<PrismaUser> {
+  async getMe(@User() user: JwtUser): Promise<PrismaUser> {
     return this.usersService.findUserById(user.id);
   }
 
@@ -43,7 +43,7 @@ export class UsersController {
   @UseInterceptors(FileInterceptor("file"))
   @UseGuards(JwtGuard)
   async changeUserData(
-    @User() user: JWTUser,
+    @User() user: JwtUser,
     @Body() body: UserUpdate,
     @UploadedFile(
       new ParseFilePipe({
@@ -52,9 +52,9 @@ export class UsersController {
           new MaxFileSizeValidator({ maxSize: 10_000_000 }), // 10MB
           new FileTypeValidator({ fileType: "image/jpeg" }),
         ],
-      }),
+      })
     )
-    file?: Express.Multer.File,
+    file?: Express.Multer.File
   ): Promise<UserPatchResponse> {
     if (body.name == null && !file) {
       throw new BadRequestException("Nic do zaaktualizowania");
@@ -72,7 +72,7 @@ export class UsersController {
     const changeProfile = await this.usersService.changeUserData(
       user.id,
       body.name,
-      fileUrl,
+      fileUrl
     );
 
     return changeProfile;
