@@ -1,6 +1,7 @@
 services:
   minio:
-    image: docker.io/bitnami/minio:2022
+    image: docker.io/minio/minio:RELEASE.2022-12-12T19-27-27Z
+    command: server /data --console-address ":9001"
     environment:
       MINIO_ROOT_USER: minio
       MINIO_ROOT_PASSWORD: supersecret
@@ -18,11 +19,10 @@ services:
       POSTGRES_PASSWORD: gnome
     ports:
       - "5432:5432"
-#    volumes:
-#      - gnome-db-data:/var/lib/postgresql/data
+    volumes:
+      - gnome-db-data:/var/lib/postgresql/data
 
-#volumes:
-#  gnome-db-data:
 volumes:
+  gnome-db-data:
   minio_data:
     driver: local
