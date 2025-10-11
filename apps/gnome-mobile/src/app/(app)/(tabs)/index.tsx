@@ -288,7 +288,7 @@ const MapScreen = () => {
         ))}
       </MapView>
 
-      <View className="absolute bottom-0 left-0 right-0 p-4 bg-transparent">
+      <View className="absolute bottom-12 left-0 right-0 p-4 bg-transparent">
         {distance !== undefined &&
           (distance > MIN_REACHED_DISTANCE &&
           distance <= MIN_TRACKER_DISTANCE ? (

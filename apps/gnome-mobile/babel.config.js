@@ -8,5 +8,8 @@ module.exports = (api) => {
       ],
       "nativewind/babel",
     ],
+    plugins: [
+      "react-native-worklets/plugin", // has to be last
+    ],
   };
 };

@@ -14,14 +14,14 @@ const HomeTabs = () => {
   return (
     <Tab.Navigator
       screenOptions={({ route, navigation }) => {
+        const focused = navigation.isFocused();
+
         return {
-          tabBarLabel: navigation.isFocused() ? route.name : "",
+          tabBarLabel: focused ? route.name : "",
           tabBarStyle: styles.tabBarStyle,
           tabBarLabelPosition: "beside-icon",
           tabBarActiveTintColor: "#FFFFFF",
-          tabBarItemStyle: navigation.isFocused()
-            ? styles.activeTab
-            : styles.inactiveTab,
+          tabBarItemStyle: focused ? styles.activeTab : styles.inactiveTab,
         };
       }}
     >
@@ -75,7 +75,6 @@ const styles = StyleSheet.create({
   tabBarStyle: {
     elevation: 0,
     position: "absolute",
-    bottom: 10,
     marginHorizontal: 10,
     borderRadius: 20,
 

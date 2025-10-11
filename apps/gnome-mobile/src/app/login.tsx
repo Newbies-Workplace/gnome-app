@@ -44,7 +44,7 @@ export default function SignInScreen() {
   };
 
   return (
-    <SafeAreaView className="flex-1 justify-end">
+    <SafeAreaView className="flex-1 justify-end bg-background">
       <Image
         source={require("@/assets/images/bgmax.png")}
         className="w-full h-full flex-1 object-cover"
