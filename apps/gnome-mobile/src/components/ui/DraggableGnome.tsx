@@ -1,10 +1,16 @@
+import DraggerIcon from "@/assets/icons/dragger.svg";
+import LockIcon from "@/assets/icons/lock.svg";
+import MadGnomeIcon from "@/assets/icons/mad-gnome.svg";
 import React, { useRef, useState } from "react";
-import { Image, PanResponder, View, useWindowDimensions } from "react-native";
+import { PanResponder, View, useWindowDimensions } from "react-native";
 
-const DraggableGnome = ({ onUnlock }) => {
+type DraggableGnomeProps = {
+  onUnlock: () => void;
+};
+
+const DraggableGnome: React.FC<DraggableGnomeProps> = ({ onUnlock }) => {
   const { width } = useWindowDimensions();
   const trackWidth = width * 0.9;
-  const trackHeight = 70;
   const gnomeWidth = 100;
   const gnomeHeight = 63;
   const startX = -trackWidth / 2 + gnomeWidth / 2;
@@ -31,23 +37,20 @@ const DraggableGnome = ({ onUnlock }) => {
   return (
     <View className="flex-1 justify-end items-center pb-10">
       <View className="flex-row items-center bg-background rounded-full relative h-[70px] w-full">
-        <Image
-          source={require("@/assets/icons/middle_dragger.png")}
+        <DraggerIcon
           style={{
             width: 232,
             height: 11,
             left: trackWidth / 2 - 116,
           }}
         />
-        <Image
-          source={require("@/assets/icons/lock.png")}
-          className="absolute w-[50px] h-[50px]"
-          style={{ right: 10 }}
-        />
+        <View className="absolute right-[10px]">
+          <LockIcon width={40} height={40} />
+        </View>
       </View>
-      <Image
+
+      <View
         {...pan.panHandlers}
-        source={require("@/assets/icons/mad-gnome.png")}
         className="absolute w-[100px] h-[63px]"
         style={{
           transform: [
@@ -55,7 +58,9 @@ const DraggableGnome = ({ onUnlock }) => {
             { translateY: -gnomeHeight / 2 - 6 },
           ],
         }}
-      />
+      >
+        <MadGnomeIcon />
+      </View>
     </View>
   );
 };

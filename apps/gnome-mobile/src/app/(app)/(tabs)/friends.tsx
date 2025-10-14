@@ -1,8 +1,7 @@
 import AddUser from "@/assets/icons/add-user.svg";
 import Mushroom from "@/assets/icons/mushroom.svg";
 import { Text } from "@/components/ui/text";
-import { useNavigation } from "@react-navigation/native";
-import { useRouter } from "expo-router";
+import { useNavigation, useRouter } from "expo-router";
 import React, { useEffect } from "react";
 import { FlatList, Image, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";

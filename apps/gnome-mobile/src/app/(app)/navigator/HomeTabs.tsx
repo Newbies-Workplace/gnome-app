@@ -26,7 +26,7 @@ const HomeTabs = () => {
       >
         <View
           className={
-            "flex-row justify-between bg-background m-2 p-2 rounded-3xl"
+            "flex-row justify-between bg-background m-2 mx-4 p-2 rounded-3xl"
           }
         >
           <TabTrigger name={"Główna"} href={"/"} asChild>

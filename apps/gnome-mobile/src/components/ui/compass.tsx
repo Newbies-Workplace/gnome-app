@@ -43,7 +43,6 @@ const EXTENDED_MARKERS = [...MARKERS, ...MARKERS, ...MARKERS];
 
 const Compass: React.FC = () => {
   const translateX = useRef(new Animated.Value(0)).current;
-  const [angle, setAngle] = useState(0);
 
   useEffect(() => {
     setUpdateIntervalForType(SensorTypes.magnetometer, 200);
@@ -52,8 +51,6 @@ const Compass: React.FC = () => {
       if (x !== 0 && y !== 0) {
         let newAngle = Math.atan2(y, x) * (180 / Math.PI);
         newAngle = newAngle < 0 ? newAngle + 360 : newAngle; // Normalizacja do 0-360°
-
-        setAngle(newAngle);
 
         // Poprawione przesunięcie, aby "N" było na środku
         const compassPosition = ((180 - newAngle) / 360) * COMPASS_WIDTH;

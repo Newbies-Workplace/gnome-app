@@ -12,6 +12,7 @@ import { Text } from "@/components/ui/text";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useGnomeStore } from "@/store/useGnomeStore";
 import { GnomeResponse } from "@repo/shared/responses";
+import { LinearGradient } from "expo-linear-gradient";
 import * as Location from "expo-location";
 import { useRouter } from "expo-router";
 import { getDistance } from "geolib";
@@ -231,6 +232,13 @@ const MapScreen = () => {
     }
   }, [userLocation, gnomes]);
 
+  const isGnomeTrackerVisible =
+    distance !== undefined &&
+    distance > MIN_REACHED_DISTANCE &&
+    distance <= MIN_TRACKER_DISTANCE;
+  const isGnomeCatcherVisible =
+    distance !== undefined && distance <= MIN_REACHED_DISTANCE;
+
   return (
     <SafeAreaView className="flex-1">
       <View className="absolute top-10 left-1/2 -translate-x-1/2 px-10 gap-2 z-10">
@@ -289,17 +297,22 @@ const MapScreen = () => {
         ))}
       </MapView>
 
-      <View className="absolute bottom-12 left-0 right-0 p-4 bg-transparent">
-        {distance !== undefined &&
-          (distance > MIN_REACHED_DISTANCE &&
-          distance <= MIN_TRACKER_DISTANCE ? (
-            <DistanceTracker distance={distance} showDistanceTracker={true} />
-          ) : distance <= MIN_REACHED_DISTANCE ? (
-            <DraggableGnome
-              onUnlock={() => navigate(`/camera?gnomeid=${closestGnomeId}`)}
-            />
-          ) : null)}
+      <View className="absolute bottom-12 left-0 right-0 p-4 bg-transparent z-10">
+        {isGnomeTrackerVisible && <DistanceTracker distance={distance} />}
+        {isGnomeCatcherVisible && (
+          <DraggableGnome
+            onUnlock={() => navigate(`/camera?gnomeid=${closestGnomeId}`)}
+          />
+        )}
       </View>
+
+      {isGnomeCatcherVisible && (
+        <LinearGradient
+          className={"absolute bottom-0 left-0 right-0 h-[130px]"}
+          end={{ x: 0.5, y: 0.75 }}
+          colors={["transparent", "hsl(359 63.4% 56.1%)"]}
+        />
+      )}
     </SafeAreaView>
   );
 };
