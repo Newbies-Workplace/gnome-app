@@ -24,6 +24,7 @@ import {
   View,
 } from "react-native";
 import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 // Maksymalna odległość w metrach
 const MAX_GNOME_RENDER_DISTANCE = 400;
@@ -231,7 +232,7 @@ const MapScreen = () => {
   }, [userLocation, gnomes]);
 
   return (
-    <View className="flex-1">
+    <SafeAreaView className="flex-1">
       <View className="absolute top-10 left-1/2 -translate-x-1/2 px-10 gap-2 z-10">
         {user && (
           <HeaderControls
@@ -257,9 +258,9 @@ const MapScreen = () => {
         showsMyLocationButton={false}
         rotateEnabled={true}
         mapPadding={{
-          top: 60,
+          top: 100,
           right: 5,
-          bottom: 60,
+          bottom: 160,
           left: 5,
         }}
         minZoomLevel={17}
@@ -299,7 +300,7 @@ const MapScreen = () => {
             />
           ) : null)}
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 

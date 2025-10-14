@@ -36,12 +36,10 @@ const Collection = () => {
   }, []);
 
   return (
-    <SafeAreaView
-      className={"flex-1 bg-background"}
-      edges={["left", "right", "bottom"]}
-    >
+    <SafeAreaView className={"flex-1 bg-background"}>
       <FlatList
         data={gnomes}
+        contentContainerClassName={"bg-background"}
         keyExtractor={(item) => item.id?.toString()}
         numColumns={3}
         renderItem={({ item }) => {

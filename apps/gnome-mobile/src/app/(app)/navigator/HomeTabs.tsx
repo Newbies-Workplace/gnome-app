@@ -1,95 +1,85 @@
 import NavFriendsIcon from "@/assets/icons/NavFriends.svg";
 import NavHomeIcon from "@/assets/icons/NavHome.svg";
 import NavMushroomIcon from "@/assets/icons/NavMushroom.svg";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { Text } from "@/components/ui/text";
+import { cn } from "@/lib/utils";
+import {
+  TabList,
+  TabSlot,
+  TabTrigger,
+  TabTriggerSlotProps,
+  Tabs,
+} from "expo-router/ui";
 import React from "react";
-import { StyleSheet } from "react-native";
-import Collection from "../(tabs)/collection";
-import Friends from "../(tabs)/friends";
-import Home from "../(tabs)/index";
-
-const Tab = createBottomTabNavigator();
+import { Pressable, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import type { SvgProps } from "react-native-svg";
 
 const HomeTabs = () => {
   return (
-    <Tab.Navigator
-      screenOptions={({ route, navigation }) => {
-        const focused = navigation.isFocused();
+    <Tabs>
+      <TabSlot />
 
-        return {
-          tabBarLabel: focused ? route.name : "",
-          tabBarStyle: styles.tabBarStyle,
-          tabBarLabelPosition: "beside-icon",
-          tabBarActiveTintColor: "#FFFFFF",
-          tabBarItemStyle: focused ? styles.activeTab : styles.inactiveTab,
-        };
-      }}
-    >
-      <Tab.Screen
-        name="Główna"
-        component={Home}
-        options={{
-          headerShown: false,
-          tabBarIcon: ({ color, size = 25, focused }) => (
-            <NavHomeIcon
-              height={size}
-              width={size}
-              color={focused ? "#FFF" : color}
-            />
-          ),
-        }}
-      />
-      <Tab.Screen
-        name="Kolekcja"
-        component={Collection}
-        options={{
-          headerShown: false,
-          tabBarIcon: ({ color, size = 25, focused }) => (
-            <NavMushroomIcon
-              height={size}
-              width={size}
-              color={focused ? "#FFF" : color}
-            />
-          ),
-        }}
-      />
-      <Tab.Screen
-        name="Znajomi"
-        component={Friends}
-        options={{
-          headerShown: false,
-          tabBarIcon: ({ color, size = 25, focused }) => (
-            <NavFriendsIcon
-              height={size}
-              width={size}
-              color={focused ? "#FFF" : color}
-            />
-          ),
-        }}
-      />
-    </Tab.Navigator>
+      <SafeAreaView
+        edges={["bottom"]}
+        className={"absolute bottom-0 left-0 w-full"}
+      >
+        <View
+          className={
+            "flex-row justify-between bg-background m-2 p-2 rounded-3xl"
+          }
+        >
+          <TabTrigger name={"Główna"} href={"/"} asChild>
+            <TabButton Icon={NavHomeIcon}>Główna</TabButton>
+          </TabTrigger>
+
+          <TabTrigger name={"Kolekcja"} href={"/collection"} asChild>
+            <TabButton Icon={NavMushroomIcon}>Kolekcja</TabButton>
+          </TabTrigger>
+
+          <TabTrigger name={"Znajomi"} href={"/friends"} asChild>
+            <TabButton Icon={NavFriendsIcon}>Znajomi</TabButton>
+          </TabTrigger>
+        </View>
+      </SafeAreaView>
+
+      <TabList style={{ display: "none" }}>
+        <TabTrigger name={"Główna"} href={"/"} />
+        <TabTrigger name={"Kolekcja"} href={"/collection"} />
+        <TabTrigger name={"Znajomi"} href={"/friends"} />
+      </TabList>
+    </Tabs>
   );
 };
 
-const styles = StyleSheet.create({
-  tabBarStyle: {
-    elevation: 0,
-    position: "absolute",
-    marginHorizontal: 10,
-    borderRadius: 20,
+export type TabButtonProps = TabTriggerSlotProps & {
+  Icon?: React.FC<SvgProps>;
+};
 
-    backgroundColor: "#222",
-    borderTopWidth: 0,
-  },
-  activeTab: {
-    backgroundColor: "#D6484A",
-    borderRadius: 12,
-    margin: 8,
-  },
-  inactiveTab: {
-    borderRadius: 12,
-    margin: 8,
-  },
-});
+function TabButton({ Icon, children, isFocused, ...props }: TabButtonProps) {
+  return (
+    <Pressable
+      {...props}
+      className={cn(
+        "rounded-2xl p-2 gap-2 items-center bg-background w-1/3",
+        isFocused && "bg-primary",
+      )}
+    >
+      <View
+        className={cn(
+          "w-full flex-row gap-2 items-center justify-center",
+          !isFocused && "w-full",
+        )}
+      >
+        {/* @ts-ignore */}
+        <Icon height={25} width={25} color={"#fff"} />
+
+        {isFocused && (
+          <Text className={"text-white font-bold"}>{children}</Text>
+        )}
+      </View>
+    </Pressable>
+  );
+}
 
 export default HomeTabs;

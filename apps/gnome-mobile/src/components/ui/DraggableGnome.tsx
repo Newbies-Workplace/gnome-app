@@ -30,18 +30,13 @@ const DraggableGnome = ({ onUnlock }) => {
 
   return (
     <View className="flex-1 justify-end items-center pb-10">
-      <View
-        className="flex-row items-center bg-background rounded-full relative"
-        style={{ width: trackWidth, height: trackHeight }}
-      >
+      <View className="flex-row items-center bg-background rounded-full relative h-[70px] w-full">
         <Image
           source={require("@/assets/icons/middle_dragger.png")}
-          className="absolute"
           style={{
             width: 232,
             height: 11,
             left: trackWidth / 2 - 116,
-            top: trackHeight / 2 - 5.5,
           }}
         />
         <Image
