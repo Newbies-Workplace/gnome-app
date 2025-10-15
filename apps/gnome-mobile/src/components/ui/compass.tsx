@@ -1,8 +1,8 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import { Animated, Dimensions, StyleSheet, View } from "react-native";
 import {
-  SensorTypes,
   magnetometer,
+  SensorTypes,
   setUpdateIntervalForType,
 } from "react-native-sensors";
 import Svg, { Text as SvgText } from "react-native-svg";
@@ -86,6 +86,7 @@ const Compass: React.FC = () => {
 
             return (
               <SvgText
+                // biome-ignore lint/suspicious/noArrayIndexKey: finite number of markers
                 key={i}
                 x={position % (COMPASS_WIDTH * 3)}
                 y={isMainDirection ? 28 : 25}

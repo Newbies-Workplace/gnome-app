@@ -1,19 +1,19 @@
-import NavFriendsIcon from "@/assets/icons/NavFriends.svg";
-import NavHomeIcon from "@/assets/icons/NavHome.svg";
-import NavMushroomIcon from "@/assets/icons/NavMushroom.svg";
-import { Text } from "@/components/ui/text";
-import { cn } from "@/lib/utils";
 import {
   TabList,
   TabSlot,
+  Tabs,
   TabTrigger,
   TabTriggerSlotProps,
-  Tabs,
 } from "expo-router/ui";
 import React from "react";
 import { Pressable, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import type { SvgProps } from "react-native-svg";
+import NavFriendsIcon from "@/assets/icons/NavFriends.svg";
+import NavHomeIcon from "@/assets/icons/NavHome.svg";
+import NavMushroomIcon from "@/assets/icons/NavMushroom.svg";
+import { Text } from "@/components/ui/text";
+import { cn } from "@/lib/utils";
 
 const HomeTabs = () => {
   return (

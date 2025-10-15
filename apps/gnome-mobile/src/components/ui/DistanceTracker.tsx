@@ -1,5 +1,5 @@
 import React from "react";
-import { Image, Text, View, useWindowDimensions } from "react-native";
+import { Image, Text, useWindowDimensions, View } from "react-native";
 
 type DistanceTrackerProps = {
   distance: number;

@@ -1,6 +1,3 @@
-import { JWTUser } from "@/auth/jwt/JWTUser";
-import { JwtGuard } from "@/auth/jwt/jwt.guard";
-import { User } from "@/auth/jwt/jwtuser.decorator";
 import {
   Body,
   Controller,
@@ -23,6 +20,9 @@ import {
   FriendsResponse,
   UserResponse,
 } from "@repo/shared/responses";
+import { JWTUser } from "@/auth/jwt/JWTUser";
+import { JwtGuard } from "@/auth/jwt/jwt.guard";
+import { User } from "@/auth/jwt/jwtuser.decorator";
 import { FriendsService } from "./friends.service";
 
 @Controller("friends")

@@ -1,10 +1,9 @@
 "use client";
 
-import { LatLngLiteral, icon } from "leaflet";
+import { icon, LatLngLiteral } from "leaflet";
 import React, { useState } from "react";
-import { MapContainer, TileLayer, useMapEvents } from "react-leaflet";
-// @ts-ignore
-import { Marker } from "react-leaflet";
+// @ts-expect-error
+import { MapContainer, Marker, TileLayer, useMapEvents } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import { cn } from "../../lib/utils.ts";
 

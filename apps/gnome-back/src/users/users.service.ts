@@ -1,7 +1,7 @@
-import { GoogleUser } from "@/auth/types/GoogleUser";
-import { PrismaService } from "@/db/prisma.service";
 import { Injectable } from "@nestjs/common";
 import { Friendship, Gnome, GnomeInteraction, User } from "@prisma/client";
+import { GoogleUser } from "@/auth/types/GoogleUser";
+import { PrismaService } from "@/db/prisma.service";
 
 @Injectable()
 export class UsersService {

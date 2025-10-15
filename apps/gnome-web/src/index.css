@@ -1,5 +1,6 @@
 @import "tailwindcss";
 
 body {
+  /* biome-ignore lint/suspicious/noUnknownAtRules: tailwind */
   @apply bg-[#444] text-[#fff] m-0 p-0;
 }

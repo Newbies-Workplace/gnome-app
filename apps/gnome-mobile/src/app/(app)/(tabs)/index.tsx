@@ -1,16 +1,3 @@
-import FriendIcon from "@/assets/icons/add-friend.svg";
-import LocationOffIcon from "@/assets/icons/location-off.svg";
-import TeamIcon from "@/assets/icons/team.svg";
-import GnomePin from "@/assets/images/GnomePin.svg";
-import GnomePinCatch from "@/assets/images/GnomePinCatch.svg";
-import { MapStyle } from "@/components/map-styles";
-import DistanceTracker from "@/components/ui/DistanceTracker";
-import DraggableGnome from "@/components/ui/DraggableGnome";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import Compass from "@/components/ui/compass";
-import { Text } from "@/components/ui/text";
-import { useAuthStore } from "@/store/useAuthStore";
-import { useGnomeStore } from "@/store/useGnomeStore";
 import { GnomeResponse } from "@repo/shared/responses";
 import { LinearGradient } from "expo-linear-gradient";
 import * as Location from "expo-location";
@@ -26,6 +13,19 @@ import {
 } from "react-native";
 import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
 import { SafeAreaView } from "react-native-safe-area-context";
+import FriendIcon from "@/assets/icons/add-friend.svg";
+import LocationOffIcon from "@/assets/icons/location-off.svg";
+import TeamIcon from "@/assets/icons/team.svg";
+import GnomePin from "@/assets/images/GnomePin.svg";
+import GnomePinCatch from "@/assets/images/GnomePinCatch.svg";
+import { MapStyle } from "@/components/map-styles";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import Compass from "@/components/ui/compass";
+import DistanceTracker from "@/components/ui/DistanceTracker";
+import DraggableGnome from "@/components/ui/DraggableGnome";
+import { Text } from "@/components/ui/text";
+import { useAuthStore } from "@/store/useAuthStore";
+import { useGnomeStore } from "@/store/useGnomeStore";
 
 // Maksymalna odległość w metrach
 const MAX_GNOME_RENDER_DISTANCE = 400;

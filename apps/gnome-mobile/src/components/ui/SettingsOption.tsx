@@ -1,7 +1,7 @@
-import ArrowRight from "@/assets/icons/arrow-right.svg";
-import { Text } from "@/components/ui/text";
 import type React from "react";
 import { TouchableOpacity, View } from "react-native";
+import ArrowRight from "@/assets/icons/arrow-right.svg";
+import { Text } from "@/components/ui/text";
 
 interface SettingsOptionProps {
   text: string;

@@ -1,10 +1,10 @@
+import { useNavigation, useRouter } from "expo-router";
+import { useEffect } from "react";
+import { FlatList, Image, TouchableOpacity, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import AddUser from "@/assets/icons/add-user.svg";
 import Mushroom from "@/assets/icons/mushroom.svg";
 import { Text } from "@/components/ui/text";
-import { useNavigation, useRouter } from "expo-router";
-import React, { useEffect } from "react";
-import { FlatList, Image, TouchableOpacity, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 
 const friendsData = [
   {
@@ -31,7 +31,11 @@ const FriendItem = ({
   name,
   avatar,
   score,
-}: { name: string; avatar: string; score: string }) => (
+}: {
+  name: string;
+  avatar: string;
+  score: string;
+}) => (
   <View className="px-4 flex flex-row items-center justify-between py-2">
     <View className="flex flex-row items-center">
       <Image source={{ uri: avatar }} className="w-10 h-10 rounded-full mr-4" />

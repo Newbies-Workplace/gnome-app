@@ -1,8 +1,8 @@
+import React, { useRef, useState } from "react";
+import { PanResponder, useWindowDimensions, View } from "react-native";
 import DraggerIcon from "@/assets/icons/dragger.svg";
 import LockIcon from "@/assets/icons/lock.svg";
 import MadGnomeIcon from "@/assets/icons/mad-gnome.svg";
-import React, { useRef, useState } from "react";
-import { PanResponder, View, useWindowDimensions } from "react-native";
 
 type DraggableGnomeProps = {
   onUnlock: () => void;

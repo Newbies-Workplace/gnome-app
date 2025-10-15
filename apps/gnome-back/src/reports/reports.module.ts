@@ -1,5 +1,5 @@
-import { MinioModule } from "@/minio/minio.module";
 import { Module } from "@nestjs/common";
+import { MinioModule } from "@/minio/minio.module";
 import { ReportsController } from "./reports.controller";
 import { ReportsService } from "./reports.service";
 

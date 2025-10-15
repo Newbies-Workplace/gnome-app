@@ -25,9 +25,10 @@ const Navbar = () => {
             className="w-1/4 h-full flex justify-center items-center no-underline"
           >
             <section
+              // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
               key={index}
               className={cn(
-                `w-full h-full flex justify-center items-center bg-[#444] text-[#dadada] rounded-t-[15px]`,
+                "w-full h-full flex justify-center items-center bg-[#444] text-[#dadada] rounded-t-[15px]",
                 `${
                   isActive ||
                   (

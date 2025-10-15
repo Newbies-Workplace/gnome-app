@@ -1,10 +1,10 @@
+import { useNavigation, useRouter } from "expo-router";
+import { useEffect } from "react";
+import { FlatList, Text, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import LoadingScreen from "@/components/LoadingScreen";
 import { GnomeCard } from "@/components/ui/GnomeCard";
 import { useGnomeStore } from "@/store/useGnomeStore";
-import { useNavigation, useRouter } from "expo-router";
-import React, { useEffect } from "react";
-import { FlatList, Text, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 
 const Collection = () => {
   const { gnomes, fetchGnomes, interactions, fetchMyInteractions, error } =

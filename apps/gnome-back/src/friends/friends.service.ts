@@ -1,5 +1,3 @@
-import { PrismaService } from "@/db/prisma.service";
-import { GnomesService } from "@/gnomes/gnomes.service";
 import {
   BadRequestException,
   Injectable,
@@ -7,6 +5,8 @@ import {
 } from "@nestjs/common";
 import { Friendship } from "@prisma/client";
 import { FriendSearchResponse, FriendsResponse } from "@repo/shared/responses";
+import { PrismaService } from "@/db/prisma.service";
+import { GnomesService } from "@/gnomes/gnomes.service";
 
 @Injectable()
 export class FriendsService {

@@ -21,7 +21,7 @@ const AddInfoPage: React.FC = () => {
         />
       </div>
 
-      <div className="bg-[#333] w-49/50 h-48/50 rounded-br-[15px] rounded-bl-[15px] rounded-tr-[15px] rounded-tl-[15px] absolute top-5 mb-5  transform -z-1"></div>
+      <div className="bg-[#333] w-49/50 h-48/50 rounded-br-[15px] rounded-bl-[15px] rounded-tr-[15px] rounded-tl-[15px] absolute top-5 mb-5  transform -z-1" />
     </div>
   );
 };

@@ -1,8 +1,8 @@
-import { GnomesService } from "@/lib/api/Gnomes.service";
-import { axiosInstance } from "@/lib/api/axios";
-import { useAuthStore } from "@/store/useAuthStore";
 import { GnomeResponse, InteractionResponse } from "@repo/shared/responses";
 import { create } from "zustand";
+import { axiosInstance } from "@/lib/api/axios";
+import { GnomesService } from "@/lib/api/Gnomes.service";
+import { useAuthStore } from "@/store/useAuthStore";
 
 interface GnomeState {
   gnomes: GnomeResponse[];
@@ -70,6 +70,7 @@ export const useGnomeStore = create<GnomeState>((set) => ({
       uri: photoUrl,
       name: "photo.jpg",
       type: "image/jpeg",
+      // biome-ignore lint/suspicious/noExplicitAny: no types needed
     } as any);
     form.append("interactionDate", interactionDate);
     form.append("gnomeId", gnomeId);

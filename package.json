@@ -1,7 +1,10 @@
 {
   "name": "gnome-app",
   "version": "1.0.0",
-  "workspaces": ["apps/*", "packages/*"],
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
   "private": true,
   "scripts": {
     "prepare": "husky",
@@ -11,7 +14,7 @@
     "lint:ci": "turbo run lint:ci"
   },
   "devDependencies": {
-    "@biomejs/biome": "1.9.4",
+    "@biomejs/biome": "2.2.4",
     "@types/leaflet": "^1.9.17",
     "husky": "9.1.7",
     "lint-staged": "15.2.11",

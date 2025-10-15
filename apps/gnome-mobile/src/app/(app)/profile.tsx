@@ -1,3 +1,8 @@
+import { useNavigation } from "@react-navigation/native";
+import { useRouter } from "expo-router";
+import { useEffect } from "react";
+import { Alert, Share, Text, TouchableOpacity, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import AchievementsIcon from "@/assets/icons/achievements.svg";
 import BackIcon from "@/assets/icons/arrow-left.svg";
 import FriendsIcon from "@/assets/icons/friends.svg";
@@ -6,20 +11,14 @@ import LogoutIcon from "@/assets/icons/log-out.svg";
 import QuestsIcon from "@/assets/icons/quests.svg";
 import SettingsIcon from "@/assets/icons/settings.svg";
 import ShareIcon from "@/assets/icons/share-right.svg";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
 import { GnomeCard } from "@/components/ui/GnomeCard";
 import {
   ProfileButton,
   ProfileButtonLogout,
 } from "@/components/ui/ProfileButton";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
 import { useAuthStore } from "@/store/useAuthStore";
-import { useNavigation } from "@react-navigation/native";
-import { useRouter } from "expo-router";
-import React from "react";
-import { useEffect } from "react";
-import { Alert, Share, Text, TouchableOpacity, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function ProfileScreen() {
   const { logout, user } = useAuthStore();
@@ -63,7 +62,7 @@ export default function ProfileScreen() {
           message: `Sprawdź profil użytkownika ${user.name}!`,
         });
       }
-    } catch (error) {
+    } catch (_ignored) {
       Alert.alert("Błąd", "Nie udało się udostępnić");
     }
   };
