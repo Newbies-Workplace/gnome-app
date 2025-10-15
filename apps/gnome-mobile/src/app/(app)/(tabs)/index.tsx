@@ -3,6 +3,7 @@ import LocationOffIcon from "@/assets/icons/location-off.svg";
 import TeamIcon from "@/assets/icons/team.svg";
 import GnomePin from "@/assets/images/GnomePin.svg";
 import GnomePinCatch from "@/assets/images/GnomePinCatch.svg";
+import { WelcomeBottomSheet } from "@/components/WelcomeBottomSheet";
 import { MapStyle } from "@/components/map-styles";
 import DistanceTracker from "@/components/ui/DistanceTracker";
 import DraggableGnome from "@/components/ui/DraggableGnome";
@@ -287,7 +288,6 @@ const MapScreen = () => {
           </Marker>
         ))}
       </MapView>
-
       <View className="absolute bottom-0 left-0 right-0 p-4 bg-transparent">
         {distance !== undefined &&
           (distance > MIN_REACHED_DISTANCE &&
@@ -299,6 +299,7 @@ const MapScreen = () => {
             />
           ) : null)}
       </View>
+      <WelcomeBottomSheet />
     </View>
   );
 };
