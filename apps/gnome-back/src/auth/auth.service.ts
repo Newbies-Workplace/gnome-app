@@ -1,9 +1,9 @@
-import { GoogleUser } from "@/auth/types/GoogleUser";
-import { PrismaService } from "@/db/prisma.service";
 import { BadRequestException, Injectable } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import { GoogleUserResponse } from "@repo/shared/responses";
 import { OAuth2Client } from "google-auth-library";
+import { GoogleUser } from "@/auth/types/GoogleUser";
+import { PrismaService } from "@/db/prisma.service";
 
 @Injectable()
 export class AuthService {

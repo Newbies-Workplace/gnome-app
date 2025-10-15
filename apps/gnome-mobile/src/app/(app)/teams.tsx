@@ -1,10 +1,10 @@
-import ArrowLeft from "@/assets/icons/arrow-left.svg";
-import { Text } from "@/components/ui/text";
 import { useNavigation } from "@react-navigation/native";
 import { useRouter } from "expo-router";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { FlatList, Image, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import ArrowLeft from "@/assets/icons/arrow-left.svg";
+import { Text } from "@/components/ui/text";
 
 const AddToTeamList = ({ users, onAdd }) => {
   return (
@@ -64,8 +64,6 @@ const TeamList = ({ users, onRemove }) => {
 
 export default function Teams() {
   const navigation = useNavigation();
-  const { push } = useRouter();
-
   const [teamMembers, setTeamMembers] = useState([
     {
       id: "4",

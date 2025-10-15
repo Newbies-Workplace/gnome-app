@@ -1,8 +1,7 @@
-import { useAuthStore } from "@/store/useAuthStore";
 import { FontAwesome } from "@expo/vector-icons";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import { useRouter } from "expo-router";
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import {
   Alert,
   Image,
@@ -12,6 +11,7 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useAuthStore } from "@/store/useAuthStore";
 
 export default function SignInScreen() {
   const { login } = useAuthStore();
@@ -44,7 +44,7 @@ export default function SignInScreen() {
   };
 
   return (
-    <SafeAreaView className="flex-1 justify-end">
+    <SafeAreaView className="flex-1 justify-end bg-background">
       <Image
         source={require("@/assets/images/bgmax.png")}
         className="w-full h-full flex-1 object-cover"

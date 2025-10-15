@@ -1,8 +1,3 @@
-import { JWTUser } from "@/auth/jwt/JWTUser";
-import { JwtGuard } from "@/auth/jwt/jwt.guard";
-import { User } from "@/auth/jwt/jwtuser.decorator";
-import { MinioService } from "@/minio/minio.service";
-import { UsersService } from "@/users/users.service";
 import {
   BadRequestException,
   Body,
@@ -25,6 +20,11 @@ import { FileInterceptor } from "@nestjs/platform-express";
 import { User as PrismaUser } from "@prisma/client";
 import { UserUpdate } from "@repo/shared/requests";
 import { UserPatchResponse } from "@repo/shared/responses";
+import { JWTUser } from "@/auth/jwt/JWTUser";
+import { JwtGuard } from "@/auth/jwt/jwt.guard";
+import { User } from "@/auth/jwt/jwtuser.decorator";
+import { MinioService } from "@/minio/minio.service";
+import { UsersService } from "@/users/users.service";
 
 @Controller("users")
 export class UsersController {

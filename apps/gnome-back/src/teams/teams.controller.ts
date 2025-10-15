@@ -1,6 +1,3 @@
-import { JWTUser } from "@/auth/jwt/JWTUser";
-import { JwtGuard } from "@/auth/jwt/jwt.guard";
-import { User } from "@/auth/jwt/jwtuser.decorator";
 import {
   BadRequestException,
   Body,
@@ -15,6 +12,9 @@ import {
   UseGuards,
 } from "@nestjs/common";
 import { TeamResponse } from "@repo/shared/responses";
+import { JWTUser } from "@/auth/jwt/JWTUser";
+import { JwtGuard } from "@/auth/jwt/jwt.guard";
+import { User } from "@/auth/jwt/jwtuser.decorator";
 import { TeamsService } from "./teams.service";
 
 @Controller("teams")

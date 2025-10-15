@@ -1,16 +1,16 @@
+import { useNavigation, useRoute } from "@react-navigation/native";
+import { GnomeResponse } from "@repo/shared/responses";
+import dayjs from "dayjs";
+import { useRouter } from "expo-router";
+import { useEffect, useMemo, useState } from "react";
+import { Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import ArrowLeft from "@/assets/icons/arrow-left.svg";
 import DateIcon from "@/assets/icons/date.svg";
 import FoundIcon from "@/assets/icons/found.svg";
 import { GnomeCard } from "@/components/ui/GnomeCard";
 import { GnomesService } from "@/lib/api/Gnomes.service";
 import { useGnomeStore } from "@/store/useGnomeStore";
-import { useNavigation, useRoute } from "@react-navigation/native";
-import { GnomeResponse } from "@repo/shared/responses";
-import dayjs from "dayjs";
-import { useRouter } from "expo-router";
-import React, { useEffect, useMemo, useState } from "react";
-import { Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 
 const GnomeDetail = () => {
   const route = useRoute();

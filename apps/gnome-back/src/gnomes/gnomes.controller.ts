@@ -1,10 +1,3 @@
-import { JWTUser } from "@/auth/jwt/JWTUser";
-import { JwtGuard } from "@/auth/jwt/jwt.guard";
-import { User } from "@/auth/jwt/jwtuser.decorator";
-import { MinioService } from "@/minio/minio.service";
-import { Role } from "@/role/role.decorator";
-import { RoleGuard } from "@/roleguard/role.guard";
-import { TeamsService } from "@/teams/teams.service";
 import {
   Body,
   Controller,
@@ -30,6 +23,13 @@ import {
   InteractionResponse,
 } from "@repo/shared/responses";
 import { Express } from "express";
+import { JWTUser } from "@/auth/jwt/JWTUser";
+import { JwtGuard } from "@/auth/jwt/jwt.guard";
+import { User } from "@/auth/jwt/jwtuser.decorator";
+import { MinioService } from "@/minio/minio.service";
+import { Role } from "@/role/role.decorator";
+import { RoleGuard } from "@/roleguard/role.guard";
+import { TeamsService } from "@/teams/teams.service";
 import { GnomesService } from "./gnomes.service";
 
 @Controller("gnomes")

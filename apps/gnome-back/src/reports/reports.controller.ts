@@ -1,13 +1,10 @@
-import { JWTUser } from "@/auth/jwt/JWTUser";
-import { JwtGuard } from "@/auth/jwt/jwt.guard";
-import { MinioService } from "@/minio/minio.service";
-import { Role } from "@/role/role.decorator";
-import { RoleGuard } from "@/roleguard/role.guard";
 import {
   Body,
   Controller,
   Delete,
+  FileTypeValidator,
   Get,
+  MaxFileSizeValidator,
   NotFoundException,
   Param,
   ParseFilePipe,
@@ -16,10 +13,14 @@ import {
   UseGuards,
   UseInterceptors,
 } from "@nestjs/common";
-import { FileTypeValidator, MaxFileSizeValidator } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { CreateReportRequest } from "@repo/shared/requests";
 import { ReportResponse } from "@repo/shared/responses";
+import { JWTUser } from "@/auth/jwt/JWTUser";
+import { JwtGuard } from "@/auth/jwt/jwt.guard";
+import { MinioService } from "@/minio/minio.service";
+import { Role } from "@/role/role.decorator";
+import { RoleGuard } from "@/roleguard/role.guard";
 import { ReportsService } from "./reports.service";
 @Controller("reports")
 export class ReportsController {
