@@ -242,6 +242,8 @@ const MapScreen = () => {
   return (
     <SafeAreaView className="flex-1">
       <View className="absolute top-10 left-1/2 -translate-x-1/2 px-10 gap-2 z-10">
+        <Compass />
+
         {user && (
           <HeaderControls
             user={user}
@@ -249,8 +251,6 @@ const MapScreen = () => {
             setErrorMsg={setErrorMsg}
           />
         )}
-
-        <Compass />
       </View>
 
       <MapView
