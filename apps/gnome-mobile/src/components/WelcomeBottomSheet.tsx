@@ -1,6 +1,7 @@
 import BottomSheet, { BottomSheetView } from "@gorhom/bottom-sheet";
 import React, { useCallback, useMemo, useRef } from "react";
 import { Text, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export const WelcomeBottomSheet = () => {
   const bottomSheetRef = useRef<BottomSheet>(null);
@@ -11,8 +12,8 @@ export const WelcomeBottomSheet = () => {
 
   return (
     <BottomSheet ref={bottomSheetRef} onChange={handleSheetChanges}>
-      <BottomSheetView>
-        <Text>Awesome 🎉</Text>
+      <BottomSheetView className="flex flex-col items-center p-5 z-10">
+        <Text>Witaj Kolego 🎉</Text>
       </BottomSheetView>
     </BottomSheet>
   );

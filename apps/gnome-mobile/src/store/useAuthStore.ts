@@ -1,9 +1,9 @@
-import { AuthService } from "@/lib/api/Auth.service";
-import { axiosInstance } from "@/lib/api/axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import type { UserResponse } from "@repo/shared/responses";
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
+import { AuthService } from "@/lib/api/Auth.service";
+import { axiosInstance } from "@/lib/api/axios";
 
 export interface AuthStore {
   user: UserResponse | null;

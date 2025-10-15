@@ -1,8 +1,8 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import { Animated, Dimensions, StyleSheet, View } from "react-native";
 import {
-  SensorTypes,
   magnetometer,
+  SensorTypes,
   setUpdateIntervalForType,
 } from "react-native-sensors";
 import Svg, { Text as SvgText } from "react-native-svg";
@@ -43,7 +43,6 @@ const EXTENDED_MARKERS = [...MARKERS, ...MARKERS, ...MARKERS];
 
 const Compass: React.FC = () => {
   const translateX = useRef(new Animated.Value(0)).current;
-  const [angle, setAngle] = useState(0);
 
   useEffect(() => {
     setUpdateIntervalForType(SensorTypes.magnetometer, 200);
@@ -52,8 +51,6 @@ const Compass: React.FC = () => {
       if (x !== 0 && y !== 0) {
         let newAngle = Math.atan2(y, x) * (180 / Math.PI);
         newAngle = newAngle < 0 ? newAngle + 360 : newAngle; // Normalizacja do 0-360°
-
-        setAngle(newAngle);
 
         // Poprawione przesunięcie, aby "N" było na środku
         const compassPosition = ((180 - newAngle) / 360) * COMPASS_WIDTH;
@@ -89,6 +86,7 @@ const Compass: React.FC = () => {
 
             return (
               <SvgText
+                // biome-ignore lint/suspicious/noArrayIndexKey: finite number of markers
                 key={i}
                 x={position % (COMPASS_WIDTH * 3)}
                 y={isMainDirection ? 28 : 25}

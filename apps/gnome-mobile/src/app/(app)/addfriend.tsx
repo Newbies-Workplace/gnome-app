@@ -1,10 +1,6 @@
-import ArrowLeft from "@/assets/icons/arrow-left.svg";
-import BackIcon from "@/assets/icons/arrow-left.svg";
-import SearchIcon from "@/assets/icons/search.svg";
-import { Text } from "@/components/ui/text";
 import { useNavigation } from "@react-navigation/native";
 import { useRouter } from "expo-router";
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   FlatList,
   Image,
@@ -13,8 +9,16 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import ArrowLeft from "@/assets/icons/arrow-left.svg";
+import BackIcon from "@/assets/icons/arrow-left.svg";
+import SearchIcon from "@/assets/icons/search.svg";
+import { Text } from "@/components/ui/text";
 
-const FriendsList = ({ friends }) => {
+type FriendsListProps = {
+  friends: { id: string; name: string; avatar?: string }[];
+};
+
+const FriendsList: React.FC<FriendsListProps> = ({ friends }) => {
   const navigation = useNavigation();
   const router = useRouter();
   //Header
@@ -66,7 +70,7 @@ export default function AddFriend() {
   const navigation = useNavigation();
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState("");
-  const [friends, setFriends] = useState([
+  const [friends, _setFriends] = useState([
     { id: "1", name: "EdwardJajko", avatar: "https://i.pravatar.cc/150?img=2" },
   ]);
 

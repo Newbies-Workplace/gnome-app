@@ -1,10 +1,10 @@
-import { PrismaService } from "@/db/prisma.service";
 import {
   BadRequestException,
   Injectable,
   NotFoundException,
 } from "@nestjs/common";
 import { Prisma, TeamMembership } from "@prisma/client";
+import { PrismaService } from "@/db/prisma.service";
 @Injectable()
 export class TeamsService {
   constructor(private readonly prisma: PrismaService) {}

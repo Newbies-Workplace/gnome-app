@@ -1,9 +1,9 @@
+import { Redirect } from "expo-router";
+import { SafeAreaView } from "react-native-safe-area-context";
 import HomeTabs from "@/app/(app)/navigator/HomeTabs";
 import LoadingScreen from "@/components/LoadingScreen";
+import { WelcomeBottomSheet } from "@/components/WelcomeBottomSheet";
 import { useAuthStore } from "@/store/useAuthStore";
-import { Redirect } from "expo-router";
-import { StatusBar } from "expo-status-bar";
-import React from "react";
 
 export default function AppLayout() {
   const { accessToken, isLoading } = useAuthStore();
@@ -17,9 +17,9 @@ export default function AppLayout() {
   }
 
   return (
-    <>
+    <SafeAreaView edges={[]} className={"flex-1 bg-background"}>
       <HomeTabs />
-      <StatusBar style="light" />
-    </>
+      <WelcomeBottomSheet />
+    </SafeAreaView>
   );
 }

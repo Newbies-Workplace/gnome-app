@@ -5,8 +5,8 @@
   "scripts": {
     "dev": "tsc --watch",
     "build": "tsc",
-    "lint": "biome check ./src --write",
-    "lint:ci": "biome ci ./src"
+    "lint": "npx @biomejs/biome check --write ./src",
+    "lint:ci": "npx @biomejs/biome ci ./src"
   },
   "exports": {
     "./responses": "./src/responses.ts",

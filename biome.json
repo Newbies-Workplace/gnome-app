@@ -1,7 +1,12 @@
 {
-  "$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
-  "organizeImports": {
-    "enabled": true
+  "$schema": "https://biomejs.dev/schemas/2.2.6/schema.json",
+  "root": true,
+  "assist": {
+    "actions": {
+      "source": {
+        "organizeImports": "on"
+      }
+    }
   },
   "javascript": {
     "parser": {
@@ -28,7 +33,8 @@
         "useAltText": "off",
         "useAnchorContent": "off",
         "useValidAnchor": "off",
-        "noLabelWithoutControl": "off"
+        "noLabelWithoutControl": "off",
+        "noStaticElementInteractions": "off"
       },
       "suspicious": {
         "noExplicitAny": "warn",
@@ -36,6 +42,7 @@
         "noAssignInExpressions": "warn"
       },
       "correctness": {
+        "useUniqueElementIds": "off",
         "useExhaustiveDependencies": "off",
         "useJsxKeyInIterable": "off",
         "noVoidElementsWithChildren": "off"

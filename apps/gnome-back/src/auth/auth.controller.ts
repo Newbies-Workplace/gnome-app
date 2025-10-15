@@ -1,6 +1,3 @@
-import { AuthService } from "@/auth/auth.service";
-import { GoogleAuthRequest } from "@/auth/dto/GoogleAuth.request";
-import { UsersService } from "@/users/users.service";
 import {
   Body,
   Controller,
@@ -12,6 +9,9 @@ import {
 } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import { GoogleUserResponse, UserResponse } from "@repo/shared/responses";
+import { AuthService } from "@/auth/auth.service";
+import { GoogleAuthRequest } from "@/auth/dto/GoogleAuth.request";
+import { UsersService } from "@/users/users.service";
 import { GoogleGuard } from "./google/google.guard";
 import { User } from "./jwt/jwtuser.decorator";
 

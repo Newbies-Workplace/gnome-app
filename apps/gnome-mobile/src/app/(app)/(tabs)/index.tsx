@@ -1,18 +1,5 @@
-import FriendIcon from "@/assets/icons/add-friend.svg";
-import LocationOffIcon from "@/assets/icons/location-off.svg";
-import TeamIcon from "@/assets/icons/team.svg";
-import GnomePin from "@/assets/images/GnomePin.svg";
-import GnomePinCatch from "@/assets/images/GnomePinCatch.svg";
-import { WelcomeBottomSheet } from "@/components/WelcomeBottomSheet";
-import { MapStyle } from "@/components/map-styles";
-import DistanceTracker from "@/components/ui/DistanceTracker";
-import DraggableGnome from "@/components/ui/DraggableGnome";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import Compass from "@/components/ui/compass";
-import { Text } from "@/components/ui/text";
-import { useAuthStore } from "@/store/useAuthStore";
-import { useGnomeStore } from "@/store/useGnomeStore";
 import { GnomeResponse } from "@repo/shared/responses";
+import { LinearGradient } from "expo-linear-gradient";
 import * as Location from "expo-location";
 import { useRouter } from "expo-router";
 import { getDistance } from "geolib";
@@ -25,6 +12,20 @@ import {
   View,
 } from "react-native";
 import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
+import { SafeAreaView } from "react-native-safe-area-context";
+import FriendIcon from "@/assets/icons/add-friend.svg";
+import LocationOffIcon from "@/assets/icons/location-off.svg";
+import TeamIcon from "@/assets/icons/team.svg";
+import GnomePin from "@/assets/images/GnomePin.svg";
+import GnomePinCatch from "@/assets/images/GnomePinCatch.svg";
+import { MapStyle } from "@/components/map-styles";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import Compass from "@/components/ui/compass";
+import DistanceTracker from "@/components/ui/DistanceTracker";
+import DraggableGnome from "@/components/ui/DraggableGnome";
+import { Text } from "@/components/ui/text";
+import { useAuthStore } from "@/store/useAuthStore";
+import { useGnomeStore } from "@/store/useGnomeStore";
 
 // Maksymalna odległość w metrach
 const MAX_GNOME_RENDER_DISTANCE = 400;
@@ -231,9 +232,18 @@ const MapScreen = () => {
     }
   }, [userLocation, gnomes]);
 
+  const isGnomeTrackerVisible =
+    distance !== undefined &&
+    distance > MIN_REACHED_DISTANCE &&
+    distance <= MIN_TRACKER_DISTANCE;
+  const isGnomeCatcherVisible =
+    distance !== undefined && distance <= MIN_REACHED_DISTANCE;
+
   return (
-    <View className="flex-1">
+    <SafeAreaView edges={["top", "bottom"]} className="flex-1">
       <View className="absolute top-10 left-1/2 -translate-x-1/2 px-10 gap-2 z-10">
+        <Compass />
+
         {user && (
           <HeaderControls
             user={user}
@@ -241,8 +251,6 @@ const MapScreen = () => {
             setErrorMsg={setErrorMsg}
           />
         )}
-
-        <Compass />
       </View>
 
       <MapView
@@ -258,9 +266,9 @@ const MapScreen = () => {
         showsMyLocationButton={false}
         rotateEnabled={true}
         mapPadding={{
-          top: 60,
+          top: 100,
           right: 5,
-          bottom: 60,
+          bottom: 160,
           left: 5,
         }}
         minZoomLevel={17}
@@ -288,19 +296,24 @@ const MapScreen = () => {
           </Marker>
         ))}
       </MapView>
-      <View className="absolute bottom-0 left-0 right-0 p-4 bg-transparent">
-        {distance !== undefined &&
-          (distance > MIN_REACHED_DISTANCE &&
-          distance <= MIN_TRACKER_DISTANCE ? (
-            <DistanceTracker distance={distance} showDistanceTracker={true} />
-          ) : distance <= MIN_REACHED_DISTANCE ? (
-            <DraggableGnome
-              onUnlock={() => navigate(`/camera?gnomeid=${closestGnomeId}`)}
-            />
-          ) : null)}
+
+      <View className="absolute bottom-12 left-0 right-0 p-4 bg-transparent z-10">
+        {isGnomeTrackerVisible && <DistanceTracker distance={distance} />}
+        {isGnomeCatcherVisible && (
+          <DraggableGnome
+            onUnlock={() => navigate(`/camera?gnomeid=${closestGnomeId}`)}
+          />
+        )}
       </View>
-      <WelcomeBottomSheet />
-    </View>
+
+      {isGnomeCatcherVisible && (
+        <LinearGradient
+          className={"absolute bottom-0 left-0 right-0 h-[130px]"}
+          end={{ x: 0.5, y: 0.75 }}
+          colors={["transparent", "hsl(359 63.4% 56.1%)"]}
+        />
+      )}
+    </SafeAreaView>
   );
 };
 

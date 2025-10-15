@@ -6,8 +6,8 @@ import {
   IsNotEmpty,
   IsOptional,
   IsString,
-  IsUUID,
   IsUrl,
+  IsUUID,
 } from "class-validator";
 
 export class UserUpdate {

@@ -40,7 +40,6 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
           "Allow $(PRODUCT_NAME) to use your location.",
       },
     ],
-
     [
       "@react-native-google-signin/google-signin",
       {
@@ -65,6 +64,8 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
         cameraPermissionText: "$(PRODUCT_NAME) needs access to your Camera.",
       },
     ],
+    "expo-build-properties",
+    "expo-web-browser",
   ],
   experiments: {
     typedRoutes: true,
