@@ -2,7 +2,8 @@ import { Stack } from "expo-router";
 import "../global.css";
 import { PortalHost } from "@rn-primitives/portal";
 import { StatusBar } from "expo-status-bar";
-import { useEffect } from "react";
+import React, { useEffect } from "react";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { useAuthStore } from "@/store/useAuthStore";
 
 export default function RootLayout() {
@@ -13,7 +14,7 @@ export default function RootLayout() {
   }, []);
 
   return (
-    <>
+    <GestureHandlerRootView>
       <StatusBar style={"light"} />
       <Stack
         screenOptions={{
@@ -22,6 +23,6 @@ export default function RootLayout() {
         }}
       />
       <PortalHost />
-    </>
+    </GestureHandlerRootView>
   );
 }
