@@ -4,11 +4,11 @@ import HomeTabs from "@/app/(app)/navigator/HomeTabs";
 import LoadingScreen from "@/components/LoadingScreen";
 import { WelcomeBottomSheet } from "@/components/WelcomeBottomSheet";
 import { useAuthStore } from "@/store/useAuthStore";
-import { useIsFirstTimeStore } from "@/store/useIsFirstTimeStore";
+import { isFirstAppEntryStore } from "@/store/useisFirstAppEntryStore";
 
 export default function AppLayout() {
   const { accessToken, isLoading } = useAuthStore();
-  const { isFirstTime, setIsFirstTimeToFalse } = useIsFirstTimeStore();
+  const { isFirstAppEntry, setIsFirstAppEntryToFalse } = isFirstAppEntryStore();
 
   if (isLoading) {
     return <LoadingScreen />;
@@ -21,8 +21,10 @@ export default function AppLayout() {
   return (
     <SafeAreaView edges={[]} className={"flex-1 bg-background"}>
       <HomeTabs />
-      {isFirstTime && (
-        <WelcomeBottomSheet setIsFirstTimeToFalse={setIsFirstTimeToFalse} />
+      {isFirstAppEntry && (
+        <WelcomeBottomSheet
+          setIsFirstAppEntryToFalse={setIsFirstAppEntryToFalse}
+        />
       )}
     </SafeAreaView>
   );

@@ -4,17 +4,17 @@ import { Text, View } from "react-native";
 import StandingGnomeImage from "@/assets/images/StandingGnome.svg";
 
 export const WelcomeBottomSheet = ({
-  setIsFirstTimeToFalse,
+  setIsFirstAppEntryToFalse,
 }: {
-  setIsFirstTimeToFalse: () => void;
+  setIsFirstAppEntryToFalse: () => void;
 }) => {
   const bottomSheetRef = useRef<BottomSheet>(null);
 
   const handleClose = () => {
-    if (!setIsFirstTimeToFalse)
-      throw new Error("setIsFirstTimeToFalse is not defined");
+    if (!setIsFirstAppEntryToFalse)
+      throw new Error("setIsFirstAppEntryToFalse is not defined");
 
-    setIsFirstTimeToFalse();
+    setIsFirstAppEntryToFalse();
     bottomSheetRef.current?.close();
   };
 
