@@ -240,7 +240,7 @@ const MapScreen = () => {
     distance !== undefined && distance <= MIN_REACHED_DISTANCE;
 
   return (
-    <SafeAreaView edges={["top", "bottom"]} className="flex-1">
+    <SafeAreaView className="flex-1">
       <View className="absolute top-10 left-1/2 -translate-x-1/2 px-10 gap-2 z-10">
         <Compass />
 

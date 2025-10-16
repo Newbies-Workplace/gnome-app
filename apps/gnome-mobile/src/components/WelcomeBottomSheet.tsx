@@ -1,19 +1,50 @@
 import BottomSheet, { BottomSheetView } from "@gorhom/bottom-sheet";
-import React, { useCallback, useMemo, useRef } from "react";
+import React, { useRef } from "react";
 import { Text, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import StandingGnomeImage from "@/assets/images/StandingGnome.svg";
 
-export const WelcomeBottomSheet = () => {
+export const WelcomeBottomSheet = ({
+  setIsFirstTimeToFalse,
+}: {
+  setIsFirstTimeToFalse: () => void;
+}) => {
   const bottomSheetRef = useRef<BottomSheet>(null);
 
-  const handleSheetChanges = useCallback((index: number) => {
-    console.log("handleSheetChanges", index);
-  }, []);
+  const handleClose = () => {
+    if (!setIsFirstTimeToFalse)
+      throw new Error("setIsFirstTimeToFalse is not defined");
+
+    setIsFirstTimeToFalse();
+    bottomSheetRef.current?.close();
+  };
 
   return (
-    <BottomSheet ref={bottomSheetRef} onChange={handleSheetChanges}>
-      <BottomSheetView className="flex flex-col items-center p-5 z-10">
-        <Text>Witaj Kolego 🎉</Text>
+    <BottomSheet
+      backgroundStyle={{ backgroundColor: "#1E201E" }}
+      handleIndicatorStyle={{
+        backgroundColor: "#FFFFFF",
+        width: 100,
+        marginTop: 8,
+      }}
+      enablePanDownToClose
+      onClose={handleClose}
+      ref={bottomSheetRef}
+    >
+      <BottomSheetView className="relative flex flex-col items-center px-10 pt-10 pb-32 gap-6 z-10">
+        <Text className="text-center text-[16px] text-white font-bold">
+          <Text className="text-primary">WITAJ W PRZYGODZIE</Text> Z
+          WROCŁAWSKIMI KRASNALAMI!
+        </Text>
+        <Text className="text-center text-[16px] text-white font-bold">
+          Twoim zadaniem jest porwanie czapek z głów wszystkich krasnali! Po
+          zbliżeniu się na mapię do krasnala pojawi się opcja z przeciągnięciem
+          na pasku jego czapki. Uzbieraj jak największą kolekcję gnomów ze
+          swoimi unikatowymi zdjęciami.{" "}
+          <Text className="text-primary">Wyrusz na poszukiwania!</Text>
+        </Text>
+        <View className="absolute bottom-5 right-5">
+          <StandingGnomeImage width={80} height={80} />
+        </View>
       </BottomSheetView>
     </BottomSheet>
   );
