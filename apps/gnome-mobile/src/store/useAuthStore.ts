@@ -4,6 +4,7 @@ import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 import { AuthService } from "@/lib/api/Auth.service";
 import { axiosInstance } from "@/lib/api/axios";
+import { UserService } from "@/lib/api/User.service";
 
 export interface AuthStore {
   user: UserResponse | null;
@@ -13,6 +14,7 @@ export interface AuthStore {
   init: () => Promise<void>;
   login: (googleIdToken: string) => Promise<void>;
   logout: () => Promise<void>;
+  regenerateInviteCode: () => Promise<void>;
 }
 
 export const useAuthStore = create<AuthStore>()(
@@ -43,6 +45,11 @@ export const useAuthStore = create<AuthStore>()(
 
       logout: async () => {
         set({ user: null, accessToken: null, isLoading: false });
+      },
+
+      regenerateInviteCode: async () => {
+        const response = await UserService.regenerateInviteCode();
+        set({ user: { ...get().user!, inviteCode: response.inviteCode } });
       },
     }),
     {

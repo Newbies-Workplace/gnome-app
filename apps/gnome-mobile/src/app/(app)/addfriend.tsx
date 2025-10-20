@@ -1,6 +1,6 @@
 import { useNavigation } from "@react-navigation/native";
 import { useRouter } from "expo-router";
-import React, { useEffect, useState } from "react";
+import React, { use, useEffect, useState } from "react";
 import {
   FlatList,
   Image,
@@ -8,11 +8,15 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { QrCodeSvg } from "react-native-qr-svg";
 import { SafeAreaView } from "react-native-safe-area-context";
 import ArrowLeft from "@/assets/icons/arrow-left.svg";
 import BackIcon from "@/assets/icons/arrow-left.svg";
 import SearchIcon from "@/assets/icons/search.svg";
 import { Text } from "@/components/ui/text";
+import { FriendsService } from "@/lib/api/Friends.service";
+import { UserService } from "@/lib/api/User.service";
+import { useAuthStore } from "@/store/useAuthStore";
 
 type FriendsListProps = {
   friends: { id: string; name: string; avatar?: string }[];
@@ -69,10 +73,6 @@ const FriendsList: React.FC<FriendsListProps> = ({ friends }) => {
 export default function AddFriend() {
   const navigation = useNavigation();
   const router = useRouter();
-  const [searchQuery, setSearchQuery] = useState("");
-  const [friends, _setFriends] = useState([
-    { id: "1", name: "EdwardJajko", avatar: "https://i.pravatar.cc/150?img=2" },
-  ]);
 
   useEffect(() => {
     navigation.setOptions({
@@ -92,22 +92,37 @@ export default function AddFriend() {
     });
   }, [navigation, router]);
 
+  const { user, regenerateInviteCode } = useAuthStore();
+  const [friends, setFriends] = useState([
+    { id: "1", name: "EdwardJajko", avatar: "https://i.pravatar.cc/150?img=2" },
+  ]);
+
+  useEffect(() => {
+    FriendsService.findUserFriends().then((data) => {
+      setFriends(data);
+    });
+  }, []);
+
   return (
-    <SafeAreaView className="flex-1 bg-background px-6 pt-6">
-      <View className="flex flex-row items-center justify-between">
-        <View className="w-10" />
+    <SafeAreaView className="flex-1 bg-background px-6 pt-6 items-center gap-10">
+      <QrCodeSvg
+        value={user!.inviteCode}
+        dotColor="hsl(359 63.4% 56.1%)"
+        backgroundColor="transparent"
+        frameSize={350}
+        contentCells={5}
+      />
+      <View className="flex-row gap-5">
+        <TouchableOpacity onPress={() => console.log("Skanuje kod")}>
+          <Text className="text-white">ZESKANUJ KOD</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => regenerateInviteCode()}>
+          <Text className="text-white">NOWY KOD</Text>
+        </TouchableOpacity>
       </View>
-      <View className="mt-6 flex flex-row items-center bg-background rounded-full px-4 py-3 mb-6 border border-red-500">
-        <SearchIcon width={20} height={20} className="text-gray-400" />
-        <TextInput
-          className="flex-1 ml-2 text-white"
-          placeholder="Wpisz nazwę znajomego"
-          placeholderTextColor="#999"
-          value={searchQuery}
-          onChangeText={setSearchQuery}
-        />
+      <View className="w-full">
+        <FriendsList friends={friends} />
       </View>
-      <FriendsList friends={friends} />
     </SafeAreaView>
   );
 }
