@@ -58,9 +58,6 @@ export class FriendsController {
   @UseGuards(JwtGuard)
   async findUserFriends(@User() user: JWTUser): Promise<FriendsResponse[]> {
     const myFriends = await this.friendsService.findUserFriends(user.id);
-    if (myFriends.length === 0) {
-      throw new NotFoundException("Nie masz jeszcze znajomych");
-    }
     return myFriends;
   }
 

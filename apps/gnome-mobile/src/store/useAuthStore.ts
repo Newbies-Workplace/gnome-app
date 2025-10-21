@@ -48,8 +48,11 @@ export const useAuthStore = create<AuthStore>()(
       },
 
       regenerateInviteCode: async () => {
+        const user = get().user;
+        if (!user) return;
+
         const response = await UserService.regenerateInviteCode();
-        set({ user: { ...get().user!, inviteCode: response.inviteCode } });
+        set({ user: { ...user, inviteCode: response.inviteCode } });
       },
     }),
     {

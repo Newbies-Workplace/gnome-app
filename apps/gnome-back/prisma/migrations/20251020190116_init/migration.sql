@@ -28,6 +28,7 @@ CREATE TABLE "User" (
     "name" TEXT NOT NULL,
     "email" TEXT NOT NULL,
     "pictureUrl" TEXT NOT NULL,
+    "inviteCode" TEXT NOT NULL,
     "role" "UserRole" NOT NULL DEFAULT 'USER',
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
@@ -94,6 +95,9 @@ CREATE UNIQUE INDEX "TeamMembership_id_key" ON "TeamMembership"("id");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "User_id_key" ON "User"("id");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "User_inviteCode_key" ON "User"("inviteCode");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Gnome_id_key" ON "Gnome"("id");

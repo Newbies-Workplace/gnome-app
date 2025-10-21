@@ -4,6 +4,7 @@ import { GoogleUserResponse } from "@repo/shared/responses";
 import { OAuth2Client } from "google-auth-library";
 import { GoogleUser } from "@/auth/types/GoogleUser";
 import { PrismaService } from "@/db/prisma.service";
+import { UsersService } from "@/users/users.service";
 
 @Injectable()
 export class AuthService {
@@ -14,6 +15,7 @@ export class AuthService {
   constructor(
     private jwtService: JwtService,
     private prismaService: PrismaService,
+    private userService: UsersService,
   ) {}
 
   generateJWT(payload) {
@@ -28,13 +30,11 @@ export class AuthService {
     });
 
     if (!userExists) {
-      userExists = await this.prismaService.user.create({
-        data: {
-          email: user.email,
-          name: user.firstName,
-          pictureUrl: user.pictureUrl,
-          googleId: user.providerId,
-        },
+      userExists = await this.userService.createUserWithGoogleData({
+        id: user.providerId,
+        email: user.email,
+        name: `${user.firstName} ${user.lastName}`,
+        pictureUrl: user.pictureUrl,
       });
     }
 

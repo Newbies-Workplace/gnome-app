@@ -1,78 +1,41 @@
+import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { useNavigation } from "@react-navigation/native";
 import { useRouter } from "expo-router";
-import React, { use, useEffect, useState } from "react";
-import {
-  FlatList,
-  Image,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import React, { useEffect, useRef, useState } from "react";
+import { FlatList, Image, TouchableOpacity, View } from "react-native";
 import { QrCodeSvg } from "react-native-qr-svg";
 import { SafeAreaView } from "react-native-safe-area-context";
 import ArrowLeft from "@/assets/icons/arrow-left.svg";
-import BackIcon from "@/assets/icons/arrow-left.svg";
-import SearchIcon from "@/assets/icons/search.svg";
+import { Scanner } from "@/components/Scanner";
 import { Text } from "@/components/ui/text";
 import { FriendsService } from "@/lib/api/Friends.service";
-import { UserService } from "@/lib/api/User.service";
 import { useAuthStore } from "@/store/useAuthStore";
-
-type FriendsListProps = {
-  friends: { id: string; name: string; avatar?: string }[];
-};
-
-const FriendsList: React.FC<FriendsListProps> = ({ friends }) => {
-  const navigation = useNavigation();
-  const router = useRouter();
-  //Header
-  useEffect(() => {
-    navigation.setOptions({
-      headerLeft: () => (
-        <TouchableOpacity className="p-5" onPress={() => router.back()}>
-          <BackIcon className="w-7 h-7" />
-        </TouchableOpacity>
-      ),
-      headerTitle: () => (
-        <Text className="text-white text-2xl text-center font-bold tracking-wide">
-          Dodaj znajomego
-        </Text>
-      ),
-      headerTitleAlign: "center",
-      headerShadowVisible: false,
-      headerShown: true,
-    });
-  }, [navigation, router]);
-
-  return (
-    <FlatList
-      data={friends}
-      keyExtractor={(item) => item.id}
-      renderItem={({ item }) => (
-        <View className="flex flex-row items-center justify-between mb-4">
-          {/* Avatar + Nickname */}
-          <View className="flex flex-row items-center">
-            <Image
-              source={{ uri: item.avatar }}
-              className="w-10 h-10 rounded-full mr-3"
-            />
-            <Text className="text-white text-lg font-semibold">
-              {item.name}
-            </Text>
-          </View>
-          {/* Przycisk Dodaj */}
-          <TouchableOpacity className="bg-red-500 px-4 py-2 rounded-full">
-            <Text className="text-white font-semibold">+ Dodaj</Text>
-          </TouchableOpacity>
-        </View>
-      )}
-    />
-  );
-};
 
 export default function AddFriend() {
   const navigation = useNavigation();
   const router = useRouter();
+  const { user, regenerateInviteCode } = useAuthStore();
+  const [friends, _setFriends] = useState([
+    {
+      id: "1",
+      name: "EdwardJajko",
+      avatar: "https://i.pravatar.cc/150?img=2",
+    },
+  ]);
+  const bottomSheetModalRef = useRef<BottomSheetModal>(null);
+
+  const handleBottomSheetOpen = () => {
+    bottomSheetModalRef.current?.present();
+  };
+
+  const handleBottomSheetClose = () => {
+    bottomSheetModalRef.current?.close();
+  };
+
+  const onCodeScanned = (code: string) => {
+    console.log("Scanned code:", code);
+    bottomSheetModalRef.current?.close();
+  };
 
   useEffect(() => {
     navigation.setOptions({
@@ -92,19 +55,8 @@ export default function AddFriend() {
     });
   }, [navigation, router]);
 
-  const { user, regenerateInviteCode } = useAuthStore();
-  const [friends, setFriends] = useState([
-    { id: "1", name: "EdwardJajko", avatar: "https://i.pravatar.cc/150?img=2" },
-  ]);
-
-  useEffect(() => {
-    FriendsService.findUserFriends().then((data) => {
-      setFriends(data);
-    });
-  }, []);
-
   return (
-    <SafeAreaView className="flex-1 bg-background px-6 pt-6 items-center gap-10">
+    <SafeAreaView className="flex-1 bg-background p-6 items-center gap-10">
       <QrCodeSvg
         value={user!.inviteCode}
         dotColor="hsl(359 63.4% 56.1%)"
@@ -113,15 +65,48 @@ export default function AddFriend() {
         contentCells={5}
       />
       <View className="flex-row gap-5">
-        <TouchableOpacity onPress={() => console.log("Skanuje kod")}>
-          <Text className="text-white">ZESKANUJ KOD</Text>
+        <TouchableOpacity onPress={handleBottomSheetOpen}>
+          <Text className="text-white">SKANUJ KOD</Text>
         </TouchableOpacity>
+        <BottomSheetModal
+          handleIndicatorStyle={{
+            backgroundColor: "#1E1E1E",
+            width: 100,
+            marginTop: 8,
+          }}
+          ref={bottomSheetModalRef}
+          enableDismissOnClose
+          onDismiss={handleBottomSheetClose}
+        >
+          <Scanner onCodeScanned={onCodeScanned} />
+        </BottomSheetModal>
+
         <TouchableOpacity onPress={() => regenerateInviteCode()}>
           <Text className="text-white">NOWY KOD</Text>
         </TouchableOpacity>
       </View>
       <View className="w-full">
-        <FriendsList friends={friends} />
+        <FlatList
+          data={friends}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => (
+            <View className="flex flex-row items-center justify-between mb-4">
+              <View className="flex flex-row items-center">
+                <Image
+                  source={{ uri: item.avatar }}
+                  className="w-10 h-10 rounded-full mr-3"
+                />
+                <Text className="text-white text-lg font-semibold">
+                  {item.name}
+                </Text>
+              </View>
+
+              <TouchableOpacity className="bg-red-500 px-4 py-2 rounded-full">
+                <Text className="text-white font-semibold">+ Dodaj</Text>
+              </TouchableOpacity>
+            </View>
+          )}
+        />
       </View>
     </SafeAreaView>
   );

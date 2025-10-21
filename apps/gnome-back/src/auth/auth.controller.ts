@@ -65,6 +65,7 @@ export class AuthController {
         name: user.name,
         email: user.email,
         pictureUrl: user.pictureUrl,
+        inviteCode: user.inviteCode,
       },
     };
 

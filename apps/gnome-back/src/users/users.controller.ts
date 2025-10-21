@@ -77,4 +77,14 @@ export class UsersController {
 
     return changeProfile;
   }
+
+  @Patch("@me/invite-code")
+  @UseGuards(JwtGuard)
+  async regenerateInviteCode(
+    @User() user: JWTUser,
+  ): Promise<{ inviteCode: string }> {
+    const newInviteCode = await this.usersService.regenerateInviteCode(user.id);
+
+    return { inviteCode: newInviteCode };
+  }
 }

@@ -1,5 +1,6 @@
 import { Stack } from "expo-router";
 import "../global.css";
+import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { PortalHost } from "@rn-primitives/portal";
 import { StatusBar } from "expo-status-bar";
 import React, { useEffect } from "react";
@@ -15,14 +16,16 @@ export default function RootLayout() {
 
   return (
     <GestureHandlerRootView>
-      <StatusBar style={"light"} />
-      <Stack
-        screenOptions={{
-          // Hide the header for this route
-          headerShown: false,
-        }}
-      />
-      <PortalHost />
+      <BottomSheetModalProvider>
+        <StatusBar style={"light"} />
+        <Stack
+          screenOptions={{
+            // Hide the header for this route
+            headerShown: false,
+          }}
+        />
+        <PortalHost />
+      </BottomSheetModalProvider>
     </GestureHandlerRootView>
   );
 }

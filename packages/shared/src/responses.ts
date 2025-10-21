@@ -3,6 +3,7 @@ export interface UserResponse {
   email: string;
   name: string;
   pictureUrl: string;
+  inviteCode: string;
 }
 
 export interface UserPatchResponse {
