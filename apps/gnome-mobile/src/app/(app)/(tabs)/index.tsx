@@ -25,6 +25,7 @@ import DistanceTracker from "@/components/ui/DistanceTracker";
 import DraggableGnome from "@/components/ui/DraggableGnome";
 import { Text } from "@/components/ui/text";
 import { useAuthStore } from "@/store/useAuthStore";
+import { useFriendsStore } from "@/store/useFriendsStore";
 import { useGnomeStore } from "@/store/useGnomeStore";
 
 // Maksymalna odległość w metrach
@@ -117,6 +118,7 @@ const MapScreen = () => {
   const { navigate } = useRouter();
   const { gnomes, fetchGnomes, interactions, fetchMyInteractions } =
     useGnomeStore();
+  const { fetchUserFriends } = useFriendsStore();
   const ref = useRef<MapView>(null);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [userLocation, setUserLocation] = useState({
@@ -136,6 +138,7 @@ const MapScreen = () => {
   useEffect(() => {
     fetchGnomes();
     fetchMyInteractions();
+    fetchUserFriends();
   }, []);
 
   useEffect(() => {

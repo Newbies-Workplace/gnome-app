@@ -1,14 +1,13 @@
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { useNavigation } from "@react-navigation/native";
 import { useRouter } from "expo-router";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import { FlatList, Image, TouchableOpacity, View } from "react-native";
 import { QrCodeSvg } from "react-native-qr-svg";
 import { SafeAreaView } from "react-native-safe-area-context";
 import ArrowLeft from "@/assets/icons/arrow-left.svg";
 import { Scanner } from "@/components/Scanner";
 import { Text } from "@/components/ui/text";
-import { FriendsService } from "@/lib/api/Friends.service";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useFriendsStore } from "@/store/useFriendsStore";
 
@@ -16,7 +15,7 @@ export default function AddFriend() {
   const navigation = useNavigation();
   const router = useRouter();
   const { user, regenerateInviteCode } = useAuthStore();
-  const { friends } = useFriendsStore();
+  const { friends, addFriend } = useFriendsStore();
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
 
   const handleBottomSheetOpen = () => {
@@ -29,7 +28,9 @@ export default function AddFriend() {
 
   const onCodeScanned = (code: string) => {
     bottomSheetModalRef.current?.close();
-    console.log("Scanned code:", code);
+    addFriend(code).catch((err) => {
+      console.error("Error adding friend:", JSON.stringify(err));
+    });
   };
 
   useEffect(() => {

@@ -12,7 +12,7 @@ type Friend = {
 interface FriendsStore {
   friends: Friend[];
 
-  getUserFriends: () => Promise<void>;
+  fetchUserFriends: () => Promise<void>;
   addFriend: (inviteCode: string) => Promise<void>;
 }
 
@@ -21,7 +21,7 @@ export const useFriendsStore = create<FriendsStore>()(
     (set) => ({
       friends: [],
 
-      getUserFriends: async () => {
+      fetchUserFriends: async () => {
         const friends = await FriendsService.findUserFriends();
 
         set({ friends });
