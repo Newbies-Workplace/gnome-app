@@ -10,18 +10,13 @@ import { Scanner } from "@/components/Scanner";
 import { Text } from "@/components/ui/text";
 import { FriendsService } from "@/lib/api/Friends.service";
 import { useAuthStore } from "@/store/useAuthStore";
+import { useFriendsStore } from "@/store/useFriendsStore";
 
 export default function AddFriend() {
   const navigation = useNavigation();
   const router = useRouter();
   const { user, regenerateInviteCode } = useAuthStore();
-  const [friends, _setFriends] = useState([
-    {
-      id: "1",
-      name: "EdwardJajko",
-      avatar: "https://i.pravatar.cc/150?img=2",
-    },
-  ]);
+  const { friends } = useFriendsStore();
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
 
   const handleBottomSheetOpen = () => {
@@ -33,8 +28,8 @@ export default function AddFriend() {
   };
 
   const onCodeScanned = (code: string) => {
-    console.log("Scanned code:", code);
     bottomSheetModalRef.current?.close();
+    console.log("Scanned code:", code);
   };
 
   useEffect(() => {
@@ -93,7 +88,9 @@ export default function AddFriend() {
             <View className="flex flex-row items-center justify-between mb-4">
               <View className="flex flex-row items-center">
                 <Image
-                  source={{ uri: item.avatar }}
+                  source={{
+                    uri: item.avatar ?? "https://i.pravatar.cc/150?img=2",
+                  }}
                   className="w-10 h-10 rounded-full mr-3"
                 />
                 <Text className="text-white text-lg font-semibold">

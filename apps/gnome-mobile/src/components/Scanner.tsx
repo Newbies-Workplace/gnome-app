@@ -15,10 +15,13 @@ export const Scanner = ({
 }) => {
   const device = useCameraDevice("back");
   const permissionStatus = Camera.getCameraPermissionStatus();
+  const [hasCodeScanned, setHasCodeScanned] = React.useState(false);
   const codeScanner = useCodeScanner({
     codeTypes: ["qr"],
     onCodeScanned: (code) => {
-      code[0].value && onCodeScanned(code[0].value);
+      if (hasCodeScanned || !code[0].value) return;
+      setHasCodeScanned(true);
+      onCodeScanned(code[0].value);
     },
   });
 
@@ -48,7 +51,7 @@ export const Scanner = ({
       {device && permissionStatus === "granted" && (
         <Camera
           codeScanner={codeScanner}
-          style={{ width: "100%", height: 400 }}
+          style={{ width: "100%", height: 410 }}
           device={device}
           isActive
         />
