@@ -13,6 +13,7 @@ import { ReportPage } from "./pages/ReportPage.tsx";
 
 const clientId = import.meta.env.VITE_PUBLIC_GOOGLE_WEB_CLIENT_ID;
 
+// biome-ignore lint/style/noNonNullAssertion: always present
 createRoot(document.getElementById("root")!).render(
   <GoogleOAuthProvider clientId={clientId}>
     <BrowserRouter>

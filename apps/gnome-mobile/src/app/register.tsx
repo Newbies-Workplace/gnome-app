@@ -1,10 +1,9 @@
+import { useRouter } from "expo-router";
+import { Image, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Text } from "@/components/ui/text";
-import { useRouter } from "expo-router";
-import React from "react";
-import { Image, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function SignInScreen() {
   const { replace } = useRouter();

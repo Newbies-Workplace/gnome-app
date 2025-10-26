@@ -1,11 +1,10 @@
+import { useNavigation, useRouter } from "expo-router";
+import { useEffect } from "react";
+import { FlatList, Text, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import LoadingScreen from "@/components/LoadingScreen";
 import { GnomeCard } from "@/components/ui/GnomeCard";
 import { useGnomeStore } from "@/store/useGnomeStore";
-import { useNavigation } from "@react-navigation/native";
-import { useRouter } from "expo-router";
-import React, { useEffect } from "react";
-import { FlatList, Text, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 
 const Collection = () => {
   const { gnomes, fetchGnomes, interactions, fetchMyInteractions, error } =
@@ -36,12 +35,10 @@ const Collection = () => {
   }, []);
 
   return (
-    <SafeAreaView
-      className={"flex-1 bg-background"}
-      edges={["left", "right", "bottom"]}
-    >
+    <SafeAreaView className={"flex-1 bg-background"}>
       <FlatList
         data={gnomes}
+        contentContainerClassName={"bg-background"}
         keyExtractor={(item) => item.id?.toString()}
         numColumns={3}
         renderItem={({ item }) => {

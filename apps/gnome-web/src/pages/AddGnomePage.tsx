@@ -1,12 +1,12 @@
 import { Controller, useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
+import { BgElement } from "../components/bg_element";
 import { DatePickerInput } from "../components/DatePickerInput";
+import { CircleTracker } from "../components/div_circle";
 import { FileInput } from "../components/FileInput";
 import { Input } from "../components/Input";
-import Navbar from "../components/Navbar";
-import { BgElement } from "../components/bg_element";
-import { CircleTracker } from "../components/div_circle";
 import InteractiveMapPicker from "../components/mapPicker/InternalMapPicker";
+import Navbar from "../components/Navbar";
 import { axiosInstance } from "../lib/api/axios"; // Import axios instance
 
 type FormValues = {

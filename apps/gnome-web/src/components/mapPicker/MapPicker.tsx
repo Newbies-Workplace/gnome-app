@@ -7,7 +7,7 @@ import {
   useMapEvents,
 } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
-import { LatLng, icon } from "leaflet"; // Import `icon` from Leaflet
+import { icon, LatLng } from "leaflet"; // Import `icon` from Leaflet
 import MapPin from "../images/Map pin.svg"; // Import your custom pin SVG
 
 interface MapPickerProps {
@@ -28,6 +28,7 @@ export const MapPicker: React.FC<MapPickerProps> = ({
     iconAnchor: [20, 40], // Anchor point of the icon (center bottom)
   });
 
+  // biome-ignore lint/correctness/noNestedComponentDefinitions: <explanation>
   const MapClickHandler = () => {
     useMapEvents({
       click: (e: { latlng: LatLng }) => {

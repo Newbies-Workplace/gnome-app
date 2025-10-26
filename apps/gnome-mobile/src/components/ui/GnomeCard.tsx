@@ -1,7 +1,7 @@
-import CameraIcon from "@/assets/icons/camera.svg";
-import NoCameraIcon from "@/assets/icons/no-camera.svg";
 import React from "react";
 import { Image, Text, TouchableOpacity, View } from "react-native";
+import CameraIcon from "@/assets/icons/camera.svg";
+import NoCameraIcon from "@/assets/icons/no-camera.svg";
 
 const placeholder = require("@/assets/images/placeholder.png");
 

@@ -1,7 +1,7 @@
+import { Injectable } from "@nestjs/common";
+import { User } from "@prisma/client";
 import { GoogleUser } from "@/auth/types/google-user";
 import { PrismaService } from "@/db/prisma.service";
-import { Injectable } from "@nestjs/common";
-import { Friendship, Gnome, GnomeInteraction, User } from "@prisma/client";
 
 @Injectable()
 export class UsersService {
@@ -21,7 +21,7 @@ export class UsersService {
   async changeUserData(
     id: string,
     name: string,
-    pictureUrl: string
+    pictureUrl: string,
   ): Promise<{ id: string; name: string; pictureUrl: string }> {
     const dataToUpdate: any = {};
 

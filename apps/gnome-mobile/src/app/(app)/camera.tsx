@@ -1,7 +1,5 @@
-import BackIcon from "@/assets/icons/arrow-left.svg";
-import { useGnomeStore } from "@/store/useGnomeStore";
 import { useLocalSearchParams, useNavigation, useRouter } from "expo-router";
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import {
@@ -9,6 +7,8 @@ import {
   CameraDevice,
   useCameraDevices,
 } from "react-native-vision-camera";
+import BackIcon from "@/assets/icons/arrow-left.svg";
+import { useGnomeStore } from "@/store/useGnomeStore";
 
 const CameraScreen = () => {
   const { addInteraction } = useGnomeStore();

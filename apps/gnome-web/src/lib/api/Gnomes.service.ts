@@ -1,5 +1,5 @@
+import { GnomeResponse } from "@repo/shared/responses";
 import { axiosInstance } from "@/lib/api/axios";
-import {GnomeResponse} from "@repo/shared/responses";
 
 const getGnomes = async (): Promise<GnomeResponse[]> => {
   return await axiosInstance

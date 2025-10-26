@@ -1,3 +1,8 @@
+import { useNavigation } from "@react-navigation/native";
+import { useRouter } from "expo-router";
+import { useEffect } from "react";
+import { TouchableOpacity, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import ArrowLeft from "@/assets/icons/arrow-left.svg";
 import ZadajPytanieIcon from "@/assets/icons/askquestion.svg";
 import DesignIcon from "@/assets/icons/design.svg";
@@ -10,11 +15,6 @@ import PrivacyIcon from "@/assets/icons/privacy.svg";
 import SecurityIcon from "@/assets/icons/security.svg";
 import { SettingsOption } from "@/components/ui/SettingsOption";
 import { Text } from "@/components/ui/text";
-import { useNavigation } from "@react-navigation/native";
-import { useRouter } from "expo-router";
-import React, { useEffect } from "react";
-import { TouchableOpacity, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 
 function SettingsScreen() {
   const navigation = useNavigation();

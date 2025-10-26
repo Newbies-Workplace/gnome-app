@@ -1,14 +1,10 @@
-import { JwtUser } from "@/auth/types/jwt-user";
-import { JwtGuard } from "@/auth/guards/jwt.guard";
-import { MinioService } from "@/minio/minio.service";
-import { Role } from "@/role/role.decorator";
-import { RoleGuard } from "@/roleguard/role.guard";
 import {
   Body,
   Controller,
   Delete,
+  FileTypeValidator,
   Get,
-  NotFoundException,
+  MaxFileSizeValidator,
   Param,
   ParseFilePipe,
   Post,
@@ -16,16 +12,20 @@ import {
   UseGuards,
   UseInterceptors,
 } from "@nestjs/common";
-import { FileTypeValidator, MaxFileSizeValidator } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { CreateReportRequest } from "@repo/shared/requests";
 import { ReportResponse } from "@repo/shared/responses";
+import { JwtGuard } from "@/auth/guards/jwt.guard";
+import { MinioService } from "@/minio/minio.service";
+import { Role } from "@/role/role.decorator";
+import { RoleGuard } from "@/roleguard/role.guard";
 import { ReportsService } from "./reports.service";
+
 @Controller("reports")
 export class ReportsController {
   constructor(
     private readonly minioService: MinioService,
-    private readonly reportsService: ReportsService
+    private readonly reportsService: ReportsService,
   ) {}
   @Get("")
   @UseGuards(JwtGuard, RoleGuard)
@@ -46,9 +46,9 @@ export class ReportsController {
           new MaxFileSizeValidator({ maxSize: 10_000_000 }), // 10MB
           new FileTypeValidator({ fileType: "image/jpeg" }),
         ],
-      })
+      }),
     )
-    file: Express.Multer.File
+    file: Express.Multer.File,
   ) {
     await this.minioService.createBucketIfNotExists();
 
@@ -69,7 +69,7 @@ export class ReportsController {
       latitude,
       longitude,
       body.location,
-      body.reportAuthor
+      body.reportAuthor,
     );
   }
 

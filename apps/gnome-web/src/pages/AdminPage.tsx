@@ -1,6 +1,6 @@
+import { BgElement } from "../components/bg_element";
 import { LinkButton } from "../components/LinkButton";
 import Navbar from "../components/Navbar";
-import { BgElement } from "../components/bg_element";
 
 export const AdminPage = () => {
   return (

@@ -5,7 +5,7 @@ export interface FileInputProps {
   onChange: (files: File[]) => void;
 }
 
-export const FileInput: React.FC<FileInputProps> = ({files, onChange}) => {
+export const FileInput: React.FC<FileInputProps> = ({ files, onChange }) => {
   const [isDragging, setIsDragging] = useState(false);
 
   const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
@@ -81,6 +81,7 @@ export const FileInput: React.FC<FileInputProps> = ({files, onChange}) => {
         {files.length > 0 && <h3 className="text-lg">Wybrane pliki:</h3>}
         <ul className="list-disc pl-5">
           {[...files].slice(0, 4).map((file, index) => (
+            // biome-ignore lint/suspicious/noArrayIndexKey: finite number of files
             <li key={index} className="text-[#A7A7A7]">
               {file.name}
             </li>
