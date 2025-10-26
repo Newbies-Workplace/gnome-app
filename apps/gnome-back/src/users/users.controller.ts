@@ -1,8 +1,3 @@
-import { JwtUser } from "@/auth/types/jwt-user";
-import { JwtGuard } from "@/auth/guards/jwt.guard";
-import { User } from "@/auth/decorators/jwt-user.decorator";
-import { MinioService } from "@/minio/minio.service";
-import { UsersService } from "@/users/users.service";
 import {
   BadRequestException,
   Body,
@@ -25,12 +20,17 @@ import { FileInterceptor } from "@nestjs/platform-express";
 import { User as PrismaUser } from "@prisma/client";
 import { UserUpdate } from "@repo/shared/requests";
 import { UserPatchResponse } from "@repo/shared/responses";
+import { User } from "@/auth/decorators/jwt-user.decorator";
+import { JwtGuard } from "@/auth/guards/jwt.guard";
+import { JwtUser } from "@/auth/types/jwt-user";
+import { MinioService } from "@/minio/minio.service";
+import { UsersService } from "@/users/users.service";
 
 @Controller("users")
 export class UsersController {
   constructor(
     private readonly usersService: UsersService,
-    private readonly minioService?: MinioService
+    private readonly minioService?: MinioService,
   ) {}
 
   @Get("@me") // moj profil
@@ -52,9 +52,9 @@ export class UsersController {
           new MaxFileSizeValidator({ maxSize: 10_000_000 }), // 10MB
           new FileTypeValidator({ fileType: "image/jpeg" }),
         ],
-      })
+      }),
     )
-    file?: Express.Multer.File
+    file?: Express.Multer.File,
   ): Promise<UserPatchResponse> {
     if (body.name == null && !file) {
       throw new BadRequestException("Nic do zaaktualizowania");
@@ -72,7 +72,7 @@ export class UsersController {
     const changeProfile = await this.usersService.changeUserData(
       user.id,
       body.name,
-      fileUrl
+      fileUrl,
     );
 
     return changeProfile;

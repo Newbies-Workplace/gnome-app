@@ -1,8 +1,3 @@
-import { JwtUser } from "@/auth/types/jwt-user";
-import { JwtGuard } from "@/auth/guards/jwt.guard";
-import { User } from "@/auth/decorators/jwt-user.decorator";
-import { FriendSearchResponse, FriendsResponse } from "@repo/shared/responses";
-import { FriendsService } from "./friends.service";
 import {
   Body,
   Controller,
@@ -18,6 +13,11 @@ import {
   DeleteFriend,
   SendFriendRequest,
 } from "@repo/shared/requests";
+import { FriendSearchResponse, FriendsResponse } from "@repo/shared/responses";
+import { User } from "@/auth/decorators/jwt-user.decorator";
+import { JwtGuard } from "@/auth/guards/jwt.guard";
+import { JwtUser } from "@/auth/types/jwt-user";
+import { FriendsService } from "./friends.service";
 
 @Controller("friends")
 export class FriendsController {
@@ -26,7 +26,7 @@ export class FriendsController {
   @Get("search") // wyszukiwanie znajomego
   @UseGuards(JwtGuard)
   async searchForFriend(
-    @Query("name") name: string
+    @Query("name") name: string,
   ): Promise<FriendSearchResponse[]> {
     /* search/?name="wartosc" */
     const searchForFriend = await this.friendsService.searchForFriend(name);
@@ -40,7 +40,7 @@ export class FriendsController {
   @UseGuards(JwtGuard)
   async findPendingRequests(@User() user: JwtUser): Promise<FriendsResponse[]> {
     const findPendingRequests = await this.friendsService.findPendingRequests(
-      user.id
+      user.id,
     );
     if (findPendingRequests.length === 0) {
       throw new NotFoundException("Brak zaproszeń");
@@ -62,11 +62,11 @@ export class FriendsController {
   @UseGuards(JwtGuard)
   async sendFriendRequest(
     @User() user: JwtUser,
-    @Body() body: SendFriendRequest
+    @Body() body: SendFriendRequest,
   ): Promise<FriendsResponse> {
     const inviteFriend = await this.friendsService.sendFriendRequest(
       user.id,
-      body.friendId
+      body.friendId,
     );
     if (!inviteFriend) {
       throw new NotFoundException("Nie można wysłać zaproszenia");
@@ -79,13 +79,13 @@ export class FriendsController {
   @UseGuards(JwtGuard)
   async acceptFriendRequest(
     @User() user: JwtUser,
-    @Body() body: AcceptFriendRequest
+    @Body() body: AcceptFriendRequest,
   ) {
     console.log(user.id);
     console.log(body.senderId);
     const acceptFriend = await this.friendsService.acceptFriendRequest(
       body.senderId,
-      user.id
+      user.id,
     );
     return acceptFriend;
   }
@@ -95,7 +95,7 @@ export class FriendsController {
   async deleteFriend(@User() user: JwtUser, @Body() body: DeleteFriend) {
     const deleteFriend = await this.friendsService.deleteFriend(
       user.id,
-      body.friendId
+      body.friendId,
     );
     return deleteFriend;
   }
@@ -104,7 +104,7 @@ export class FriendsController {
   async deleteFriendRequest(@User() user: JwtUser, @Body() body: DeleteFriend) {
     const deleteFriendRequest = await this.friendsService.cancelInvitaion(
       user.id,
-      body.friendId
+      body.friendId,
     );
     return deleteFriendRequest;
   }

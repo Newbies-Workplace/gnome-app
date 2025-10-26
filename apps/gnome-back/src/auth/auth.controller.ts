@@ -1,20 +1,20 @@
+import { Body, Controller, Get, Post, Res, UseGuards } from "@nestjs/common";
+import { JwtService } from "@nestjs/jwt";
+import { UserRole } from "@prisma/client";
+import { GoogleUserResponse, UserResponse } from "@repo/shared/responses";
+import { Response } from "express";
 import { AuthService } from "@/auth/auth.service";
 import { UsersService } from "@/users/users.service";
-import { JwtService } from "@nestjs/jwt";
-import { GoogleUserResponse, UserResponse } from "@repo/shared/responses";
-import { GoogleGuard } from "./guards/google.guard";
 import { User } from "./decorators/jwt-user.decorator";
 import { GoogleAuthRequest } from "./dto/google-auth.request.dto";
-import { UserRole } from "@prisma/client";
-import { Body, Controller, Get, Post, Res, UseGuards } from "@nestjs/common";
-import { Response } from "express";
+import { GoogleGuard } from "./guards/google.guard";
 
 @Controller("auth")
 export class AuthController {
   constructor(
     private readonly authService: AuthService,
     private readonly usersService: UsersService,
-    private readonly jwtService: JwtService
+    private readonly jwtService: JwtService,
   ) {}
 
   @Get("google/redirect")
@@ -25,7 +25,7 @@ export class AuthController {
   @UseGuards(GoogleGuard)
   async googleAuthRedirect(
     @User() user: GoogleUserResponse,
-    @Res() res: Response
+    @Res() res: Response,
   ) {
     const FRONTEND_URL = process.env.FRONTEND_URL;
     const token = await this.authService.googleAuth(user);

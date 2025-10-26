@@ -1,19 +1,19 @@
-import { GoogleUser } from "@/auth/types/google-user";
-import { PrismaService } from "@/db/prisma.service";
 import { BadRequestException, Injectable } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import { GoogleUserResponse } from "@repo/shared/responses";
 import { OAuth2Client } from "google-auth-library";
+import { GoogleUser } from "@/auth/types/google-user";
+import { PrismaService } from "@/db/prisma.service";
 
 @Injectable()
 export class AuthService {
   private client = new OAuth2Client(
-    `${process.env.GOOGLE_ID}.apps.googleusercontent.com`
+    `${process.env.GOOGLE_ID}.apps.googleusercontent.com`,
   );
 
   constructor(
     private jwtService: JwtService,
-    private prismaService: PrismaService
+    private prismaService: PrismaService,
   ) {}
 
   generateJWT(payload) {

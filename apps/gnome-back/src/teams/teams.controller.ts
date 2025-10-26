@@ -1,6 +1,3 @@
-import { JwtUser } from "@/auth/types/jwt-user";
-import { JwtGuard } from "@/auth/guards/jwt.guard";
-import { User } from "@/auth/decorators/jwt-user.decorator";
 import {
   BadRequestException,
   Body,
@@ -14,6 +11,9 @@ import {
   UseGuards,
 } from "@nestjs/common";
 import { TeamResponse } from "@repo/shared/responses";
+import { User } from "@/auth/decorators/jwt-user.decorator";
+import { JwtGuard } from "@/auth/guards/jwt.guard";
+import { JwtUser } from "@/auth/types/jwt-user";
 import { TeamsService } from "./teams.service";
 
 @Controller("teams")
@@ -40,12 +40,12 @@ export class TeamsController {
   @UseGuards(JwtGuard)
   async create(
     @Body() team: { members: string[] },
-    @User() user: JwtUser
+    @User() user: JwtUser,
   ): Promise<TeamResponse> {
     const leaderId = user.id;
     const createTeam = await this.teamsService.createTeam(
       leaderId,
-      team.members
+      team.members,
     );
 
     return createTeam;
@@ -64,14 +64,14 @@ export class TeamsController {
   async updateTeam(
     @User() user: JwtUser,
     @Param("id") teamId: string,
-    @Body() body: { newLeaderId?: string; newMemberIds?: string[] }
+    @Body() body: { newLeaderId?: string; newMemberIds?: string[] },
   ) {
     await this.teamsService.getTeam(teamId);
     await this.teamsService.updateTeam(
       user.id,
       teamId,
       body.newLeaderId,
-      body.newMemberIds
+      body.newMemberIds,
     );
     if (body.newLeaderId == null && body.newMemberIds == null) {
       throw new BadRequestException("Nic do zaaktualizowania");
