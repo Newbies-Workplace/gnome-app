@@ -1,4 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import type { UserResponse } from "@repo/shared/responses";
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
@@ -44,6 +45,7 @@ export const useAuthStore = create<AuthStore>()(
       },
 
       logout: async () => {
+        await GoogleSignin.signOut();
         set({ user: null, accessToken: null, isLoading: false });
       },
 

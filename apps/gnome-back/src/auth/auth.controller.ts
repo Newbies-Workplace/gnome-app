@@ -11,6 +11,7 @@ import { JwtService } from "@nestjs/jwt";
 import { GoogleUserResponse, UserResponse } from "@repo/shared/responses";
 import { AuthService } from "@/auth/auth.service";
 import { GoogleAuthRequest } from "@/auth/dto/GoogleAuth.request";
+import { JWTUser } from "@/auth/jwt/JWTUser";
 import { UsersService } from "@/users/users.service";
 import { GoogleGuard } from "./google/google.guard";
 import { User } from "./jwt/jwtuser.decorator";
@@ -49,7 +50,10 @@ export class AuthController {
   }
 
   @Post("google")
-  async google(@Body() body: GoogleAuthRequest) {
+  async google(@Body() body: GoogleAuthRequest): Promise<{
+    user: UserResponse;
+    access_token: string;
+  }> {
     const userData = await this.authService.verifyGoogleToken(body.idToken);
     let user = await this.usersService.findUserByGoogleId(userData.id);
 
@@ -57,9 +61,14 @@ export class AuthController {
       user = await this.usersService.createUserWithGoogleData(userData);
     }
 
-    const payload: {
-      user: UserResponse;
-    } = {
+    const jwtUser: JWTUser = {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      googleId: user.googleId,
+    };
+
+    return {
       user: {
         id: user.id,
         name: user.name,
@@ -67,11 +76,7 @@ export class AuthController {
         pictureUrl: user.pictureUrl,
         inviteCode: user.inviteCode,
       },
-    };
-
-    return {
-      user: payload.user,
-      access_token: await this.jwtService.signAsync(payload),
+      access_token: this.jwtService.sign({ user: jwtUser }),
     };
   }
 }

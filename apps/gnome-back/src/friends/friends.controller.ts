@@ -4,19 +4,11 @@ import {
   Controller,
   Delete,
   Get,
-  NotFoundException,
-  Param,
   Post,
-  Query,
   UseGuards,
 } from "@nestjs/common";
-import { Friendship } from "@prisma/client";
 import { AddFriendRequest, DeleteFriend } from "@repo/shared/requests";
-import {
-  FriendSearchResponse,
-  FriendsResponse,
-  UserResponse,
-} from "@repo/shared/responses";
+import { FriendsResponse } from "@repo/shared/responses";
 import { JWTUser } from "@/auth/jwt/JWTUser";
 import { JwtGuard } from "@/auth/jwt/jwt.guard";
 import { User } from "@/auth/jwt/jwtuser.decorator";
@@ -56,18 +48,15 @@ export class FriendsController {
       throw new BadRequestException("You cannot add yourself as a friend");
     }
 
-    const isAlreadyFriends = await this.friendsService.findFriendship(
-      user.id,
-      reciever.id,
-    );
+    const isAlreadyFriends =
+      (await this.friendsService.findFriendship(user.id, reciever.id)).length >
+      0;
 
     if (isAlreadyFriends) {
       throw new BadRequestException("You are already friends with this user");
     }
 
-    const addFriend = await this.friendsService.addFriend(user.id, reciever.id);
-
-    return addFriend;
+    return await this.friendsService.addFriend(user.id, reciever.id);
   }
 
   @Delete("@me") // usun znajomego

@@ -19,6 +19,7 @@ export const Scanner = ({
   const codeScanner = useCodeScanner({
     codeTypes: ["qr"],
     onCodeScanned: (code) => {
+      console.log("Scanned code:", code);
       if (hasCodeScanned || !code[0].value) return;
       setHasCodeScanned(true);
       onCodeScanned(code[0].value);

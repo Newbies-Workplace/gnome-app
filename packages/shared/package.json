@@ -6,7 +6,7 @@
     "dev": "tsc --watch",
     "build": "tsc",
     "lint": "npx @biomejs/biome check --write ./src",
-    "lint:ci": "npx @biomejs/biome ci ./src"
+    "lint:ci": "npx @biomejs/biome ci ./src --diagnostic-level=error"
   },
   "exports": {
     "./responses": "./src/responses.ts",

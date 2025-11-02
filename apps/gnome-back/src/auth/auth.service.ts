@@ -1,7 +1,8 @@
-import { BadRequestException, Injectable } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import { GoogleUserResponse } from "@repo/shared/responses";
 import { OAuth2Client } from "google-auth-library";
+import { JWTUser } from "@/auth/jwt/JWTUser";
 import { GoogleUser } from "@/auth/types/GoogleUser";
 import { PrismaService } from "@/db/prisma.service";
 import { UsersService } from "@/users/users.service";
@@ -18,19 +19,15 @@ export class AuthService {
     private userService: UsersService,
   ) {}
 
-  generateJWT(payload) {
-    return this.jwtService.sign(payload);
-  }
-
   async googleAuth(user: GoogleUserResponse) {
-    let userExists = await this.prismaService.user.findFirst({
+    let existingUser = await this.prismaService.user.findFirst({
       where: {
         email: user.email,
       },
     });
 
-    if (!userExists) {
-      userExists = await this.userService.createUserWithGoogleData({
+    if (!existingUser) {
+      existingUser = await this.userService.createUserWithGoogleData({
         id: user.providerId,
         email: user.email,
         name: `${user.firstName} ${user.lastName}`,
@@ -38,14 +35,15 @@ export class AuthService {
       });
     }
 
-    return await this.jwtService.sign({
-      user: {
-        id: userExists.id,
-        name: userExists.name,
-        email: userExists.email,
-        pictureUrl: userExists.pictureUrl,
-        role: userExists.role,
-      },
+    const jwtUser: JWTUser = {
+      id: existingUser.id,
+      name: existingUser.name,
+      email: existingUser.email,
+      googleId: existingUser.googleId,
+    };
+
+    return this.jwtService.sign({
+      user: jwtUser,
     });
   }
 
