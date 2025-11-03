@@ -1,16 +1,11 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { FriendResponse } from "@repo/shared/responses";
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 import { FriendsService } from "@/lib/api/Friends.service";
 
-type Friend = {
-  id: string;
-  name: string;
-  avatar: string | null;
-};
-
 interface FriendsStore {
-  friends: Friend[];
+  friends: FriendResponse[];
 
   fetchUserFriends: () => Promise<void>;
   addFriend: (inviteCode: string) => Promise<void>;

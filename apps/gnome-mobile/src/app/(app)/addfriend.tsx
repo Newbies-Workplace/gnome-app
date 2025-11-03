@@ -1,29 +1,38 @@
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { useNavigation } from "@react-navigation/native";
 import { useRouter } from "expo-router";
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { FlatList, Image, TouchableOpacity, View } from "react-native";
 import { QrCodeSvg } from "react-native-qr-svg";
-import { SafeAreaView } from "react-native-safe-area-context";
 import ArrowLeft from "@/assets/icons/arrow-left.svg";
+import CameraIcon from "@/assets/icons/camera.svg";
+import CopyIcon from "@/assets/icons/copy.svg";
+import RefreshIcon from "@/assets/icons/refresh.svg";
+import ShareIcon from "@/assets/icons/share-right.svg";
+import { ConfirmDialog } from "@/components/ConfirmDialog";
 import { Scanner } from "@/components/Scanner";
 import { Text } from "@/components/ui/text";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useFriendsStore } from "@/store/useFriendsStore";
 
-export default function AddFriend() {
+type DialogActions = "regenerate-invite-code" | "scan-qr-code";
+
+export default function AddFriendScreen() {
   const navigation = useNavigation();
   const router = useRouter();
   const { user, regenerateInviteCode } = useAuthStore();
-  const { friends, addFriend } = useFriendsStore();
+  const { addFriend } = useFriendsStore();
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
+  const [dialogAction, setDialogAction] = useState<DialogActions | null>(null);
 
-  const handleBottomSheetOpen = () => {
+  const handleBottomSheetOpen = (action: DialogActions) => {
+    setDialogAction(action);
     bottomSheetModalRef.current?.present();
   };
 
   const handleBottomSheetClose = () => {
     bottomSheetModalRef.current?.close();
+    setDialogAction(null);
   };
 
   const onCodeScanned = (code: string) => {
@@ -33,76 +42,135 @@ export default function AddFriend() {
     });
   };
 
+  const splittedInviteCode = user!.inviteCode
+    .split(/(.{4})/)
+    .filter(Boolean)
+    .join(" ");
+
   useEffect(() => {
     navigation.setOptions({
       headerLeft: () => (
-        <TouchableOpacity className="p-5" onPress={() => router.back()}>
-          <ArrowLeft className="w-7 h-7" />
+        <TouchableOpacity className="px-5" onPress={() => router.back()}>
+          <ArrowLeft className="size-7" />
         </TouchableOpacity>
       ),
       headerTitle: () => (
         <Text className="text-white font-bold text-2xl text-center tracking-wide">
-          Dodaj znajomego
+          Nawiąż znajomość
         </Text>
       ),
       headerTitleAlign: "center",
-      headerStyle: { backgroundColor: "#131413" },
+      headerStyle: { backgroundColor: "#1E201E" },
       headerShadowVisible: false,
+      headerShown: true,
     });
   }, [navigation, router]);
 
   return (
-    <SafeAreaView className="flex-1 bg-background p-6 items-center gap-10">
-      <QrCodeSvg
-        value={user!.inviteCode}
-        dotColor="hsl(359 63.4% 56.1%)"
-        backgroundColor="transparent"
-        frameSize={350}
-        contentCells={5}
-      />
-      <View className="flex-row gap-5">
-        <TouchableOpacity onPress={handleBottomSheetOpen}>
-          <Text className="text-white">SKANUJ KOD</Text>
-        </TouchableOpacity>
-        <BottomSheetModal
-          handleIndicatorStyle={{
-            backgroundColor: "#1E1E1E",
-            width: 100,
-            marginTop: 8,
+    <View className="flex-1 bg-background p-6 items-center gap-5">
+      <View className="w-full flex-row items-center gap-3">
+        <Image
+          source={{
+            uri: user!.pictureUrl,
           }}
-          ref={bottomSheetModalRef}
-          enableDismissOnClose
-          onDismiss={handleBottomSheetClose}
-        >
-          <Scanner onCodeScanned={onCodeScanned} />
-        </BottomSheetModal>
-
-        <TouchableOpacity onPress={() => regenerateInviteCode()}>
-          <Text className="text-white">NOWY KOD</Text>
-        </TouchableOpacity>
+          className="size-16 rounded-lg"
+        />
+        <View>
+          <Text className="text-white text-lg font-semibold">{user!.name}</Text>
+          <Text className="text-white/50 text-md">Początkowy zbieracz</Text>
+        </View>
       </View>
-      <View className="w-full gap-2">
-        <Text className="text-white text-lg">Znajomi:</Text>
-        <FlatList
-          data={friends}
-          keyExtractor={(item) => item.id}
-          renderItem={({ item }) => (
-            <View className="flex flex-row items-center justify-between mb-4">
-              <View className="flex flex-row items-center">
-                <Image
-                  source={{
-                    uri: item.avatar ?? "https://i.pravatar.cc/150?img=2",
-                  }}
-                  className="w-10 h-10 rounded-full mr-3"
-                />
-                <Text className="text-white text-lg font-semibold">
-                  {item.name}
-                </Text>
-              </View>
-            </View>
-          )}
+      <Spacer title="twój kod znajomego" />
+      <View className="bg-white p-5 rounded-xl">
+        <QrCodeSvg
+          value={user!.inviteCode}
+          backgroundColor="transparent"
+          frameSize={240}
         />
       </View>
-    </SafeAreaView>
+      <Text className="text-primary text-3xl font-bold">
+        {splittedInviteCode}
+      </Text>
+      <View className="flex-row gap-4">
+        <IconWrapper onPressAction={() => {}}>
+          <CopyIcon width={20} height={20} />
+        </IconWrapper>
+        <IconWrapper
+          onPressAction={() => handleBottomSheetOpen("regenerate-invite-code")}
+        >
+          <RefreshIcon width={20} height={20} />
+        </IconWrapper>
+        <IconWrapper onPressAction={() => {}}>
+          <ShareIcon width={20} height={20} />
+        </IconWrapper>
+      </View>
+      <Spacer title="dodaj znajomego" />
+      <View>
+        <IconWrapper
+          onPressAction={() => handleBottomSheetOpen("scan-qr-code")}
+        >
+          <CameraIcon width={20} height={20} />
+        </IconWrapper>
+      </View>
+      <BottomSheetModal
+        handleIndicatorStyle={{
+          backgroundColor: "#D9D9D9",
+          width: 94,
+          marginTop: 8,
+          borderRadius: 4,
+        }}
+        backgroundStyle={{ backgroundColor: "#1E1E1E" }}
+        ref={bottomSheetModalRef}
+        enableDismissOnClose
+        onDismiss={handleBottomSheetClose}
+      >
+        {dialogAction === "regenerate-invite-code" ? (
+          <ConfirmDialog
+            title="czy na pewno chcesz zresetować kod zaproszenia?"
+            description="stary kod przestanie być aktualny."
+            onDecline={handleBottomSheetClose}
+            onConfirm={async () => {
+              await regenerateInviteCode();
+              handleBottomSheetClose();
+            }}
+            confirmContent={
+              <>
+                <Text className="text-white">Resetuj</Text>
+                <RefreshIcon width={16} height={16} />
+              </>
+            }
+          />
+        ) : (
+          <Scanner onCodeScanned={onCodeScanned} />
+        )}
+      </BottomSheetModal>
+    </View>
   );
 }
+
+const Spacer = ({ title }: { title: string }) => {
+  return (
+    <View className="w-full flex-row items-center">
+      <View className="flex-1 h-1 bg-primary rounded-full" />
+      <Text className="px-2 text-white">{title}</Text>
+      <View className="flex-1 h-1 bg-primary rounded-full" />
+    </View>
+  );
+};
+
+const IconWrapper = ({
+  children,
+  onPressAction,
+}: {
+  children: React.ReactNode;
+  onPressAction: () => void;
+}) => {
+  return (
+    <TouchableOpacity
+      onPress={onPressAction}
+      className="bg-primary p-3 rounded-full"
+    >
+      {children}
+    </TouchableOpacity>
+  );
+};
