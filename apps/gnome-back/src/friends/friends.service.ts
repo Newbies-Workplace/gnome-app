@@ -3,8 +3,12 @@ import {
   Injectable,
   NotFoundException,
 } from "@nestjs/common";
-import { Friendship } from "@prisma/client";
-import { FriendSearchResponse, FriendsResponse } from "@repo/shared/responses";
+import { Friendship, User } from "@prisma/client";
+import {
+  FriendResponse,
+  FriendSearchResponse,
+  FriendShipResponse,
+} from "@repo/shared/responses";
 import { PrismaService } from "@/db/prisma.service";
 import { GnomesService } from "@/gnomes/gnomes.service";
 
@@ -15,24 +19,33 @@ export class FriendsService {
     private readonly gnomesService: GnomesService,
   ) {}
 
-  async findUserFriends(
-    senderId: string,
-  ): Promise<(Friendship & { interactions: number })[]> {
-    const friends = await this.prismaService.friendship.findMany({
+  async findUserFriends(senderId: string): Promise<FriendResponse[]> {
+    const friendShips = await this.prismaService.friendship.findMany({
       where: {
         OR: [{ senderId: senderId }, { receiverId: senderId }],
         status: "ACTIVE",
       },
+      select: {
+        sender: true,
+        receiver: true,
+      },
+    });
+
+    const friends = friendShips.map((friendShip) => {
+      const isSender = friendShip.sender.id === senderId;
+      return isSender ? friendShip.receiver : friendShip.sender;
     });
 
     return Promise.all(
       friends.map(async (friend) => {
         const interactions = await this.gnomesService.getInteractionCount(
-          friend.receiverId,
+          friend.id,
         );
         return {
-          ...friend,
-          interactions,
+          id: friend.id,
+          name: friend.name,
+          avatar: friend.pictureUrl,
+          interactions: interactions,
         };
       }),
     );
@@ -41,7 +54,7 @@ export class FriendsService {
   async findFriendship(
     senderId: string,
     receiverId: string,
-  ): Promise<FriendsResponse[] | null> {
+  ): Promise<FriendShipResponse[] | null> {
     return this.prismaService.friendship.findMany({
       where: {
         OR: [

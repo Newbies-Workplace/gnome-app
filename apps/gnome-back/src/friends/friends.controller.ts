@@ -8,7 +8,7 @@ import {
   UseGuards,
 } from "@nestjs/common";
 import { AddFriendRequest, DeleteFriend } from "@repo/shared/requests";
-import { FriendsResponse } from "@repo/shared/responses";
+import { FriendResponse } from "@repo/shared/responses";
 import { JWTUser } from "@/auth/jwt/JWTUser";
 import { JwtGuard } from "@/auth/jwt/jwt.guard";
 import { User } from "@/auth/jwt/jwtuser.decorator";
@@ -24,7 +24,7 @@ export class FriendsController {
 
   @Get("@me") // znajomi + ich interakcje
   @UseGuards(JwtGuard)
-  async findUserFriends(@User() user: JWTUser): Promise<FriendsResponse[]> {
+  async findUserFriends(@User() user: JWTUser): Promise<FriendResponse[]> {
     const myFriends = await this.friendsService.findUserFriends(user.id);
     return myFriends;
   }

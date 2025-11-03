@@ -81,7 +81,8 @@ export default function AddFriend() {
           <Text className="text-white">NOWY KOD</Text>
         </TouchableOpacity>
       </View>
-      <View className="w-full">
+      <View className="w-full gap-2">
+        <Text className="text-white text-lg">Znajomi:</Text>
         <FlatList
           data={friends}
           keyExtractor={(item) => item.id}
@@ -98,10 +99,6 @@ export default function AddFriend() {
                   {item.name}
                 </Text>
               </View>
-
-              <TouchableOpacity className="bg-red-500 px-4 py-2 rounded-full">
-                <Text className="text-white font-semibold">+ Dodaj</Text>
-              </TouchableOpacity>
             </View>
           )}
         />

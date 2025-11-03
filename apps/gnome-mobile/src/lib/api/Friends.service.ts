@@ -1,4 +1,3 @@
-import { FriendsResponse } from "@repo/shared/responses";
 import { axiosInstance } from "@/lib/api/axios";
 
 const findUserFriends = async () => {
