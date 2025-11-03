@@ -11,6 +11,7 @@ import RefreshIcon from "@/assets/icons/refresh.svg";
 import ShareIcon from "@/assets/icons/share-right.svg";
 import { ConfirmDialog } from "@/components/ConfirmDialog";
 import { Scanner } from "@/components/Scanner";
+import { Input } from "@/components/ui/input";
 import { Text } from "@/components/ui/text";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useFriendsStore } from "@/store/useFriendsStore";
@@ -105,7 +106,11 @@ export default function AddFriendScreen() {
         </IconWrapper>
       </View>
       <Spacer title="dodaj znajomego" />
-      <View>
+      <View className="flex-row w-full gap-2 p-3 border-primary border rounded-xl">
+        <Input
+          className="flex-1 text-white/50 border-background text-3xl font-bold text-center"
+          placeholder="0000 0000 0000 0000"
+        />
         <IconWrapper
           onPressAction={() => handleBottomSheetOpen("scan-qr-code")}
         >
@@ -168,7 +173,7 @@ const IconWrapper = ({
   return (
     <TouchableOpacity
       onPress={onPressAction}
-      className="bg-primary p-3 rounded-full"
+      className="bg-primary p-3 rounded-full "
     >
       {children}
     </TouchableOpacity>
