@@ -3,8 +3,9 @@ import Clipboard from "@react-native-clipboard/clipboard";
 import { useNavigation } from "@react-navigation/native";
 import { useRouter } from "expo-router";
 import React, { useEffect, useRef, useState } from "react";
-import { FlatList, Image, TouchableOpacity, View } from "react-native";
+import { Image, TouchableOpacity, View } from "react-native";
 import { QrCodeSvg } from "react-native-qr-svg";
+import { useCameraDevice } from "react-native-vision-camera";
 import ArrowLeft from "@/assets/icons/arrow-left.svg";
 import CameraIcon from "@/assets/icons/camera.svg";
 import CopyIcon from "@/assets/icons/copy.svg";
@@ -28,6 +29,7 @@ export default function AddFriendScreen() {
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
   const [dialogAction, setDialogAction] = useState<DialogActions | null>(null);
   const [inviteCodeInputText, setInviteCodeInputText] = useState<string>("");
+  const device = useCameraDevice("back");
 
   const handleBottomSheetOpen = (action: DialogActions) => {
     setDialogAction(action);
@@ -135,7 +137,13 @@ export default function AddFriendScreen() {
           value={inviteCodeInputText}
           onChangeText={handleTextChange}
         />
-        {inviteCodeInputText.length >= 1 ? (
+        {inviteCodeInputText.length === 0 && device ? (
+          <IconWrapper
+            onPressAction={() => handleBottomSheetOpen("scan-qr-code")}
+          >
+            <CameraIcon width={20} height={20} />
+          </IconWrapper>
+        ) : (
           <IconWrapper
             disabled={inviteCodeInputText.replace(/ /g, "").length < 16}
             onPressAction={() =>
@@ -143,12 +151,6 @@ export default function AddFriendScreen() {
             }
           >
             <Text>+</Text>
-          </IconWrapper>
-        ) : (
-          <IconWrapper
-            onPressAction={() => handleBottomSheetOpen("scan-qr-code")}
-          >
-            <CameraIcon width={20} height={20} />
           </IconWrapper>
         )}
       </View>
@@ -181,7 +183,11 @@ export default function AddFriendScreen() {
             }
           />
         ) : (
-          <Scanner onCodeScanned={onCodeScanned} />
+          <Scanner
+            onCodeScanned={onCodeScanned}
+            onRequestPermission={() => bottomSheetModalRef.current?.close()}
+            device={device}
+          />
         )}
       </BottomSheetModal>
     </View>

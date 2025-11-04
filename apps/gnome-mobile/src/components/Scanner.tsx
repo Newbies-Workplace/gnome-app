@@ -3,17 +3,20 @@ import React from "react";
 import { Linking, Text, View } from "react-native";
 import {
   Camera,
-  useCameraDevice,
+  CameraDevice,
   useCodeScanner,
 } from "react-native-vision-camera";
 import { Button } from "./ui/button";
 
 export const Scanner = ({
   onCodeScanned,
+  onRequestPermission,
+  device,
 }: {
   onCodeScanned: (code: string) => void;
+  onRequestPermission: () => void;
+  device: CameraDevice | undefined;
 }) => {
-  const device = useCameraDevice("back");
   const permissionStatus = Camera.getCameraPermissionStatus();
   const [hasCodeScanned, setHasCodeScanned] = React.useState(false);
   const codeScanner = useCodeScanner({
@@ -34,6 +37,8 @@ export const Scanner = ({
     if (permissionStatus === "denied" || permissionStatus === "restricted") {
       Linking.openSettings();
     }
+
+    onRequestPermission();
   };
 
   return (
@@ -41,7 +46,7 @@ export const Scanner = ({
       {!device ||
         (permissionStatus !== "granted" && (
           <View className="gap-10 p-10">
-            <Text>
+            <Text className="text-white">
               Kamera jest potrzebna do zeskanowania kodu QR znajomego.
             </Text>
             <Button onPress={requestCameraPermission}>
