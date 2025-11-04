@@ -1,4 +1,5 @@
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
+import Clipboard from "@react-native-clipboard/clipboard";
 import { useNavigation } from "@react-navigation/native";
 import { useRouter } from "expo-router";
 import React, { useEffect, useRef, useState } from "react";
@@ -109,7 +110,9 @@ export default function AddFriendScreen() {
         {formatCode(user!.inviteCode)}
       </Text>
       <View className="flex-row gap-4">
-        <IconWrapper onPressAction={() => {}}>
+        <IconWrapper
+          onPressAction={() => Clipboard.setString(user!.inviteCode)}
+        >
           <CopyIcon width={20} height={20} />
         </IconWrapper>
         <IconWrapper
