@@ -13,6 +13,7 @@ import { ConfirmDialog } from "@/components/ConfirmDialog";
 import { Scanner } from "@/components/Scanner";
 import { Input } from "@/components/ui/input";
 import { Text } from "@/components/ui/text";
+import { cn } from "@/lib/utils";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useFriendsStore } from "@/store/useFriendsStore";
 
@@ -25,6 +26,7 @@ export default function AddFriendScreen() {
   const { addFriend } = useFriendsStore();
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
   const [dialogAction, setDialogAction] = useState<DialogActions | null>(null);
+  const [inviteCodeInputText, setInviteCodeInputText] = useState<string>("");
 
   const handleBottomSheetOpen = (action: DialogActions) => {
     setDialogAction(action);
@@ -36,6 +38,18 @@ export default function AddFriendScreen() {
     setDialogAction(null);
   };
 
+  const handleTextChange = (text: string) => {
+    const digitsOnly = text.replace(/[^0-9]/g, "");
+    setInviteCodeInputText(formatCode(digitsOnly));
+  };
+
+  const onCodeWrite = (code: string) => {
+    setInviteCodeInputText("");
+    addFriend(code).catch((err) => {
+      console.error("Error adding friend:", JSON.stringify(err));
+    });
+  };
+
   const onCodeScanned = (code: string) => {
     bottomSheetModalRef.current?.close();
     addFriend(code).catch((err) => {
@@ -43,10 +57,12 @@ export default function AddFriendScreen() {
     });
   };
 
-  const splittedInviteCode = user!.inviteCode
-    .split(/(.{4})/)
-    .filter(Boolean)
-    .join(" ");
+  const formatCode = (code: string) => {
+    return code
+      .split(/(.{4})/)
+      .filter(Boolean)
+      .join(" ");
+  };
 
   useEffect(() => {
     navigation.setOptions({
@@ -90,7 +106,7 @@ export default function AddFriendScreen() {
         />
       </View>
       <Text className="text-primary text-3xl font-bold">
-        {splittedInviteCode}
+        {formatCode(user!.inviteCode)}
       </Text>
       <View className="flex-row gap-4">
         <IconWrapper onPressAction={() => {}}>
@@ -106,16 +122,32 @@ export default function AddFriendScreen() {
         </IconWrapper>
       </View>
       <Spacer title="dodaj znajomego" />
-      <View className="flex-row w-full gap-2 p-3 border-primary border rounded-xl">
+      <View className="flex-row w-full gap-2 border-primary border rounded-2xl p-2">
         <Input
-          className="flex-1 text-white/50 border-background text-3xl font-bold text-center"
+          className="flex-1 text-white/50 font-bold text-center border-background"
           placeholder="0000 0000 0000 0000"
+          maxLength={19}
+          inputMode="numeric"
+          keyboardType="numeric"
+          value={inviteCodeInputText}
+          onChangeText={handleTextChange}
         />
-        <IconWrapper
-          onPressAction={() => handleBottomSheetOpen("scan-qr-code")}
-        >
-          <CameraIcon width={20} height={20} />
-        </IconWrapper>
+        {inviteCodeInputText.length >= 1 ? (
+          <IconWrapper
+            disabled={inviteCodeInputText.replace(/ /g, "").length < 16}
+            onPressAction={() =>
+              onCodeWrite(inviteCodeInputText.replace(/ /g, ""))
+            }
+          >
+            <Text>+</Text>
+          </IconWrapper>
+        ) : (
+          <IconWrapper
+            onPressAction={() => handleBottomSheetOpen("scan-qr-code")}
+          >
+            <CameraIcon width={20} height={20} />
+          </IconWrapper>
+        )}
       </View>
       <BottomSheetModal
         handleIndicatorStyle={{
@@ -166,14 +198,17 @@ const Spacer = ({ title }: { title: string }) => {
 const IconWrapper = ({
   children,
   onPressAction,
+  disabled,
 }: {
   children: React.ReactNode;
   onPressAction: () => void;
+  disabled?: boolean;
 }) => {
   return (
     <TouchableOpacity
-      onPress={onPressAction}
-      className="bg-primary p-3 rounded-full "
+      onPress={disabled ? undefined : onPressAction}
+      className={cn("bg-primary p-3 rounded-full", disabled && "opacity-60")}
+      disabled={disabled}
     >
       {children}
     </TouchableOpacity>
