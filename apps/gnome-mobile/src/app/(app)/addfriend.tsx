@@ -9,6 +9,7 @@ import { useCameraDevice } from "react-native-vision-camera";
 import ArrowLeft from "@/assets/icons/arrow-left.svg";
 import CameraIcon from "@/assets/icons/camera.svg";
 import CopyIcon from "@/assets/icons/copy.svg";
+import PlusIcon from "@/assets/icons/plus.svg";
 import RefreshIcon from "@/assets/icons/refresh.svg";
 import ShareIcon from "@/assets/icons/share-right.svg";
 import { ConfirmDialog } from "@/components/ConfirmDialog";
@@ -30,6 +31,7 @@ export default function AddFriendScreen() {
   const [dialogAction, setDialogAction] = useState<DialogActions | null>(null);
   const [inviteCodeInputText, setInviteCodeInputText] = useState<string>("");
   const device = useCameraDevice("back");
+  const IS_NATIVE_DIALOG_ADDED = false;
 
   const handleBottomSheetOpen = (action: DialogActions) => {
     setDialogAction(action);
@@ -122,18 +124,24 @@ export default function AddFriendScreen() {
         >
           <RefreshIcon width={20} height={20} />
         </IconWrapper>
-        <IconWrapper onPressAction={() => {}}>
-          <ShareIcon width={20} height={20} />
-        </IconWrapper>
+        {IS_NATIVE_DIALOG_ADDED && (
+          <IconWrapper onPressAction={() => {}}>
+            <ShareIcon width={20} height={20} />
+          </IconWrapper>
+        )}
       </View>
       <Spacer title="dodaj znajomego" />
-      <View className="flex-row w-full gap-2 border-primary border rounded-2xl p-2">
+      <View className="flex-row w-full items-center gap-2 border-primary border rounded-2xl p-2">
         <Input
-          className="flex-1 text-white/50 font-bold text-center border-background"
+          className="flex-1 text-white/50 bg-background font-bold text-center border-background"
           placeholder="0000 0000 0000 0000"
           maxLength={19}
           inputMode="numeric"
           keyboardType="numeric"
+          style={{
+            fontSize: 20,
+            marginTop: 5,
+          }}
           value={inviteCodeInputText}
           onChangeText={handleTextChange}
         />
@@ -150,7 +158,7 @@ export default function AddFriendScreen() {
               onCodeWrite(inviteCodeInputText.replace(/ /g, ""))
             }
           >
-            <Text>+</Text>
+            <PlusIcon width={20} height={20} />
           </IconWrapper>
         )}
       </View>
@@ -216,7 +224,10 @@ const IconWrapper = ({
   return (
     <TouchableOpacity
       onPress={disabled ? undefined : onPressAction}
-      className={cn("bg-primary p-3 rounded-full", disabled && "opacity-60")}
+      className={cn(
+        "bg-primary p-3 rounded-full h-12",
+        disabled && "opacity-60",
+      )}
       disabled={disabled}
     >
       {children}
