@@ -1,4 +1,4 @@
-export type JWTUser = {
+export type JwtUser = {
   id: string;
   name: string;
   email: string;
@@ -6,5 +6,5 @@ export type JWTUser = {
 };
 
 export type Token = {
-  user: JWTUser;
+  user: JwtUser;
 };

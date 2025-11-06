@@ -2,7 +2,7 @@ import { BadRequestException, Injectable } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import { GoogleUserResponse } from "@repo/shared/responses";
 import { OAuth2Client } from "google-auth-library";
-import { GoogleUser } from "@/auth/types/GoogleUser";
+import { GoogleUser } from "@/auth/types/google-user";
 import { PrismaService } from "@/db/prisma.service";
 
 @Injectable()

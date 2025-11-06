@@ -4,8 +4,8 @@ import { AuthGuard } from "@nestjs/passport";
 @Injectable()
 export class JwtGuard extends AuthGuard("jwt") {
   canActivate(context: ExecutionContext) {
-    const request = context.switchToHttp().getRequest();
-    console.log("Headers in JwtGuard:", request.headers);
+    // Left in case of crf token implementation
+    const _request = context.switchToHttp().getRequest();
     return super.canActivate(context);
   }
 }

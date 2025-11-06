@@ -20,9 +20,9 @@ import { FileInterceptor } from "@nestjs/platform-express";
 import { User as PrismaUser } from "@prisma/client";
 import { UserUpdate } from "@repo/shared/requests";
 import { UserPatchResponse } from "@repo/shared/responses";
-import { JWTUser } from "@/auth/jwt/JWTUser";
-import { JwtGuard } from "@/auth/jwt/jwt.guard";
-import { User } from "@/auth/jwt/jwtuser.decorator";
+import { User } from "@/auth/decorators/jwt-user.decorator";
+import { JwtGuard } from "@/auth/guards/jwt.guard";
+import { JwtUser } from "@/auth/types/jwt-user";
 import { MinioService } from "@/minio/minio.service";
 import { UsersService } from "@/users/users.service";
 
@@ -35,7 +35,7 @@ export class UsersController {
 
   @Get("@me") // moj profil
   @UseGuards(JwtGuard)
-  async getMe(@User() user: JWTUser): Promise<PrismaUser> {
+  async getMe(@User() user: JwtUser): Promise<PrismaUser> {
     return this.usersService.findUserById(user.id);
   }
 
@@ -43,7 +43,7 @@ export class UsersController {
   @UseInterceptors(FileInterceptor("file"))
   @UseGuards(JwtGuard)
   async changeUserData(
-    @User() user: JWTUser,
+    @User() user: JwtUser,
     @Body() body: UserUpdate,
     @UploadedFile(
       new ParseFilePipe({
