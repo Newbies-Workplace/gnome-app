@@ -28,7 +28,7 @@ export class FriendsController {
     private readonly friendsService: FriendsService,
   ) {}
 
-  @Get("@me") // znajomi + ich interakcje
+  @Get("@me")
   @UseGuards(JwtGuard)
   async findUserFriends(@User() user: JwtUser): Promise<FriendResponse[]> {
     const myFriends = await this.friendsService.findUserFriends(user.id);
@@ -61,7 +61,7 @@ export class FriendsController {
     return await this.friendsService.addFriend(user.id, reciever.id);
   }
 
-  @Delete("@me") // usun znajomego
+  @Delete("@me")
   @UseGuards(JwtGuard)
   async deleteFriend(@User() user: JwtUser, @Body() body: DeleteFriend) {
     const deleteFriend = await this.friendsService.deleteFriend(
