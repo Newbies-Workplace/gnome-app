@@ -13,61 +13,26 @@ import PlusIcon from "@/assets/icons/plus.svg";
 import RefreshIcon from "@/assets/icons/refresh.svg";
 import ShareIcon from "@/assets/icons/share-right.svg";
 import { ConfirmDialog } from "@/components/ConfirmDialog";
+import { Divider } from "@/components/Divider";
+import LoadingScreen from "@/components/LoadingScreen";
 import { Scanner } from "@/components/Scanner";
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Text } from "@/components/ui/text";
 import { cn } from "@/lib/utils";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useFriendsStore } from "@/store/useFriendsStore";
 
-type DialogActions = "regenerate-invite-code" | "scan-qr-code";
-
 export default function AddFriendScreen() {
+  const { user, regenerateInviteCode } = useAuthStore();
   const navigation = useNavigation();
   const router = useRouter();
-  const { user, regenerateInviteCode } = useAuthStore();
   const { addFriend } = useFriendsStore();
-  const bottomSheetModalRef = useRef<BottomSheetModal>(null);
-  const [dialogAction, setDialogAction] = useState<DialogActions | null>(null);
+  const regenerateInviteCodeSheetRef = useRef<BottomSheetModal>(null);
+  const scanInvitationSheetRef = useRef<BottomSheetModal>(null);
   const [inviteCodeInputText, setInviteCodeInputText] = useState<string>("");
   const device = useCameraDevice("back");
   const IS_NATIVE_DIALOG_ADDED = false;
-
-  const handleBottomSheetOpen = (action: DialogActions) => {
-    setDialogAction(action);
-    bottomSheetModalRef.current?.present();
-  };
-
-  const handleBottomSheetClose = () => {
-    bottomSheetModalRef.current?.close();
-    setDialogAction(null);
-  };
-
-  const handleTextChange = (text: string) => {
-    const digitsOnly = text.replace(/[^0-9]/g, "");
-    setInviteCodeInputText(formatCode(digitsOnly));
-  };
-
-  const onCodeWrite = (code: string) => {
-    setInviteCodeInputText("");
-    addFriend(code).catch((err) => {
-      console.error("Error adding friend:", JSON.stringify(err));
-    });
-  };
-
-  const onCodeScanned = (code: string) => {
-    bottomSheetModalRef.current?.close();
-    addFriend(code).catch((err) => {
-      console.error("Error adding friend:", JSON.stringify(err));
-    });
-  };
-
-  const formatCode = (code: string) => {
-    return code
-      .split(/(.{4})/)
-      .filter(Boolean)
-      .join(" ");
-  };
 
   useEffect(() => {
     navigation.setOptions({
@@ -88,49 +53,91 @@ export default function AddFriendScreen() {
     });
   }, [navigation, router]);
 
+  if (!user) {
+    return <LoadingScreen />;
+  }
+
+  const handleTextChange = (text: string) => {
+    const digitsOnly = text.replace(/[^0-9]/g, "");
+    setInviteCodeInputText(formatCode(digitsOnly));
+  };
+
+  const onCopyInviteCodePress = () => {
+    Clipboard.setString(user.inviteCode);
+  };
+
+  const onRefreshInviteCodePress = () => {
+    regenerateInviteCodeSheetRef.current?.present();
+  };
+
+  const onCodeWrite = (code: string) => {
+    setInviteCodeInputText("");
+    addFriend(code).catch((err) => {
+      console.error("Error adding friend:", JSON.stringify(err));
+    });
+  };
+
+  const onCodeScanned = (code: string) => {
+    scanInvitationSheetRef.current?.close();
+    addFriend(code).catch((err) => {
+      console.error("Error adding friend:", JSON.stringify(err));
+    });
+  };
+
+  const formatCode = (code: string) => {
+    return code
+      .split(/(.{4})/)
+      .filter(Boolean)
+      .join(" ");
+  };
+
   return (
     <View className="flex-1 bg-background p-6 items-center gap-5">
       <View className="w-full flex-row items-center gap-3">
         <Image
           source={{
-            uri: user!.pictureUrl,
+            uri: user.pictureUrl,
           }}
           className="size-16 rounded-lg"
         />
         <View>
-          <Text className="text-white text-lg font-semibold">{user!.name}</Text>
+          <Text className="text-white text-lg font-semibold">{user.name}</Text>
           <Text className="text-white/50 text-md">Początkowy zbieracz</Text>
         </View>
       </View>
-      <Spacer title="twój kod znajomego" />
+      <Divider title="twój kod znajomego" />
       <View className="bg-white p-5 rounded-xl">
         <QrCodeSvg
-          value={user!.inviteCode}
+          value={user.inviteCode}
           backgroundColor="transparent"
           frameSize={240}
         />
       </View>
       <Text className="text-primary text-3xl font-bold">
-        {formatCode(user!.inviteCode)}
+        {formatCode(user.inviteCode)}
       </Text>
       <View className="flex-row gap-4">
-        <IconWrapper
-          onPressAction={() => Clipboard.setString(user!.inviteCode)}
+        <Button
+          size="icon"
+          className="rounded-full"
+          onPress={onCopyInviteCodePress}
         >
           <CopyIcon width={20} height={20} />
-        </IconWrapper>
-        <IconWrapper
-          onPressAction={() => handleBottomSheetOpen("regenerate-invite-code")}
+        </Button>
+        <Button
+          size="icon"
+          className="rounded-full"
+          onPress={onRefreshInviteCodePress}
         >
           <RefreshIcon width={20} height={20} />
-        </IconWrapper>
+        </Button>
         {IS_NATIVE_DIALOG_ADDED && (
-          <IconWrapper onPressAction={() => {}}>
+          <Button size="icon" className="rounded-full" onPress={() => {}}>
             <ShareIcon width={20} height={20} />
-          </IconWrapper>
+          </Button>
         )}
       </View>
-      <Spacer title="dodaj znajomego" />
+      <Divider title="dodaj znajomego" />
       <View className="flex-row w-full items-center gap-2 border-primary border rounded-2xl p-2">
         <Input
           className="flex-1 text-white/50 bg-background font-bold text-center border-background"
@@ -146,20 +153,22 @@ export default function AddFriendScreen() {
           onChangeText={handleTextChange}
         />
         {inviteCodeInputText.length === 0 && device ? (
-          <IconWrapper
-            onPressAction={() => handleBottomSheetOpen("scan-qr-code")}
+          <Button
+            size="icon"
+            className="rounded-full"
+            onPress={() => scanInvitationSheetRef.current?.present()}
           >
             <CameraIcon width={20} height={20} />
-          </IconWrapper>
+          </Button>
         ) : (
-          <IconWrapper
+          <Button
+            size="icon"
+            className="rounded-full"
             disabled={inviteCodeInputText.replace(/ /g, "").length < 16}
-            onPressAction={() =>
-              onCodeWrite(inviteCodeInputText.replace(/ /g, ""))
-            }
+            onPress={() => onCodeWrite(inviteCodeInputText.replace(/ /g, ""))}
           >
             <PlusIcon width={20} height={20} />
-          </IconWrapper>
+          </Button>
         )}
       </View>
       <BottomSheetModal
@@ -170,67 +179,44 @@ export default function AddFriendScreen() {
           borderRadius: 4,
         }}
         backgroundStyle={{ backgroundColor: "#1E1E1E" }}
-        ref={bottomSheetModalRef}
+        ref={scanInvitationSheetRef}
         enableDismissOnClose
-        onDismiss={handleBottomSheetClose}
+        onDismiss={scanInvitationSheetRef.current?.close}
       >
-        {dialogAction === "regenerate-invite-code" ? (
-          <ConfirmDialog
-            title="czy na pewno chcesz zresetować kod zaproszenia?"
-            description="stary kod przestanie być aktualny."
-            onDecline={handleBottomSheetClose}
-            onConfirm={async () => {
-              await regenerateInviteCode();
-              handleBottomSheetClose();
-            }}
-            confirmContent={
-              <>
-                <Text className="text-white">Resetuj</Text>
-                <RefreshIcon width={16} height={16} />
-              </>
-            }
-          />
-        ) : (
-          <Scanner
-            onCodeScanned={onCodeScanned}
-            onRequestPermission={() => bottomSheetModalRef.current?.close()}
-            device={device}
-          />
-        )}
+        <Scanner
+          onCodeScanned={onCodeScanned}
+          onRequestPermission={() => scanInvitationSheetRef.current?.close()}
+          device={device}
+        />
+      </BottomSheetModal>
+      <BottomSheetModal
+        handleIndicatorStyle={{
+          backgroundColor: "#D9D9D9",
+          width: 94,
+          marginTop: 8,
+          borderRadius: 4,
+        }}
+        backgroundStyle={{ backgroundColor: "#1E1E1E" }}
+        ref={regenerateInviteCodeSheetRef}
+        enableDismissOnClose
+        onDismiss={regenerateInviteCodeSheetRef.current?.close}
+      >
+        <ConfirmDialog
+          title="czy na pewno chcesz zresetować kod zaproszenia?"
+          description="stary kod przestanie być aktualny."
+          onDecline={() => regenerateInviteCodeSheetRef.current?.close()}
+          onConfirm={async () => {
+            await regenerateInviteCode();
+            regenerateInviteCodeSheetRef.current?.close();
+          }}
+          confirmContent={
+            <>
+              <Text className="text-white">Resetuj</Text>
+              <RefreshIcon width={16} height={16} />
+            </>
+          }
+        />
       </BottomSheetModal>
     </View>
   );
 }
-
-const Spacer = ({ title }: { title: string }) => {
-  return (
-    <View className="w-full flex-row items-center">
-      <View className="flex-1 h-1 bg-primary rounded-full" />
-      <Text className="px-2 text-white">{title}</Text>
-      <View className="flex-1 h-1 bg-primary rounded-full" />
-    </View>
-  );
-};
-
-const IconWrapper = ({
-  children,
-  onPressAction,
-  disabled,
-}: {
-  children: React.ReactNode;
-  onPressAction: () => void;
-  disabled?: boolean;
-}) => {
-  return (
-    <TouchableOpacity
-      onPress={disabled ? undefined : onPressAction}
-      className={cn(
-        "bg-primary p-3 rounded-full h-12",
-        disabled && "opacity-60",
-      )}
-      disabled={disabled}
-    >
-      {children}
-    </TouchableOpacity>
-  );
-};

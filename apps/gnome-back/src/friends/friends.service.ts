@@ -19,11 +19,10 @@ export class FriendsService {
     private readonly gnomesService: GnomesService,
   ) {}
 
-  async findUserFriends(senderId: string): Promise<FriendResponse[]> {
+  async findUserFriends(userId: string): Promise<FriendResponse[]> {
     const friendShips = await this.prismaService.friendship.findMany({
       where: {
-        OR: [{ senderId: senderId }, { receiverId: senderId }],
-        status: "ACTIVE",
+        OR: [{ senderId: userId }, { receiverId: userId }],
       },
       select: {
         sender: true,
@@ -32,7 +31,7 @@ export class FriendsService {
     });
 
     const friends = friendShips.map((friendShip) => {
-      const isSender = friendShip.sender.id === senderId;
+      const isSender = friendShip.sender.id === userId;
       return isSender ? friendShip.receiver : friendShip.sender;
     });
 
@@ -70,7 +69,6 @@ export class FriendsService {
       data: {
         receiverId: receiverId,
         senderId: senderId,
-        status: "ACTIVE",
       },
     });
   }
@@ -78,13 +76,9 @@ export class FriendsService {
   async deleteFriend(senderId: string, receiverId: string) {
     return this.prismaService.$transaction(async (prisma) => {
       const findFriendship = await this.findFriendship(senderId, receiverId);
-      const friendshipStatus = findFriendship.map(
-        (friendship) => friendship.status,
-      );
 
       const deleteFriendship = await prisma.friendship.deleteMany({
         where: {
-          status: "ACTIVE",
           OR: [
             { senderId: senderId, receiverId: receiverId },
             { senderId: receiverId, receiverId: senderId },

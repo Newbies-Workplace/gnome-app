@@ -73,13 +73,10 @@ export interface FriendSearchResponse {
   pictureUrl: string;
 }
 
-export type Status = "ACTIVE" | "PENDING";
-
 export interface FriendShipResponse {
   id: string;
   senderId: string;
   receiverId: string;
-  status: Status;
 }
 
 export interface FriendResponse {

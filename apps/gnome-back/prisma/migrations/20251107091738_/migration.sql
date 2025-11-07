@@ -77,7 +77,6 @@ CREATE TABLE "GnomeInteraction" (
 -- CreateTable
 CREATE TABLE "Friendship" (
     "id" TEXT NOT NULL,
-    "status" "Status" NOT NULL DEFAULT 'PENDING',
     "senderId" TEXT NOT NULL,
     "receiverId" TEXT NOT NULL,
 

@@ -8,11 +8,17 @@ export const ConfirmDialog = ({
   description,
   onDecline,
   onConfirm,
-  confirmContent,
+  declineText = "Anuluj",
+  confirmContent = (
+    <>
+      <Text className="text-white">Potwierdź</Text>
+    </>
+  ),
 }: {
   title: string;
   description?: string;
-  confirmContent: React.ReactNode;
+  declineText?: string;
+  confirmContent?: React.ReactNode;
 
   onDecline: () => void;
   onConfirm: () => void;
@@ -29,7 +35,7 @@ export const ConfirmDialog = ({
           style={{ backgroundColor: "hsl(0, 0%, 17%)" }}
           className="flex-1 w-full flex-row gap-2 iteems-center"
         >
-          <Text className="text-white">Anuluj</Text>
+          <Text className="text-white">{declineText}</Text>
           <CloseIcon width={16} height={16} />
         </Button>
         <Button

@@ -32,10 +32,6 @@ export class FriendsController {
   @Post("@me")
   @UseGuards(JwtGuard)
   async addFriend(@User() user: JWTUser, @Body() body: AddFriendRequest) {
-    if (!/^[0-9]{16}$/.test(body.inviteCode)) {
-      throw new BadRequestException("Invalid invite code");
-    }
-
     const reciever = await this.prismaService.user.findUnique({
       where: { inviteCode: body.inviteCode },
     });
