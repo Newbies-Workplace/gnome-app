@@ -4,14 +4,20 @@ import {
   Controller,
   Delete,
   Get,
+  NotFoundException,
   Post,
   UseGuards,
 } from "@nestjs/common";
+import { Friendship } from "@prisma/client";
 import { AddFriendRequest, DeleteFriend } from "@repo/shared/requests";
-import { FriendResponse } from "@repo/shared/responses";
-import { JWTUser } from "@/auth/jwt/JWTUser";
-import { JwtGuard } from "@/auth/jwt/jwt.guard";
-import { User } from "@/auth/jwt/jwtuser.decorator";
+import {
+  FriendResponse,
+  FriendSearchResponse,
+  UserResponse,
+} from "@repo/shared/responses";
+import { User } from "@/auth/decorators/jwt-user.decorator";
+import { JwtGuard } from "@/auth/guards/jwt.guard";
+import { JwtUser } from "@/auth/types/jwt-user";
 import { PrismaService } from "@/db/prisma.service";
 import { FriendsService } from "./friends.service";
 
@@ -24,14 +30,14 @@ export class FriendsController {
 
   @Get("@me") // znajomi + ich interakcje
   @UseGuards(JwtGuard)
-  async findUserFriends(@User() user: JWTUser): Promise<FriendResponse[]> {
+  async findUserFriends(@User() user: JwtUser): Promise<FriendResponse[]> {
     const myFriends = await this.friendsService.findUserFriends(user.id);
     return myFriends;
   }
 
   @Post("@me")
   @UseGuards(JwtGuard)
-  async addFriend(@User() user: JWTUser, @Body() body: AddFriendRequest) {
+  async addFriend(@User() user: JwtUser, @Body() body: AddFriendRequest) {
     const reciever = await this.prismaService.user.findUnique({
       where: { inviteCode: body.inviteCode },
     });
@@ -57,7 +63,7 @@ export class FriendsController {
 
   @Delete("@me") // usun znajomego
   @UseGuards(JwtGuard)
-  async deleteFriend(@User() user: JWTUser, @Body() body: DeleteFriend) {
+  async deleteFriend(@User() user: JwtUser, @Body() body: DeleteFriend) {
     const deleteFriend = await this.friendsService.deleteFriend(
       user.id,
       body.friendId,

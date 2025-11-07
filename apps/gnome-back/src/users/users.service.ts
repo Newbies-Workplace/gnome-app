@@ -1,8 +1,9 @@
 import { Injectable } from "@nestjs/common";
-import { Friendship, Gnome, GnomeInteraction, User } from "@prisma/client";
+import { User } from "@prisma/client";
 import { customAlphabet } from "nanoid";
-import { GoogleUser } from "@/auth/types/GoogleUser";
+import { GoogleUser } from "@/auth/types/google-user";
 import { PrismaService } from "@/db/prisma.service";
+
 @Injectable()
 export class UsersService {
   constructor(private readonly prismaService: PrismaService) {}
@@ -14,6 +15,7 @@ export class UsersService {
       },
     });
   }
+
   async findAll(): Promise<User[]> {
     return this.prismaService.user.findMany();
   }

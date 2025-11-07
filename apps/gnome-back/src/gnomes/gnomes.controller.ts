@@ -23,9 +23,9 @@ import {
   InteractionResponse,
 } from "@repo/shared/responses";
 import { Express } from "express";
-import { JWTUser } from "@/auth/jwt/JWTUser";
-import { JwtGuard } from "@/auth/jwt/jwt.guard";
-import { User } from "@/auth/jwt/jwtuser.decorator";
+import { User } from "@/auth/decorators/jwt-user.decorator";
+import { JwtGuard } from "@/auth/guards/jwt.guard";
+import { JwtUser } from "@/auth/types/jwt-user";
 import { MinioService } from "@/minio/minio.service";
 import { Role } from "@/role/role.decorator";
 import { RoleGuard } from "@/roleguard/role.guard";
@@ -82,7 +82,7 @@ export class GnomesController {
   @Get("@me/interactions")
   @UseGuards(JwtGuard)
   async getMyGnomesInteractions(
-    @User() user: JWTUser,
+    @User() user: JwtUser,
   ): Promise<InteractionResponse[]> {
     return this.gnomeService.getMyGnomesInteractions(user.id);
   }
@@ -136,7 +136,7 @@ export class GnomesController {
       }),
     )
     file: Express.Multer.File,
-    @User() user: JWTUser,
+    @User() user: JwtUser,
     @Body() body: CreateInteractionRequest,
   ): Promise<InteractionResponse> {
     await this.minioService.createBucketIfNotExists();

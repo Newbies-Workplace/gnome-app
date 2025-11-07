@@ -2,8 +2,8 @@ import { Injectable } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import { GoogleUserResponse } from "@repo/shared/responses";
 import { OAuth2Client } from "google-auth-library";
-import { JWTUser } from "@/auth/jwt/JWTUser";
-import { GoogleUser } from "@/auth/types/GoogleUser";
+import { GoogleUser } from "@/auth/types/google-user";
+import { JwtUser } from "@/auth/types/jwt-user";
 import { PrismaService } from "@/db/prisma.service";
 import { UsersService } from "@/users/users.service";
 
@@ -35,7 +35,7 @@ export class AuthService {
       });
     }
 
-    const jwtUser: JWTUser = {
+    const jwtUser: JwtUser = {
       id: existingUser.id,
       name: existingUser.name,
       email: existingUser.email,
