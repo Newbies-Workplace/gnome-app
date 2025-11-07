@@ -1,5 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { User } from "@prisma/client";
+import { customAlphabet } from "nanoid";
 import { GoogleUser } from "@/auth/types/google-user";
 import { PrismaService } from "@/db/prisma.service";
 
@@ -14,6 +15,7 @@ export class UsersService {
       },
     });
   }
+
   async findAll(): Promise<User[]> {
     return this.prismaService.user.findMany();
   }
@@ -43,6 +45,13 @@ export class UsersService {
     });
   }
 
+  async generateInviteCode() {
+    const alphabet = "0123456789";
+    const nanoid = customAlphabet(alphabet, 16);
+
+    return nanoid();
+  }
+
   async createUserWithGoogleData(data: GoogleUser): Promise<User> {
     return this.prismaService.user.create({
       data: {
@@ -50,6 +59,7 @@ export class UsersService {
         name: data.name,
         pictureUrl: data.pictureUrl,
         googleId: data.id,
+        inviteCode: await this.generateInviteCode(),
       },
     });
   }
@@ -60,5 +70,16 @@ export class UsersService {
         googleId,
       },
     });
+  }
+
+  async regenerateInviteCode(userId: string): Promise<string> {
+    const newInviteCode = await this.generateInviteCode();
+
+    await this.prismaService.user.update({
+      where: { id: userId },
+      data: { inviteCode: newInviteCode },
+    });
+
+    return newInviteCode;
   }
 }

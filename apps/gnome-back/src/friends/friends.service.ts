@@ -3,8 +3,12 @@ import {
   Injectable,
   NotFoundException,
 } from "@nestjs/common";
-import { Friendship } from "@prisma/client";
-import { FriendSearchResponse, FriendsResponse } from "@repo/shared/responses";
+import { Friendship, User } from "@prisma/client";
+import {
+  FriendResponse,
+  FriendSearchResponse,
+  FriendShipResponse,
+} from "@repo/shared/responses";
 import { PrismaService } from "@/db/prisma.service";
 import { GnomesService } from "@/gnomes/gnomes.service";
 
@@ -15,48 +19,32 @@ export class FriendsService {
     private readonly gnomesService: GnomesService,
   ) {}
 
-  async searchForFriend(name: string): Promise<FriendSearchResponse[]> {
-    return this.prismaService.user.findMany({
+  async findUserFriends(userId: string): Promise<FriendResponse[]> {
+    const friendShips = await this.prismaService.friendship.findMany({
       where: {
-        name: {
-          contains: name,
-          mode: "insensitive",
-        },
+        OR: [{ senderId: userId }, { receiverId: userId }],
       },
       select: {
-        id: true,
-        name: true,
-        pictureUrl: true,
+        sender: true,
+        receiver: true,
       },
     });
-  }
 
-  async findPendingRequests(senderId: string): Promise<Friendship[]> {
-    return this.prismaService.friendship.findMany({
-      where: {
-        OR: [{ senderId: senderId }, { receiverId: senderId }],
-        status: "PENDING",
-      },
-    });
-  }
-  async findUserFriends(
-    senderId: string,
-  ): Promise<(Friendship & { interactions: number })[]> {
-    const friends = await this.prismaService.friendship.findMany({
-      where: {
-        senderId: senderId,
-        status: "ACTIVE",
-      },
+    const friends = friendShips.map((friendShip) => {
+      const isSender = friendShip.sender.id === userId;
+      return isSender ? friendShip.receiver : friendShip.sender;
     });
 
     return Promise.all(
       friends.map(async (friend) => {
         const interactions = await this.gnomesService.getInteractionCount(
-          friend.receiverId,
+          friend.id,
         );
         return {
-          ...friend,
-          interactions,
+          id: friend.id,
+          name: friend.name,
+          avatar: friend.pictureUrl,
+          interactions: interactions,
         };
       }),
     );
@@ -65,7 +53,7 @@ export class FriendsService {
   async findFriendship(
     senderId: string,
     receiverId: string,
-  ): Promise<FriendsResponse[] | null> {
+  ): Promise<FriendShipResponse[] | null> {
     return this.prismaService.friendship.findMany({
       where: {
         OR: [
@@ -75,111 +63,22 @@ export class FriendsService {
       },
     });
   }
-  async sendFriendRequest(
-    senderId: string,
-    receiverId: string,
-  ): Promise<FriendsResponse | null> {
-    if (senderId !== receiverId) {
-      const findFriend = await this.prismaService.user.findUnique({
-        where: {
-          id: receiverId,
-        },
-      });
-      if (!findFriend) {
-        throw new NotFoundException("Nie znaleziono użytkownika");
-      }
-      const findFriendship = await this.findFriendship(senderId, receiverId);
-      const friendshipStatus = findFriendship.map(
-        (friendship) => friendship.status,
-      );
 
-      if (friendshipStatus.includes("ACTIVE")) {
-        throw new BadRequestException("Już jesteście znajomymi");
-      }
-      if (friendshipStatus.includes("PENDING")) {
-        throw new BadRequestException("Już wysłałeś zaproszenie");
-      }
-
-      const inviteFriend = await this.prismaService.friendship.create({
-        data: {
-          senderId: senderId,
-          receiverId: receiverId,
-        },
-      });
-
-      return inviteFriend;
-    }
-    throw new BadRequestException("Nie możesz zaprosić siebie");
-  }
-  async acceptFriendRequest(senderId: string, receiverId: string) {
-    return await this.prismaService.$transaction(async (prisma) => {
-      const findFriendship = await this.findFriendship(senderId, receiverId);
-      const friendshipStatus = findFriendship.map(
-        (friendship) => friendship.status,
-      );
-      if (!friendshipStatus.includes("PENDING")) {
-        throw new BadRequestException("Nie masz zaproszenia do znajomych");
-      }
-      const updatedFriendship = await prisma.friendship.updateMany({
-        where: {
-          senderId: senderId,
-          receiverId: receiverId,
-          status: "PENDING",
-        },
-        data: {
-          status: "ACTIVE",
-        },
-      });
-
-      const newFriendship = await prisma.friendship.create({
-        data: {
-          senderId: receiverId,
-          receiverId: senderId,
-          status: "ACTIVE",
-        },
-      });
-
-      return { updatedFriendship, newFriendship };
-    });
-  }
-
-  async cancelInvitaion(senderId: string, receiverId: string) {
-    return this.prismaService.$transaction(async (prisma) => {
-      const findFriendship = await this.findFriendship(senderId, receiverId);
-      const friendshipStatus = findFriendship.map(
-        (friendship) => friendship.status,
-      );
-      if (!friendshipStatus.includes("PENDING")) {
-        throw new BadRequestException("Nie masz zaproszenia do znajomych");
-      }
-      const cancelOutgoingInvitation = await prisma.friendship.deleteMany({
-        where: {
-          senderId: senderId,
-          receiverId: receiverId,
-          status: "PENDING",
-        },
-      });
-      const cancelIncomingInvitation = await prisma.friendship.deleteMany({
-        where: {
-          senderId: receiverId,
-          receiverId: senderId,
-          status: "PENDING",
-        },
-      });
-      return { cancelOutgoingInvitation, cancelIncomingInvitation };
+  async addFriend(senderId: string, receiverId: string) {
+    return this.prismaService.friendship.create({
+      data: {
+        receiverId: receiverId,
+        senderId: senderId,
+      },
     });
   }
 
   async deleteFriend(senderId: string, receiverId: string) {
     return this.prismaService.$transaction(async (prisma) => {
       const findFriendship = await this.findFriendship(senderId, receiverId);
-      const friendshipStatus = findFriendship.map(
-        (friendship) => friendship.status,
-      );
 
       const deleteFriendship = await prisma.friendship.deleteMany({
         where: {
-          status: "ACTIVE",
           OR: [
             { senderId: senderId, receiverId: receiverId },
             { senderId: receiverId, receiverId: senderId },

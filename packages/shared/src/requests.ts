@@ -8,6 +8,7 @@ import {
   IsString,
   IsUrl,
   IsUUID,
+  Matches,
 } from "class-validator";
 
 export class UserUpdate {
@@ -81,14 +82,9 @@ export class CreateInteractionRequest {
   gnomeId!: string;
 }
 
-export class AcceptFriendRequest {
-  @IsUUID()
-  senderId!: string;
-}
-
-export class SendFriendRequest {
-  @IsUUID()
-  friendId!: string;
+export class AddFriendRequest {
+  @Matches(/^[0-9]{16}$/)
+  inviteCode!: string;
 }
 
 export class DeleteFriend {

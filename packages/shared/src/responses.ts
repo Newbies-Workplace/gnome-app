@@ -3,6 +3,7 @@ export interface UserResponse {
   email: string;
   name: string;
   pictureUrl: string;
+  inviteCode: string;
 }
 
 export interface UserPatchResponse {
@@ -72,13 +73,17 @@ export interface FriendSearchResponse {
   pictureUrl: string;
 }
 
-export type Status = "ACTIVE" | "PENDING";
-
-export interface FriendsResponse {
+export interface FriendShipResponse {
   id: string;
   senderId: string;
   receiverId: string;
-  status: Status;
+}
+
+export interface FriendResponse {
+  id: string;
+  name: string;
+  avatar: string | null;
+  interactions: number;
 }
 
 export interface TeamMembersResponse {

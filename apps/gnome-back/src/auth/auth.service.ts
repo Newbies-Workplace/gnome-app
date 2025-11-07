@@ -1,9 +1,11 @@
-import { BadRequestException, Injectable } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import { GoogleUserResponse } from "@repo/shared/responses";
 import { OAuth2Client } from "google-auth-library";
 import { GoogleUser } from "@/auth/types/google-user";
+import { JwtUser } from "@/auth/types/jwt-user";
 import { PrismaService } from "@/db/prisma.service";
+import { UsersService } from "@/users/users.service";
 
 @Injectable()
 export class AuthService {
@@ -14,38 +16,34 @@ export class AuthService {
   constructor(
     private jwtService: JwtService,
     private prismaService: PrismaService,
+    private userService: UsersService,
   ) {}
 
-  generateJWT(payload) {
-    return this.jwtService.sign(payload);
-  }
-
   async googleAuth(user: GoogleUserResponse) {
-    let userExists = await this.prismaService.user.findFirst({
+    let existingUser = await this.prismaService.user.findFirst({
       where: {
         email: user.email,
       },
     });
 
-    if (!userExists) {
-      userExists = await this.prismaService.user.create({
-        data: {
-          email: user.email,
-          name: user.firstName,
-          pictureUrl: user.pictureUrl,
-          googleId: user.providerId,
-        },
+    if (!existingUser) {
+      existingUser = await this.userService.createUserWithGoogleData({
+        id: user.providerId,
+        email: user.email,
+        name: `${user.firstName} ${user.lastName}`,
+        pictureUrl: user.pictureUrl,
       });
     }
 
-    return await this.jwtService.sign({
-      user: {
-        id: userExists.id,
-        name: userExists.name,
-        email: userExists.email,
-        pictureUrl: userExists.pictureUrl,
-        role: userExists.role,
-      },
+    const jwtUser: JwtUser = {
+      id: existingUser.id,
+      name: existingUser.name,
+      email: existingUser.email,
+      googleId: existingUser.googleId,
+    };
+
+    return this.jwtService.sign({
+      user: jwtUser,
     });
   }
 

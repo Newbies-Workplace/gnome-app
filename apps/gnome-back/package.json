@@ -4,7 +4,7 @@
   "scripts": {
     "build": "yarn generate && nest build",
     "lint": "npx @biomejs/biome check --write ./src && prisma format",
-    "lint:ci": "npx @biomejs/biome ci ./src",
+    "lint:ci": "npx @biomejs/biome ci ./src --diagnostic-level=error",
     "studio": "prisma studio --port 5556",
     "generate": "prisma generate && prisma format",
     "start": "nest start",

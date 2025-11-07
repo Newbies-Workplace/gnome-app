@@ -4,9 +4,10 @@ import { UserRole } from "@prisma/client";
 import { GoogleUserResponse, UserResponse } from "@repo/shared/responses";
 import { Response } from "express";
 import { AuthService } from "@/auth/auth.service";
+import { GoogleAuthRequest } from "@/auth/dto/google-auth.request.dto";
+import { JwtUser } from "@/auth/types/jwt-user";
 import { UsersService } from "@/users/users.service";
 import { User } from "./decorators/jwt-user.decorator";
-import { GoogleAuthRequest } from "./dto/google-auth.request.dto";
 import { GoogleGuard } from "./guards/google.guard";
 
 @Controller("auth")
@@ -43,7 +44,10 @@ export class AuthController {
   }
 
   @Post("google")
-  async google(@Body() body: GoogleAuthRequest) {
+  async google(@Body() body: GoogleAuthRequest): Promise<{
+    user: UserResponse;
+    access_token: string;
+  }> {
     const userData = await this.authService.verifyGoogleToken(body.idToken);
     let user = await this.usersService.findUserByGoogleId(userData.id);
 
@@ -51,20 +55,22 @@ export class AuthController {
       user = await this.usersService.createUserWithGoogleData(userData);
     }
 
-    const payload: {
-      user: UserResponse;
-    } = {
+    const jwtUser: JwtUser = {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      googleId: user.googleId,
+    };
+
+    return {
       user: {
         id: user.id,
         name: user.name,
         email: user.email,
         pictureUrl: user.pictureUrl,
+        inviteCode: user.inviteCode,
       },
-    };
-
-    return {
-      user: payload.user,
-      access_token: await this.jwtService.signAsync(payload),
+      access_token: this.jwtService.sign({ user: jwtUser }),
     };
   }
 }

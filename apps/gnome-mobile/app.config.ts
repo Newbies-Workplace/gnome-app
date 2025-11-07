@@ -62,6 +62,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
       "react-native-vision-camera",
       {
         cameraPermissionText: "$(PRODUCT_NAME) needs access to your Camera.",
+        enableCodeScanner: true,
       },
     ],
     "expo-build-properties",

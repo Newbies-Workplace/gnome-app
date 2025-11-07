@@ -1,9 +1,11 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import type { UserResponse } from "@repo/shared/responses";
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 import { AuthService } from "@/lib/api/Auth.service";
 import { axiosInstance } from "@/lib/api/axios";
+import { UserService } from "@/lib/api/User.service";
 
 export interface AuthStore {
   user: UserResponse | null;
@@ -13,6 +15,7 @@ export interface AuthStore {
   init: () => Promise<void>;
   login: (googleIdToken: string) => Promise<void>;
   logout: () => Promise<void>;
+  regenerateInviteCode: () => Promise<void>;
 }
 
 export const useAuthStore = create<AuthStore>()(
@@ -42,7 +45,16 @@ export const useAuthStore = create<AuthStore>()(
       },
 
       logout: async () => {
+        await GoogleSignin.signOut();
         set({ user: null, accessToken: null, isLoading: false });
+      },
+
+      regenerateInviteCode: async () => {
+        const user = get().user;
+        if (!user) return;
+
+        const response = await UserService.regenerateInviteCode();
+        set({ user: { ...user, inviteCode: response.inviteCode } });
       },
     }),
     {

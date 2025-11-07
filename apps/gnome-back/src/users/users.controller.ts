@@ -2,16 +2,11 @@ import {
   BadRequestException,
   Body,
   Controller,
-  Delete,
   FileTypeValidator,
   Get,
   MaxFileSizeValidator,
-  Param,
   ParseFilePipe,
   Patch,
-  Post,
-  Query,
-  Req,
   UploadedFile,
   UseGuards,
   UseInterceptors,
@@ -76,5 +71,15 @@ export class UsersController {
     );
 
     return changeProfile;
+  }
+
+  @Patch("@me/invite-code")
+  @UseGuards(JwtGuard)
+  async regenerateInviteCode(
+    @User() user: JwtUser,
+  ): Promise<{ inviteCode: string }> {
+    const newInviteCode = await this.usersService.regenerateInviteCode(user.id);
+
+    return { inviteCode: newInviteCode };
   }
 }

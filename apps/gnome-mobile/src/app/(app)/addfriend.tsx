@@ -1,113 +1,222 @@
+import { BottomSheetModal } from "@gorhom/bottom-sheet";
+import Clipboard from "@react-native-clipboard/clipboard";
 import { useNavigation } from "@react-navigation/native";
 import { useRouter } from "expo-router";
-import React, { useEffect, useState } from "react";
-import {
-  FlatList,
-  Image,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import React, { useEffect, useRef, useState } from "react";
+import { Image, TouchableOpacity, View } from "react-native";
+import { QrCodeSvg } from "react-native-qr-svg";
+import { useCameraDevice } from "react-native-vision-camera";
 import ArrowLeft from "@/assets/icons/arrow-left.svg";
-import BackIcon from "@/assets/icons/arrow-left.svg";
-import SearchIcon from "@/assets/icons/search.svg";
+import CameraIcon from "@/assets/icons/camera.svg";
+import CopyIcon from "@/assets/icons/copy.svg";
+import PlusIcon from "@/assets/icons/plus.svg";
+import RefreshIcon from "@/assets/icons/refresh.svg";
+import ShareIcon from "@/assets/icons/share-right.svg";
+import { ConfirmDialog } from "@/components/ConfirmDialog";
+import { Divider } from "@/components/Divider";
+import LoadingScreen from "@/components/LoadingScreen";
+import { Scanner } from "@/components/Scanner";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Text } from "@/components/ui/text";
+import { cn } from "@/lib/utils";
+import { useAuthStore } from "@/store/useAuthStore";
+import { useFriendsStore } from "@/store/useFriendsStore";
 
-type FriendsListProps = {
-  friends: { id: string; name: string; avatar?: string }[];
-};
-
-const FriendsList: React.FC<FriendsListProps> = ({ friends }) => {
+export default function AddFriendScreen() {
+  const { user, regenerateInviteCode } = useAuthStore();
   const navigation = useNavigation();
   const router = useRouter();
-  //Header
+  const { addFriend } = useFriendsStore();
+  const regenerateInviteCodeSheetRef = useRef<BottomSheetModal>(null);
+  const scanInvitationSheetRef = useRef<BottomSheetModal>(null);
+  const [inviteCodeInputText, setInviteCodeInputText] = useState<string>("");
+  const device = useCameraDevice("back");
+  const IS_NATIVE_DIALOG_ADDED = false;
+
   useEffect(() => {
     navigation.setOptions({
       headerLeft: () => (
-        <TouchableOpacity className="p-5" onPress={() => router.back()}>
-          <BackIcon className="w-7 h-7" />
+        <TouchableOpacity className="px-5" onPress={() => router.back()}>
+          <ArrowLeft className="size-7" />
         </TouchableOpacity>
       ),
       headerTitle: () => (
-        <Text className="text-white text-2xl text-center font-bold tracking-wide">
-          Dodaj znajomego
+        <Text className="text-white font-bold text-2xl text-center tracking-wide">
+          Nawiąż znajomość
         </Text>
       ),
       headerTitleAlign: "center",
+      headerStyle: { backgroundColor: "#1E201E" },
       headerShadowVisible: false,
       headerShown: true,
     });
   }, [navigation, router]);
 
-  return (
-    <FlatList
-      data={friends}
-      keyExtractor={(item) => item.id}
-      renderItem={({ item }) => (
-        <View className="flex flex-row items-center justify-between mb-4">
-          {/* Avatar + Nickname */}
-          <View className="flex flex-row items-center">
-            <Image
-              source={{ uri: item.avatar }}
-              className="w-10 h-10 rounded-full mr-3"
-            />
-            <Text className="text-white text-lg font-semibold">
-              {item.name}
-            </Text>
-          </View>
-          {/* Przycisk Dodaj */}
-          <TouchableOpacity className="bg-red-500 px-4 py-2 rounded-full">
-            <Text className="text-white font-semibold">+ Dodaj</Text>
-          </TouchableOpacity>
-        </View>
-      )}
-    />
-  );
-};
+  if (!user) {
+    return <LoadingScreen />;
+  }
 
-export default function AddFriend() {
-  const navigation = useNavigation();
-  const router = useRouter();
-  const [searchQuery, setSearchQuery] = useState("");
-  const [friends, _setFriends] = useState([
-    { id: "1", name: "EdwardJajko", avatar: "https://i.pravatar.cc/150?img=2" },
-  ]);
+  const handleTextChange = (text: string) => {
+    const digitsOnly = text.replace(/[^0-9]/g, "");
+    setInviteCodeInputText(formatCode(digitsOnly));
+  };
 
-  useEffect(() => {
-    navigation.setOptions({
-      headerLeft: () => (
-        <TouchableOpacity className="p-5" onPress={() => router.back()}>
-          <ArrowLeft className="w-7 h-7" />
-        </TouchableOpacity>
-      ),
-      headerTitle: () => (
-        <Text className="text-white font-bold text-2xl text-center tracking-wide">
-          Dodaj znajomego
-        </Text>
-      ),
-      headerTitleAlign: "center",
-      headerStyle: { backgroundColor: "#131413" },
-      headerShadowVisible: false,
+  const onCopyInviteCodePress = () => {
+    Clipboard.setString(user.inviteCode);
+  };
+
+  const onRefreshInviteCodePress = () => {
+    regenerateInviteCodeSheetRef.current?.present();
+  };
+
+  const onCodeWrite = (code: string) => {
+    setInviteCodeInputText("");
+    addFriend(code).catch((err) => {
+      console.error("Error adding friend:", JSON.stringify(err));
     });
-  }, [navigation, router]);
+  };
+
+  const onCodeScanned = (code: string) => {
+    scanInvitationSheetRef.current?.close();
+    addFriend(code).catch((err) => {
+      console.error("Error adding friend:", JSON.stringify(err));
+    });
+  };
+
+  const formatCode = (code: string) => {
+    return code
+      .split(/(.{4})/)
+      .filter(Boolean)
+      .join(" ");
+  };
 
   return (
-    <SafeAreaView className="flex-1 bg-background px-6 pt-6">
-      <View className="flex flex-row items-center justify-between">
-        <View className="w-10" />
+    <View className="flex-1 bg-background p-6 items-center gap-5">
+      <View className="w-full flex-row items-center gap-3">
+        <Image
+          source={{
+            uri: user.pictureUrl,
+          }}
+          className="size-16 rounded-lg"
+        />
+        <View>
+          <Text className="text-white text-lg font-semibold">{user.name}</Text>
+          <Text className="text-white/50 text-md">Początkowy zbieracz</Text>
+        </View>
       </View>
-      <View className="mt-6 flex flex-row items-center bg-background rounded-full px-4 py-3 mb-6 border border-red-500">
-        <SearchIcon width={20} height={20} className="text-gray-400" />
-        <TextInput
-          className="flex-1 ml-2 text-white"
-          placeholder="Wpisz nazwę znajomego"
-          placeholderTextColor="#999"
-          value={searchQuery}
-          onChangeText={setSearchQuery}
+      <Divider title="twój kod znajomego" />
+      <View className="bg-white p-5 rounded-xl">
+        <QrCodeSvg
+          value={user.inviteCode}
+          backgroundColor="transparent"
+          frameSize={240}
         />
       </View>
-      <FriendsList friends={friends} />
-    </SafeAreaView>
+      <Text className="text-primary text-3xl font-bold">
+        {formatCode(user.inviteCode)}
+      </Text>
+      <View className="flex-row gap-4">
+        <Button
+          size="icon"
+          className="rounded-full"
+          onPress={onCopyInviteCodePress}
+        >
+          <CopyIcon width={20} height={20} />
+        </Button>
+        <Button
+          size="icon"
+          className="rounded-full"
+          onPress={onRefreshInviteCodePress}
+        >
+          <RefreshIcon width={20} height={20} />
+        </Button>
+        {IS_NATIVE_DIALOG_ADDED && (
+          <Button size="icon" className="rounded-full" onPress={() => {}}>
+            <ShareIcon width={20} height={20} />
+          </Button>
+        )}
+      </View>
+      <Divider title="dodaj znajomego" />
+      <View className="flex-row w-full items-center gap-2 border-primary border rounded-2xl p-2">
+        <Input
+          className="flex-1 text-white/50 bg-background font-bold text-center border-background"
+          placeholder="0000 0000 0000 0000"
+          maxLength={19}
+          inputMode="numeric"
+          keyboardType="numeric"
+          style={{
+            fontSize: 20,
+            marginTop: 5,
+          }}
+          value={inviteCodeInputText}
+          onChangeText={handleTextChange}
+        />
+        {inviteCodeInputText.length === 0 && device ? (
+          <Button
+            size="icon"
+            className="rounded-full"
+            onPress={() => scanInvitationSheetRef.current?.present()}
+          >
+            <CameraIcon width={20} height={20} />
+          </Button>
+        ) : (
+          <Button
+            size="icon"
+            className="rounded-full"
+            disabled={inviteCodeInputText.replace(/ /g, "").length < 16}
+            onPress={() => onCodeWrite(inviteCodeInputText.replace(/ /g, ""))}
+          >
+            <PlusIcon width={20} height={20} />
+          </Button>
+        )}
+      </View>
+      <BottomSheetModal
+        handleIndicatorStyle={{
+          backgroundColor: "#D9D9D9",
+          width: 94,
+          marginTop: 8,
+          borderRadius: 4,
+        }}
+        backgroundStyle={{ backgroundColor: "#1E1E1E" }}
+        ref={scanInvitationSheetRef}
+        enableDismissOnClose
+        onDismiss={scanInvitationSheetRef.current?.close}
+      >
+        <Scanner
+          onCodeScanned={onCodeScanned}
+          onRequestPermission={() => scanInvitationSheetRef.current?.close()}
+          device={device}
+        />
+      </BottomSheetModal>
+      <BottomSheetModal
+        handleIndicatorStyle={{
+          backgroundColor: "#D9D9D9",
+          width: 94,
+          marginTop: 8,
+          borderRadius: 4,
+        }}
+        backgroundStyle={{ backgroundColor: "#1E1E1E" }}
+        ref={regenerateInviteCodeSheetRef}
+        enableDismissOnClose
+        onDismiss={regenerateInviteCodeSheetRef.current?.close}
+      >
+        <ConfirmDialog
+          title="czy na pewno chcesz zresetować kod zaproszenia?"
+          description="stary kod przestanie być aktualny."
+          onDecline={() => regenerateInviteCodeSheetRef.current?.close()}
+          onConfirm={async () => {
+            await regenerateInviteCode();
+            regenerateInviteCodeSheetRef.current?.close();
+          }}
+          confirmContent={
+            <>
+              <Text className="text-white">Resetuj</Text>
+              <RefreshIcon width={16} height={16} />
+            </>
+          }
+        />
+      </BottomSheetModal>
+    </View>
   );
 }

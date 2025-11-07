@@ -75,13 +75,18 @@ export default function Friends() {
   }, [navigation, router]);
 
   return (
-    <SafeAreaView
-      className="flex-1 bg-background"
-      edges={["left", "right", "bottom"]}
-    >
+    <SafeAreaView className="flex-1 bg-background">
       <FlatList
         data={friendsData}
         keyExtractor={(item) => item.id}
+        ListHeaderComponent={
+          <TouchableOpacity
+            className="p-5"
+            onPress={() => router.push("/addfriend")}
+          >
+            <AddUser className="w-7 h-7" />
+          </TouchableOpacity>
+        }
         renderItem={({ item }) => (
           <FriendItem
             name={item.name}
