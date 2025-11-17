@@ -263,19 +263,20 @@ const MapScreen = () => {
         provider={PROVIDER_GOOGLE}
         zoomEnabled={true}
         zoomControlEnabled={false}
-        scrollEnabled={false}
+        scrollEnabled={true}
         customMapStyle={MapStyle}
         showsCompass={false}
         showsMyLocationButton={false}
         rotateEnabled={true}
+        poiClickEnabled={true}
         mapPadding={{
           top: 100,
           right: 5,
           bottom: 160,
           left: 5,
         }}
-        minZoomLevel={17}
-        maxZoomLevel={20}
+        minZoomLevel={10}
+        maxZoomLevel={18}
         ref={ref}
       >
         {filteredGnomes.map((gnome) => (
