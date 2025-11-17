@@ -142,7 +142,6 @@ async function main() {
       where: { id: gnome.id },
       update: {},
       create: {
-        pictureUrl: "",
         id: crypto.randomUUID(),
         name: gnome.name,
         latitude: gnome.latitude,

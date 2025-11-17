@@ -94,29 +94,9 @@ export class GnomesController {
   @Role(["ADMIN"])
   @UseInterceptors(FileInterceptor("file"))
   async createGnome(
-    @UploadedFile(
-      new ParseFilePipe({
-        fileIsRequired: false,
-        validators: [
-          new MaxFileSizeValidator({ maxSize: 10_000_000 }),
-          new FileTypeValidator({ fileType: "image/jpeg" }),
-        ],
-      }),
-    )
-    file: Express.Multer.File,
     @Body() createGnomeDto: CreateGnomeRequest,
   ): Promise<GnomeResponse> {
-    await this.minioService.createBucketIfNotExists();
-    const fileName = `${createGnomeDto.name}.jpg`;
-    const catalogueName = "defaultGnomePictures";
-    const filePath = `${catalogueName}/${fileName}`;
-    await this.minioService.uploadFile(file, fileName, catalogueName);
-    const fileUrl = await this.minioService.getFileUrl(filePath);
-
-    const gnomeCreate = await this.gnomeService.createGnome(
-      createGnomeDto,
-      fileUrl,
-    );
+    const gnomeCreate = await this.gnomeService.createGnome(createGnomeDto);
     return gnomeCreate;
   }
 

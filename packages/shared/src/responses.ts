@@ -32,7 +32,6 @@ export interface GnomeResponse {
   creationDate: Date;
   description: string;
   exists: boolean;
-  pictureUrl: string;
 }
 
 export interface GnomeIdResponse {
