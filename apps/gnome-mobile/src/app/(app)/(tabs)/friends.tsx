@@ -43,7 +43,7 @@ const FriendItem = ({
     </View>
     <View className="flex flex-row items-center">
       <Text className="text-white text-lg font-semibold mr-2">{score}</Text>
-      <GnomeIcon width={28} height={28} />
+      <GnomeIcon width={25} height={25} />
     </View>
   </View>
 );
