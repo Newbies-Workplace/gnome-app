@@ -70,14 +70,12 @@ export class GnomesService {
     userId: string,
     interactionDate: Date,
     gnomeId: string,
-    userPicture: string,
   ) {
     const createGnome = await this.prismaService.gnomeInteraction.create({
       data: {
         userId,
         interactionDate,
         gnomeId,
-        userPicture,
       },
     });
 

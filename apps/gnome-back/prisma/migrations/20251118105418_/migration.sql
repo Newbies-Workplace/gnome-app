@@ -69,7 +69,6 @@ CREATE TABLE "GnomeInteraction" (
     "interactionDate" TIMESTAMP(3) NOT NULL,
     "userId" TEXT NOT NULL,
     "gnomeId" TEXT NOT NULL,
-    "userPicture" TEXT NOT NULL,
 
     CONSTRAINT "GnomeInteraction_pkey" PRIMARY KEY ("id")
 );

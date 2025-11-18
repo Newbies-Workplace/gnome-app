@@ -54,7 +54,6 @@ export interface InteractionResponse {
   gnomeId: string;
   userId: string;
   interactionDate: Date;
-  userPicture?: string;
 }
 
 export interface ReportResponse {
