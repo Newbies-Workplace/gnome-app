@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { FlatList, Image, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import AddUser from "@/assets/icons/add-user.svg";
-import Mushroom from "@/assets/icons/mushroom.svg";
+import GnomeIcon from "@/assets/icons/gnome-icon.svg";
 import { Text } from "@/components/ui/text";
 
 const friendsData = [
@@ -43,7 +43,7 @@ const FriendItem = ({
     </View>
     <View className="flex flex-row items-center">
       <Text className="text-white text-lg font-semibold mr-2">{score}</Text>
-      <Mushroom width={28} height={28} />
+      <GnomeIcon width={25} height={25} />
     </View>
   </View>
 );
