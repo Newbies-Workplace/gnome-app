@@ -82,6 +82,16 @@ CREATE TABLE "Friendship" (
     CONSTRAINT "Friendship_pkey" PRIMARY KEY ("id")
 );
 
+-- CreateTable
+CREATE TABLE "Districts" (
+    "id" SERIAL NOT NULL,
+    "name" TEXT NOT NULL,
+    "points" JSONB[],
+    "bbox" JSONB[],
+
+    CONSTRAINT "Districts_pkey" PRIMARY KEY ("id")
+);
+
 -- CreateIndex
 CREATE UNIQUE INDEX "Team_id_key" ON "Team"("id");
 
@@ -108,6 +118,9 @@ CREATE UNIQUE INDEX "GnomeInteraction_id_key" ON "GnomeInteraction"("id");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Friendship_id_key" ON "Friendship"("id");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Districts_id_key" ON "Districts"("id");
 
 -- AddForeignKey
 ALTER TABLE "TeamMembership" ADD CONSTRAINT "TeamMembership_teamId_fkey" FOREIGN KEY ("teamId") REFERENCES "Team"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

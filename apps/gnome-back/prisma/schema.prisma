@@ -77,6 +77,13 @@ model Friendship {
   receiverId String
 }
 
+model Districts {
+  id        Int @id @unique @default(autoincrement())
+  name      String
+  points    Json
+  bbox      Json
+}
+
 enum UserRole {
   ADMIN
   USER
