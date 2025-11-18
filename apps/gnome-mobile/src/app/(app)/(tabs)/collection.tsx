@@ -50,7 +50,6 @@ const Collection = () => {
               onClick={() => router.push(`/gnomes/${item.id}`)}
               interaction={{
                 found: !!interaction,
-                userPicture: interaction?.userPicture,
               }}
             />
           );
