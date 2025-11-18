@@ -9,9 +9,9 @@ import React from "react";
 import { Pressable, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import type { SvgProps } from "react-native-svg";
+import GnomeIcon from "@/assets/icons/gnome-icon.svg";
 import NavFriendsIcon from "@/assets/icons/NavFriends.svg";
 import NavHomeIcon from "@/assets/icons/NavHome.svg";
-import NavMushroomIcon from "@/assets/icons/NavMushroom.svg";
 import { Text } from "@/components/ui/text";
 import { cn } from "@/lib/utils";
 
@@ -34,7 +34,7 @@ const HomeTabs = () => {
           </TabTrigger>
 
           <TabTrigger name={"Kolekcja"} href={"/collection"} asChild>
-            <TabButton Icon={NavMushroomIcon}>Kolekcja</TabButton>
+            <TabButton Icon={GnomeIcon}>Kolekcja</TabButton>
           </TabTrigger>
 
           <TabTrigger name={"Znajomi"} href={"/friends"} asChild>
