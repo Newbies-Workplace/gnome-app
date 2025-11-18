@@ -124,39 +124,10 @@ export class GnomesController {
 
   @Post("interaction")
   @UseGuards(JwtGuard)
-  @UseInterceptors(FileInterceptor("file"))
   async uploadFile(
-    @UploadedFile(
-      new ParseFilePipe({
-        fileIsRequired: false,
-        validators: [
-          new MaxFileSizeValidator({ maxSize: 10_000_000 }), // 10MB
-          new FileTypeValidator({ fileType: "image/jpeg" }),
-        ],
-      }),
-    )
-    file: Express.Multer.File,
     @User() user: JwtUser,
     @Body() body: CreateInteractionRequest,
   ): Promise<InteractionResponse> {
-    await this.minioService.createBucketIfNotExists();
-
-    const fileName = `${user.id}-${body.gnomeId}.jpg`;
-    const catalogueName = "userGnomes";
-    const filePath = `${catalogueName}/${fileName}`;
-    await this.minioService.uploadFile(file, fileName, catalogueName);
-    const gnomeName = (await this.gnomeService.getGnomeData(body.gnomeId)).name;
-
-    let fileUrl: string;
-
-    if (file) {
-      fileUrl = await this.minioService.getFileUrl(filePath);
-    } else {
-      fileUrl = await this.minioService.getFileUrl(
-        `defaultGnomePictures/${gnomeName}.jpg`,
-      );
-    }
-
     const team = await this.teamsService.getTeamWithMemberId(user.id);
     if (team && team.members.length > 1) {
       const interactions = team.members.map((member) => {
@@ -164,7 +135,6 @@ export class GnomesController {
           member.userId,
           body.interactionDate,
           body.gnomeId,
-          fileUrl,
         );
       });
       const resolvedInteractions = await Promise.all(interactions);
@@ -178,7 +148,6 @@ export class GnomesController {
       user.id,
       body.interactionDate,
       body.gnomeId,
-      fileUrl,
     );
 
     return interaction;
