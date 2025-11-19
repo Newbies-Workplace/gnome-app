@@ -19,6 +19,7 @@ export class DistrictsController {
   }
 
   @Post("")
-  @UseGuards(JwtGuard)
-  async createDistrict(@Body() body: CreateDistrict) {}
+  async createDistrict(@Body() body: CreateDistrict) {
+    return await this.districtService.createDistricts(body.name, body.points);
+  }
 }
