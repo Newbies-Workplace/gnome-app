@@ -66,12 +66,6 @@ export const useGnomeStore = create<GnomeState>((set) => ({
     console.log("Photo captured:", photoUrl);
     const form = new FormData();
     const interactionDate = new Date().toISOString();
-    form.append("file", {
-      uri: photoUrl,
-      name: "photo.jpg",
-      type: "image/jpeg",
-      // biome-ignore lint/suspicious/noExplicitAny: no types needed
-    } as any);
     form.append("interactionDate", interactionDate);
     form.append("gnomeId", gnomeId);
 
