@@ -27,7 +27,7 @@ function App() {
             Pobyt we Wrocławiu nie musi być nudny - odkrywaj krasnale i walcz o
             dominacje!
           </h2>
-          <h4 className="text-gray text-3xl">
+          <h4 className="text-gray-300 text-3xl">
             Dołącz do jednej z trzech drużyn, eksploruj swoją dzielnicę i buduj
             fortyfikacje, które inni bedą próbowali zniszczyć.
           </h4>
@@ -39,7 +39,7 @@ function App() {
           </div>
           <div className="flex flex-col justify-between ml-4">
             <h1 className="text-white text-5xl">EKSPLORUJ WROCŁAW</h1>
-            <h4 className="text-gray text-3xl">
+            <h4 className="text-gray-300 text-3xl">
               Chodź sam lub ze znajomymi i odkrywaj różne krasnale!
             </h4>
           </div>
@@ -48,7 +48,9 @@ function App() {
         <div className="mt-4 mb-4 flex flex-row items-center justify-center gap-10 sm:gap-20 md:gap-40 lg:gap-60">
           <div className="flex flex-col space-y-2">
             <h1 className="text-white text-5xl">RYWALIZUJ LOKALNIE</h1>
-            <h4 className="text-gray text-3xl">Wrocław staje się polem gry!</h4>
+            <h4 className="text-gray-300 text-3xl">
+              Wrocław staje się polem gry!
+            </h4>
           </div>
           <div className="flex flex-col justify-between ml-4">
             <img src={phoneImage} alt="phone" />
