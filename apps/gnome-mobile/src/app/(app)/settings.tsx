@@ -1,24 +1,23 @@
+import BottomSheet, { BottomSheetView } from "@gorhom/bottom-sheet";
 import { useNavigation } from "@react-navigation/native";
 import { useRouter } from "expo-router";
-import { useEffect } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import ArrowLeft from "@/assets/icons/arrow-left.svg";
-import ZadajPytanieIcon from "@/assets/icons/askquestion.svg";
-import DesignIcon from "@/assets/icons/design.svg";
-import FAQIcon from "@/assets/icons/faq.svg";
 import LanguageIcon from "@/assets/icons/language.svg";
-import MainIcon from "@/assets/icons/main.svg";
 import ModeIcon from "@/assets/icons/mode.svg";
-import NotificationsIcon from "@/assets/icons/notifications.svg";
-import PrivacyIcon from "@/assets/icons/privacy.svg";
-import SecurityIcon from "@/assets/icons/security.svg";
 import { SettingsOption } from "@/components/ui/SettingsOption";
 import { Text } from "@/components/ui/text";
+import { useColorScheme } from "@/lib/useColorScheme";
 
 function SettingsScreen() {
   const navigation = useNavigation();
   const router = useRouter();
+  const themeBottomSheetRef = useRef<BottomSheet>(null);
+  const languageBottomSheetRef = useRef<BottomSheet>(null);
+  const snapPoints = useMemo(() => ["20%", "30%"], []);
+  const { toggleColorScheme } = useColorScheme();
 
   useEffect(() => {
     navigation.setOptions({
@@ -40,61 +39,73 @@ function SettingsScreen() {
   }, [navigation, router]);
 
   return (
-    <SafeAreaView className="flex-1 bg-background">
-      {/* Opcje ustawień */}
+    <SafeAreaView className="flex-1 bg-primary-foreground">
+      <BottomSheet
+        ref={themeBottomSheetRef}
+        index={-1}
+        snapPoints={snapPoints}
+        enablePanDownToClose
+        backgroundStyle={{ backgroundColor: "#1E201E" }}
+        handleIndicatorStyle={{
+          backgroundColor: "#D9D9D9",
+          width: 94,
+          marginTop: 8,
+          borderRadius: 4,
+        }}
+      >
+        <BottomSheetView className="w-full px-6 py-6">
+          <View className="py-4 border-b border-gray-700">
+            <Text className="text-white text-xl" onPress={toggleColorScheme}>
+              Ciemny
+            </Text>
+          </View>
+
+          <View className="py-4">
+            <Text className="text-white text-xl">Jasny</Text>
+          </View>
+        </BottomSheetView>
+      </BottomSheet>
+
+      <BottomSheet
+        ref={languageBottomSheetRef}
+        index={-1}
+        snapPoints={snapPoints}
+        enablePanDownToClose
+        backgroundStyle={{ backgroundColor: "#1E201E" }}
+        handleIndicatorStyle={{
+          backgroundColor: "#D9D9D9",
+          width: 94,
+          marginTop: 8,
+          borderRadius: 4,
+        }}
+      >
+        <BottomSheetView className="w-full px-6 py-6">
+          <View className="py-4 border-b border-gray-700">
+            <Text className="text-white text-xl">Polski</Text>
+          </View>
+
+          <View className="py-4 border-b border-gray-700">
+            <Text className="text-white text-xl">English</Text>
+          </View>
+
+          <View className="py-4">
+            <Text className="text-white text-xl">Deutsch</Text>
+          </View>
+        </BottomSheetView>
+      </BottomSheet>
       <View className="w-full px-4 mt-4">
-        {/* 1 przycisk */},
         <SettingsOption
           text="Motyw"
           image={ModeIcon}
-          onClick={() => router.replace("/theme")}
+          onClick={() => themeBottomSheetRef.current?.expand()}
           customClass="mb-8"
-        />
-        {/* 3 przyciski */}
-        <SettingsOption
-          text="Powiadomienia"
-          image={NotificationsIcon}
-          onClick={() => router.replace("/notifications")}
-        />
-        <SettingsOption
-          text="Prywatność"
-          image={PrivacyIcon}
-          onClick={() => router.replace("/privacy")}
-        />
-        <SettingsOption
-          text="Bezpieczeństwo"
-          image={SecurityIcon}
-          onClick={() => router.replace("/security")}
-          customClass="mb-8"
-        />
-        {/* 3 przyciski */}
-        <SettingsOption
-          text="Główne"
-          image={MainIcon}
-          onClick={() => router.replace("/main")}
-        />
-        <SettingsOption
-          text="Wygląd"
-          image={DesignIcon}
-          onClick={() => router.replace("/appearance")}
         />
         <SettingsOption
           text="Język"
           image={LanguageIcon}
-          onClick={() => router.replace("/language")}
+          onClick={() => languageBottomSheetRef.current?.expand()}
           extraText="Polski"
           customClass="mb-8"
-        />
-        {/* 2 przyciski */}
-        <SettingsOption
-          text="Zadaj pytanie"
-          image={ZadajPytanieIcon}
-          onClick={() => router.replace("/ask")}
-        />
-        <SettingsOption
-          text="FAQ"
-          image={FAQIcon}
-          onClick={() => router.replace("/faq")}
         />
       </View>
     </SafeAreaView>
