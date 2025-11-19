@@ -99,5 +99,8 @@ export interface DistrictsResponse {
   id: number;
   name: string;
   points: any;
-  bbox: any;
+  minX: number;
+  maxX: number;
+  minY: number;
+  maxY: number;
 }

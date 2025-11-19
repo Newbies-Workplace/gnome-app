@@ -78,10 +78,13 @@ model Friendship {
 }
 
 model Districts {
-  id        Int @id @unique @default(autoincrement())
+  id        Int @id @default(autoincrement())
   name      String
   points    Json
-  bbox      Json
+  minX      Float
+  maxX      Float
+  minY      Float
+  maxY      Float
 }
 
 enum UserRole {
