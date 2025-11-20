@@ -54,9 +54,16 @@ export class DistrictsService {
         maxY: { gte: y },
       },
     });
+    if (polygons.length === 0) {
+      resultsName.push("Poza Wrocławiem");
+    }
     for (let i = 0; i < polygons.length; i++) {
       const data = JSON.parse(JSON.stringify(polygons[i].points));
-      if (booleanPointInPolygon(turfPoint, polygon(data.coordinates))) {
+      const isInPolygon = booleanPointInPolygon(
+        turfPoint,
+        polygon(data.coordinates),
+      );
+      if (isInPolygon) {
         resultsName.push(polygons[i].name);
       }
     }
