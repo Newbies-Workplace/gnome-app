@@ -28,6 +28,7 @@ import { TeamsModule } from "./teams/teams.module";
     FriendsModule,
     ReportsModule,
     MinioModule,
+    DistrictsModule,
     ThrottlerModule.forRoot({
       throttlers: [
         {
@@ -36,15 +37,12 @@ import { TeamsModule } from "./teams/teams.module";
         },
       ],
     }),
-    DistrictsModule,
   ],
   providers: [
     {
       provide: APP_GUARD,
       useClass: ThrottlerGuard,
     },
-    DistrictsService,
   ],
-  controllers: [DistrictsController],
 })
 export class AppModule {}
