@@ -158,7 +158,7 @@ function HomePage() {
             target="_blank"
             rel="noopener noreferrer"
           >
-            <button className="bg-[#D6484A] text-white text-2xl w-100 px-6 py-3 rounded-4xl hover:opacity-90 transition mt-2 mb-2 font-Afacad">
+            <button className="bg-[#D6484A] text-white text-2xl w-100 px-6 py-3 rounded-4xl hover:opacity-90 transition mt-10 mb-10 font-Afacad">
               Pobierz na Android
             </button>
           </a>
