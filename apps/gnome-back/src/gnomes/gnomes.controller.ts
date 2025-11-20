@@ -43,7 +43,7 @@ export class GnomesController {
   // Pobieranie wszystkich gnomów
 
   @Get("")
-  @UseGuards(JwtGuard)
+  // @UseGuards(JwtGuard)
   async getAllGnomes(): Promise<GnomeResponse[]> {
     const gnomes = await this.gnomeService.getAllGnomes();
     if (!gnomes) {
@@ -124,24 +124,45 @@ export class GnomesController {
 
   @Post("interaction")
   @UseGuards(JwtGuard)
-  async uploadFile(
+  async createInteraction(
     @User() user: JwtUser,
     @Body() body: CreateInteractionRequest,
   ): Promise<InteractionResponse> {
-    const team = await this.teamsService.getTeamWithMemberId(user.id);
-    if (team && team.members.length > 1) {
-      const interactions = team.members.map((member) => {
-        return this.gnomeService.createInteraction(
-          member.userId,
+    // const team = await this.teamsService.getTeamWithMemberId(user.id);
+    // if (team && team.members.length > 1) {
+    //   const interactions = team.members.map((member) => {
+    //     return this.gnomeService.createInteraction(
+    //       member.userId,
+    //       body.interactionDate,
+    //       body.gnomeId,
+    //     );
+    //   });
+    //   const resolvedInteractions = await Promise.all(interactions);
+    //   const filteredInteractions = resolvedInteractions.filter(
+    //     (interaction) => interaction.userId === user.id,
+    //   );
+    //   return filteredInteractions[0];
+    // }
+    const userInteraction = await this.gnomeService.getInteraction(
+      body.gnomeId,
+      user.id,
+    );
+    if (userInteraction) {
+      if (
+        new Date(userInteraction.interactionDate).getTime() -
+          new Date().getTime() >
+        5 * 60 * 1000
+      ) {
+        const interaction = await this.gnomeService.createInteraction(
+          user.id,
           body.interactionDate,
           body.gnomeId,
-        );
-      });
-      const resolvedInteractions = await Promise.all(interactions);
-      const filteredInteractions = resolvedInteractions.filter(
-        (interaction) => interaction.userId === user.id,
-      );
-      return filteredInteractions[0];
+        ); // Dodać update interactionDate
+
+        return interaction;
+      } else {
+        throw new NotFoundException("Nie mineło 5 minut");
+      }
     }
 
     const interaction = await this.gnomeService.createInteraction(

@@ -51,6 +51,16 @@ export class GnomesService {
     });
   }
 
+  async getInteraction(id: string, user: string) {
+    const hasInteraction = await this.prismaService.gnomeInteraction.findFirst({
+      where: {
+        userId: user,
+        gnomeId: id,
+      },
+    });
+    return hasInteraction;
+  }
+
   async createGnome(data: CreateGnomeRequest, pictureUrl: string) {
     return this.prismaService.gnome.create({
       data: {
