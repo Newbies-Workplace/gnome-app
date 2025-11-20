@@ -3,29 +3,11 @@ import { useEffect } from "react";
 import { FlatList, Image, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import AddUser from "@/assets/icons/add-user.svg";
-import Mushroom from "@/assets/icons/mushroom.svg";
+import GnomeIcon from "@/assets/icons/gnome-icon.svg";
 import { Text } from "@/components/ui/text";
+import { useFriendsStore } from "@/store/useFriendsStore";
 
-const friendsData = [
-  {
-    id: "1",
-    name: "XYZ",
-    avatar: "https://i.pravatar.cc/150?img=1",
-    score: "39/400",
-  },
-  {
-    id: "2",
-    name: "ABC",
-    avatar: "https://i.pravatar.cc/150?img=2",
-    score: "120/400",
-  },
-  {
-    id: "3",
-    name: "DEF",
-    avatar: "https://i.pravatar.cc/150?img=3",
-    score: "260/400",
-  },
-];
+const placeholder = { uri: "https://i.pravatar.cc/150?img=1" };
 
 const FriendItem = ({
   name,
@@ -43,7 +25,7 @@ const FriendItem = ({
     </View>
     <View className="flex flex-row items-center">
       <Text className="text-white text-lg font-semibold mr-2">{score}</Text>
-      <Mushroom width={28} height={28} />
+      <GnomeIcon width={25} height={25} />
     </View>
   </View>
 );
@@ -51,6 +33,7 @@ const FriendItem = ({
 export default function Friends() {
   const router = useRouter();
   const navigation = useNavigation();
+  const { friends } = useFriendsStore();
 
   useEffect(() => {
     navigation.setOptions({
@@ -77,7 +60,7 @@ export default function Friends() {
   return (
     <SafeAreaView className="flex-1 bg-background">
       <FlatList
-        data={friendsData}
+        data={friends}
         keyExtractor={(item) => item.id}
         ListHeaderComponent={
           <TouchableOpacity
@@ -90,8 +73,8 @@ export default function Friends() {
         renderItem={({ item }) => (
           <FriendItem
             name={item.name}
-            avatar={item.avatar}
-            score={item.score}
+            avatar={item.avatar || placeholder.uri}
+            score={item.interactions.toString()}
           />
         )}
         contentContainerStyle={{ marginTop: 20 }}
