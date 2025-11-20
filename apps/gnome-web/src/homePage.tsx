@@ -162,16 +162,6 @@ function HomePage() {
               Pobierz na Android
             </button>
           </a>
-
-          <a
-            href="https://www.apple.com/app-store/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <button className="bg-[#D6484A] text-white text-2xl w-100 px-6 py-3 rounded-4xl hover:opacity-90 transition mt-2 mb-20 font-Afacad">
-              Pobierz na iOS
-            </button>
-          </a>
         </div>
       </div>
     </div>
