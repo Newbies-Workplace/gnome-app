@@ -14,9 +14,11 @@ function App() {
       <div className="w-full p-5 bg-transparent">
         <div className="flex items-center justify-between">
           <h1 className="text-white text-5xl">Krasnale</h1>
-          <button className="bg-red-700 text-white text-2xl px-6 py-3 rounded-2xl hover:opacity-90 transition">
-            Zaloguj się
-          </button>
+          <a href="/login.tsx">
+            <button className="bg-red-700 text-white text-2xl px-6 py-3 rounded-2xl hover:opacity-90 transition">
+              Zaloguj się
+            </button>
+          </a>
         </div>
 
         <div className="flex items-center mt-3">
@@ -143,12 +145,25 @@ function App() {
               <img src={phoneImage} alt="phone" className="w-full h-auto" />
             </div>
           </div>
-          <button className="bg-red-700 text-white text-2xl w-full max-w-md px-6 py-3 rounded-2xl hover:opacity-90 transition mt-2 mb-2">
-            Pobierz na Android
-          </button>
-          <button className="bg-red-700 text-white text-2xl w-full max-w-md px-6 py-3 rounded-2xl hover:opacity-90 transition mt-2 mb-20">
-            Pobierz na iOS
-          </button>
+          <a
+            href="https://play.google.com/store"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <button className="bg-red-700 text-white text-2xl w-100 px-6 py-3 rounded-2xl hover:opacity-90 transition mt-2 mb-2">
+              Pobierz na Android
+            </button>
+          </a>
+
+          <a
+            href="https://www.apple.com/app-store/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <button className="bg-red-700 text-white text-2xl w-100 px-6 py-3 rounded-2xl hover:opacity-90 transition mt-2 mb-20">
+              Pobierz na iOS
+            </button>
+          </a>
         </div>
       </div>
     </div>
