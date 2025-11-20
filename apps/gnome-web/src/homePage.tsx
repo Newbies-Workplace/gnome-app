@@ -1,4 +1,5 @@
 import "./App.css";
+import loginIcon from "./assets/icons/login.svg";
 import backgroundImage from "./assets/images/background.png";
 import phoneImage from "./assets/images/phone.png";
 import teamBuildMap from "./assets/images/teamBuildMap.png";
@@ -14,8 +15,10 @@ function App() {
       <div className="w-full p-5 bg-transparent">
         <div className="flex items-center justify-between">
           <h1 className="text-white text-5xl">Krasnale</h1>
-          <a href="/login.tsx">
-            <button className="bg-red-700 text-white text-2xl px-6 py-3 rounded-2xl hover:opacity-90 transition">
+          {/* Zaloguj button with icon */}
+          <a href="/login">
+            <button className="bg-red-700 text-white text-2xl px-6 py-3 rounded-2xl hover:opacity-90 transition flex items-center gap-2">
+              <img src={loginIcon} alt="login icon" className="w-6 h-6" />
               Zaloguj się
             </button>
           </a>
@@ -134,6 +137,7 @@ function App() {
             Gotowy na krasnalową przygodę we Wrocławiu? Pobierz aplikację i
             wybierz drużynę, zanim zrobią to inni!
           </h4>
+
           <div className="mt-6 mb-6 flex flex-row flex-wrap items-center justify-center gap-10 sm:gap-20 md:gap-40 lg:gap-60">
             <div className="flex flex-col space-y-2 w-64 sm:w-72 md:w-80 lg:w-96">
               <img src={phoneImage} alt="phone" className="w-full h-auto" />
@@ -145,6 +149,7 @@ function App() {
               <img src={phoneImage} alt="phone" className="w-full h-auto" />
             </div>
           </div>
+
           <a
             href="https://play.google.com/store"
             target="_blank"
