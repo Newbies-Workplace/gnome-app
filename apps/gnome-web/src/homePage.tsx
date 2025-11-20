@@ -141,7 +141,7 @@ function HomePage() {
             wybierz drużynę, zanim zrobią to inni!
           </h4>
 
-          <div className="mt-6 mb-6 flex flex-row flex-wrap items-center justify-center gap-10 sm:gap-20 md:gap-40 lg:gap-60">
+          <div className="mt-6 mb-6 flex flex-row flex-wrap items-center justify-center gap-10 sm:gap-20 md:gap-40 lg:gap-40">
             <div className="flex flex-col space-y-2 w-64 sm:w-72 md:w-80 lg:w-96">
               <img src={phoneImage} alt="phone" className="w-full h-auto" />
             </div>
