@@ -17,14 +17,12 @@ function HomePage() {
         <div className="flex items-center justify-between">
           <h1 className="text-white text-5xl font-Afacad">Krasnale</h1>
           {/* Zaloguj button with icon */}
-          <a href="/login">
-            <button className="bg-red-700 text-white text-2xl font-Afacad px-6 py-3 rounded-4xl hover:opacity-90 transition flex items-center gap-2">
-              <img src={loginIcon} alt="login icon" className="w-6 h-6" />
-              <Link to="/login" className="text-white">
-                Zaloguj się
-              </Link>
-            </button>
-          </a>
+          <button className="bg-red-700 text-white text-2xl font-Afacad px-6 py-3 rounded-4xl hover:opacity-90 transition flex items-center gap-2">
+            <img src={loginIcon} alt="login icon" className="w-6 h-6" />
+            <Link to="/login" className="text-white">
+              Zaloguj się
+            </Link>
+          </button>
         </div>
 
         <div className="flex items-center mt-3">
