@@ -44,7 +44,7 @@ export default function SignInScreen() {
   };
 
   return (
-    <SafeAreaView className="flex-1 justify-end bg-background">
+    <SafeAreaView className="flex-1 justify-end bg-primary-foreground">
       <Image
         source={require("@/assets/images/bgmax.png")}
         className="w-full h-full flex-1 object-cover"
@@ -53,16 +53,16 @@ export default function SignInScreen() {
         }}
       />
       <View className="bg-background p-10">
-        <Text className="text-white text-2xl font-bold mb-5 text-center">
+        <Text className="text-tekst text-2xl font-bold mb-5 text-center">
           Zaloguj się!
         </Text>
         <TextInput
-          className="bg-background text-white w-full p-2.5 mb-2.5 rounded-3xl placeholder:text-[white] border border-[white]"
+          className="bg-background text-tekst w-full p-2.5 mb-2.5 rounded-3xl placeholder:text-[tekst] border border-[background]"
           placeholder="Email"
           secureTextEntry
         />
         <TextInput
-          className="bg-background text-white w-full p-2.5 mb-2.5 rounded-3xl placeholder:text-[white] border border-[white]"
+          className="bg-background text-tekst w-full p-2.5 mb-2.5 rounded-3xl placeholder:text-[tekst] border border-[background]"
           placeholder="Hasło"
           secureTextEntry
         />
@@ -71,7 +71,7 @@ export default function SignInScreen() {
           onPress={() => console.log("Zalogowano po podaniu email oraz haslo")}
           className="bg-primary mb-2.5 p-2.5 rounded-3xl w-full flex items-center"
         >
-          <Text className="text-white font-bold">Zaloguj</Text>
+          <Text className="text-tekst font-bold">Zaloguj</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
@@ -82,11 +82,11 @@ export default function SignInScreen() {
           <Text className="ml-2.5 text-black">Zaloguj przez Google</Text>
         </TouchableOpacity>
 
-        <Text className="text-white mt-5 text-center">
+        <Text className="text-tekst mt-5 text-center">
           Nie masz konta?
           <Text
             onPress={() => replace("/register")}
-            style={{ color: "#FF5252", fontWeight: "bold" }}
+            className="text-primary font-bold"
           >
             {" "}
             Zarejestruj się tutaj!

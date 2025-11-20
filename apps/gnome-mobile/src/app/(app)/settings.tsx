@@ -17,7 +17,7 @@ function SettingsScreen() {
   const themeBottomSheetRef = useRef<BottomSheet>(null);
   const languageBottomSheetRef = useRef<BottomSheet>(null);
   const snapPoints = useMemo(() => ["20%", "30%"], []);
-  const { toggleColorScheme } = useColorScheme();
+  const { setColorScheme } = useColorScheme();
 
   useEffect(() => {
     navigation.setOptions({
@@ -27,13 +27,15 @@ function SettingsScreen() {
         </TouchableOpacity>
       ),
       headerTitle: () => (
-        <Text className="text-white text-2xl font-bold text-center tracking-wide">
+        <Text className="text-tekst text-2xl font-bold text-center tracking-wide">
           USTAWIENIA
         </Text>
       ),
       headerTitleAlign: "center",
       headerShadowVisible: false,
-      headerStyle: { backgroundColor: "#1E201E" },
+      headerBackground: () => (
+        <View className="absolute inset-0 bg-primary-foreground" />
+      ),
       headerShown: true,
     });
   }, [navigation, router]);
@@ -45,7 +47,7 @@ function SettingsScreen() {
         index={-1}
         snapPoints={snapPoints}
         enablePanDownToClose
-        backgroundStyle={{ backgroundColor: "#1E201E" }}
+        backgroundStyle={{ backgroundColor: "primary-foreground" }}
         handleIndicatorStyle={{
           backgroundColor: "#D9D9D9",
           width: 94,
@@ -54,14 +56,22 @@ function SettingsScreen() {
         }}
       >
         <BottomSheetView className="w-full px-6 py-6">
-          <View className="py-4 border-b border-gray-700">
-            <Text className="text-white text-xl" onPress={toggleColorScheme}>
+          <View className="py-4 border-b border-tekst">
+            <Text
+              className="text-tekst text-xl font-bold"
+              onPress={() => setColorScheme?.("dark")}
+            >
               Ciemny
             </Text>
           </View>
 
           <View className="py-4">
-            <Text className="text-white text-xl">Jasny</Text>
+            <Text
+              className="text-tekst text-xl font-bold"
+              onPress={() => setColorScheme?.("light")}
+            >
+              Jasny
+            </Text>
           </View>
         </BottomSheetView>
       </BottomSheet>
@@ -71,7 +81,7 @@ function SettingsScreen() {
         index={-1}
         snapPoints={snapPoints}
         enablePanDownToClose
-        backgroundStyle={{ backgroundColor: "#1E201E" }}
+        backgroundStyle={{ backgroundColor: "background" }}
         handleIndicatorStyle={{
           backgroundColor: "#D9D9D9",
           width: 94,
@@ -80,16 +90,16 @@ function SettingsScreen() {
         }}
       >
         <BottomSheetView className="w-full px-6 py-6">
-          <View className="py-4 border-b border-gray-700">
-            <Text className="text-white text-xl">Polski</Text>
+          <View className="py-4 border-b border-tekst">
+            <Text className="text-tekst text-xl">Polski</Text>
           </View>
 
-          <View className="py-4 border-b border-gray-700">
-            <Text className="text-white text-xl">English</Text>
+          <View className="py-4 border-b border-tekst">
+            <Text className="text-tekst text-xl">English</Text>
           </View>
 
           <View className="py-4">
-            <Text className="text-white text-xl">Deutsch</Text>
+            <Text className="text-tekst text-xl">Deutsch</Text>
           </View>
         </BottomSheetView>
       </BottomSheet>

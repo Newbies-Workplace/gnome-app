@@ -35,10 +35,10 @@ const Collection = () => {
   }, []);
 
   return (
-    <SafeAreaView className={"flex-1 bg-background"}>
+    <SafeAreaView className={"flex-1 bg-primary-foreground"}>
       <FlatList
         data={gnomes}
-        contentContainerClassName={"bg-background"}
+        contentContainerClassName={"bg-primary-foreground"}
         keyExtractor={(item) => item.id?.toString()}
         numColumns={3}
         renderItem={({ item }) => {
@@ -57,7 +57,7 @@ const Collection = () => {
         }}
         ListEmptyComponent={() =>
           error ? (
-            <Text className="text-white">Błąd: {error}</Text>
+            <Text className="text-tekst">Błąd: {error}</Text>
           ) : (
             <LoadingScreen />
           )
