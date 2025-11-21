@@ -4,9 +4,14 @@ import { CreateGnomeRequest } from "@repo/shared/requests";
 import { GnomeIdResponse } from "@repo/shared/responses";
 import { PrismaService } from "@/db/prisma.service";
 
+import { DistrictsService } from "@/districts/districts.service";
+
 @Injectable()
 export class GnomesService {
-  constructor(private readonly prismaService: PrismaService) {}
+  constructor(
+    private readonly prismaService: PrismaService,
+    private readonly districtsService: DistrictsService,
+  ) {}
 
   async getAllGnomes(): Promise<Gnome[]> {
     return this.prismaService.gnome.findMany();
@@ -51,17 +56,36 @@ export class GnomesService {
     });
   }
 
+  async getLastInteraction(id: string, user: string) {
+    const hasInteraction = await this.prismaService.gnomeInteraction.findFirst({
+      where: {
+        userId: user,
+        gnomeId: id,
+      },
+      orderBy: {
+        interactionDate: "desc",
+      },
+    });
+    return hasInteraction;
+  }
+
   async createGnome(data: CreateGnomeRequest, pictureUrl: string) {
+    const districtId = await this.districtsService.findPointInPolygon([
+      Number(data.latitude),
+      Number(data.longitude),
+    ]);
+
     return this.prismaService.gnome.create({
       data: {
         name: data.name,
-        latitude: data.latitude,
-        longitude: data.longitude,
+        latitude: Number(data.latitude),
+        longitude: Number(data.longitude),
         location: data.location,
         description: data.description,
         creationDate: data.creationDate,
         pictureUrl: pictureUrl,
         funFact: data.funFact,
+        districtId: districtId || undefined,
       },
     });
   }
