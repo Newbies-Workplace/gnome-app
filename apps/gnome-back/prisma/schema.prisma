@@ -8,33 +8,31 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Team {
-  id      String           @id @unique @default(cuid())
-  leader  String           @unique
-  members TeamMembership[] @relation("team")
-}
 
-model TeamMembership {
-  id     String @id @unique @default(cuid())
-  team   Team   @relation("team", fields: [teamId], references: [id])
-  teamId String
-  user   User   @relation("member", fields: [userId], references: [id])
-  userId String
-}
 
 model User {
-  id                String             @id @unique @default(uuid())
-  googleId          String
-  name              String
-  email             String
-  pictureUrl        String
-  inviteCode        String             @unique
-  role              UserRole           @default(USER)
-  gnomeInteractions GnomeInteraction[]
-  sentRequest       Friendship[]       @relation("sender")
-  receivedRequest   Friendship[]       @relation("receiver")
-  memberships       TeamMembership[]   @relation("member")
-  Buildings         Building[]  
+  id                   String                @id @unique @default(uuid())
+  googleId             String
+  name                 String
+  email                String
+  pictureUrl           String
+  inviteCode           String                @unique
+  Team                 Team?                  
+  role                 UserRole              @default(USER)
+  Resource             UserResource?
+  gnomeInteractions    GnomeInteraction[]
+  sentRequest          Friendship[]          @relation("sender")
+  receivedRequest      Friendship[]          @relation("receiver")
+  buildings            Building[]
+  buildingsInteraction BuildingInteraction[]
+}
+
+model UserResource {
+  berrys Int    @default(0)
+  sticks Int    @default(0)
+  stones Int    @default(0)
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String @id @unique
 }
 
 model Gnome {
@@ -77,12 +75,37 @@ model Friendship {
   senderId   String
   receiverId String
 }
+
 model Building {
-  id         String @id @unique @default(cuid())
+  id         String       @id @unique @default(cuid())
   gnomeCount Int
   Health     Int
-  user       User   @relation(fields: [userId], references: [id])
-  userId     String
+  latitude   Float
+  longitude  Float
+  District   String
+  Type       BuildingType
+  createdAt  DateTime     @default(now())
+  Owner      User         @relation(fields: [ownerId], references: [id])
+  ownerId    String
+}
+
+model BuildingInteraction {
+  id              String                  @id @unique @default(cuid())
+  interactionType BuildingInteractionType
+  user            User                    @relation(fields: [userId], references: [id])
+  userId          String
+  createdAt       DateTime                @default(now())
+  amount          Int // ilosc surowcow przy wzmocnieniu/ilosc gnomow przy ataku
+}
+
+enum BuildingType {
+  WATCHTOWER
+  MINE
+}
+
+enum BuildingInteractionType {
+  ATTACK
+  EMPOWER
 }
 
 enum UserRole {
@@ -94,4 +117,9 @@ enum UserRole {
 enum Status {
   ACTIVE
   PENDING
+}
+enum Team {
+  TEAM1
+  TEAM2
+  TEAM3
 }

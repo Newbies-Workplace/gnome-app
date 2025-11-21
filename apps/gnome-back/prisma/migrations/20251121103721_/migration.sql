@@ -1,25 +1,17 @@
 -- CreateEnum
+CREATE TYPE "BuildingType" AS ENUM ('WATCHTOWER', 'MINE');
+
+-- CreateEnum
+CREATE TYPE "BuildingInteractionType" AS ENUM ('ATTACK', 'EMPOWER');
+
+-- CreateEnum
 CREATE TYPE "UserRole" AS ENUM ('ADMIN', 'USER', 'MODERATOR');
 
 -- CreateEnum
 CREATE TYPE "Status" AS ENUM ('ACTIVE', 'PENDING');
 
--- CreateTable
-CREATE TABLE "Team" (
-    "id" TEXT NOT NULL,
-    "leader" TEXT NOT NULL,
-
-    CONSTRAINT "Team_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
-CREATE TABLE "TeamMembership" (
-    "id" TEXT NOT NULL,
-    "teamId" TEXT NOT NULL,
-    "userId" TEXT NOT NULL,
-
-    CONSTRAINT "TeamMembership_pkey" PRIMARY KEY ("id")
-);
+-- CreateEnum
+CREATE TYPE "Team" AS ENUM ('TEAM1', 'TEAM2', 'TEAM3');
 
 -- CreateTable
 CREATE TABLE "User" (
@@ -29,9 +21,20 @@ CREATE TABLE "User" (
     "email" TEXT NOT NULL,
     "pictureUrl" TEXT NOT NULL,
     "inviteCode" TEXT NOT NULL,
+    "Team" "Team",
     "role" "UserRole" NOT NULL DEFAULT 'USER',
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "UserResource" (
+    "berrys" INTEGER NOT NULL DEFAULT 0,
+    "sticks" INTEGER NOT NULL DEFAULT 0,
+    "stones" INTEGER NOT NULL DEFAULT 0,
+    "userId" TEXT NOT NULL,
+
+    CONSTRAINT "UserResource_pkey" PRIMARY KEY ("userId")
 );
 
 -- CreateTable
@@ -82,20 +85,40 @@ CREATE TABLE "Friendship" (
     CONSTRAINT "Friendship_pkey" PRIMARY KEY ("id")
 );
 
--- CreateIndex
-CREATE UNIQUE INDEX "Team_id_key" ON "Team"("id");
+-- CreateTable
+CREATE TABLE "Building" (
+    "id" TEXT NOT NULL,
+    "gnomeCount" INTEGER NOT NULL,
+    "Health" INTEGER NOT NULL,
+    "latitude" DOUBLE PRECISION NOT NULL,
+    "longitude" DOUBLE PRECISION NOT NULL,
+    "District" TEXT NOT NULL,
+    "Type" "BuildingType" NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "ownerId" TEXT NOT NULL,
 
--- CreateIndex
-CREATE UNIQUE INDEX "Team_leader_key" ON "Team"("leader");
+    CONSTRAINT "Building_pkey" PRIMARY KEY ("id")
+);
 
--- CreateIndex
-CREATE UNIQUE INDEX "TeamMembership_id_key" ON "TeamMembership"("id");
+-- CreateTable
+CREATE TABLE "BuildingInteraction" (
+    "id" TEXT NOT NULL,
+    "interactionType" "BuildingInteractionType" NOT NULL,
+    "userId" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "amount" INTEGER NOT NULL,
+
+    CONSTRAINT "BuildingInteraction_pkey" PRIMARY KEY ("id")
+);
 
 -- CreateIndex
 CREATE UNIQUE INDEX "User_id_key" ON "User"("id");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "User_inviteCode_key" ON "User"("inviteCode");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "UserResource_userId_key" ON "UserResource"("userId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Gnome_id_key" ON "Gnome"("id");
@@ -109,11 +132,14 @@ CREATE UNIQUE INDEX "GnomeInteraction_id_key" ON "GnomeInteraction"("id");
 -- CreateIndex
 CREATE UNIQUE INDEX "Friendship_id_key" ON "Friendship"("id");
 
--- AddForeignKey
-ALTER TABLE "TeamMembership" ADD CONSTRAINT "TeamMembership_teamId_fkey" FOREIGN KEY ("teamId") REFERENCES "Team"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+-- CreateIndex
+CREATE UNIQUE INDEX "Building_id_key" ON "Building"("id");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "BuildingInteraction_id_key" ON "BuildingInteraction"("id");
 
 -- AddForeignKey
-ALTER TABLE "TeamMembership" ADD CONSTRAINT "TeamMembership_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "UserResource" ADD CONSTRAINT "UserResource_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "GnomeInteraction" ADD CONSTRAINT "GnomeInteraction_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -126,3 +152,9 @@ ALTER TABLE "Friendship" ADD CONSTRAINT "Friendship_senderId_fkey" FOREIGN KEY (
 
 -- AddForeignKey
 ALTER TABLE "Friendship" ADD CONSTRAINT "Friendship_receiverId_fkey" FOREIGN KEY ("receiverId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Building" ADD CONSTRAINT "Building_ownerId_fkey" FOREIGN KEY ("ownerId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "BuildingInteraction" ADD CONSTRAINT "BuildingInteraction_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

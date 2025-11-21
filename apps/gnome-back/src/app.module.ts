@@ -9,7 +9,6 @@ import { UsersModule } from "@/users/users.module";
 import { FriendsModule } from "./friends/friends.module";
 import { MinioModule } from "./minio/minio.module";
 import { ReportsModule } from "./reports/reports.module";
-import { TeamsModule } from "./teams/teams.module";
 
 @Module({
   imports: [
@@ -21,7 +20,6 @@ import { TeamsModule } from "./teams/teams.module";
     AuthModule,
     UsersModule,
     GnomesModule,
-    TeamsModule,
     FriendsModule,
     ReportsModule,
     MinioModule,

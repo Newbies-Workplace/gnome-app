@@ -94,3 +94,10 @@ export interface TeamResponse {
   leader: string;
   members: TeamMembersResponse[];
 }
+
+export interface DistrictsResponse {
+  id: number;
+  name: string;
+  points: any;
+  bbox: any;
+}
