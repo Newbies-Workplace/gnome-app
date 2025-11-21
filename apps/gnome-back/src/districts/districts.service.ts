@@ -8,7 +8,7 @@ export class DistrictsService {
   constructor(private readonly prismaService: PrismaService) {}
 
   async findDistrict(id: number): Promise<DistrictsResponse> {
-    const district = await this.prismaService.districts.findFirst({
+    const district = await this.prismaService.district.findFirst({
       where: {
         id: id,
       },
@@ -20,7 +20,7 @@ export class DistrictsService {
     return district;
   }
   async findManyDistricts(): Promise<DistrictsResponse[]> {
-    const districts = await this.prismaService.districts.findMany({
+    const districts = await this.prismaService.district.findMany({
       select: {
         id: true,
         name: true,
@@ -32,7 +32,7 @@ export class DistrictsService {
   async findPointInPolygon(pointXY: [number, number]) {
     const [x, y] = pointXY;
     const turfPoint = point(pointXY);
-    const polygons = await this.prismaService.districts.findMany({
+    const polygons = await this.prismaService.district.findMany({
       where: {
         minX: { lte: x },
         maxX: { gte: x },
