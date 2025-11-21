@@ -1,7 +1,6 @@
-import "./App.css";
 import { Link } from "react-router-dom";
-import logoGoogle from "./assets/icons/google-logo.svg";
-import backgroundImage from "./assets/images/background.png";
+import logoGoogle from "../assets/icons/google-logo.svg";
+import backgroundImage from "../assets/images/background.png";
 
 export default function LoginPage() {
   return (
@@ -23,7 +22,7 @@ export default function LoginPage() {
               <input
                 type="text"
                 placeholder="Podaj login"
-                className="border-2 border-white rounded-4xl px-4 py-4 sm:px-8 sm:py-8 text-left w-full font-Afacad text-[16px] sm:text-[20px]"
+                className="border-2 border-white text-white rounded-4xl px-4 py-4 sm:px-8 sm:py-8 text-left w-full font-Afacad text-[16px] sm:text-[20px]"
               />
             </div>
 
@@ -31,7 +30,7 @@ export default function LoginPage() {
               <input
                 type="password"
                 placeholder="Podaj hasło"
-                className="border-2 border-white rounded-4xl px-4 py-4 sm:px-8 sm:py-8 text-left w-full font-Afacad text-[20px]"
+                className="border-2 border-white rounded-4xl px-4 py-4 sm:px-8 sm:py-8 text-left w-full text-white font-Afacad text-[20px]"
               />
             </div>
           </form>
@@ -65,7 +64,7 @@ export default function LoginPage() {
                               border-one rounded-4xl w-full px-4 py-4 sm:px-8 sm:py-8 bg-[#D6484A] 
                               font-Afacad text-[16px] sm:text-[24px] font-bold text-center"
             >
-              <Link to="/adminPage" className="text-white">
+              <Link to="/pages/admin" className="text-white">
                 Zaloguj się
               </Link>
             </button>
