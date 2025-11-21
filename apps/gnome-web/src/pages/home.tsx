@@ -1,9 +1,9 @@
 import { Link } from "react-router-dom";
-import loginIcon from "../assets/icons/login.svg";
-import backgroundImage from "../assets/images/background.png";
-import phoneImage from "../assets/images/phone.png";
-import teamBuildMap from "../assets/images/teamBuildMap.png";
-import teamMap from "../assets/images/teamMap.png";
+import loginIcon from "@/assets/icons/login.svg";
+import backgroundImage from "@/assets/images/background.png";
+import phoneImage from "@/assets/images/phone.png";
+import teamBuildMap from "@/assets/images/teamBuildMap.png";
+import teamMap from "@/assets/images/teamMap.png";
 
 function HomePage() {
   return (
@@ -18,7 +18,7 @@ function HomePage() {
           {/* Zaloguj button with icon */}
           <button className="bg-[#D6484A] text-white text-2xl font-Afacad px-6 py-3 rounded-4xl hover:opacity-90 transition flex items-center gap-2">
             <img src={loginIcon} alt="login icon" className="w-6 h-6" />
-            <Link to="/pages/login" className="text-white">
+            <Link to="/login" className="text-white">
               Zaloguj się
             </Link>
           </button>
