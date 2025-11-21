@@ -43,7 +43,7 @@ export class GnomesController {
   // Pobieranie wszystkich gnomów
 
   @Get("")
-  // @UseGuards(JwtGuard)
+  @UseGuards(JwtGuard)
   async getAllGnomes(): Promise<GnomeResponse[]> {
     const gnomes = await this.gnomeService.getAllGnomes();
     if (!gnomes) {
@@ -143,6 +143,7 @@ export class GnomesController {
     //   );
     //   return filteredInteractions[0];
     // }
+    // \/ ZMIENIC NA LASTSUERINTERACION \/
     const userInteraction = await this.gnomeService.getInteraction(
       body.gnomeId,
       user.id,
@@ -157,7 +158,7 @@ export class GnomesController {
           user.id,
           body.interactionDate,
           body.gnomeId,
-        ); // Dodać update interactionDate
+        );
 
         return interaction;
       } else {
