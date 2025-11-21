@@ -56,6 +56,19 @@ export class GnomesService {
     });
   }
 
+  async getLastInteraction(id: string, user: string) {
+    const hasInteraction = await this.prismaService.gnomeInteraction.findFirst({
+      where: {
+        userId: user,
+        gnomeId: id,
+      },
+      orderBy: {
+        interactionDate: "desc",
+      },
+    });
+    return hasInteraction;
+  }
+
   async createGnome(data: CreateGnomeRequest, pictureUrl: string) {
     const districtId = await this.districtsService.findPointInPolygon([
       Number(data.latitude),
