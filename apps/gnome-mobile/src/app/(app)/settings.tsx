@@ -25,7 +25,7 @@ function SettingsScreen() {
     navigation.setOptions({
       headerLeft: () => (
         <TouchableOpacity className="p-5" onPress={() => router.back()}>
-          <ArrowLeft className="w-7 h-7" />
+          <ArrowLeft className="w-7 h-7 " color={"gray"} />
         </TouchableOpacity>
       ),
       headerTitle: () => (
