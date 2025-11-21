@@ -82,6 +82,19 @@ CREATE TABLE "Friendship" (
     CONSTRAINT "Friendship_pkey" PRIMARY KEY ("id")
 );
 
+-- CreateTable
+CREATE TABLE "Districts" (
+    "id" SERIAL NOT NULL,
+    "name" TEXT NOT NULL,
+    "points" JSONB NOT NULL,
+    "minX" DOUBLE PRECISION NOT NULL,
+    "maxX" DOUBLE PRECISION NOT NULL,
+    "minY" DOUBLE PRECISION NOT NULL,
+    "maxY" DOUBLE PRECISION NOT NULL,
+
+    CONSTRAINT "Districts_pkey" PRIMARY KEY ("id")
+);
+
 -- CreateIndex
 CREATE UNIQUE INDEX "Team_id_key" ON "Team"("id");
 
