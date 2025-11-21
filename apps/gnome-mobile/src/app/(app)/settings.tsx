@@ -49,13 +49,8 @@ function SettingsScreen() {
         index={-1}
         snapPoints={snapPoints}
         enablePanDownToClose
-        backgroundStyle={{ backgroundColor: "primary-foreground" }}
-        handleIndicatorStyle={{
-          backgroundColor: "#D9D9D9",
-          width: 94,
-          marginTop: 8,
-          borderRadius: 4,
-        }}
+        backgroundClassName={"bg-background"}
+        handleIndicatorClassName={"bg-tekst w-24 mt-2 rounded-lg"}
       >
         <BottomSheetView className="w-full px-6 py-6">
           <TouchableOpacity
@@ -91,18 +86,13 @@ function SettingsScreen() {
         index={-1}
         snapPoints={snapPoints}
         enablePanDownToClose
-        backgroundStyle={{ backgroundColor: "background" }}
-        handleIndicatorStyle={{
-          backgroundColor: "#D9D9D9",
-          width: 94,
-          marginTop: 8,
-          borderRadius: 4,
-        }}
+        backgroundClassName={"bg-background"}
+        handleIndicatorClassName={"bg-tekst w-24 mt-2 rounded-lg"}
       >
         <BottomSheetView className="w-full px-6 py-6">
           <View className="py-4 border-b border-tekst">
             <Text
-              className="text-tekst text-xl"
+              className="text-tekst text-xl font-bold"
               onPress={() => {
                 // TODO: set language to Polish
                 languageBottomSheetRef.current?.close();
@@ -114,7 +104,7 @@ function SettingsScreen() {
 
           <View className="py-4 border-b border-tekst">
             <Text
-              className="text-tekst text-xl"
+              className="text-tekst text-xl font-bold"
               onPress={() => {
                 // TODO: set language to English
                 languageBottomSheetRef.current?.close();
@@ -126,7 +116,7 @@ function SettingsScreen() {
 
           <View className="py-4">
             <Text
-              className="text-tekst text-xl"
+              className="text-tekst text-xl font-bold"
               onPress={() => {
                 // TODO: set language to Deutsch
                 languageBottomSheetRef.current?.close();

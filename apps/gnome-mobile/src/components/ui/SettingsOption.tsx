@@ -32,7 +32,7 @@ export const SettingsOption: React.FC<SettingsOptionProps> = ({
       {/* Prawa strona: Dodatkowy tekst + Strzałka */}
       <View className="flex flex-row items-center">
         {extraText && (
-          <Text className="text-gray-400 text-lg mr-3">{extraText}</Text>
+          <Text className="text-tekst/50 text-lg mr-3">{extraText}</Text>
         )}
         <ArrowRight width={24} height={24} />
       </View>
