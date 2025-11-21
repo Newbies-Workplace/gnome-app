@@ -30,7 +30,6 @@ import { JwtUser } from "@/auth/types/jwt-user";
 import { MinioService } from "@/minio/minio.service";
 import { Role } from "@/role/role.decorator";
 import { RoleGuard } from "@/roleguard/role.guard";
-import { TeamsService } from "@/teams/teams.service";
 import { GnomesService } from "./gnomes.service";
 
 const MIN_INTERACTION_INTERVAL = 5 * 60 * 1000;
@@ -40,7 +39,6 @@ export class GnomesController {
   constructor(
     private readonly gnomeService: GnomesService,
     private readonly minioService: MinioService,
-    private readonly teamsService: TeamsService,
   ) {}
 
   // Pobieranie wszystkich gnomów
