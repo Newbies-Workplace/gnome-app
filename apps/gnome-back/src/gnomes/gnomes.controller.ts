@@ -1,5 +1,6 @@
 import {
   Body,
+  ConflictException,
   Controller,
   FileTypeValidator,
   Get,
@@ -31,6 +32,8 @@ import { Role } from "@/role/role.decorator";
 import { RoleGuard } from "@/roleguard/role.guard";
 import { TeamsService } from "@/teams/teams.service";
 import { GnomesService } from "./gnomes.service";
+
+const MIN_INTERACTION_INTERVAL = 5 * 60 * 1000;
 
 @Controller("gnomes")
 export class GnomesController {
@@ -143,26 +146,20 @@ export class GnomesController {
     //   );
     //   return filteredInteractions[0];
     // }
-    // \/ ZMIENIC NA LASTSUERINTERACION \/
-    const userInteraction = await this.gnomeService.getInteraction(
+
+    const lastUserInteraction = await this.gnomeService.getLastInteraction(
       body.gnomeId,
       user.id,
     );
-    if (userInteraction) {
+    if (lastUserInteraction) {
       if (
-        new Date(userInteraction.interactionDate).getTime() -
-          new Date().getTime() >
-        5 * 60 * 1000
+        new Date().getTime() -
+          new Date(lastUserInteraction.interactionDate).getTime() <
+        MIN_INTERACTION_INTERVAL
       ) {
-        const interaction = await this.gnomeService.createInteraction(
-          user.id,
-          body.interactionDate,
-          body.gnomeId,
+        throw new ConflictException(
+          `Interaction cooldown - gnomeId: ${body.gnomeId}`,
         );
-
-        return interaction;
-      } else {
-        throw new NotFoundException("Nie mineło 5 minut");
       }
     }
 

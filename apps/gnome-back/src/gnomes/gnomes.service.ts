@@ -50,8 +50,8 @@ export class GnomesService {
       where: { userId: id },
     });
   }
-  // ZMIENIC NA GETLASTINTERACTION!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-  async getInteraction(id: string, user: string) {
+
+  async getLastInteraction(id: string, user: string) {
     const hasInteraction = await this.prismaService.gnomeInteraction.findFirst({
       where: {
         userId: user,
