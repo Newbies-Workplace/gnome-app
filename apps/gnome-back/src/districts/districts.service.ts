@@ -30,31 +30,6 @@ export class DistrictsService {
     return districts;
   }
 
-  async createDistricts(name: string, points: any = null) {
-    const coords = JSON.stringify(points);
-    const data = JSON.parse(coords);
-
-    const xs = data.coordinates[0].map((p) => p[0]);
-    const ys = data.coordinates[0].map((p) => p[1]);
-    const bbox = {
-      minX: Math.min(...xs),
-      maxX: Math.max(...xs),
-      minY: Math.min(...ys),
-      maxY: Math.max(...ys),
-    };
-
-    return this.prismaService.districts.create({
-      data: {
-        name,
-        points,
-        minX: bbox.minX,
-        maxX: bbox.maxX,
-        minY: bbox.minY,
-        maxY: bbox.maxY,
-      },
-    });
-  }
-
   async findPointInPolygon(pointXY: [number, number]) {
     const [x, y] = pointXY;
     const turfPoint = point(pointXY);

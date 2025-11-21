@@ -49,7 +49,7 @@ model Gnome {
   pictureUrl   String
   interactions GnomeInteraction[]
   districtId   Int?
-  district     Districts?         @relation(fields: [districtId], references: [id])
+  district     District?         @relation(fields: [districtId], references: [id])
 }
 
 model Report {
@@ -79,7 +79,7 @@ model Friendship {
   receiverId String
 }
 
-model Districts {
+model District {
   id     Int     @id @default(autoincrement())
   name   String
   points Json

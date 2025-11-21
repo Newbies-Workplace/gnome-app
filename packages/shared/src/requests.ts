@@ -91,8 +91,3 @@ export class DeleteFriend {
   @IsUUID()
   friendId!: string;
 }
-
-export class CreateDistrict {
-  name!: string;
-  points!: any;
-}
