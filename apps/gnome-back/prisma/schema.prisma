@@ -108,6 +108,7 @@ enum BuildingType {
 enum BuildingInteractionType {
   ATTACK
   EMPOWER
+}
 model District {
   id     Int     @id @default(autoincrement())
   name   String
