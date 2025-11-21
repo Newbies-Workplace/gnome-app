@@ -33,6 +33,7 @@ export interface GnomeResponse {
   description: string;
   exists: boolean;
   pictureUrl: string;
+  districtId?: number | null;
 }
 
 export interface GnomeIdResponse {
@@ -46,6 +47,7 @@ export interface GnomeIdResponse {
   description: string;
   exists: boolean;
   pictureUrl?: string;
+  districtId?: number | null;
   nearest: GnomeResponse[];
 }
 
@@ -98,9 +100,4 @@ export interface TeamResponse {
 export interface DistrictsResponse {
   id: number;
   name: string;
-  points: any;
-  minX: number;
-  maxX: number;
-  minY: number;
-  maxY: number;
 }

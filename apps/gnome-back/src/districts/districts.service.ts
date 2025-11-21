@@ -8,13 +8,26 @@ import { PrismaService } from "@/db/prisma.service";
 export class DistrictsService {
   constructor(private readonly prismaService: PrismaService) {}
 
-  async findDistricts(id: number): Promise<DistrictsResponse> {
+  async findDistrict(id: number): Promise<DistrictsResponse> {
     const district = await this.prismaService.districts.findFirst({
       where: {
         id: id,
       },
+      select: {
+        id: true,
+        name: true,
+      },
     });
     return district;
+  }
+  async findManyDistricts(): Promise<DistrictsResponse[]> {
+    const districts = await this.prismaService.districts.findMany({
+      select: {
+        id: true,
+        name: true,
+      },
+    });
+    return districts;
   }
 
   async createDistricts(name: string, points: any = null) {
@@ -44,7 +57,6 @@ export class DistrictsService {
 
   async findPointInPolygon(pointXY: [number, number]) {
     const [x, y] = pointXY;
-    const resultsName: string[] = [];
     const turfPoint = point(pointXY);
     const polygons = await this.prismaService.districts.findMany({
       where: {
@@ -55,7 +67,7 @@ export class DistrictsService {
       },
     });
     if (polygons.length === 0) {
-      resultsName.push("Poza Wrocławiem");
+      return null;
     }
     for (let i = 0; i < polygons.length; i++) {
       const data = JSON.parse(JSON.stringify(polygons[i].points));
@@ -64,9 +76,9 @@ export class DistrictsService {
         polygon(data.coordinates),
       );
       if (isInPolygon) {
-        resultsName.push(polygons[i].name);
+        return polygons[i].id;
       }
     }
-    return resultsName;
+    return null;
   }
 }

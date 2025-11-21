@@ -1,5 +1,13 @@
-import { Body, Controller, Get, Post, Query, UseGuards } from "@nestjs/common";
-import { CreateDistrict, FindPoint } from "@repo/shared/requests";
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Query,
+  UseGuards,
+} from "@nestjs/common";
+import { CreateDistrict } from "@repo/shared/requests";
 import { DistrictsResponse } from "@repo/shared/responses";
 import { JwtGuard } from "@/auth/guards/jwt.guard";
 import { Role } from "@/role/role.decorator";
@@ -11,20 +19,15 @@ export class DistrictsController {
 
   @Get("")
   @UseGuards(JwtGuard)
-  async findDistricts(@Query("id") id: number): Promise<DistrictsResponse> {
-    return await this.districtService.findDistricts(id);
+  async findDistricts(): Promise<DistrictsResponse[]> {
+    return await this.districtService.findManyDistricts();
   }
 
-  @Post("")
+  @Get("id")
   @UseGuards(JwtGuard)
-  @Role(["ADMIN"])
-  async createDistrict(@Body() body: CreateDistrict) {
-    return await this.districtService.createDistricts(body.name, body.points);
-  }
-
-  @Get("point")
-  @UseGuards(JwtGuard)
-  async findPoint(@Body() body: { point: [number, number] }) {
-    return await this.districtService.findPointInPolygon(body.point);
+  async findDistrictById(
+    @Body() body: { id: number },
+  ): Promise<DistrictsResponse> {
+    return await this.districtService.findDistrict(body.id);
   }
 }
