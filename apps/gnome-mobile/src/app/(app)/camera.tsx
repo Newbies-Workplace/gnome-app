@@ -45,7 +45,7 @@ const CameraScreen = () => {
         <TouchableOpacity
           className="p-5"
           onPress={() => {
-            addInteraction(gnomeid, undefined);
+            addInteraction(gnomeid);
             router.push("/collection");
           }}
         >
@@ -117,11 +117,11 @@ const CameraScreen = () => {
           console.error("Error saving photo: ", error);
         }
       }
+      console.log("Before addInteraction");
+      await addInteraction(gnomeid);
+      console.log("After addInteraction — redirecting");
+      router.push("/collection");
     }
-    console.log("Before addInteraction");
-    await addInteraction(gnomeid);
-    console.log("After addInteraction — redirecting");
-    router.push("/collection");
   };
 
   // Przełączenie flasha
