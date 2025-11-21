@@ -1,5 +1,4 @@
 import { Injectable } from "@nestjs/common";
-import { CreateDistrict } from "@repo/shared/requests";
 import { DistrictsResponse } from "@repo/shared/responses";
 import { booleanPointInPolygon, point, polygon } from "@turf/turf";
 import { PrismaService } from "@/db/prisma.service";

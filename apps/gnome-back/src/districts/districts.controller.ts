@@ -7,7 +7,6 @@ import {
   Query,
   UseGuards,
 } from "@nestjs/common";
-import { CreateDistrict } from "@repo/shared/requests";
 import { DistrictsResponse } from "@repo/shared/responses";
 import { JwtGuard } from "@/auth/guards/jwt.guard";
 import { Role } from "@/role/role.decorator";
