@@ -48,6 +48,8 @@ model Gnome {
   exists       Boolean            @default(true)
   pictureUrl   String
   interactions GnomeInteraction[]
+  districtId   Int?
+  district     District?         @relation(fields: [districtId], references: [id])
 }
 
 model Report {
@@ -75,6 +77,17 @@ model Friendship {
   receiver   User   @relation("receiver", fields: [receiverId], references: [id])
   senderId   String
   receiverId String
+}
+
+model District {
+  id     Int     @id @default(autoincrement())
+  name   String
+  points Json
+  minX   Float
+  maxX   Float
+  minY   Float
+  maxY   Float
+  gnomes Gnome[]
 }
 
 enum UserRole {
