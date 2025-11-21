@@ -1,5 +1,6 @@
 import {
   Body,
+  ConflictException,
   Controller,
   FileTypeValidator,
   Get,
@@ -31,6 +32,8 @@ import { Role } from "@/role/role.decorator";
 import { RoleGuard } from "@/roleguard/role.guard";
 import { TeamsService } from "@/teams/teams.service";
 import { GnomesService } from "./gnomes.service";
+
+const MIN_INTERACTION_INTERVAL = 5 * 60 * 1000;
 
 @Controller("gnomes")
 export class GnomesController {
@@ -124,24 +127,24 @@ export class GnomesController {
 
   @Post("interaction")
   @UseGuards(JwtGuard)
-  async uploadFile(
+  async createInteraction(
     @User() user: JwtUser,
     @Body() body: CreateInteractionRequest,
   ): Promise<InteractionResponse> {
-    const team = await this.teamsService.getTeamWithMemberId(user.id);
-    if (team && team.members.length > 1) {
-      const interactions = team.members.map((member) => {
-        return this.gnomeService.createInteraction(
-          member.userId,
-          body.interactionDate,
-          body.gnomeId,
+    const lastUserInteraction = await this.gnomeService.getLastInteraction(
+      body.gnomeId,
+      user.id,
+    );
+    if (lastUserInteraction) {
+      if (
+        new Date().getTime() -
+          new Date(lastUserInteraction.interactionDate).getTime() <
+        MIN_INTERACTION_INTERVAL
+      ) {
+        throw new ConflictException(
+          `Interaction cooldown - gnomeId: ${body.gnomeId}`,
         );
-      });
-      const resolvedInteractions = await Promise.all(interactions);
-      const filteredInteractions = resolvedInteractions.filter(
-        (interaction) => interaction.userId === user.id,
-      );
-      return filteredInteractions[0];
+      }
     }
 
     const interaction = await this.gnomeService.createInteraction(
