@@ -1,12 +1,14 @@
 import BottomSheet, { BottomSheetView } from "@gorhom/bottom-sheet";
 import { useNavigation } from "@react-navigation/native";
 import { useRouter } from "expo-router";
+import { colorScheme } from "nativewind";
 import { useEffect, useMemo, useRef } from "react";
-import { TouchableOpacity, View } from "react-native";
+import { Linking, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import ArrowLeft from "@/assets/icons/arrow-left.svg";
 import LanguageIcon from "@/assets/icons/language.svg";
 import ModeIcon from "@/assets/icons/mode.svg";
+import NotificationsIcon from "@/assets/icons/notifications.svg";
 import { SettingsOption } from "@/components/ui/SettingsOption";
 import { Text } from "@/components/ui/text";
 import { useColorScheme } from "@/lib/useColorScheme";
@@ -56,23 +58,31 @@ function SettingsScreen() {
         }}
       >
         <BottomSheetView className="w-full px-6 py-6">
-          <View className="py-4 border-b border-tekst">
-            <Text
-              className="text-tekst text-xl font-bold"
-              onPress={() => setColorScheme?.("dark")}
-            >
-              Ciemny
-            </Text>
-          </View>
+          <TouchableOpacity
+            className="py-4 border-b border-tekst flex-row justify-between items-center"
+            onPress={() => {
+              setColorScheme?.("dark");
+              themeBottomSheetRef.current?.close();
+            }}
+          >
+            <Text className="text-tekst text-xl font-bold">Ciemny</Text>
+            {colorScheme.get?.() === "dark" && (
+              <Text className="text-tekst text-xl">✓</Text>
+            )}
+          </TouchableOpacity>
 
-          <View className="py-4">
-            <Text
-              className="text-tekst text-xl font-bold"
-              onPress={() => setColorScheme?.("light")}
-            >
-              Jasny
-            </Text>
-          </View>
+          <TouchableOpacity
+            className="py-4 flex-row justify-between items-center"
+            onPress={() => {
+              setColorScheme?.("light");
+              themeBottomSheetRef.current?.close();
+            }}
+          >
+            <Text className="text-tekst text-xl font-bold">Jasny</Text>
+            {colorScheme.get?.() === "light" && (
+              <Text className="text-tekst text-xl">✓</Text>
+            )}
+          </TouchableOpacity>
         </BottomSheetView>
       </BottomSheet>
 
@@ -91,15 +101,39 @@ function SettingsScreen() {
       >
         <BottomSheetView className="w-full px-6 py-6">
           <View className="py-4 border-b border-tekst">
-            <Text className="text-tekst text-xl">Polski</Text>
+            <Text
+              className="text-tekst text-xl"
+              onPress={() => {
+                // TODO: set language to Polish
+                languageBottomSheetRef.current?.close();
+              }}
+            >
+              Polski
+            </Text>
           </View>
 
           <View className="py-4 border-b border-tekst">
-            <Text className="text-tekst text-xl">English</Text>
+            <Text
+              className="text-tekst text-xl"
+              onPress={() => {
+                // TODO: set language to English
+                languageBottomSheetRef.current?.close();
+              }}
+            >
+              English
+            </Text>
           </View>
 
           <View className="py-4">
-            <Text className="text-tekst text-xl">Deutsch</Text>
+            <Text
+              className="text-tekst text-xl"
+              onPress={() => {
+                // TODO: set language to Deutsch
+                languageBottomSheetRef.current?.close();
+              }}
+            >
+              Deutsch
+            </Text>
           </View>
         </BottomSheetView>
       </BottomSheet>
@@ -107,13 +141,25 @@ function SettingsScreen() {
         <SettingsOption
           text="Motyw"
           image={ModeIcon}
-          onClick={() => themeBottomSheetRef.current?.expand()}
+          onClick={() => {
+            languageBottomSheetRef.current?.close();
+            themeBottomSheetRef.current?.expand();
+          }}
+          customClass="mb-8"
+        />
+        <SettingsOption
+          text="Powiadomienia"
+          image={NotificationsIcon}
+          onClick={() => Linking.openSettings()}
           customClass="mb-8"
         />
         <SettingsOption
           text="Język"
           image={LanguageIcon}
-          onClick={() => languageBottomSheetRef.current?.expand()}
+          onClick={() => {
+            themeBottomSheetRef.current?.close();
+            languageBottomSheetRef.current?.expand();
+          }}
           extraText="Polski"
           customClass="mb-8"
         />
