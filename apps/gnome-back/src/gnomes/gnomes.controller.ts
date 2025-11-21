@@ -131,22 +131,6 @@ export class GnomesController {
     @User() user: JwtUser,
     @Body() body: CreateInteractionRequest,
   ): Promise<InteractionResponse> {
-    // const team = await this.teamsService.getTeamWithMemberId(user.id);
-    // if (team && team.members.length > 1) {
-    //   const interactions = team.members.map((member) => {
-    //     return this.gnomeService.createInteraction(
-    //       member.userId,
-    //       body.interactionDate,
-    //       body.gnomeId,
-    //     );
-    //   });
-    //   const resolvedInteractions = await Promise.all(interactions);
-    //   const filteredInteractions = resolvedInteractions.filter(
-    //     (interaction) => interaction.userId === user.id,
-    //   );
-    //   return filteredInteractions[0];
-    // }
-
     const lastUserInteraction = await this.gnomeService.getLastInteraction(
       body.gnomeId,
       user.id,
