@@ -1,10 +1,9 @@
-import "./App.css";
 import { Link } from "react-router-dom";
-import loginIcon from "./assets/icons/login.svg";
-import backgroundImage from "./assets/images/background.png";
-import phoneImage from "./assets/images/phone.png";
-import teamBuildMap from "./assets/images/teamBuildMap.png";
-import teamMap from "./assets/images/teamMap.png";
+import loginIcon from "@/assets/icons/login.svg";
+import backgroundImage from "@/assets/images/background.png";
+import phoneImage from "@/assets/images/phone.png";
+import teamBuildMap from "@/assets/images/teamBuildMap.png";
+import teamMap from "@/assets/images/teamMap.png";
 
 function HomePage() {
   return (
@@ -15,7 +14,7 @@ function HomePage() {
       {/* Header */}
       <div className="w-full p-5 bg-transparent">
         <div className="flex items-center justify-between">
-          <h1 className="text-white text-5xl font-Afacad">Krasnale</h1>
+          <h1 className="text-white text-5xl font-Afacad">KRASNALE</h1>
           {/* Zaloguj button with icon */}
           <button className="bg-[#D6484A] text-white text-2xl font-Afacad px-6 py-3 rounded-4xl hover:opacity-90 transition flex items-center gap-2">
             <img src={loginIcon} alt="login icon" className="w-6 h-6" />
@@ -35,11 +34,11 @@ function HomePage() {
       <div className="overflow-y-auto px-5 pt-10 h-[calc(100vh-20px)]">
         {/* Section 1 */}
         <div className="mt-10 mb-20">
-          <h2 className="text-white text-6xl font-bold font-Afacad">
+          <h2 className="text-white text-center text-6xl font-bold font-Afacad">
             Pobyt we Wrocławiu nie musi być nudny - odkrywaj krasnale i walcz o
             dominacje!
           </h2>
-          <h4 className="text-gray-300 text-2xl mt-2 font-Afacad">
+          <h4 className="text-gray-300 text-2xl mt-2 font-Afacad text-center">
             Dołącz do jednej z trzech drużyn, eksploruj swoją dzielnicę i buduj
             fortyfikacje, które inni będą próbowali zniszczyć.
           </h4>
@@ -51,10 +50,10 @@ function HomePage() {
             <img src={phoneImage} alt="phone" className="w-full h-auto" />
           </div>
           <div className="flex flex-col justify-between ml-4 max-w-xl">
-            <h1 className="text-white text-6xl font-bold font-Afacad">
+            <h1 className="text-white text-6xl text-center font-bold font-Afacad">
               EKSPLORUJ WROCŁAW
             </h1>
-            <h4 className="text-gray-300 text-2xl mt-2 font-Afacad">
+            <h4 className="text-gray-300 text-center text-2xl mt-2 font-Afacad">
               Chodź sam lub ze znajomymi i odkrywaj różne krasnale!
             </h4>
           </div>
@@ -97,10 +96,10 @@ function HomePage() {
         {/* Section 5 */}
         <div className="mt-10 mb-20 flex flex-row items-center justify-center gap-10 sm:gap-20 md:gap-40 lg:gap-60">
           <div className="flex flex-col space-y-2 max-w-xl">
-            <h1 className="text-white text-6xl font-bold font-Afacad">
+            <h1 className="text-white text-center text-6xl font-bold font-Afacad">
               RYWALIZUJ LOKALNIE
             </h1>
-            <h4 className="text-gray-300 text-2xl mt-2 font-Afacad">
+            <h4 className="text-gray-300 text-center text-2xl mt-2 font-Afacad">
               Wrocław staje się polem gry!
             </h4>
           </div>
