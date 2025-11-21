@@ -23,8 +23,7 @@ export class DistrictsController {
   }
 
   @Get(":id")
-  @UseGuards(JwtGuard)
-  async findDistrictById(@Param() id: number): Promise<DistrictsResponse> {
+  async findDistrictById(@Param("id") id: number): Promise<DistrictsResponse> {
     return await this.districtService.findDistrict(Number(id));
   }
 }
