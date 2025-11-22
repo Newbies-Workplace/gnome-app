@@ -71,7 +71,7 @@ function TabButton({ Icon, children, isFocused, ...props }: TabButtonProps) {
         )}
       >
         {/* @ts-ignore */}
-        <Icon height={25} width={25} className="bg-tekst" />
+        <Icon height={25} width={25} />
 
         {isFocused && (
           <Text className={"text-tekst font-bold"}>{children}</Text>

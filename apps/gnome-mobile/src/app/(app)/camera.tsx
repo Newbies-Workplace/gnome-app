@@ -32,7 +32,7 @@ const CameraScreen = () => {
       ),
       headerTitle: () => (
         <View className="text-center">
-          <Text className="text-white text-lg font-bold text-center tracking-wide">
+          <Text className="text-tekst text-lg font-bold text-center tracking-wide">
             Znalazłeś krasnala?{"\n"}Zrób mu zdjęcie!
           </Text>
         </View>
@@ -45,7 +45,7 @@ const CameraScreen = () => {
             router.push("/collection");
           }}
         >
-          <Text className="text-white text-lg font-bold text-center tracking-wide">
+          <Text className="text-tekst text-lg font-bold text-center tracking-wide">
             Pomiń
           </Text>
         </TouchableOpacity>
