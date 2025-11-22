@@ -17,7 +17,7 @@ const Collection = () => {
     navigation.setOptions({
       headerTitle: () => (
         <View className="flex justify-center">
-          <Text className="text-white text-2xl font-bold">Twoja kolekcja</Text>
+          <Text className="text-tekst text-2xl font-bold">Twoja kolekcja</Text>
         </View>
       ),
       headerTitleAlign: "center",
@@ -35,29 +35,32 @@ const Collection = () => {
   }, []);
 
   return (
-    <SafeAreaView className={"flex-1 bg-background"}>
+    <SafeAreaView className={"flex-1 bg-primary-foreground"}>
       <FlatList
         data={gnomes}
-        contentContainerClassName={"bg-background"}
+        contentContainerClassName={"bg-primary-foreground"}
+        columnWrapperStyle={{ justifyContent: "flex-start" }}
         keyExtractor={(item) => item.id?.toString()}
         numColumns={3}
         renderItem={({ item }) => {
           const interaction = interactions.find((i) => i.gnomeId === item.id);
           return (
-            <GnomeCard
-              image={item.pictureUrl}
-              text={item.name}
-              onClick={() => router.push(`/gnomes/${item.id}`)}
-              interaction={{
-                found: !!interaction,
-                userPicture: interaction?.userPicture,
-              }}
-            />
+            <View style={{ width: "33.3333%" }}>
+              <GnomeCard
+                image={item.pictureUrl}
+                text={item.name}
+                onClick={() => router.push(`/gnomes/${item.id}`)}
+                interaction={{
+                  found: !!interaction,
+                  userPicture: interaction?.userPicture,
+                }}
+              />
+            </View>
           );
         }}
         ListEmptyComponent={() =>
           error ? (
-            <Text className="text-white">Błąd: {error}</Text>
+            <Text className="text-tekst">Błąd: {error}</Text>
           ) : (
             <LoadingScreen />
           )

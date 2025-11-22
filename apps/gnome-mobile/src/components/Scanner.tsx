@@ -46,7 +46,7 @@ export const Scanner = ({
       {!device ||
         (permissionStatus !== "granted" && (
           <View className="gap-10 p-10">
-            <Text className="text-white">
+            <Text className="text-tekst">
               Kamera jest potrzebna do zeskanowania kodu QR znajomego.
             </Text>
             <Button onPress={requestCameraPermission}>

@@ -18,10 +18,10 @@ const DistanceTracker: React.FC<DistanceTrackerProps> = ({ distance }) => {
           transform: [{ translateX: -viewWidth / 2 }],
         }}
       >
-        <Text className="text-lg text-white font-bold">
+        <Text className="text-lg text-tekst font-bold">
           Najbliższy krasnal znajduje{" "}
         </Text>
-        <Text className="text-lg text-white font-bold">
+        <Text className="text-lg text-tekst font-bold">
           się{" "}
           <Text className="text-lg text-primary font-bold">{distance}m</Text> od
           ciebie

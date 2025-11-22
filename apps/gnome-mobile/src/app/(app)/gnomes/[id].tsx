@@ -36,9 +36,7 @@ const GnomeDetail = () => {
       ),
       headerTitle: "",
       headerTitleAlign: "center",
-      headerStyle: {
-        backgroundColor: "#131413",
-      },
+      headerBackground: () => <View className="bg-primary-foreground flex-1" />,
       headerShadowVisible: false,
       headerShown: true,
     });
@@ -64,8 +62,8 @@ const GnomeDetail = () => {
 
   if (!gnome) {
     return (
-      <View className="flex-1 justify-center items-center bg-[#131413]">
-        <Text className="text-white text-lg">Ładowanie...</Text>
+      <View className="flex-1 justify-center items-center bg-primary-foreground">
+        <Text className="text-tekst text-lg">Ładowanie...</Text>
       </View>
     );
   }
@@ -79,7 +77,7 @@ const GnomeDetail = () => {
 
   return (
     <SafeAreaView
-      className="bg-background flex-1"
+      className="bg-primary-foreground flex-1"
       edges={["bottom", "left", "right"]}
     >
       <ScrollView className={"px-4"}>
@@ -91,17 +89,17 @@ const GnomeDetail = () => {
           />
         </View>
 
-        <Text className="text-center text-white text-3xl font-bold mb-2.5">
+        <Text className="text-center text-tekst text-3xl font-bold mb-2.5">
           {gnome.name}
         </Text>
-        <Text className="text-center text-white text-lg mb-2.5">
+        <Text className="text-center text-tekst text-lg mb-2.5">
           {gnome.location}
         </Text>
 
         <View className="border-b border-primary my-2.5 w-4/5 self-center" />
         <View className="flex-row items-center mb-2.5">
           <FoundIcon width={20} height={20} />
-          <Text className="text-white ml-2.5">
+          <Text className="text-tekst ml-2.5">
             Data znalezienia:{" "}
             {interaction
               ? dayjs(interaction.interactionDate).format("DD.MM.YYYY")
@@ -111,18 +109,18 @@ const GnomeDetail = () => {
 
         <View className="flex-row items-center mb-2.5">
           <DateIcon width={20} height={20} />
-          <Text className="text-white ml-2.5">
+          <Text className="text-tekst ml-2.5">
             Data postawienia: {dayjs(gnome.creationDate).format("DD.MM-YYYY")}
           </Text>
         </View>
         <View className="border-b border-primary my-2.5 w-4/5 self-center" />
 
-        <Text className="text-white mb-2.5">{gnome.description}</Text>
+        <Text className="text-tekst mb-2.5">{gnome.description}</Text>
 
-        <Text className="text-white font-bold text-xl font-afacad my-2">
+        <Text className="text-tekst font-bold text-xl font-afacad my-2">
           Ciekawostka:
         </Text>
-        <Text className="text-white font-afacad my-2">{gnome.funFact}</Text>
+        <Text className="text-tekst font-afacad my-2">{gnome.funFact}</Text>
 
         <View className="flex-row justify-center">
           {nearestGnomes.slice(0, 3).map((gnome) => (
