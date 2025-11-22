@@ -52,17 +52,17 @@ export default function SignInScreen() {
           transform: "scale(1)",
         }}
       />
-      <View className="bg-background p-10">
+      <View className="bg-primary-foreground p-10">
         <Text className="text-tekst text-2xl font-bold mb-5 text-center">
           Zaloguj się!
         </Text>
         <TextInput
-          className="bg-background text-tekst w-full p-2.5 mb-2.5 rounded-3xl placeholder:text-[tekst] border border-[background]"
+          className="bg-primary-foreground text-tekst w-full p-2.5 mb-2.5 rounded-3xl placeholder:text-[tekst] border border-[primary-foreground]"
           placeholder="Email"
           secureTextEntry
         />
         <TextInput
-          className="bg-background text-tekst w-full p-2.5 mb-2.5 rounded-3xl placeholder:text-[tekst] border border-[background]"
+          className="bg-primary-foreground text-tekst w-full p-2.5 mb-2.5 rounded-3xl placeholder:text-[tekst] border border-[primary-foreground]"
           placeholder="Hasło"
           secureTextEntry
         />

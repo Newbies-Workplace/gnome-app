@@ -1,6 +1,7 @@
 import BottomSheet, { BottomSheetView } from "@gorhom/bottom-sheet";
 import { useNavigation } from "@react-navigation/native";
 import { useRouter } from "expo-router";
+import { setStatusBarStyle } from "expo-status-bar";
 import { colorScheme } from "nativewind";
 import { useEffect, useMemo, useRef } from "react";
 import { Linking, TouchableOpacity, View } from "react-native";
@@ -58,6 +59,7 @@ function SettingsScreen() {
             onPress={() => {
               setColorScheme?.("dark");
               themeBottomSheetRef.current?.close();
+              setStatusBarStyle("light");
             }}
           >
             <Text className="text-tekst text-xl font-bold">Ciemny</Text>
@@ -71,6 +73,7 @@ function SettingsScreen() {
             onPress={() => {
               setColorScheme?.("light");
               themeBottomSheetRef.current?.close();
+              setStatusBarStyle("dark");
             }}
           >
             <Text className="text-tekst text-xl font-bold">Jasny</Text>

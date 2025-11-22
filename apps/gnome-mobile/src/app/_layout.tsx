@@ -27,7 +27,7 @@ export default function RootLayout() {
   return (
     <GestureHandlerRootView>
       <BottomSheetModalProvider>
-        <StatusBar style={"light"} />
+        <StatusBar />
         <Stack
           screenOptions={{
             // Hide the header for this route

@@ -11,7 +11,7 @@ export const ConfirmDialog = ({
   declineText = "Anuluj",
   confirmContent = (
     <>
-      <Text className="text-white">Potwierdź</Text>
+      <Text className="text-tekst">Potwierdź</Text>
     </>
   ),
 }: {
@@ -25,9 +25,9 @@ export const ConfirmDialog = ({
 }) => {
   return (
     <BottomSheetView className="gap-4 p-10">
-      <Text className="text-white font-bold text-lg">{title}</Text>
+      <Text className="text-tekst font-bold text-lg">{title}</Text>
       {description && (
-        <Text className="text-white font-bold text-lg">{description}</Text>
+        <Text className="text-tekst font-bold text-lg">{description}</Text>
       )}
       <View className="w-full flex-row gap-4">
         <Button
@@ -35,7 +35,7 @@ export const ConfirmDialog = ({
           style={{ backgroundColor: "hsl(0, 0%, 17%)" }}
           className="flex-1 w-full flex-row gap-2 iteems-center"
         >
-          <Text className="text-white">{declineText}</Text>
+          <Text className="text-tekst">{declineText}</Text>
           <CloseIcon width={16} height={16} />
         </Button>
         <Button
