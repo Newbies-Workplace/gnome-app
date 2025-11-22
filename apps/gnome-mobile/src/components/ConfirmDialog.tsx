@@ -35,7 +35,7 @@ export const ConfirmDialog = ({
           style={{ backgroundColor: "hsl(0, 0%, 17%)" }}
           className="flex-1 w-full flex-row gap-2 iteems-center"
         >
-          <Text className="text-tekst">{declineText}</Text>
+          <Text className="text-white">{declineText}</Text>
           <CloseIcon width={16} height={16} />
         </Button>
         <Button

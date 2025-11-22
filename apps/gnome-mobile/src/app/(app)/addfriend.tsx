@@ -174,13 +174,8 @@ export default function AddFriendScreen() {
         )}
       </View>
       <BottomSheetModal
-        handleIndicatorStyle={{
-          backgroundColor: "#D9D9D9",
-          width: 94,
-          marginTop: 8,
-          borderRadius: 4,
-        }}
-        backgroundStyle={{ backgroundColor: "#1E1E1E" }}
+        handleIndicatorClassName={"bg-tekst w-24 mt-2 rounded-lg"}
+        backgroundClassName={"bg-background"}
         ref={scanInvitationSheetRef}
         enableDismissOnClose
         onDismiss={scanInvitationSheetRef.current?.close}
@@ -192,13 +187,8 @@ export default function AddFriendScreen() {
         />
       </BottomSheetModal>
       <BottomSheetModal
-        handleIndicatorStyle={{
-          backgroundColor: "#D9D9D9",
-          width: 94,
-          marginTop: 8,
-          borderRadius: 4,
-        }}
-        backgroundStyle={{ backgroundColor: "#1E1E1E" }}
+        handleIndicatorClassName={"bg-tekst w-24 mt-2 rounded-lg"}
+        backgroundClassName={"bg-background"}
         ref={regenerateInviteCodeSheetRef}
         enableDismissOnClose
         onDismiss={regenerateInviteCodeSheetRef.current?.close}
