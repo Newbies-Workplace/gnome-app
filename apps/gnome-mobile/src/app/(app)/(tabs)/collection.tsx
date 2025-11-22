@@ -39,20 +39,23 @@ const Collection = () => {
       <FlatList
         data={gnomes}
         contentContainerClassName={"bg-primary-foreground"}
+        columnWrapperStyle={{ justifyContent: "flex-start" }}
         keyExtractor={(item) => item.id?.toString()}
         numColumns={3}
         renderItem={({ item }) => {
           const interaction = interactions.find((i) => i.gnomeId === item.id);
           return (
-            <GnomeCard
-              image={item.pictureUrl}
-              text={item.name}
-              onClick={() => router.push(`/gnomes/${item.id}`)}
-              interaction={{
-                found: !!interaction,
-                userPicture: interaction?.userPicture,
-              }}
-            />
+            <View style={{ width: "33.3333%" }}>
+              <GnomeCard
+                image={item.pictureUrl}
+                text={item.name}
+                onClick={() => router.push(`/gnomes/${item.id}`)}
+                interaction={{
+                  found: !!interaction,
+                  userPicture: interaction?.userPicture,
+                }}
+              />
+            </View>
           );
         }}
         ListEmptyComponent={() =>
