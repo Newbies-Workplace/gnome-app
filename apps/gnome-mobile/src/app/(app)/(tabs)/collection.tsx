@@ -17,7 +17,7 @@ const Collection = () => {
     navigation.setOptions({
       headerTitle: () => (
         <View className="flex justify-center">
-          <Text className="text-white text-2xl font-bold">Twoja kolekcja</Text>
+          <Text className="text-tekst text-2xl font-bold">Twoja kolekcja</Text>
         </View>
       ),
       headerTitleAlign: "center",
