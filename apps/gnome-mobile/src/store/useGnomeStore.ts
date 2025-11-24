@@ -14,7 +14,7 @@ interface GnomeState {
   addGnome: (gnome: GnomeResponse) => void;
   removeGnome: (id: string) => void;
   fetchMyInteractions: () => Promise<void>;
-  addInteraction: (gnomeId: string, photoUrl?: string) => Promise<void>;
+  addInteraction: (gnomeId: string) => Promise<void>;
 }
 
 export const useGnomeStore = create<GnomeState>((set) => ({
@@ -62,24 +62,14 @@ export const useGnomeStore = create<GnomeState>((set) => ({
     }
   },
 
-  addInteraction: async (gnomeId, photoUrl) => {
-    console.log("Photo captured:", photoUrl);
-    const form = new FormData();
-    const interactionDate = new Date().toISOString();
-    form.append("file", {
-      uri: photoUrl,
-      name: "photo.jpg",
-      type: "image/jpeg",
-      // biome-ignore lint/suspicious/noExplicitAny: no types needed
-    } as any);
-    form.append("interactionDate", interactionDate);
-    form.append("gnomeId", gnomeId);
-
-    const url = "api/rest/v1/gnomes/interaction";
-    const headers = {
-      "Content-Type": "multipart/form-data",
-    };
-
-    await axiosInstance.post(url, form, { headers });
+  addInteraction: async (gnomeId: string) => {
+    const interactionDate = new Date();
+    const interaction = await GnomesService.addInteraction({
+      gnomeId,
+      interactionDate,
+    });
+    set((state) => ({
+      interactions: [...state.interactions, interaction],
+    }));
   },
 }));
