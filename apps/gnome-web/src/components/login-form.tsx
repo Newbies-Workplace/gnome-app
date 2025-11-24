@@ -56,7 +56,7 @@ export function LoginForm({
                 />
               </Field>
               <Field>
-                <Button className="text-white font-Afacad bg-primary-red border-none rounded-4xl">
+                <Button className="text-white font-Afacad bg-primary-color border-none rounded-4xl">
                   ZALOGUJ SIĘ
                 </Button>
               </Field>
