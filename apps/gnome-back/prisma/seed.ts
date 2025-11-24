@@ -1,6 +1,5 @@
 import { PrismaClient } from "@prisma/client";
 import * as fs from "fs/promises";
-import { Polygon } from "geojson";
 
 const prisma = new PrismaClient();
 
