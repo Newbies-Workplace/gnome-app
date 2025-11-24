@@ -3,7 +3,7 @@ import { useNavigation } from "@react-navigation/native";
 import { useRouter } from "expo-router";
 import { setStatusBarStyle } from "expo-status-bar";
 import { colorScheme } from "nativewind";
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { Linking, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import ArrowLeft from "@/assets/icons/arrow-left.svg";
