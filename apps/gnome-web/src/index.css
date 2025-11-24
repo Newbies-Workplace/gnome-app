@@ -69,6 +69,9 @@ h1 {
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+  --color-primary-red: oklch(0.601 0.178 23.5); /* kolor primary */
+  --color-primary-gray: oklch(0.236 0.006 150); /* kolor tla admin panelu */
+  --color-input: oklch(0.285 0.007 145); /* kolor inputów */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);

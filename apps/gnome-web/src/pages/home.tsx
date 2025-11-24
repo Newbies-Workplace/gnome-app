@@ -15,8 +15,8 @@ function HomePage() {
       <div className="w-full p-5 bg-transparent">
         <div className="flex items-center justify-between">
           <h1 className="text-white text-5xl font-Afacad">KRASNALE</h1>
-          {/* Zaloguj button with icon */}
-          <button className="bg-[#D6484A] text-white text-2xl font-Afacad px-6 py-3 rounded-4xl hover:opacity-90 transition flex items-center gap-2">
+          {/* Zaloguj button z icon */}
+          <button className="bg-primary-red text-white text-2xl font-Afacad px-6 py-3 rounded-4xl hover:opacity-90 transition flex items-center gap-2">
             <img src={loginIcon} alt="login icon" className="w-6 h-6" />
             <Link to="/login" className="text-white">
               Zaloguj się
@@ -157,7 +157,7 @@ function HomePage() {
             target="_blank"
             rel="noopener noreferrer"
           >
-            <button className="bg-[#D6484A] text-white text-2xl w-100 px-6 py-3 rounded-4xl hover:opacity-90 transition mt-10 mb-10 font-Afacad">
+            <button className="bg-primary-red text-white text-2xl w-100 px-6 py-3 rounded-4xl hover:opacity-90 transition mt-10 mb-10 font-Afacad">
               Pobierz na Android
             </button>
           </a>
