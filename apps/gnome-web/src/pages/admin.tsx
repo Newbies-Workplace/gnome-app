@@ -19,7 +19,7 @@ export default function AdminPage() {
       <div className="flex">
         <div className="p-4 w-3/4 h-screen">
           <LoadScript
-            googleMapsApiKey={import.meta.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY}
+            googleMapsApiKey={import.meta.env.VITE_PUBLIC_GOOGLE_MAPS_API_KEY}
           >
             <GoogleMap
               mapContainerStyle={{ width: "100%", height: "100%" }}
