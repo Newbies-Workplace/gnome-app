@@ -31,16 +31,13 @@ export class AuthController {
     const FRONTEND_URL = process.env.FRONTEND_URL;
     const token = await this.authService.googleAuth(user);
     res.cookie("access_token", token, {
-      httpOnly: true,
+      httpOnly: false,
       secure: true,
       sameSite: "none",
       maxAge: 60 * 60 * 1000, // 1 hour
     });
 
-    if (user.role.includes(UserRole.ADMIN))
-      return res.redirect(`${FRONTEND_URL}/admin`);
-
-    return res.redirect(`${FRONTEND_URL}`);
+    return res.redirect(`${FRONTEND_URL}/login/callback`);
   }
 
   @Post("google")
