@@ -66,16 +66,19 @@ export function LoginForm({
               <Field>
                 <Button
                   type="submit"
-                  className="bg-white border-none rounded-4xl"
+                  onClick={() => {
+                    window.location.href =
+                      import.meta.env.VITE_PUBLIC_API_URL +
+                      "/auth/google/redirect";
+                  }}
+                  className="bg-white text-black border-none rounded-4xl"
                 >
-                  <Link to="/login" className="text-black font-Afacad">
-                    Zaloguj się z{" "}
-                    <img
-                      src={GoogleLogo}
-                      alt="Logo Google"
-                      className="inline-block"
-                    />
-                  </Link>
+                  Zaloguj się z{" "}
+                  <img
+                    src={GoogleLogo}
+                    alt="Logo Google"
+                    className="inline-block"
+                  />
                 </Button>
               </Field>
             </FieldGroup>
