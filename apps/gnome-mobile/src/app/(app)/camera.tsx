@@ -1,6 +1,14 @@
+import * as MediaLibrary from "expo-media-library";
 import { useLocalSearchParams, useNavigation, useRouter } from "expo-router";
 import { useEffect, useRef, useState } from "react";
-import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  Image,
+  StyleSheet,
+  Text,
+  ToastAndroid,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import {
   Camera,
@@ -18,6 +26,8 @@ const CameraScreen = () => {
   const cameraRef = useRef<Camera>(null);
   const [hasPermission, setHasPermission] = useState(false);
   const [flashMode, setFlashMode] = useState<"off" | "on" | "auto">("off");
+  const [mediaPermissionResponse, requestMediaPermission] =
+    MediaLibrary.usePermissions();
 
   //Header
   const navigation = useNavigation();
@@ -41,7 +51,7 @@ const CameraScreen = () => {
         <TouchableOpacity
           className="p-5"
           onPress={() => {
-            addInteraction(gnomeid, undefined);
+            addInteraction(gnomeid);
             router.push("/collection");
           }}
         >
@@ -63,6 +73,13 @@ const CameraScreen = () => {
     (async () => {
       const cameraPermission = await Camera.requestCameraPermission();
       setHasPermission(cameraPermission === "granted");
+
+      if (
+        !mediaPermissionResponse ||
+        mediaPermissionResponse.status !== "granted"
+      ) {
+        await requestMediaPermission();
+      }
     })();
   }, []);
 
@@ -78,8 +95,40 @@ const CameraScreen = () => {
       const photo = await cameraRef.current.takePhoto({
         flash: flashMode,
       });
-      const photoUrl = `file://${photo.path}`;
-      await addInteraction(gnomeid, photoUrl);
+
+      const photoPath = photo.path.startsWith("file://")
+        ? photo.path
+        : `file://${photo.path}`;
+      console.log("Media permission:", mediaPermissionResponse);
+
+      if (mediaPermissionResponse?.status === "granted") {
+        try {
+          const asset = await MediaLibrary.createAssetAsync(photoPath);
+          const albumName = "GnomeCollection";
+
+          let album = await MediaLibrary.getAlbumAsync(albumName);
+
+          if (!album) {
+            album = await MediaLibrary.createAlbumAsync(
+              albumName,
+              asset,
+              false,
+            );
+          } else {
+            await MediaLibrary.addAssetsToAlbumAsync([asset], album.id, false);
+          }
+
+          console.log("Saved to album: ", asset.uri);
+        } catch (error) {
+          console.error("Error saving photo: ", error);
+        }
+      }
+      await addInteraction(gnomeid).catch(() => {
+        ToastAndroid.show(
+          "Nie udało się zapisać interakcji. Spróbuj później.",
+          ToastAndroid.LONG,
+        );
+      });
       router.push("/collection");
     }
   };
