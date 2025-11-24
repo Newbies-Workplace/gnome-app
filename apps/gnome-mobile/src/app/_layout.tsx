@@ -1,6 +1,9 @@
 import { Stack } from "expo-router";
 import "../global.css";
-import BottomSheet, { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
+import BottomSheet, {
+  BottomSheetModal,
+  BottomSheetModalProvider,
+} from "@gorhom/bottom-sheet";
 import { PortalHost } from "@rn-primitives/portal";
 import { StatusBar } from "expo-status-bar";
 import { cssInterop } from "nativewind";
@@ -11,13 +14,13 @@ import { useAuthStore } from "@/store/useAuthStore";
 export default function RootLayout() {
   const { init } = useAuthStore();
 
-  cssInterop(BottomSheet, {
-    backgroundClassName: {
-      target: "backgroundStyle",
-    },
-    handleIndicatorClassName: {
-      target: "handleIndicatorStyle",
-    },
+  const sheetInteropConfig = {
+    backgroundClassName: { target: "backgroundStyle" },
+    handleIndicatorClassName: { target: "handleIndicatorStyle" },
+  };
+
+  [BottomSheet, BottomSheetModal].forEach((Component) => {
+    cssInterop(Component, sheetInteropConfig);
   });
 
   useEffect(() => {
