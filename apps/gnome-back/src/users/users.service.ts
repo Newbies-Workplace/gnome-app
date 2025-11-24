@@ -53,7 +53,7 @@ export class UsersService {
   }
 
   async createUserWithGoogleData(data: GoogleUser): Promise<User> {
-    return this.prismaService.user.create({
+    const user = await this.prismaService.user.create({
       data: {
         email: data.email,
         name: data.name,
@@ -62,6 +62,12 @@ export class UsersService {
         inviteCode: await this.generateInviteCode(),
       },
     });
+    this.prismaService.userResource.create({
+      data: {
+        userId: user.id,
+      },
+    });
+    return user;
   }
 
   async findUserByGoogleId(googleId: string): Promise<User | null> {

@@ -41,16 +41,13 @@ function SettingsScreen() {
 
   return (
     <SafeAreaView className="flex-1 bg-background">
-      {/* Opcje ustawień */}
       <View className="w-full px-4 mt-4">
-        {/* 1 przycisk */},
         <SettingsOption
           text="Motyw"
           image={ModeIcon}
           onClick={() => router.replace("/theme")}
           customClass="mb-8"
         />
-        {/* 3 przyciski */}
         <SettingsOption
           text="Powiadomienia"
           image={NotificationsIcon}
@@ -67,7 +64,6 @@ function SettingsScreen() {
           onClick={() => router.replace("/security")}
           customClass="mb-8"
         />
-        {/* 3 przyciski */}
         <SettingsOption
           text="Główne"
           image={MainIcon}
@@ -85,7 +81,6 @@ function SettingsScreen() {
           extraText="Polski"
           customClass="mb-8"
         />
-        {/* 2 przyciski */}
         <SettingsOption
           text="Zadaj pytanie"
           image={ZadajPytanieIcon}
