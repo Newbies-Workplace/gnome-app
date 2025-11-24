@@ -60,7 +60,7 @@ export default function ProfileScreen() {
       ),
       headerRight: () => (
         <TouchableOpacity className="p-5" onPress={handleShare}>
-          <ShareIcon className="w-7 h-7]" />
+          <ShareIcon className="w-7 h-7" />
         </TouchableOpacity>
       ),
       headerTitle: "",

@@ -10,6 +10,7 @@ import ArrowLeft from "@/assets/icons/arrow-left.svg";
 import LanguageIcon from "@/assets/icons/language.svg";
 import ModeIcon from "@/assets/icons/mode.svg";
 import NotificationsIcon from "@/assets/icons/notifications.svg";
+import ThemeSelector from "@/components/settings-components/ThemeSelector";
 import { SettingsOption } from "@/components/ui/SettingsOption";
 import { Text } from "@/components/ui/text";
 import { useColorScheme } from "@/lib/useColorScheme";
@@ -51,37 +52,13 @@ function SettingsScreen() {
         backgroundClassName={"bg-background"}
         handleIndicatorClassName={"bg-tekst w-24 mt-2 rounded-lg"}
       >
-        <BottomSheetView className="w-full px-6 py-6">
-          <TouchableOpacity
-            className="py-4 border-b border-tekst flex-row justify-between items-center"
-            onPress={() => {
-              setColorScheme?.("dark");
-              themeBottomSheetRef.current?.close();
-              setStatusBarStyle("light");
-            }}
-          >
-            <Text className="text-tekst text-xl font-bold">Ciemny</Text>
-            {colorScheme.get?.() === "dark" && (
-              <Text className="text-tekst text-xl">✓</Text>
-            )}
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            className="py-4 flex-row justify-between items-center"
-            onPress={() => {
-              setColorScheme?.("light");
-              themeBottomSheetRef.current?.close();
-              setStatusBarStyle("dark");
-            }}
-          >
-            <Text className="text-tekst text-xl font-bold">Jasny</Text>
-            {colorScheme.get?.() === "light" && (
-              <Text className="text-tekst text-xl">✓</Text>
-            )}
-          </TouchableOpacity>
-        </BottomSheetView>
+        <ThemeSelector
+          colorScheme={colorScheme}
+          setColorScheme={setColorScheme}
+          themeBottomSheetRef={themeBottomSheetRef}
+          setStatusBarStyle={setStatusBarStyle}
+        />
       </BottomSheet>
-
       <BottomSheet
         ref={languageBottomSheetRef}
         index={-1}
