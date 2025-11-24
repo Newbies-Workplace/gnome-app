@@ -9,7 +9,7 @@ export default function AdminPage() {
   });
 
   if (loadError) {
-    console.error("Błąd ładowania Google Maps:", loadError);
+    console.error("Error while loading google map:", loadError);
   }
 
   const mapOptions = {
@@ -36,8 +36,8 @@ export default function AdminPage() {
         </div>
       </div>
 
-      <div className="flex flex-grow">
-        <div className="w-3/4 h-full p-4">
+      <div className="flex flex-grow p-4 gap-4">
+        <div className="w-3/4 h-full">
           {isLoaded && (
             <GoogleMap
               mapContainerStyle={{ width: "100%", height: "100%" }}
@@ -47,7 +47,7 @@ export default function AdminPage() {
             />
           )}
         </div>
-        <div className="w-1/4 h-full p-4">{/* admin panel */}</div>
+        <div className="w-1/4 h-full bg-gray-300 rounded-4xl"></div>
       </div>
     </div>
   );
