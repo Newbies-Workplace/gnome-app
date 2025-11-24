@@ -1,8 +1,45 @@
 import { PrismaClient } from "@prisma/client";
+import * as fs from "fs/promises";
+import { Polygon } from "geojson";
 
 const prisma = new PrismaClient();
 
+function extractCoords(coords: number[][][]) {
+  const flat = coords.flat();
+  const xs = flat.map((p) => p[0]);
+  const ys = flat.map((p) => p[1]);
+
+  return {
+    minX: Math.min(...xs),
+    maxX: Math.max(...xs),
+    minY: Math.min(...ys),
+    maxY: Math.max(...ys),
+  };
+}
+
 async function main() {
+  const json = await fs.readFile("./assets/GraniceOsiedli.geojson", "utf-8");
+  const data = JSON.parse(json);
+
+  for (const feat of data.features) {
+    const name = feat.properties?.NAZWAOSIED;
+    const geom = feat.geometry;
+    const points = geom.coordinates;
+    const bounds = extractCoords(points);
+
+    await prisma.district.create({
+      data: {
+        name,
+        points: points,
+        minX: bounds.minX,
+        maxX: bounds.maxX,
+        minY: bounds.minY,
+        maxY: bounds.maxY,
+      },
+    });
+  }
+  console.log("Dodano dzielnice");
+
   // DATY DO POPRAWKI (daty testowe)
 
   const gnomes = [
@@ -155,6 +192,7 @@ async function main() {
       },
     });
   }
+  console.log("Dodano gnomy");
 }
 
 main()
