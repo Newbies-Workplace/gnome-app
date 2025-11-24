@@ -1,3 +1,4 @@
+import { CreateInteractionRequest } from "@repo/shared/requests";
 import {
   GnomeIdResponse,
   GnomeResponse,
@@ -26,10 +27,9 @@ const getGnomeById = async (id: string): Promise<GnomeIdResponse> => {
     });
 };
 
-const addInteraction = async (data: {
-  gnomeId: string;
-  interactionDate: string;
-}): Promise<InteractionResponse> => {
+const addInteraction = async (
+  data: CreateInteractionRequest,
+): Promise<InteractionResponse> => {
   return await axiosInstance
     .post("api/rest/v1/gnomes/interaction", data)
     .then((response) => response.data);

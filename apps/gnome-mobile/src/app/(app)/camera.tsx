@@ -1,14 +1,20 @@
 import * as MediaLibrary from "expo-media-library";
 import { useLocalSearchParams, useNavigation, useRouter } from "expo-router";
 import { useEffect, useRef, useState } from "react";
-import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  Image,
+  StyleSheet,
+  Text,
+  ToastAndroid,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import {
   Camera,
   CameraDevice,
   useCameraDevices,
 } from "react-native-vision-camera";
-// import { shareAsync } from 'expo-sharing';
 import BackIcon from "@/assets/icons/arrow-left.svg";
 import { useGnomeStore } from "@/store/useGnomeStore";
 
@@ -117,9 +123,12 @@ const CameraScreen = () => {
           console.error("Error saving photo: ", error);
         }
       }
-      console.log("Before addInteraction");
-      await addInteraction(gnomeid);
-      console.log("After addInteraction — redirecting");
+      await addInteraction(gnomeid).catch(() => {
+        ToastAndroid.show(
+          "Nie udało się zapisać interakcji. Spróbuj później.",
+          ToastAndroid.LONG,
+        );
+      });
       router.push("/collection");
     }
   };
