@@ -19,7 +19,6 @@ function SettingsScreen() {
   const router = useRouter();
   const themeBottomSheetRef = useRef<BottomSheet>(null);
   const languageBottomSheetRef = useRef<BottomSheet>(null);
-  const snapPoints = useMemo(() => ["20%", "30%"], []);
   const { setColorScheme } = useColorScheme();
 
   useEffect(() => {
@@ -48,7 +47,6 @@ function SettingsScreen() {
       <BottomSheet
         ref={themeBottomSheetRef}
         index={-1}
-        snapPoints={snapPoints}
         enablePanDownToClose
         backgroundClassName={"bg-background"}
         handleIndicatorClassName={"bg-tekst w-24 mt-2 rounded-lg"}
@@ -87,7 +85,6 @@ function SettingsScreen() {
       <BottomSheet
         ref={languageBottomSheetRef}
         index={-1}
-        snapPoints={snapPoints}
         enablePanDownToClose
         backgroundClassName={"bg-background"}
         handleIndicatorClassName={"bg-tekst w-24 mt-2 rounded-lg"}
