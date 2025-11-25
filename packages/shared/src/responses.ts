@@ -4,6 +4,7 @@ export interface UserResponse {
   name: string;
   pictureUrl: string;
   inviteCode: string;
+  role: [string];
 }
 
 export interface UserPatchResponse {

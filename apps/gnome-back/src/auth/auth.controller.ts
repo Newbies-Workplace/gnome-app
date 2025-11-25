@@ -66,6 +66,7 @@ export class AuthController {
         email: user.email,
         pictureUrl: user.pictureUrl,
         inviteCode: user.inviteCode,
+        role: [user.role],
       },
       access_token: this.jwtService.sign({ user: jwtUser }),
     };
