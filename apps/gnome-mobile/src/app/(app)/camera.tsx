@@ -1,3 +1,4 @@
+import { Directory, File, Paths } from "expo-file-system";
 import * as MediaLibrary from "expo-media-library";
 import { useLocalSearchParams, useNavigation, useRouter } from "expo-router";
 import { useEffect, useRef, useState } from "react";
@@ -16,10 +17,12 @@ import {
   useCameraDevices,
 } from "react-native-vision-camera";
 import BackIcon from "@/assets/icons/arrow-left.svg";
+import { useGnomeImageStore } from "@/store/useGnomeImageStore";
 import { useGnomeStore } from "@/store/useGnomeStore";
 
 const CameraScreen = () => {
   const { addInteraction } = useGnomeStore();
+  const { setImageForGnome } = useGnomeImageStore();
   const { gnomeid } = useLocalSearchParams<{ gnomeid: string }>();
   const devices = useCameraDevices();
   const [device, setDevice] = useState<CameraDevice | null>(null);
@@ -103,6 +106,7 @@ const CameraScreen = () => {
 
       if (mediaPermissionResponse?.status === "granted") {
         try {
+          const fileName = `gnome-${gnomeid}-${Date.now()}.jpg`;
           const asset = await MediaLibrary.createAssetAsync(photoPath);
           const albumName = "GnomeCollection";
 
@@ -117,8 +121,12 @@ const CameraScreen = () => {
           } else {
             await MediaLibrary.addAssetsToAlbumAsync([asset], album.id, false);
           }
-
           console.log("Saved to album: ", asset.uri);
+
+          setImageForGnome({
+            gnomeId: gnomeid,
+            assetUri: asset.uri,
+          });
         } catch (error) {
           console.error("Error saving photo: ", error);
         }

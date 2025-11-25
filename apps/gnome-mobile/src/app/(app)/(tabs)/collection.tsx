@@ -1,14 +1,17 @@
 import { useNavigation, useRouter } from "expo-router";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { FlatList, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import LoadingScreen from "@/components/LoadingScreen";
 import { GnomeCard } from "@/components/ui/GnomeCard";
+import { useGnomeImageStore } from "@/store/useGnomeImageStore";
 import { useGnomeStore } from "@/store/useGnomeStore";
 
 const Collection = () => {
   const { gnomes, fetchGnomes, interactions, fetchMyInteractions, error } =
     useGnomeStore();
+  const { loadImagesFromAlbum, getImageForGnome } = useGnomeImageStore();
+
   const router = useRouter();
   const navigation = useNavigation();
 
@@ -32,6 +35,7 @@ const Collection = () => {
   useEffect(() => {
     fetchGnomes();
     fetchMyInteractions(); // Fetch interactions when component mounts
+    loadImagesFromAlbum();
   }, []);
 
   return (
@@ -43,9 +47,10 @@ const Collection = () => {
         numColumns={3}
         renderItem={({ item }) => {
           const interaction = interactions.find((i) => i.gnomeId === item.id);
+          const localImage = getImageForGnome(item.id);
           return (
             <GnomeCard
-              image={item.pictureUrl}
+              image={localImage?.assetUri || item.pictureUrl}
               text={item.name}
               onClick={() => router.push(`/gnomes/${item.id}`)}
               interaction={{
