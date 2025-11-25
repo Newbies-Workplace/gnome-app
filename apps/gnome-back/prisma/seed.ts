@@ -1,7 +1,10 @@
 import { PrismaClient } from "@prisma/client";
 import * as fs from "fs/promises";
+import { PrismaService } from "../src/db/prisma.service";
+import { DistrictsService } from "../src/districts/districts.service";
 
 const prisma = new PrismaClient();
+const prismaService = new PrismaService();
 
 function extractCoords(coords: number[][][]) {
   const flat = coords.flat();
@@ -17,33 +20,41 @@ function extractCoords(coords: number[][][]) {
 }
 
 async function main() {
+  await prismaService.$connect();
+  const districtsService = new DistrictsService(prismaService);
+
   const json = await fs.readFile("./assets/GraniceOsiedli.geojson", "utf-8");
   const data = JSON.parse(json);
 
+  let id = 1;
   for (const feat of data.features) {
     const name = feat.properties?.NAZWAOSIED;
     const geom = feat.geometry;
     const points = geom.coordinates;
     const bounds = extractCoords(points);
 
-    await prisma.district.create({
-      data: {
-        name,
-        points: points,
-        minX: bounds.minX,
-        maxX: bounds.maxX,
-        minY: bounds.minY,
-        maxY: bounds.maxY,
-      },
-    });
+    try {
+      await prisma.district.create({
+        data: {
+          id,
+          name,
+          points: points,
+          minX: bounds.minX,
+          maxX: bounds.maxX,
+          minY: bounds.minY,
+          maxY: bounds.maxY,
+        },
+      });
+    } catch (error) {}
+
+    id++;
   }
-  console.log("Dodano dzielnice");
 
   // DATY DO POPRAWKI (daty testowe)
 
   const gnomes = [
     {
-      id: "",
+      id: "a1f3c9b2-7d4e-4f3a-9b6c-12d34e56f789",
       name: "Kacuś",
       latitude: 51.11063127588679,
       longitude: 17.033377728360577,
@@ -56,7 +67,7 @@ async function main() {
         "Krążą plotki, że potrafi wypić więcej piwa niż niejeden Duży Człowiek. Podobno zna tajne przejścia między wrocławskimi pubami.",
     },
     {
-      id: "",
+      id: "b2e4d8c7-9a4b-4a5b-8c9d-2345ef6789ab",
       name: "Ogrodnik Wrocławski",
       latitude: 51.09712647932332,
       longitude: 17.034123867260472,
@@ -69,7 +80,7 @@ async function main() {
         "Jego nożyce są magiczne. Mówi się, że potrafią przycinać krzewy w idealne kształty zwierząt, ale tylko w świetle księżyca.",
     },
     {
-      id: "",
+      id: "c3d5e6f7-0b1c-4b6c-9eab-3456f7890abc",
       name: "Frugalek",
       latitude: 51.122837162049635,
       longitude: 16.9914869064251,
@@ -82,7 +93,7 @@ async function main() {
         "Testował każdą hulajnogę we Wrocławiu, a niektórzy twierdzą, że ma swoją własną, niewidzialną dla ludzi, dzięki której zawsze jest pierwszy na miejscu.",
     },
     {
-      id: "",
+      id: "d4e6f7a8-1c2d-4c7d-8abc-4567890abcd1",
       name: "Piastosław I Złocisty",
       latitude: 51.116098426715645,
       longitude: 17.03752618397891,
@@ -95,7 +106,7 @@ async function main() {
         "Jego ulubiony trunek to tajemniczy Eliksir Piastowski. Legenda głosi, że kto go spróbuje, ten nigdy nie zapomni smaku Wrocławia.",
     },
     {
-      id: "",
+      id: "e5f7a8b9-2d3e-4d8e-9bcd-567890abcdef",
       name: "Hipoczyściel",
       latitude: 51.10647343755045,
       longitude: 17.072574621075326,
@@ -108,7 +119,7 @@ async function main() {
         "Hipopotamy w zoo uwielbiają go tak bardzo, że czasem zapraszają go na kąpiele.",
     },
     {
-      id: "",
+      id: "f6a8b9c0-3e4f-4e9f-8cde-67890abcdef1",
       name: "Krasnal Spółdzielca",
       latitude: 51.09725064705496,
       longitude: 17.03056272854362,
@@ -121,7 +132,7 @@ async function main() {
         "Mówi się, że jego klucz pasuje do każdego zamka we Wrocławiu, ale tylko jeśli zna się tajne krasnalowe zaklęcia.",
     },
     {
-      id: "",
+      id: "07a9b1c2-4f5a-4f0a-8def-7890abcdef12",
       name: "Wyborcy",
       latitude: 51.05836634559732,
       longitude: 17.059513357879336,
@@ -133,7 +144,7 @@ async function main() {
         "Podobno każdy, kto go dotknie, poczuje nagłą chęć do działania na rzecz swojej społeczności.",
     },
     {
-      id: "",
+      id: "18b0c2d3-5a6b-4a1b-9abc-890abcdef123",
       name: "Ogorzałek i Opiłek",
       latitude: 51.11110709104292,
       longitude: 17.030365597979237,
@@ -146,7 +157,7 @@ async function main() {
         "Plotki głoszą, że ich ulubiona gorzałka ma magiczne właściwości – kto jej spróbuje, nigdy nie zapomni tej nocy.",
     },
     {
-      id: "",
+      id: "29c1d3e4-6b7c-4b2c-8bcd-90abcdef1234",
       name: "Ikuś",
       latitude: 51.048281613103356,
       longitude: 16.95514228088844,
@@ -159,7 +170,7 @@ async function main() {
         "Podobno zna wszystkie tajne skróty w IKEI i potrafi wyjść z niej w kilka minut – bez zgubienia się w labiryncie alejek.",
     },
     {
-      id: "",
+      id: "3ad2e4f5-7c8d-4c3d-8abc-abcdef123456",
       name: "Pakuś",
       latitude: 51.03608819743249,
       longitude: 16.946498357986727,
@@ -174,12 +185,17 @@ async function main() {
   ];
 
   for (const gnome of gnomes) {
+    const districtId = await districtsService.findPointInPolygon([
+      gnome.longitude,
+      gnome.latitude,
+    ]);
+
     await prisma.gnome.upsert({
       where: { id: gnome.id },
       update: {},
       create: {
         pictureUrl: "",
-        id: crypto.randomUUID(),
+        id: gnome.id,
         name: gnome.name,
         latitude: gnome.latitude,
         longitude: gnome.longitude,
@@ -188,18 +204,20 @@ async function main() {
         description: gnome.description,
         exists: gnome.exists,
         funFact: gnome.funFact,
+        districtId: districtId,
       },
     });
   }
-  console.log("Dodano gnomy");
 }
 
 main()
   .then(async () => {
     await prisma.$disconnect();
+    await prismaService.$disconnect();
   })
   .catch(async (e) => {
     console.error(e);
     await prisma.$disconnect();
+    await prismaService.$disconnect();
     process.exit(1);
   });
