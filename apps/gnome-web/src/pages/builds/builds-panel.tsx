@@ -1,5 +1,5 @@
 function BuildsPanel() {
-  return <div>Buildings Panel</div>;
+  return <div className="text-center text-white">Builds Panel</div>;
 }
 
 export default BuildsPanel;

@@ -34,7 +34,7 @@ export default function AdminPage() {
     if (location.pathname.endsWith("/users")) return "users";
     if (location.pathname.endsWith("/builds")) return "builds";
     if (location.pathname.endsWith("/events")) return "events";
-    return "gnomes";
+    return "gnomes"; // default tab
   })();
 
   return (
@@ -68,7 +68,25 @@ export default function AdminPage() {
         </div>
 
         <div className="w-1/4 h-full bg-primary-gray rounded-4xl flex flex-col">
-          <Tabs value={currentTab} centered>
+          <Tabs
+            value={currentTab}
+            centered
+            variant="fullWidth"
+            sx={{
+              "& .MuiTabs-indicator": {
+                display: "none",
+              },
+              "& .MuiTab-root": {
+                color: "white",
+                borderRadius: "2rem",
+                textTransform: "none",
+              },
+              "& .Mui-selected": {
+                backgroundColor: "#D6484A",
+                color: "white",
+              },
+            }}
+          >
             <Tab
               label={<img src={GnomeIcon} alt="gnome" />}
               value="gnomes"
@@ -94,7 +112,6 @@ export default function AdminPage() {
               to="events"
             />
           </Tabs>
-
           {/* Podstrony */}
           <div className="flex-1 p-4 overflow-auto">
             <Outlet />

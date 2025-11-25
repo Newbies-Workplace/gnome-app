@@ -1,5 +1,5 @@
 function EventsPanel() {
-  return <div>Events Panel</div>;
+  return <div className="text-center text-white">Events Panel</div>;
 }
 
 export default EventsPanel;
