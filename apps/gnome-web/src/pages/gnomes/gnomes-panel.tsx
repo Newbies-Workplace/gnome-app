@@ -1,5 +1,5 @@
 function GnomePanel() {
-  return <div>Gnome Panel</div>;
+  return <div>Gnomes Panel</div>;
 }
 
 export default GnomePanel;
