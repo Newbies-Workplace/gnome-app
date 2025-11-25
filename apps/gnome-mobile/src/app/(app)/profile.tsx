@@ -38,6 +38,18 @@ export default function ProfileScreen() {
     ]);
   };
 
+  const handleShare = async () => {
+    try {
+      if (user?.name) {
+        await Share.share({
+          message: `Sprawdź profil użytkownika ${user.name}!`,
+        });
+      }
+    } catch (_ignored) {
+      Alert.alert("Błąd", "Nie udało się udostępnić");
+    }
+  };
+
   // header z powrotem i udostepnianiem
   useEffect(() => {
     navigation.setOptions({
@@ -52,31 +64,18 @@ export default function ProfileScreen() {
         </TouchableOpacity>
       ),
       headerTitle: "",
-      headerStyle: {
-        backgroundColor: "#131413",
-      },
+      headerBackground: () => (
+        <View className="absolute inset-0 bg-primary-foreground" />
+      ),
       headerShadowVisible: false,
       headerShown: true,
     });
-  }, [navigation, router]);
-
-  // udostepnianie
-  const handleShare = async () => {
-    try {
-      if (user?.name) {
-        await Share.share({
-          message: `Sprawdź profil użytkownika ${user.name}!`,
-        });
-      }
-    } catch (_ignored) {
-      Alert.alert("Błąd", "Nie udało się udostępnić");
-    }
-  };
+  }, [navigation, router, handleShare]);
 
   if (!user) {
     return (
       <View className="flex-1 items-center justify-center">
-        <Text className="text-lg text-white">Brak danych użytkownika</Text>
+        <Text className="text-lg text-tekst">Brak danych użytkownika</Text>
       </View>
     );
   }
@@ -92,9 +91,9 @@ export default function ProfileScreen() {
           </AvatarFallback>
         </Avatar>
         <View>
-          <Text className="text-xl font-bold text-white">{user.name}</Text>
+          <Text className="text-xl font-bold text-tekst">{user.name}</Text>
           <Button className="mt-2 px-4 py-2 rounded-full bg-background">
-            <Text className="text-white">Edytuj profil</Text>
+            <Text className="text-tekst">Edytuj profil</Text>
           </Button>
         </View>
       </View>

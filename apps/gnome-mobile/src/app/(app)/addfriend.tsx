@@ -42,12 +42,14 @@ export default function AddFriendScreen() {
         </TouchableOpacity>
       ),
       headerTitle: () => (
-        <Text className="text-white font-bold text-2xl text-center tracking-wide">
+        <Text className="text-tekst font-bold text-2xl text-center tracking-wide">
           Nawiąż znajomość
         </Text>
       ),
       headerTitleAlign: "center",
-      headerStyle: { backgroundColor: "#1E201E" },
+      headerBackground: () => (
+        <View className="absolute inset-0 bg-primary-foreground" />
+      ),
       headerShadowVisible: false,
       headerShown: true,
     });
@@ -92,7 +94,7 @@ export default function AddFriendScreen() {
   };
 
   return (
-    <View className="flex-1 bg-background p-6 items-center gap-5">
+    <View className="flex-1 bg-primary-foreground p-6 items-center gap-5">
       <View className="w-full flex-row items-center gap-3">
         <Image
           source={{
@@ -101,8 +103,8 @@ export default function AddFriendScreen() {
           className="size-16 rounded-lg"
         />
         <View>
-          <Text className="text-white text-lg font-semibold">{user.name}</Text>
-          <Text className="text-white/50 text-md">Początkowy zbieracz</Text>
+          <Text className="text-tekst text-lg font-semibold">{user.name}</Text>
+          <Text className="text-tekst/50 text-md">Początkowy zbieracz</Text>
         </View>
       </View>
       <Divider title="twój kod znajomego" />
@@ -140,7 +142,7 @@ export default function AddFriendScreen() {
       <Divider title="dodaj znajomego" />
       <View className="flex-row w-full items-center gap-2 border-primary border rounded-2xl p-2">
         <Input
-          className="flex-1 text-white/50 bg-background font-bold text-center border-background"
+          className="flex-1 text-tekst/50 bg-background font-bold text-center border-background"
           placeholder="0000 0000 0000 0000"
           maxLength={19}
           inputMode="numeric"
@@ -172,13 +174,8 @@ export default function AddFriendScreen() {
         )}
       </View>
       <BottomSheetModal
-        handleIndicatorStyle={{
-          backgroundColor: "#D9D9D9",
-          width: 94,
-          marginTop: 8,
-          borderRadius: 4,
-        }}
-        backgroundStyle={{ backgroundColor: "#1E1E1E" }}
+        handleIndicatorClassName={"bg-tekst w-24 mt-2 rounded-lg"}
+        backgroundClassName={"bg-background"}
         ref={scanInvitationSheetRef}
         enableDismissOnClose
         onDismiss={scanInvitationSheetRef.current?.close}
@@ -190,13 +187,8 @@ export default function AddFriendScreen() {
         />
       </BottomSheetModal>
       <BottomSheetModal
-        handleIndicatorStyle={{
-          backgroundColor: "#D9D9D9",
-          width: 94,
-          marginTop: 8,
-          borderRadius: 4,
-        }}
-        backgroundStyle={{ backgroundColor: "#1E1E1E" }}
+        handleIndicatorClassName={"bg-tekst w-24 mt-2 rounded-lg"}
+        backgroundClassName={"bg-background"}
         ref={regenerateInviteCodeSheetRef}
         enableDismissOnClose
         onDismiss={regenerateInviteCodeSheetRef.current?.close}
@@ -211,7 +203,7 @@ export default function AddFriendScreen() {
           }}
           confirmContent={
             <>
-              <Text className="text-white">Resetuj</Text>
+              <Text className="text-tekst">Resetuj</Text>
               <RefreshIcon width={16} height={16} />
             </>
           }
