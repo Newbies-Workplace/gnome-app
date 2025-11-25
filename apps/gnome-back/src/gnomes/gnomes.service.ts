@@ -88,7 +88,22 @@ export class GnomesService {
       },
     });
   }
+  async getRandomResources() {
+    const resources = ["berries", "sticks", "stones"];
 
+    const i = Math.floor(Math.random() * resources.length);
+
+    let j = Math.floor(Math.random() * (resources.length - 1));
+    if (j >= i) j++;
+
+    const resource1 = resources[i];
+    const resource2 = resources[j];
+
+    const amount1 = Math.ceil(Math.random() * 5);
+    const amount2 = Math.ceil(Math.random() * 5);
+
+    return { resource1, resource2, amount1, amount2 };
+  }
   async createInteraction(
     userId: string,
     interactionDate: Date,
@@ -107,26 +122,10 @@ export class GnomesService {
         id: gnomeId,
       },
     });
-    const resources = ["berrys", "sticks", "stones"];
-    const i = Math.floor(Math.random() * resources.length);
+    const { resource1, resource2, amount1, amount2 } =
+      await this.getRandomResources();
 
-    let j = Math.floor(Math.random() * (resources.length - 1));
-    if (j >= i) j++;
-
-    const resource1 = resources[i];
-    const resource2 = resources[j];
-    let amount1 = 0;
-    let amount2 = 0;
-    for (let x = 5; x >= 1; x--) {
-      const choice = Math.floor(Math.random() * 2);
-      if (choice === 0) {
-        amount1 += 1;
-      } else {
-        amount2 += 1;
-      }
-    }
-
-    const _addResources = await this.prismaService.userResource.update({
+    await this.prismaService.userResource.update({
       where: {
         userId: userId,
       },

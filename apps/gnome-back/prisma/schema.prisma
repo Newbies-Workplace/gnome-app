@@ -26,7 +26,7 @@ model User {
 }
 
 model UserResource {
-  berrys Int?   @default(0)
+  berries Int?   @default(0)
   sticks Int?   @default(0)
   stones Int?   @default(0)
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)

@@ -85,7 +85,7 @@ export class UsersController {
   }
   @Get("@me/resource")
   @UseGuards(JwtGuard)
-  async displayUserResources(@User() user: JwtUser): Promise<UserResource> {
-    return await this.usersService.displayUserResources(user.id);
+  async getUserResources(@User() user: JwtUser): Promise<UserResource> {
+    return await this.usersService.getUserResources(user.id);
   }
 }
