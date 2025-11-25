@@ -11,7 +11,7 @@ export const ConfirmDialog = ({
   declineText = "Anuluj",
   confirmContent = (
     <>
-      <Text className="text-white">Potwierdź</Text>
+      <Text className="text-tekst">Potwierdź</Text>
     </>
   ),
 }: {
@@ -25,9 +25,9 @@ export const ConfirmDialog = ({
 }) => {
   return (
     <BottomSheetView className="gap-4 p-10">
-      <Text className="text-white font-bold text-lg">{title}</Text>
+      <Text className="text-tekst font-bold text-lg">{title}</Text>
       {description && (
-        <Text className="text-white font-bold text-lg">{description}</Text>
+        <Text className="text-tekst font-bold text-lg">{description}</Text>
       )}
       <View className="w-full flex-row gap-4">
         <Button

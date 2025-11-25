@@ -46,7 +46,7 @@ export const GnomeCard: React.FC<GnomeCardProps> = ({
       </View>
 
       <Text
-        className="text-center rounded px-1 text-white font-bold"
+        className="text-center rounded px-1 text-tekst font-bold"
         numberOfLines={1}
       >
         {text}

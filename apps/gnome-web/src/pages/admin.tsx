@@ -1,8 +1,13 @@
 import { GoogleMap, LoadScript } from "@react-google-maps/api";
 import backgroundImage from "@/assets/images/background.png";
 import { MapStyle } from "@/components/map-styles";
+import { useAuthStore } from "@/store/useAuthStore";
+
+// todo user powinien nie być nullem po refreshu
+// todo user nie powinien miec dostep do tej strony jesli nie jest zalogowany (custom coomponent w routerze)
 
 export default function AdminPage() {
+  const { logout } = useAuthStore();
   const mapOptions = {
     fullscreenControl: false,
     mapTypeControl: true,
@@ -31,6 +36,7 @@ export default function AdminPage() {
         </div>
         <div className="p-4 w-1/4 h-screen">{/* admin panel */}</div>
       </div>
+      <button onClick={logout}>Wyloguj</button>
     </div>
   );
 }
