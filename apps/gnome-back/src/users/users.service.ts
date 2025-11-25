@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { User } from "@prisma/client";
+import { User, UserResource } from "@prisma/client";
 import { customAlphabet } from "nanoid";
 import { GoogleUser } from "@/auth/types/google-user";
 import { PrismaService } from "@/db/prisma.service";
@@ -87,5 +87,12 @@ export class UsersService {
     });
 
     return newInviteCode;
+  }
+  async displayUserResources(userId: string): Promise<UserResource | null> {
+    return this.prismaService.userResource.findFirst({
+      where: {
+        userId: userId,
+      },
+    });
   }
 }
