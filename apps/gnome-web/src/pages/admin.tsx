@@ -1,12 +1,13 @@
 import { Tab, Tabs } from "@mui/material";
 import { GoogleMap, useJsApiLoader } from "@react-google-maps/api";
 import { NavLink, Outlet, useLocation } from "react-router-dom";
+import BuildsIcon from "@/assets/icons/builds-icon.svg";
+import EventsIcon from "@/assets/icons/events-icon.svg";
+import GnomeIcon from "@/assets/icons/gnome-icon.svg";
+import UsersIcon from "@/assets/icons/users-icon.svg";
 import backgroundImage from "@/assets/images/background.png";
 import { MapStyle } from "@/components/map-styles";
 import { useAuthStore } from "@/store/useAuthStore";
-
-// todo user powinien nie być nullem po refreshu
-// todo user nie powinien miec dostep do tej strony jesli nie jest zalogowany (custom coomponent w routerze)
 
 export default function AdminPage() {
   const { isLoaded, loadError } = useJsApiLoader({
@@ -19,6 +20,7 @@ export default function AdminPage() {
   }
 
   const { logout } = useAuthStore();
+  const location = useLocation();
 
   const mapOptions = {
     fullscreenControl: false,
@@ -30,9 +32,9 @@ export default function AdminPage() {
 
   const currentTab = (() => {
     if (location.pathname.endsWith("/users")) return "users";
-    if (location.pathname.endsWith("/buildings")) return "buildings";
+    if (location.pathname.endsWith("/builds")) return "builds";
     if (location.pathname.endsWith("/events")) return "events";
-    return "overview"; // gnomes set as default admin panel tab
+    return "gnomes";
   })();
 
   return (
@@ -45,12 +47,14 @@ export default function AdminPage() {
           <button className="bg-primary-gray text-white text-xl font-Afacad px-6 py-2 rounded-3xl hover:opacity-90 transition">
             Główna
           </button>
-          <button className="bg-primary-color text-white text-xl font-Afacad px-6 py-2 rounded-3xl hover:opacity-90 transition">
+          <button
+            onClick={logout}
+            className="bg-primary-color text-white text-xl font-Afacad px-6 py-2 rounded-3xl hover:opacity-90 transition"
+          >
             Wyloguj
           </button>
         </div>
       </div>
-
       <div className="flex flex-grow p-4 gap-4">
         <div className="w-3/4 h-full">
           {isLoaded && (
@@ -62,25 +66,41 @@ export default function AdminPage() {
             />
           )}
         </div>
-        <div className="w-1/4 h-full bg-gray-300 rounded-4xl" />
-        <Tabs value={currentTab} centered>
-          <Tab label="📊 Overview" value="overview" component={NavLink} to="" />
-          <Tab label="👥 Users" value="users" component={NavLink} to="users" />
-          <Tab
-            label="🏢 Buildings"
-            value="buildings"
-            component={NavLink}
-            to="buildings"
-          />
-          <Tab
-            label="📅 Events"
-            value="events"
-            component={NavLink}
-            to="events"
-          />
-        </Tabs>
+
+        <div className="w-1/4 h-full bg-primary-gray rounded-4xl flex flex-col">
+          <Tabs value={currentTab} centered>
+            <Tab
+              label={<img src={GnomeIcon} alt="gnome" />}
+              value="gnomes"
+              component={NavLink}
+              to=""
+            />
+            <Tab
+              label={<img src={UsersIcon} alt="users" />}
+              value="users"
+              component={NavLink}
+              to="users"
+            />
+            <Tab
+              label={<img src={BuildsIcon} alt="builds" />}
+              value="builds"
+              component={NavLink}
+              to="builds"
+            />
+            <Tab
+              label={<img src={EventsIcon} alt="events" />}
+              value="events"
+              component={NavLink}
+              to="events"
+            />
+          </Tabs>
+
+          {/* Podstrony */}
+          <div className="flex-1 p-4 overflow-auto">
+            <Outlet />
+          </div>
+        </div>
       </div>
-      <button onClick={logout}>Wyloguj</button>
     </div>
   );
 }
