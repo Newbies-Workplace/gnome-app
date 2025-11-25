@@ -29,9 +29,9 @@ CREATE TABLE "User" (
 
 -- CreateTable
 CREATE TABLE "UserResource" (
-    "berrys" INTEGER NOT NULL DEFAULT 0,
-    "sticks" INTEGER NOT NULL DEFAULT 0,
-    "stones" INTEGER NOT NULL DEFAULT 0,
+    "berries" INTEGER DEFAULT 0,
+    "sticks" INTEGER DEFAULT 0,
+    "stones" INTEGER DEFAULT 0,
     "userId" TEXT NOT NULL,
 
     CONSTRAINT "UserResource_pkey" PRIMARY KEY ("userId")
