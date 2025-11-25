@@ -19,7 +19,6 @@ const HomeTabs = () => {
   return (
     <Tabs>
       <TabSlot />
-
       <SafeAreaView
         edges={["bottom"]}
         className={"absolute bottom-0 left-0 w-full"}
@@ -72,10 +71,10 @@ function TabButton({ Icon, children, isFocused, ...props }: TabButtonProps) {
         )}
       >
         {/* @ts-ignore */}
-        <Icon height={25} width={25} color={"#fff"} />
+        <Icon height={25} width={25} />
 
         {isFocused && (
-          <Text className={"text-white font-bold"}>{children}</Text>
+          <Text className={"text-tekst font-bold"}>{children}</Text>
         )}
       </View>
     </Pressable>
