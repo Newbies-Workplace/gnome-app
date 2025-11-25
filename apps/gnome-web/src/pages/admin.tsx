@@ -1,4 +1,6 @@
+import { Tab, Tabs } from "@mui/material";
 import { GoogleMap, useJsApiLoader } from "@react-google-maps/api";
+import { NavLink, Outlet, useLocation } from "react-router-dom";
 import backgroundImage from "@/assets/images/background.png";
 import { MapStyle } from "@/components/map-styles";
 import { useAuthStore } from "@/store/useAuthStore";
@@ -17,6 +19,7 @@ export default function AdminPage() {
   }
 
   const { logout } = useAuthStore();
+
   const mapOptions = {
     fullscreenControl: false,
     mapTypeControl: true,
@@ -24,6 +27,13 @@ export default function AdminPage() {
     zoomControl: true,
     styles: MapStyle,
   };
+
+  const currentTab = (() => {
+    if (location.pathname.endsWith("/users")) return "users";
+    if (location.pathname.endsWith("/buildings")) return "buildings";
+    if (location.pathname.endsWith("/events")) return "events";
+    return "overview"; // gnomes set as default admin panel tab
+  })();
 
   return (
     <div
@@ -53,6 +63,22 @@ export default function AdminPage() {
           )}
         </div>
         <div className="w-1/4 h-full bg-gray-300 rounded-4xl" />
+        <Tabs value={currentTab} centered>
+          <Tab label="📊 Overview" value="overview" component={NavLink} to="" />
+          <Tab label="👥 Users" value="users" component={NavLink} to="users" />
+          <Tab
+            label="🏢 Buildings"
+            value="buildings"
+            component={NavLink}
+            to="buildings"
+          />
+          <Tab
+            label="📅 Events"
+            value="events"
+            component={NavLink}
+            to="events"
+          />
+        </Tabs>
       </div>
       <button onClick={logout}>Wyloguj</button>
     </div>
