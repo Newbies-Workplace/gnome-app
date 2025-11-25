@@ -61,7 +61,7 @@ model Achievement {
 }
 
 model UserAchievement {
-  id             String        @id @unique @default(uuid())
+  @@id([userId, achievementId])
   userId         String
   achievementId  String
   earnedAt       DateTime      @default(now())
