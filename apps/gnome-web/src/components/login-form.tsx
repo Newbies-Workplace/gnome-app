@@ -1,4 +1,3 @@
-import { Link } from "react-router-dom";
 import GoogleLogo from "@/assets/icons/google-logo.svg";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
