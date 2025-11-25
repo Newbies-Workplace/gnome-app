@@ -1,8 +1,4 @@
-import {
-  createBrowserRouter,
-  createRoutesFromElements,
-  RouterProvider,
-} from "react-router-dom";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import AdminPage from "@/pages/admin";
 import BuildsPanel from "@/pages/builds/builds-panel";
 import EventsPanel from "@/pages/events/events-panel";
