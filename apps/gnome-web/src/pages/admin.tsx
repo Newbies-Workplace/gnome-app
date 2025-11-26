@@ -75,24 +75,26 @@ export default function AdminPage() {
                   <img src={GnomeIcon} alt="gnome" />
                 </NavLink>
               </TabsTrigger>
-              <TabsTrigger value="users">
-                <NavLink to="/admin/users">
-                  <img src={UsersIcon} alt="users" />
-                </NavLink>
-              </TabsTrigger>
+
               <TabsTrigger value="builds">
                 <NavLink to="/admin/builds">
                   <img src={BuildsIcon} alt="builds" />
                 </NavLink>
               </TabsTrigger>
+
               <TabsTrigger value="events">
                 <NavLink to="/admin/events">
                   <img src={EventsIcon} alt="events" />
                 </NavLink>
               </TabsTrigger>
+
+              <TabsTrigger value="users">
+                <NavLink to="/admin/users">
+                  <img src={UsersIcon} alt="users" />
+                </NavLink>
+              </TabsTrigger>
             </TabsList>
           </Tabs>
-
           {/* Podstrony */}
           <div className="flex-1 p-4 overflow-auto">
             <Outlet />
