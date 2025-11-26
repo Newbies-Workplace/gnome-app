@@ -3,7 +3,6 @@ import { Gnome } from "@prisma/client";
 import { CreateGnomeRequest } from "@repo/shared/requests";
 import { GnomeIdResponse } from "@repo/shared/responses";
 import { PrismaService } from "@/db/prisma.service";
-
 import { DistrictsService } from "@/districts/districts.service";
 
 @Injectable()
@@ -89,7 +88,22 @@ export class GnomesService {
       },
     });
   }
+  async getRandomResources() {
+    const resources = ["berries", "sticks", "stones"];
 
+    const i = Math.floor(Math.random() * resources.length);
+
+    let j = Math.floor(Math.random() * (resources.length - 1));
+    if (j >= i) j++;
+
+    const resource1 = resources[i];
+    const resource2 = resources[j];
+
+    const amount1 = Math.ceil(Math.random() * 5);
+    const amount2 = Math.ceil(Math.random() * 5);
+
+    return { resource1, resource2, amount1, amount2 };
+  }
   async createInteraction(
     userId: string,
     interactionDate: Date,
@@ -106,6 +120,18 @@ export class GnomesService {
     const findGnome = await this.prismaService.gnome.findUnique({
       where: {
         id: gnomeId,
+      },
+    });
+    const { resource1, resource2, amount1, amount2 } =
+      await this.getRandomResources();
+
+    await this.prismaService.userResource.update({
+      where: {
+        userId: userId,
+      },
+      data: {
+        [resource1]: { increment: amount1 },
+        [resource2]: { increment: amount2 },
       },
     });
 
