@@ -1,4 +1,3 @@
-import { Tab, Tabs } from "@mui/material";
 import { GoogleMap, useJsApiLoader } from "@react-google-maps/api";
 import { NavLink, Outlet, useLocation } from "react-router-dom";
 import BuildsIcon from "@/assets/icons/builds-icon.svg";
@@ -7,6 +6,7 @@ import GnomeIcon from "@/assets/icons/gnome-icon.svg";
 import UsersIcon from "@/assets/icons/users-icon.svg";
 import backgroundImage from "@/assets/images/background.png";
 import { MapStyle } from "@/components/map-styles";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAuthStore } from "@/store/useAuthStore";
 
 export default function AdminPage() {
@@ -68,50 +68,31 @@ export default function AdminPage() {
         </div>
 
         <div className="w-1/4 h-full bg-primary-gray rounded-4xl flex flex-col">
-          <Tabs
-            value={currentTab}
-            centered
-            variant="fullWidth"
-            sx={{
-              "& .MuiTabs-indicator": {
-                display: "none",
-              },
-              "& .MuiTab-root": {
-                color: "white",
-                borderRadius: "2rem",
-                textTransform: "none",
-              },
-              "& .Mui-selected": {
-                backgroundColor: "#D6484A",
-                color: "white",
-              },
-            }}
-          >
-            <Tab
-              label={<img src={GnomeIcon} alt="gnome" />}
-              value="gnomes"
-              component={NavLink}
-              to=""
-            />
-            <Tab
-              label={<img src={UsersIcon} alt="users" />}
-              value="users"
-              component={NavLink}
-              to="users"
-            />
-            <Tab
-              label={<img src={BuildsIcon} alt="builds" />}
-              value="builds"
-              component={NavLink}
-              to="builds"
-            />
-            <Tab
-              label={<img src={EventsIcon} alt="events" />}
-              value="events"
-              component={NavLink}
-              to="events"
-            />
+          <Tabs value={currentTab} className="bg-primary-gray rounded-4xl">
+            <TabsList className="grid grid-cols-4 gap-2 p-2 w-full h-full bg-primary-gray rounded-4xl">
+              <TabsTrigger value="gnomes">
+                <NavLink to="/admin">
+                  <img src={GnomeIcon} alt="gnome" />
+                </NavLink>
+              </TabsTrigger>
+              <TabsTrigger value="users">
+                <NavLink to="/admin/users">
+                  <img src={UsersIcon} alt="users" />
+                </NavLink>
+              </TabsTrigger>
+              <TabsTrigger value="builds">
+                <NavLink to="/admin/builds">
+                  <img src={BuildsIcon} alt="builds" />
+                </NavLink>
+              </TabsTrigger>
+              <TabsTrigger value="events">
+                <NavLink to="/admin/events">
+                  <img src={EventsIcon} alt="events" />
+                </NavLink>
+              </TabsTrigger>
+            </TabsList>
           </Tabs>
+
           {/* Podstrony */}
           <div className="flex-1 p-4 overflow-auto">
             <Outlet />
