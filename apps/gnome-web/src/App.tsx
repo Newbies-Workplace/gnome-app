@@ -2,7 +2,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import AdminPage from "@/pages/admin";
 import BuildsPanel from "@/pages/builds/builds-panel";
 import EventsPanel from "@/pages/events/events-panel";
-import GnomePanel from "@/pages/gnomes/gnomes-panel";
+import GnomesPanel from "@/pages/gnomes/gnomes-panel";
 import HomePage from "@/pages/home";
 import LoginPage from "@/pages/login";
 import LoginCallback from "@/pages/login-callback";
@@ -32,7 +32,7 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <GnomePanel />,
+        element: <GnomesPanel />,
       },
       {
         path: "builds",
