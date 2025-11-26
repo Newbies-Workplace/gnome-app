@@ -101,3 +101,15 @@ export interface DistrictsResponse {
   id: number;
   name: string;
 }
+
+export interface AchievementDataResponse {
+  id: string;
+  name: string;
+  description: string;
+  pictureUrl: string;
+  users: number;
+}
+
+export interface UserAchievementResponse {
+  achievementId: string;
+}
