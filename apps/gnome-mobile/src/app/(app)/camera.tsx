@@ -99,15 +99,11 @@ const CameraScreen = () => {
         flash: flashMode,
       });
 
-      const photoPath = photo.path.startsWith("file://")
-        ? photo.path
-        : `file://${photo.path}`;
       console.log("Media permission:", mediaPermissionResponse);
 
       if (mediaPermissionResponse?.status === "granted") {
         try {
-          const fileName = `gnome-${gnomeid}-${Date.now()}.jpg`;
-          const asset = await MediaLibrary.createAssetAsync(photoPath);
+          const asset = await MediaLibrary.createAssetAsync(photo.path);
           const albumName = "GnomeCollection";
 
           let album = await MediaLibrary.getAlbumAsync(albumName);

@@ -10,7 +10,7 @@ import { useGnomeStore } from "@/store/useGnomeStore";
 const Collection = () => {
   const { gnomes, fetchGnomes, interactions, fetchMyInteractions, error } =
     useGnomeStore();
-  const { loadImagesFromAlbum, getImageForGnome } = useGnomeImageStore();
+  const { getImageForGnome } = useGnomeImageStore();
 
   const router = useRouter();
   const navigation = useNavigation();
@@ -35,7 +35,6 @@ const Collection = () => {
   useEffect(() => {
     fetchGnomes();
     fetchMyInteractions(); // Fetch interactions when component mounts
-    loadImagesFromAlbum();
   }, []);
 
   return (
@@ -47,16 +46,15 @@ const Collection = () => {
         keyExtractor={(item) => item.id?.toString()}
         numColumns={3}
         renderItem={({ item }) => {
-          const interaction = interactions.find((i) => i.gnomeId === item.id);
-          const localImage = getImageForGnome(item.id);
+          const img = getImageForGnome(item.id);
           return (
             <GnomeCard
-              image={localImage?.assetUri || item.pictureUrl}
+              image={img?.assetUri || item.pictureUrl}
               text={item.name}
               onClick={() => router.push(`/gnomes/${item.id}`)}
               interaction={{
-                found: !!interaction,
-                userPicture: interaction?.userPicture,
+                found: !!img,
+                userPicture: img?.assetUri,
               }}
             />
           );
