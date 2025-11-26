@@ -27,10 +27,10 @@ model User {
 
 model UserResource {
   berries Int?   @default(0)
-  sticks Int?   @default(0)
-  stones Int?   @default(0)
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId String @id @unique
+  sticks  Int?   @default(0)
+  stones  Int?   @default(0)
+  user    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId  String @id @unique
 }
 
 model Gnome {
@@ -79,10 +79,10 @@ model Friendship {
 model Building {
   id         String       @id @unique @default(cuid())
   gnomeCount Int
-  Health     Int
+  health     Int
   latitude   Float
   longitude  Float
-  District   String
+  district   String
   Type       BuildingType
   createdAt  DateTime     @default(now())
   Owner      User         @relation(fields: [ownerId], references: [id])

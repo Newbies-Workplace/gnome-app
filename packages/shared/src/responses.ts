@@ -101,3 +101,14 @@ export interface DistrictsResponse {
   id: number;
   name: string;
 }
+export interface BuildingResponse {
+  id: string;
+  gnomeCount: number;
+  health: number;
+  latitude: number;
+  longitude: number;
+  district: string;
+  Type: string;
+  createdAt: Date;
+  ownerId: string;
+}
