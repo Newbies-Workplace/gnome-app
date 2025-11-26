@@ -1,11 +1,10 @@
-import { useNavigation, useRouter } from "expo-router";
-import { useEffect } from "react";
+import { useRouter } from "expo-router";
 import { FlatList, Image, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import AddUser from "@/assets/icons/add-user.svg";
 import GnomeIcon from "@/assets/icons/gnome-icon.svg";
-import SadGnome from "@/assets/images/SadGnome.png";
-import { NoFriendsAlert } from "@/components/ui/NoFriendsAlert";
+import SadGnome from "@/assets/images/SadGnome.svg";
+import { NoFriendsAlert } from "@/components/ui/EmptyState";
 import { Text } from "@/components/ui/text";
 import { useFriendsStore } from "@/store/useFriendsStore";
 
@@ -39,14 +38,15 @@ export default function Friends() {
   );
 
   const EmptyState = () => (
-    <View>
+    <View className="flex-1 items-center justify-center pt-40">
       <NoFriendsAlert
-        image={SadGnome}
+        image={<SadGnome className="mb-4" />}
         title="Hej Poszukiwaczu!"
         alert={
           "Twoja lista znajomych jest całkiem pusta,\n nawet żaden z wrocławskhich krasnali tutaj\n nie zawitał."
         }
         description={"W końcu nawet krasnale wiedzą, że w\n drużynie raźniej!"}
+        ButtonTitle="Dodaj znajomego"
         onClick={() => router.push("/addfriend")}
       />
     </View>
@@ -72,7 +72,6 @@ export default function Friends() {
           />
         )}
         ListEmptyComponent={EmptyState}
-        contentContainerStyle={{ marginTop: 20 }}
       />
     </SafeAreaView>
   );
