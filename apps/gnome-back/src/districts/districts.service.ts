@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { DistrictsResponse } from "@repo/shared/responses";
 import { booleanPointInPolygon, point, polygon } from "@turf/turf";
-import { PrismaService } from "@/db/prisma.service";
+import { PrismaService } from "../db/prisma.service";
 
 @Injectable()
 export class DistrictsService {
@@ -45,10 +45,9 @@ export class DistrictsService {
     }
     for (let i = 0; i < polygons.length; i++) {
       const data = JSON.parse(JSON.stringify(polygons[i].points));
-      const isInPolygon = booleanPointInPolygon(
-        turfPoint,
-        polygon(data.coordinates),
-      );
+      const coords = data?.coordinates ?? data;
+
+      const isInPolygon = booleanPointInPolygon(turfPoint, polygon(coords));
       if (isInPolygon) {
         return polygons[i].id;
       }
