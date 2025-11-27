@@ -55,6 +55,25 @@ CREATE TABLE "Gnome" (
 );
 
 -- CreateTable
+CREATE TABLE "Achievement" (
+    "id" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
+    "description" TEXT NOT NULL,
+    "pictureUrl" TEXT NOT NULL,
+
+    CONSTRAINT "Achievement_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "UserAchievement" (
+    "userId" TEXT NOT NULL,
+    "achievementId" TEXT NOT NULL,
+    "earnedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "UserAchievement_pkey" PRIMARY KEY ("userId","achievementId")
+);
+
+-- CreateTable
 CREATE TABLE "Report" (
     "id" TEXT NOT NULL,
     "gnomeName" TEXT NOT NULL,
@@ -138,6 +157,9 @@ CREATE UNIQUE INDEX "UserResource_userId_key" ON "UserResource"("userId");
 CREATE UNIQUE INDEX "Gnome_id_key" ON "Gnome"("id");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "Achievement_id_key" ON "Achievement"("id");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "Report_id_key" ON "Report"("id");
 
 -- CreateIndex
@@ -159,19 +181,25 @@ ALTER TABLE "UserResource" ADD CONSTRAINT "UserResource_userId_fkey" FOREIGN KEY
 ALTER TABLE "Gnome" ADD CONSTRAINT "Gnome_districtId_fkey" FOREIGN KEY ("districtId") REFERENCES "District"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "GnomeInteraction" ADD CONSTRAINT "GnomeInteraction_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "UserAchievement" ADD CONSTRAINT "UserAchievement_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "GnomeInteraction" ADD CONSTRAINT "GnomeInteraction_gnomeId_fkey" FOREIGN KEY ("gnomeId") REFERENCES "Gnome"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "UserAchievement" ADD CONSTRAINT "UserAchievement_achievementId_fkey" FOREIGN KEY ("achievementId") REFERENCES "Achievement"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Friendship" ADD CONSTRAINT "Friendship_senderId_fkey" FOREIGN KEY ("senderId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "GnomeInteraction" ADD CONSTRAINT "GnomeInteraction_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Friendship" ADD CONSTRAINT "Friendship_receiverId_fkey" FOREIGN KEY ("receiverId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "GnomeInteraction" ADD CONSTRAINT "GnomeInteraction_gnomeId_fkey" FOREIGN KEY ("gnomeId") REFERENCES "Gnome"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Building" ADD CONSTRAINT "Building_ownerId_fkey" FOREIGN KEY ("ownerId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Friendship" ADD CONSTRAINT "Friendship_senderId_fkey" FOREIGN KEY ("senderId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "BuildingInteraction" ADD CONSTRAINT "BuildingInteraction_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Friendship" ADD CONSTRAINT "Friendship_receiverId_fkey" FOREIGN KEY ("receiverId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Building" ADD CONSTRAINT "Building_ownerId_fkey" FOREIGN KEY ("ownerId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "BuildingInteraction" ADD CONSTRAINT "BuildingInteraction_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
