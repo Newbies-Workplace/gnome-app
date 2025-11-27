@@ -18,7 +18,7 @@ function GnomeDetail() {
     <div className="text-white p-4 font-Afacad flex flex-col gap-4">
       <Button
         onClick={() => navigate("/admin")}
-        className="mb-4 bg-primary-color px-4 py-2 rounded-2xl text-white"
+        className="bg-primary-color px-4 py-2 rounded-2xl text-white"
       >
         go back
       </Button>
@@ -46,9 +46,10 @@ function GnomeDetail() {
           Usuń gnoma
         </Button>
       </div>
+      <hr className="border-t-2 border-primary-color " />
       <div className="flex flex-col text-left">
         <div>{gnome.description}</div>
-        <h4 className="mt-2">Ciekawostka:</h4>
+        <h4 className="mt-2 font-bold">Ciekawostka:</h4>
         <div>{gnome.funFact}</div>
       </div>
     </div>
