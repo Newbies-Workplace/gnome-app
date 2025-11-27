@@ -1,5 +1,6 @@
 import { useNavigate, useParams } from "react-router-dom";
 import PlaceHolder from "@/assets/images/placeholder.png";
+import { Button } from "@/components/ui/button";
 import { useGnomeStore } from "@/store/useGnomeStore";
 
 function GnomeDetail() {
@@ -14,22 +15,42 @@ function GnomeDetail() {
   }
 
   return (
-    <div className="text-white p-4">
-      <button
+    <div className="text-white p-4 font-Afacad flex flex-col gap-4">
+      <Button
         onClick={() => navigate("/admin")}
         className="mb-4 bg-primary-color px-4 py-2 rounded-2xl text-white"
       >
-        ←
-      </button>
-
-      <h2 className="text-2xl font-bold">{gnome.name}</h2>
-      <img
-        src={gnome.imageUrl || PlaceHolder}
-        alt={gnome.name}
-        className="w-32 h-32 object-cover rounded mt-4"
-      />
-      <p className="mt-2">Dzielnica: {gnome.districtId}</p>
-      <p className="mt-2">Opis: {gnome.description || "Brak opisu"}</p>
+        go back
+      </Button>
+      <div className="flex flex-row items-stretch gap-4">
+        <img
+          src={gnome.imageUrl || PlaceHolder}
+          alt={gnome.name}
+          className="w-32 h-32 object-cover rounded"
+        />
+        <div className="flex flex-col justify-between h-32">
+          <div className="text-3xl font-bold text-center">{gnome.name}</div>
+          <div className="text-sm text-gray-300 text-center">
+            {gnome.districtId}
+          </div>
+          <div className="text-m">{gnome.location}</div>
+          <div className="text-m">{gnome.creationDate}</div>
+          <div className="text-m">{gnome.name}</div>
+        </div>
+      </div>
+      <div className="flex flex-row justify-center">
+        <Button className="w-1/2 text-center text-white font-Afacad bg-primary-color border-none rounded-4xl">
+          Edytuj gnoma
+        </Button>
+        <Button className="w-1/2 text-center text-white font-Afacad bg-primary-color border-none rounded-4xl">
+          Usuń gnoma
+        </Button>
+      </div>
+      <div className="flex flex-col text-left">
+        <div>{gnome.description}</div>
+        <h4 className="mt-2">Ciekawostka:</h4>
+        <div>{gnome.funFact}</div>
+      </div>
     </div>
   );
 }
