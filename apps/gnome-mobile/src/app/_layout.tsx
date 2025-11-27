@@ -9,7 +9,7 @@ import { StatusBar } from "expo-status-bar";
 import { cssInterop } from "nativewind";
 import React, { useEffect } from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import Svg, { Circle, Rect } from "react-native-svg";
+import Svg, { Circle, Rect, Text as SvgText } from "react-native-svg";
 import { useAuthStore } from "@/store/useAuthStore";
 
 export default function RootLayout() {
@@ -50,6 +50,15 @@ export default function RootLayout() {
         height: true,
         stroke: true,
         strokeWidth: true,
+        fill: true,
+      },
+    },
+  });
+  cssInterop(SvgText, {
+    className: {
+      target: "style",
+      nativeStyleToProp: {
+        stroke: true,
         fill: true,
       },
     },

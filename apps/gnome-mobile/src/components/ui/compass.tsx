@@ -68,7 +68,7 @@ const Compass: React.FC = () => {
   }, []);
 
   return (
-    <View style={styles.container}>
+    <View style={styles.container} className={"bg-primary-foreground"}>
       <Animated.View style={[styles.compass, { transform: [{ translateX }] }]}>
         <Svg
           width={COMPASS_WIDTH * 3}
@@ -88,9 +88,9 @@ const Compass: React.FC = () => {
               <SvgText
                 // biome-ignore lint/suspicious/noArrayIndexKey: finite number of markers
                 key={i}
+                className="fill-tekst"
                 x={position % (COMPASS_WIDTH * 3)}
                 y={isMainDirection ? 28 : 25}
-                fill={isMainDirection ? "white" : "gray"}
                 fontSize={isMainDirection ? 20 : 12}
                 fontWeight={isMainDirection ? "bold" : "normal"}
                 textAnchor="middle"
@@ -110,7 +110,6 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     width: width - 32,
     height: 24,
-    backgroundColor: "#1E201E",
     borderRadius: 15,
     justifyContent: "center",
     alignItems: "center",
