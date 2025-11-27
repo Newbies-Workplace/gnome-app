@@ -4,7 +4,6 @@ import { useAuthStore } from "@/store/useAuthStore";
 
 interface Props {
   children?: React.ReactNode;
-  fallback?: React.ReactNode;
 }
 export const RequireAuth: React.FC<Props> = ({ children }) => {
   const { user, isLoading } = useAuthStore();
