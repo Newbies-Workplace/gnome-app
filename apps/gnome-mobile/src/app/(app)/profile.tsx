@@ -154,7 +154,7 @@ export default function ProfileScreen() {
         {/* Wylogowanie */}
         <ProfileButtonLogout
           text="Wyloguj"
-          image={<LogoutIcon />}
+          image={<LogoutIcon className={"text-red-500"} />}
           onClick={handleLogout}
         />
       </View>

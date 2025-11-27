@@ -9,6 +9,7 @@ import { StatusBar } from "expo-status-bar";
 import { cssInterop } from "nativewind";
 import React, { useEffect } from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import Svg, { Circle, Rect } from "react-native-svg";
 import { useAuthStore } from "@/store/useAuthStore";
 
 export default function RootLayout() {
@@ -21,6 +22,37 @@ export default function RootLayout() {
 
   [BottomSheet, BottomSheetModal].forEach((Component) => {
     cssInterop(Component, sheetInteropConfig);
+  });
+
+  cssInterop(Svg, {
+    className: {
+      target: "style",
+      nativeStyleToProp: { width: true, height: true },
+    },
+  });
+  cssInterop(Circle, {
+    className: {
+      target: "style",
+      nativeStyleToProp: {
+        width: true,
+        height: true,
+        stroke: true,
+        strokeWidth: true,
+        fill: true,
+      },
+    },
+  });
+  cssInterop(Rect, {
+    className: {
+      target: "style",
+      nativeStyleToProp: {
+        width: true,
+        height: true,
+        stroke: true,
+        strokeWidth: true,
+        fill: true,
+      },
+    },
   });
 
   useEffect(() => {

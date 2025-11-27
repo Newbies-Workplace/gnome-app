@@ -34,7 +34,7 @@ export const SettingsOption: React.FC<SettingsOptionProps> = ({
         {extraText && (
           <Text className="text-tekst/50 text-lg mr-3">{extraText}</Text>
         )}
-        <ArrowRight width={24} height={24} />
+        <ArrowRight width={24} height={24} className={"text-tekst"} />
       </View>
     </TouchableOpacity>
   );
