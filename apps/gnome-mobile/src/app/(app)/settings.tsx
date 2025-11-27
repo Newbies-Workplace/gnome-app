@@ -15,6 +15,7 @@ import ThemeSelector from "@/components/settings-components/ThemeSelector";
 import { SettingsOption } from "@/components/ui/SettingsOption";
 import { Text } from "@/components/ui/text";
 import { useColorScheme } from "@/lib/useColorScheme";
+import { useAuthStore } from "@/store/useAuthStore";
 
 function SettingsScreen() {
   const navigation = useNavigation();
@@ -22,6 +23,8 @@ function SettingsScreen() {
   const themeBottomSheetRef = useRef<BottomSheet>(null);
   const languageBottomSheetRef = useRef<BottomSheet>(null);
   const { setColorScheme } = useColorScheme();
+
+  const { deleteAccount } = useAuthStore();
 
   const handleAccountDelete = () => {
     Alert.alert(
@@ -32,6 +35,7 @@ function SettingsScreen() {
         {
           text: "Usuń",
           onPress: () => {
+            deleteAccount();
             router.replace("/welcome");
           },
         },

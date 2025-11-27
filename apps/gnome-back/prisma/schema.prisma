@@ -23,15 +23,15 @@ model User {
   receivedRequest      Friendship[]          @relation("receiver")
   buildings            Building[]
   buildingsInteraction BuildingInteraction[]
-  achievements    UserAchievement[]
+  achievements         UserAchievement[]
 }
 
 model UserResource {
   berries Int?   @default(0)
-  sticks Int?   @default(0)
-  stones Int?   @default(0)
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId String @id @unique
+  sticks  Int?   @default(0)
+  stones  Int?   @default(0)
+  user    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId  String @id @unique
 }
 
 model Gnome {
@@ -51,20 +51,21 @@ model Gnome {
 }
 
 model Achievement {
-  id           String            @id @unique @default(uuid())
-  name         String
-  description  String
-  pictureUrl   String
-  users        UserAchievement[]
+  id          String            @id @unique @default(uuid())
+  name        String
+  description String
+  pictureUrl  String
+  users       UserAchievement[]
 }
 
 model UserAchievement {
+  userId        String
+  achievementId String
+  earnedAt      DateTime    @default(now())
+  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  achievement   Achievement @relation(fields: [achievementId], references: [id])
+
   @@id([userId, achievementId])
-  userId         String
-  achievementId  String
-  earnedAt       DateTime      @default(now())
-  user           User          @relation(fields: [userId], references: [id], onDelete: Cascade)
-  achievement    Achievement   @relation(fields: [achievementId], references: [id])
 }
 
 model Report {
