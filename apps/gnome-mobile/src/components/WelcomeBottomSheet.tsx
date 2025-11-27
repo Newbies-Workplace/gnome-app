@@ -20,7 +20,7 @@ export const WelcomeBottomSheet = ({
 
   return (
     <BottomSheet
-      backgroundStyle={{ backgroundColor: "#1E201E" }}
+      backgroundClassName="bg-primary-foreground"
       handleIndicatorStyle={{
         backgroundColor: "#FFFFFF",
         width: 100,
@@ -31,11 +31,11 @@ export const WelcomeBottomSheet = ({
       ref={bottomSheetRef}
     >
       <BottomSheetView className="relative flex flex-col items-center px-10 pt-10 pb-32 gap-6 z-10">
-        <Text className="text-center text-[16px] text-white font-bold">
+        <Text className="text-center text-[16px] text-tekst font-bold">
           <Text className="text-primary">WITAJ W PRZYGODZIE</Text> Z
           WROCŁAWSKIMI KRASNALAMI!
         </Text>
-        <Text className="text-center text-[16px] text-white font-bold">
+        <Text className="text-center text-[16px] text-tekst font-bold">
           Twoim zadaniem jest porwanie czapek z głów wszystkich krasnali! Po
           zbliżeniu się na mapię do krasnala pojawi się opcja z przeciągnięciem
           na pasku jego czapki. Uzbieraj jak największą kolekcję gnomów ze

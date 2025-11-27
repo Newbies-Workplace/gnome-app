@@ -21,10 +21,10 @@ const FriendItem = ({
   <View className="px-4 flex flex-row items-center justify-between py-2">
     <View className="flex flex-row items-center">
       <Image source={{ uri: avatar }} className="w-10 h-10 rounded-full mr-4" />
-      <Text className="text-white text-lg font-semibold">{name}</Text>
+      <Text className="text-tekst text-lg font-semibold">{name}</Text>
     </View>
     <View className="flex flex-row items-center">
-      <Text className="text-white text-lg font-semibold mr-2">{score}</Text>
+      <Text className="text-tekst text-lg font-semibold mr-2">{score}</Text>
       <GnomeIcon width={25} height={25} />
     </View>
   </View>
@@ -46,19 +46,21 @@ export default function Friends() {
         </TouchableOpacity>
       ),
       headerTitle: () => (
-        <Text className="text-white text-2xl font-bold text-center tracking-wide">
+        <Text className="text-tekst text-2xl font-bold text-center tracking-wide">
           Twoi znajomi
         </Text>
       ),
       headerTitleAlign: "center",
       headerShadowVisible: false,
       headerShown: true,
-      headerStyle: { backgroundColor: "#131413" },
+      headerBackground: () => (
+        <View className="absolute inset-0 bg-primary-foreground" />
+      ),
     });
   }, [navigation, router]);
 
   return (
-    <SafeAreaView className="flex-1 bg-background">
+    <SafeAreaView className="flex-1 bg-primary-foreground">
       <FlatList
         data={friends}
         keyExtractor={(item) => item.id}
