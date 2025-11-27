@@ -4,16 +4,18 @@ import { useRouter } from "expo-router";
 import { setStatusBarStyle } from "expo-status-bar";
 import { colorScheme } from "nativewind";
 import { useEffect, useRef } from "react";
-import { Linking, TouchableOpacity, View } from "react-native";
+import { Alert, Linking, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import ArrowLeft from "@/assets/icons/arrow-left.svg";
 import LanguageIcon from "@/assets/icons/language.svg";
 import ModeIcon from "@/assets/icons/mode.svg";
 import NotificationsIcon from "@/assets/icons/notifications.svg";
+import AccoutDeleteIcon from "@/assets/icons/security.svg";
 import ThemeSelector from "@/components/settings-components/ThemeSelector";
 import { SettingsOption } from "@/components/ui/SettingsOption";
 import { Text } from "@/components/ui/text";
 import { useColorScheme } from "@/lib/useColorScheme";
+import { useAuthStore } from "@/store/useAuthStore";
 
 function SettingsScreen() {
   const navigation = useNavigation();
@@ -21,6 +23,25 @@ function SettingsScreen() {
   const themeBottomSheetRef = useRef<BottomSheet>(null);
   const languageBottomSheetRef = useRef<BottomSheet>(null);
   const { setColorScheme } = useColorScheme();
+
+  const { deleteAccount } = useAuthStore();
+
+  const handleAccountDelete = () => {
+    Alert.alert(
+      "Usuwanie konta",
+      "Czy jesteś pewien tego ,że chcesz usunąć swoje konto?\n \nProces ten możebyć nie odwracalny i utracisz progres swojego konta!",
+      [
+        { text: "Anuluj", style: "cancel" },
+        {
+          text: "Usuń",
+          onPress: () => {
+            deleteAccount();
+            router.replace("/welcome");
+          },
+        },
+      ],
+    );
+  };
 
   useEffect(() => {
     navigation.setOptions({
@@ -129,6 +150,12 @@ function SettingsScreen() {
           }}
           extraText="Polski"
           customClass="mb-8"
+        />
+        <SettingsOption
+          text="Usuń konto"
+          image={AccoutDeleteIcon}
+          onClick={handleAccountDelete}
+          customClass="mb-8 text-primary"
         />
       </View>
     </SafeAreaView>
