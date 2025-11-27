@@ -1,40 +1,59 @@
 import type { UserResponse } from "@repo/shared/responses";
-import { create } from "zustand/react";
+import { create } from "zustand";
+import { createJSONStorage, persist } from "zustand/middleware";
 import { axiosInstance } from "@/api/axios";
 import { UserService } from "@/api/User.service";
 
 type AuthState = {
   isLoading: boolean;
   user: UserResponse | null;
+  accessToken: string | null;
+  init: () => Promise<void>;
   handleAccessToken: (token: string) => Promise<void>;
   logout: () => void;
 };
 
-export const useAuthStore = create<AuthState>()((set) => ({
-  isLoading: true,
-  user: null,
-  handleAccessToken: async (token: string) => {
-    console.log("Handling access token:", token);
-    axiosInstance.defaults.headers.Authorization = `Bearer ${token}`;
+export const useAuthStore = create<AuthState>()(
+  persist(
+    (set, get) => ({
+      isLoading: true,
+      user: null,
+      accessToken: null,
 
-    try {
-      const user = await UserService.getMyUser();
+      init: async () => {
+        const token = get().accessToken;
+        if (token) {
+          axiosInstance.defaults.headers.Authorization = `Bearer ${token}`;
+          try {
+            const user = await UserService.getMyUser();
+            set({ user, isLoading: false });
+          } catch {
+            set({ user: null, isLoading: false });
+          }
+        } else {
+          set({ isLoading: false });
+        }
+      },
 
-      console.log("Fetched user:", user);
+      handleAccessToken: async (token: string) => {
+        axiosInstance.defaults.headers.Authorization = `Bearer ${token}`;
+        try {
+          const user = await UserService.getMyUser();
+          set({ accessToken: token, user, isLoading: false });
+        } catch {
+          set({ accessToken: null, user: null, isLoading: false });
+        }
+      },
 
-      set({ user, isLoading: false });
-    } catch (error) {
-      console.error(error);
-
-      set({ user: null, isLoading: false });
-    }
-  },
-  logout: async () => {
-    // clear cookie
-    document.cookie =
-      "access_token=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/; SameSite=None; Secure";
-
-    axiosInstance.defaults.headers.Authorization = "";
-    set({ user: null });
-  },
-}));
+      logout: () => {
+        localStorage.removeItem("access_token");
+        axiosInstance.defaults.headers.Authorization = "";
+        set({ user: null, accessToken: null });
+      },
+    }),
+    {
+      name: "auth-storage",
+      storage: createJSONStorage(() => localStorage),
+    },
+  ),
+);
