@@ -45,6 +45,14 @@ export class UsersService {
     });
   }
 
+  async deleteAccount(userId) {
+    return this.prismaService.user.delete({
+      where: {
+        id: userId,
+      },
+    });
+  }
+
   async generateInviteCode() {
     const alphabet = "0123456789";
     const nanoid = customAlphabet(alphabet, 16);
