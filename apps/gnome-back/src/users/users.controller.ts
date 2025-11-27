@@ -12,9 +12,10 @@ import {
   UseInterceptors,
 } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
-import { User as PrismaUser } from "@prisma/client";
+import { User as PrismaUser, UserResource } from "@prisma/client";
 import { UserUpdate } from "@repo/shared/requests";
 import { UserPatchResponse } from "@repo/shared/responses";
+import { userInfo } from "os";
 import { User } from "@/auth/decorators/jwt-user.decorator";
 import { JwtGuard } from "@/auth/guards/jwt.guard";
 import { JwtUser } from "@/auth/types/jwt-user";
@@ -81,5 +82,10 @@ export class UsersController {
     const newInviteCode = await this.usersService.regenerateInviteCode(user.id);
 
     return { inviteCode: newInviteCode };
+  }
+  @Get("@me/resource")
+  @UseGuards(JwtGuard)
+  async getUserResources(@User() user: JwtUser): Promise<UserResource> {
+    return await this.usersService.getUserResources(user.id);
   }
 }

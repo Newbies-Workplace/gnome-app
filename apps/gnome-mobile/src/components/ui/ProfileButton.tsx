@@ -19,7 +19,7 @@ export const ProfileButton: React.FC<ProfileButtonProps> = ({
       className="rounded-lg bg-background mb-3 flex flex-row justify-start items-center px-3 py-2"
     >
       {Icon}
-      <Text className="text-white text-lg font-bold ml-3">{text}</Text>
+      <Text className="text-tekst text-lg font-bold ml-3">{text}</Text>
     </TouchableOpacity>
   );
 };
