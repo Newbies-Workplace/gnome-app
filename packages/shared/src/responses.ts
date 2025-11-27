@@ -7,6 +7,14 @@ export interface UserResponse {
   role: string;
 }
 
+export interface UserFriendResponse {
+  id: string;
+  name: string;
+  pictureUrl: string;
+  gnomeInteractions: InteractionResponse[];
+  inviteCode: string;
+}
+
 export interface UserPatchResponse {
   id: string;
   name: string;

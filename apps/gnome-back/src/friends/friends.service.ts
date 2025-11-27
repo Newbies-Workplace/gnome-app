@@ -8,6 +8,7 @@ import {
   FriendResponse,
   FriendSearchResponse,
   FriendShipResponse,
+  UserFriendResponse,
 } from "@repo/shared/responses";
 import { PrismaService } from "@/db/prisma.service";
 import { GnomesService } from "@/gnomes/gnomes.service";
@@ -48,6 +49,27 @@ export class FriendsService {
         };
       }),
     );
+  }
+
+  async getFriendData(id: string, userId: string): Promise<UserFriendResponse> {
+    const isFriends = await this.findFriendship(id, userId);
+    if (isFriends.length === 0) {
+      return null;
+    }
+    const findFriend = await this.prismaService.user.findUnique({
+      where: {
+        id: id,
+      },
+      select: {
+        id: true,
+        name: true,
+        pictureUrl: true,
+        gnomeInteractions: true,
+        inviteCode: true,
+      },
+    });
+
+    return findFriend;
   }
 
   async findFriendship(
