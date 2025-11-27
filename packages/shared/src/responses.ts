@@ -108,7 +108,7 @@ export interface BuildingResponse {
   health: number;
   latitude: number;
   longitude: number;
-  district: string;
+  districtId: number;
   Type: string;
   createdAt: Date;
   ownerId: string;

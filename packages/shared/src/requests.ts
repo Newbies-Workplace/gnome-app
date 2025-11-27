@@ -106,11 +106,6 @@ export class CreateBuildingRequest {
   gnomeCount!: number;
 
   @Type(() => Number)
-  @IsInt()
-  @IsNotEmpty()
-  health!: number;
-
-  @Type(() => Number)
   @IsLatitude()
   @IsNotEmpty()
   latitude!: number;
@@ -119,18 +114,16 @@ export class CreateBuildingRequest {
   @IsLongitude()
   @IsNotEmpty()
   longitude!: number;
-
-  @IsString()
+  @Type(() => Number)
+  @IsInt()
   @IsNotEmpty()
-  district!: string;
+  districtId!: number;
 
   @IsEnum(BuildingType)
   @IsNotEmpty()
   type!: BuildingType;
 }
 export class updateBuildingRequest {
-  @IsNotEmpty()
-  id!: string;
   @Type(() => Number)
   @IsInt()
   @IsNotEmpty()

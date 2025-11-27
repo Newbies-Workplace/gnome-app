@@ -8,8 +8,10 @@ import {
   Param,
   Patch,
   Post,
+  Req,
   UseGuards,
 } from "@nestjs/common";
+import { UserRole } from "@prisma/client";
 import {
   CreateBuildingRequest,
   updateBuildingRequest,
@@ -54,19 +56,26 @@ export class BuildingsController {
   }
 
   @Delete(":id")
-  @UseGuards(JwtGuard, RoleGuard)
-  @Role(["ADMIN"])
+  @UseGuards(JwtGuard)
   async deleteBuilding(
     @Param("id") buildingId: string,
+    @User() user,
   ): Promise<BuildingResponse> {
-    return await this.buildingsService.deleteBuilding(buildingId);
+    return await this.buildingsService.deleteBuilding(
+      buildingId,
+      user.id,
+      user.role,
+    );
   }
 
-  @Patch()
+  @Patch(":id/empower")
   @UseGuards(JwtGuard)
-  async updateBuilding(@Body() body: updateBuildingRequest) {
+  async updateBuilding(
+    @Param("id") buildingId: string,
+    @Body() body: updateBuildingRequest,
+  ) {
     return await this.buildingsService.empowerBuilding(
-      body.id,
+      buildingId,
       body.gnomeCount,
     );
   }
