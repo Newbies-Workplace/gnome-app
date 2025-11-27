@@ -38,7 +38,7 @@ export default function Friends() {
   );
 
   const EmptyState = () => (
-    <View className="flex-1 items-center justify-center pt-40">
+    <View className="flex-1 items-center justify-center">
       <NoFriendsAlert
         image={<SadGnome className="mb-4" />}
         title="Hej Poszukiwaczu!"
@@ -72,6 +72,11 @@ export default function Friends() {
           />
         )}
         ListEmptyComponent={EmptyState}
+        contentContainerStyle={
+          friends.length === 0
+            ? { flexGrow: 1, justifyContent: "center" }
+            : undefined
+        }
       />
     </SafeAreaView>
   );
