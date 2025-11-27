@@ -12,6 +12,7 @@ export interface UserFriendResponse {
   name: string;
   pictureUrl: string;
   gnomeInteractions: InteractionResponse[];
+  achievements: UserAchievementResponse[];
   inviteCode: string;
 }
 

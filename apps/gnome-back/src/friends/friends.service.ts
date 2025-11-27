@@ -65,6 +65,7 @@ export class FriendsService {
         name: true,
         pictureUrl: true,
         gnomeInteractions: true,
+        achievements: true,
         inviteCode: true,
       },
     });
