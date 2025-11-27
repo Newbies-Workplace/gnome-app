@@ -1,10 +1,10 @@
 import ClockIcon from "@/assets/icons/clock-icon.svg";
 import BuildPlaceHolder from "@/assets/images/placeholder.png";
-import { Button } from "@/components/ui/button";
+import { Item } from "@/components/ui/item";
 
 function BuildsList() {
   return (
-    <Button className="w-full h-20 rounded-4xl bg-primary-gray hover:bg-white/10 transition p-4">
+    <Item className="w-full h-20 rounded-4xl bg-primary-gray hover:bg-white/10 transition p-4">
       <div className="flex w-full h-full items-center text-left text-white font-Afacad">
         <img
           src={BuildPlaceHolder}
@@ -22,7 +22,7 @@ function BuildsList() {
           <div className="text-gray-400 text-xs leading-tight">Autor</div>
         </div>
       </div>
-    </Button>
+    </Item>
   );
 }
 

@@ -39,7 +39,7 @@ export default function AdminPage() {
 
   return (
     <div
-      className="h-screen w-screen bg-cover bg-center bg-no-repeat flex flex-col"
+      className="h-screen w-screen bg-cover bg-center bg-no-repeat flex flex-col overflow-hidden"
       style={{ backgroundImage: `url(${backgroundImage})` }}
     >
       <div className="w-full p-4 flex justify-between items-center bg-transparent">
@@ -55,7 +55,7 @@ export default function AdminPage() {
           </button>
         </div>
       </div>
-      <div className="flex flex-grow p-4 gap-4">
+      <div className="flex flex-1 h-0 p-4 gap-4">
         <div className="w-3/4 h-full">
           {isLoaded && (
             <GoogleMap
@@ -66,10 +66,12 @@ export default function AdminPage() {
             />
           )}
         </div>
-
         <div className="w-1/4 h-full bg-primary-gray rounded-4xl flex flex-col">
-          <Tabs value={currentTab} className="bg-primary-gray rounded-4xl">
-            <TabsList className="grid grid-cols-4 gap-2 p-2 w-full h-full bg-primary-gray rounded-4xl">
+          <Tabs
+            value={currentTab}
+            className="bg-primary-gray rounded-4xl p-2 m-2"
+          >
+            <TabsList className="grid grid-cols-4 gap-2 p-2 w-full bg-primary-gray rounded-4xl">
               <TabsTrigger value="gnomes">
                 <NavLink to="/admin">
                   <img src={GnomeIcon} alt="gnome" />
@@ -95,8 +97,9 @@ export default function AdminPage() {
               </TabsTrigger>
             </TabsList>
           </Tabs>
+
           {/* Podstrony */}
-          <div className="flex-1 p-4 overflow-auto">
+          <div className="flex-1 p-4 overflow-y-auto">
             <Outlet />
           </div>
         </div>

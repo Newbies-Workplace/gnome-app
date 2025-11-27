@@ -1,9 +1,9 @@
 import UserPlaceHolder from "@/assets/images/placeholder-user.png";
-import { Button } from "@/components/ui/button";
+import { Item } from "@/components/ui/item";
 
 function UsersList() {
   return (
-    <Button className="w-full h-20 rounded-4xl bg-primary-gray hover:bg-white/10 transition p-4">
+    <Item className="w-full h-20 rounded-4xl bg-primary-gray hover:bg-white/10 transition p-4">
       <div className="flex w-full h-full items-center text-left text-white font-Afacad">
         <img
           src={UserPlaceHolder}
@@ -16,7 +16,7 @@ function UsersList() {
           </div>
         </div>
       </div>
-    </Button>
+    </Item>
   );
 }
 

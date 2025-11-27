@@ -1,9 +1,9 @@
 import PlaceHolder from "@/assets/images/placeholder.png";
-import { Button } from "@/components/ui/button";
+import { Item } from "@/components/ui/item";
 
 function GnomesList() {
   return (
-    <Button className="w-full h-20 rounded-4xl bg-primary-gray hover:bg-white/10 transition p-4">
+    <Item className="w-full h-20 rounded-4xl bg-primary-gray hover:bg-white/10 transition p-4">
       <div className="flex w-full h-full items-center text-left text-white font-Afacad">
         <img
           src={PlaceHolder}
@@ -17,7 +17,7 @@ function GnomesList() {
           <div className="text-gray-300 text-sm leading-tight">Psie pole</div>
         </div>
       </div>
-    </Button>
+    </Item>
   );
 }
 
