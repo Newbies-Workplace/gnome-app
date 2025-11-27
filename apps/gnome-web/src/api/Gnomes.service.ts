@@ -1,4 +1,3 @@
-// src/api/Gnomes.service.ts
 import type { GnomeIdResponse, GnomeResponse } from "@repo/shared/responses";
 import { axiosInstance } from "@/api/axios";
 

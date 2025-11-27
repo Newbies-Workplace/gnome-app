@@ -1,4 +1,3 @@
-// src/store/useGnomeStore.ts
 import type { GnomeResponse } from "@repo/shared/responses";
 import { create } from "zustand";
 import { GnomesService } from "@/api/Gnomes.service";
