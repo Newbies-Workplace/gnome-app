@@ -15,14 +15,19 @@ export default function AppLayout() {
   const syncPending = useOfflineInteractionStore((s) => s.syncPending);
 
   useEffect(() => {
-    const interval = setInterval(async () => {
-      const net = await Network.getNetworkStateAsync();
-      if (net.isConnected && net.isInternetReachable) {
-        syncPending();
-      }
-    }, 5000);
-
-    return () => clearInterval(interval);
+    const subscription = Network.addNetworkStateListener(
+      ({ isConnected, isInternetReachable }) => {
+        console.log(
+          `Connected: ${isConnected}, Internet Reachable: ${isInternetReachable}`,
+        );
+        if (isConnected && isInternetReachable) {
+          syncPending();
+        }
+      },
+    );
+    return () => {
+      subscription?.remove();
+    };
   }, []);
 
   if (isLoading) {
