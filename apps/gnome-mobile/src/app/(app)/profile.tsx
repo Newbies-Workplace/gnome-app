@@ -55,12 +55,12 @@ export default function ProfileScreen() {
     navigation.setOptions({
       headerLeft: () => (
         <TouchableOpacity className="p-5" onPress={() => router.back()}>
-          <BackIcon className="w-7 h-7" />
+          <BackIcon className="w-7 h-7 text-tekst" />
         </TouchableOpacity>
       ),
       headerRight: () => (
         <TouchableOpacity className="p-5" onPress={handleShare}>
-          <ShareIcon className="w-7 h-7" />
+          <ShareIcon className="w-7 h-7 text-tekst" />
         </TouchableOpacity>
       ),
       headerTitle: "",
@@ -102,24 +102,24 @@ export default function ProfileScreen() {
       <View className="w-full mt-4">
         <ProfileButton
           text="Znajomi"
-          image={<FriendsIcon />}
+          image={<FriendsIcon className="text-tekst" />}
           onClick={() => router.navigate("/friends")}
         />
         <ProfileButton
           text="Osiągnięcia"
-          image={<AchievementsIcon />}
+          image={<AchievementsIcon className="text-tekst" />}
           onClick={() => router.push("/achievements")}
         />
         <ProfileButton
           text="Zadania"
-          image={<QuestsIcon />}
+          image={<QuestsIcon className="text-tekst" />}
           onClick={() => router.push("/quests")}
         />
         {/* Ostatnio odkryte */}
         <View className="mb-4">
           <ProfileButton
             text="Ostatnio odkryte"
-            image={<LastSeenIcon />}
+            image={<LastSeenIcon className="text-tekst" />}
             onClick={() => router.replace("/(app)/(tabs)/collection")}
           />
           {/* Trzy zdjęcia z polami tekstowymi */}
@@ -147,14 +147,14 @@ export default function ProfileScreen() {
         {/* Ustawienia */}
         <ProfileButton
           text="Ustawienia"
-          image={<SettingsIcon />}
+          image={<SettingsIcon className="text-tekst" />}
           onClick={() => router.push("/settings")}
         />
 
         {/* Wylogowanie */}
         <ProfileButtonLogout
           text="Wyloguj"
-          image={<LogoutIcon />}
+          image={<LogoutIcon className={"text-primary"} />}
           onClick={handleLogout}
         />
       </View>

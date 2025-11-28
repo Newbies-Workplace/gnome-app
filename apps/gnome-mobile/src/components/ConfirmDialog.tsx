@@ -36,7 +36,7 @@ export const ConfirmDialog = ({
           className="flex-1 w-full flex-row gap-2 iteems-center"
         >
           <Text className="text-white">{declineText}</Text>
-          <CloseIcon width={16} height={16} />
+          <CloseIcon width={16} height={16} className="text-white" />
         </Button>
         <Button
           onPress={onConfirm}

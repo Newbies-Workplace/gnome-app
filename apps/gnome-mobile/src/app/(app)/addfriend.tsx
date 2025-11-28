@@ -38,7 +38,7 @@ export default function AddFriendScreen() {
     navigation.setOptions({
       headerLeft: () => (
         <TouchableOpacity className="px-5" onPress={() => router.back()}>
-          <ArrowLeft className="size-7" />
+          <ArrowLeft className="size-7 text-tekst" />
         </TouchableOpacity>
       ),
       headerTitle: () => (
@@ -124,18 +124,18 @@ export default function AddFriendScreen() {
           className="rounded-full"
           onPress={onCopyInviteCodePress}
         >
-          <CopyIcon width={20} height={20} />
+          <CopyIcon width={20} height={20} className="text-tekst" />
         </Button>
         <Button
           size="icon"
           className="rounded-full"
           onPress={onRefreshInviteCodePress}
         >
-          <RefreshIcon width={20} height={20} />
+          <RefreshIcon width={20} height={20} className="text-tekst" />
         </Button>
         {IS_NATIVE_DIALOG_ADDED && (
           <Button size="icon" className="rounded-full" onPress={() => {}}>
-            <ShareIcon width={20} height={20} />
+            <ShareIcon width={20} height={20} className="text-tekst" />
           </Button>
         )}
       </View>
@@ -160,7 +160,7 @@ export default function AddFriendScreen() {
             className="rounded-full"
             onPress={() => scanInvitationSheetRef.current?.present()}
           >
-            <CameraIcon width={20} height={20} />
+            <CameraIcon width={20} height={20} className="text-tekst" />
           </Button>
         ) : (
           <Button
@@ -204,7 +204,7 @@ export default function AddFriendScreen() {
           confirmContent={
             <>
               <Text className="text-tekst">Resetuj</Text>
-              <RefreshIcon width={16} height={16} />
+              <RefreshIcon width={16} height={16} className="text-tekst" />
             </>
           }
         />

@@ -31,7 +31,7 @@ const GnomeDetail = () => {
     navigation.setOptions({
       headerLeft: () => (
         <TouchableOpacity className="p-5" onPress={() => router.back()}>
-          <ArrowLeft className="w-7 h-7" />
+          <ArrowLeft className="w-7 h-7 text-tekst" />
         </TouchableOpacity>
       ),
       headerTitle: "",
@@ -98,7 +98,7 @@ const GnomeDetail = () => {
 
         <View className="border-b border-primary my-2.5 w-4/5 self-center" />
         <View className="flex-row items-center mb-2.5">
-          <FoundIcon width={20} height={20} />
+          <FoundIcon width={20} height={20} className="text-tekst" />
           <Text className="text-tekst ml-2.5">
             Data znalezienia:{" "}
             {interaction
@@ -108,7 +108,7 @@ const GnomeDetail = () => {
         </View>
 
         <View className="flex-row items-center mb-2.5">
-          <DateIcon width={20} height={20} />
+          <DateIcon width={20} height={20} className="text-tekst" />
           <Text className="text-tekst ml-2.5">
             Data postawienia: {dayjs(gnome.creationDate).format("DD.MM-YYYY")}
           </Text>

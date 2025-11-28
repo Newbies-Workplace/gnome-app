@@ -32,7 +32,7 @@ export default function Friends() {
       </View>
       <View className="flex flex-row items-center">
         <Text className="text-tekst text-lg font-semibold mr-2">{score}</Text>
-        <GnomeIcon width={25} height={25} />
+        <GnomeIcon width={25} height={25} className="text-tekst" />
       </View>
     </View>
   );
@@ -61,7 +61,7 @@ export default function Friends() {
             className="p-5"
             onPress={() => router.push("/addfriend")}
           >
-            <AddUser className="w-7 h-7" />
+            <AddUser className="w-7 h-7 text-tekst" />
           </TouchableOpacity>
         }
         renderItem={({ item }) => (
