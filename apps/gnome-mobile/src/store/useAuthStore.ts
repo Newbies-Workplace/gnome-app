@@ -15,6 +15,7 @@ export interface AuthStore {
   init: () => Promise<void>;
   login: (googleIdToken: string) => Promise<void>;
   logout: () => Promise<void>;
+  deleteAccount: () => Promise<void>;
   regenerateInviteCode: () => Promise<void>;
 }
 
@@ -46,6 +47,11 @@ export const useAuthStore = create<AuthStore>()(
 
       logout: async () => {
         await GoogleSignin.signOut();
+        set({ user: null, accessToken: null, isLoading: false });
+      },
+
+      deleteAccount: async () => {
+        await UserService.deleteAccount();
         set({ user: null, accessToken: null, isLoading: false });
       },
 

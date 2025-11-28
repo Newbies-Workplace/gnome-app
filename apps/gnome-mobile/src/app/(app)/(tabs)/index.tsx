@@ -281,14 +281,11 @@ const MapScreen = () => {
       >
         {filteredGnomes.map((gnome) => (
           <Marker
-            className=""
             key={gnome.id}
             coordinate={{
               latitude: gnome.latitude,
               longitude: gnome.longitude,
             }}
-            title={gnome.name}
-            description={gnome.description}
           >
             {interactions.find(
               (interactions) => interactions.gnomeId === gnome.id,
