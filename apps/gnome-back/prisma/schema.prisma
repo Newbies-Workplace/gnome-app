@@ -23,14 +23,14 @@ model User {
   receivedRequest      Friendship[]          @relation("receiver")
   buildings            Building[]
   buildingsInteraction BuildingInteraction[]
-  achievements    UserAchievement[]
+  achievements         UserAchievement[]
 }
 
 model UserResource {
   berries Int?   @default(0)
   sticks  Int?   @default(0)
   stones  Int?   @default(0)
-  user    User   @relation(fields: [userId], references: [id])
+  user    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId  String @id @unique
 }
 
@@ -51,20 +51,21 @@ model Gnome {
 }
 
 model Achievement {
-  id           String            @id @unique @default(uuid())
-  name         String
-  description  String
-  pictureUrl   String
-  users        UserAchievement[]
+  id          String            @id @unique @default(uuid())
+  name        String
+  description String
+  pictureUrl  String
+  users       UserAchievement[]
 }
 
 model UserAchievement {
+  userId        String
+  achievementId String
+  earnedAt      DateTime    @default(now())
+  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  achievement   Achievement @relation(fields: [achievementId], references: [id])
+
   @@id([userId, achievementId])
-  userId         String
-  achievementId  String
-  earnedAt       DateTime      @default(now())
-  user           User          @relation(fields: [userId], references: [id])
-  achievement    Achievement   @relation(fields: [achievementId], references: [id])
 }
 
 model Report {
@@ -79,8 +80,8 @@ model Report {
 
 model GnomeInteraction {
   id              String   @id @unique @default(uuid())
-  user            User     @relation(fields: [userId], references: [id])
-  gnome           Gnome    @relation(fields: [gnomeId], references: [id])
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  gnome           Gnome    @relation(fields: [gnomeId], references: [id], onDelete: Cascade)
   interactionDate DateTime
   userId          String
   gnomeId         String
@@ -88,8 +89,8 @@ model GnomeInteraction {
 
 model Friendship {
   id         String @id @unique @default(cuid())
-  sender     User   @relation("sender", fields: [senderId], references: [id])
-  receiver   User   @relation("receiver", fields: [receiverId], references: [id])
+  sender     User   @relation("sender", fields: [senderId], references: [id], onDelete: Cascade)
+  receiver   User   @relation("receiver", fields: [receiverId], references: [id], onDelete: Cascade)
   senderId   String
   receiverId String
 }
@@ -104,14 +105,14 @@ model Building {
   districtId  Int?
   type       BuildingType @default(MINE)
   createdAt  DateTime     @default(now())
-  Owner      User         @relation(fields: [ownerId], references: [id])
+  Owner      User         @relation(fields: [ownerId], references: [id], onDelete: Cascade)
   ownerId    String
 }
 
 model BuildingInteraction {
   id              String                  @id @unique @default(cuid())
   interactionType BuildingInteractionType
-  user            User                    @relation(fields: [userId], references: [id])
+  user            User                    @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId          String
   createdAt       DateTime                @default(now())
   amount          Int // ilosc surowcow przy wzmocnieniu/ilosc gnomow przy ataku
