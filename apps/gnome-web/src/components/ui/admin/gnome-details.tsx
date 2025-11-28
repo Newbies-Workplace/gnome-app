@@ -1,14 +1,18 @@
 import { useNavigate, useParams } from "react-router-dom";
+import UserIcon from "@/assets/icons/users-icon.svg";
 import PlaceHolder from "@/assets/images/placeholder.png";
 import { Button } from "@/components/ui/button";
+import { useDistrictStore } from "@/store/useDistrictStore";
 import { useGnomeStore } from "@/store/useGnomeStore";
 
 function GnomeDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { gnomes } = useGnomeStore();
+  const { districts } = useDistrictStore();
 
   const gnome = gnomes.find((g) => g.id.toString() === id);
+  const districtName = districts.find((d) => d.id === gnome?.districtId)?.name;
 
   if (!gnome) {
     return <p className="text-white">Nie znaleziono krasnala o ID {id}</p>;
@@ -29,13 +33,22 @@ function GnomeDetail() {
           className="w-32 h-32 object-cover rounded"
         />
         <div className="flex flex-col justify-between h-32">
-          <div className="text-3xl font-bold text-center">{gnome.name}</div>
+          <div className="text-2xl font-bold text-center">{gnome.name}</div>
           <div className="text-sm text-gray-300 text-center">
-            {gnome.districtId}
+            {districtName || "Brak przypisanej dzielnicy"}
           </div>
-          <div className="text-m">{gnome.location}</div>
-          <div className="text-m">{gnome.creationDate}</div>
-          <div className="text-m">{gnome.name}</div>
+          <div className="text-m flex flex-row gap-2">
+            {" "}
+            <img src={UserIcon} alt="location" className="w-6 h-6" />
+            {gnome.location}
+          </div>
+          <div className="text-m flex flex-row gap-2">
+            <img src={UserIcon} alt="date" className="w-6 h-6" />
+            {new Date(gnome.creationDate).toLocaleDateString()}
+          </div>
+          <div className="text-m flex flex-row gap-2">
+            <img src={UserIcon} alt="users" className="w-6 h-6" />0 osób
+          </div>
         </div>
       </div>
       <div className="flex flex-row justify-center">
