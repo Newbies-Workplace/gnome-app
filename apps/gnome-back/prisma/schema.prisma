@@ -102,7 +102,7 @@ model Building {
   longitude  Float
   district    District?    @relation(fields: [districtId], references: [id])
   districtId  Int?
-  type       BuildingType
+  type       BuildingType @default(MINE)
   createdAt  DateTime     @default(now())
   Owner      User         @relation(fields: [ownerId], references: [id])
   ownerId    String

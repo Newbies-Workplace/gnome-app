@@ -109,7 +109,7 @@ export interface BuildingResponse {
   latitude: number;
   longitude: number;
   districtId: number;
-  Type: string;
+  type: string;
   createdAt: Date;
   ownerId: string;
 }

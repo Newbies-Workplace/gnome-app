@@ -8,6 +8,7 @@ import {
 import { Building, UserRole } from "@prisma/client";
 import { CreateBuildingRequest } from "@repo/shared/requests";
 import { BuildingResponse } from "@repo/shared/responses";
+import { distance, featureCollection, nearestPoint, point } from "@turf/turf";
 import { create } from "domain";
 import { identity } from "rxjs";
 import { User } from "@/auth/decorators/jwt-user.decorator";
@@ -17,6 +18,13 @@ import { PrismaService } from "@/db/prisma.service";
 export class BuildingsService {
   constructor(private readonly prismaService: PrismaService) {}
   async CreateBuilding(data: CreateBuildingRequest, user: JwtUser) {
+    const buildings = await this.prismaService.building.findMany({
+      select: {
+        latitude: true,
+        longitude: true,
+      },
+    });
+
     const healthByType = {
       MINE: 75,
       WATCHTOWER: 100,
@@ -26,7 +34,6 @@ export class BuildingsService {
         userId: user.id,
       },
     });
-    console.log(resources.berries, resources.sticks, resources.stones);
     if (
       resources.berries > 15 &&
       resources.sticks > 15 &&
@@ -42,6 +49,18 @@ export class BuildingsService {
           stones: { increment: -15 },
         },
       });
+      const newPoint = point([data.longitude, data.latitude]);
+      const oldPoints = buildings.map((b) => point([b.longitude, b.latitude]));
+      if (oldPoints.length > 0) {
+        const collection = featureCollection(oldPoints);
+        const nearest = nearestPoint(newPoint, collection);
+
+        const dist = distance(newPoint, nearest, { units: "meters" });
+        console.log(dist, "metrow");
+        if (dist < 50) {
+          throw new ForbiddenException("Za blisko innego budynku");
+        }
+      }
 
       return this.prismaService.building.create({
         data: {
@@ -50,7 +69,7 @@ export class BuildingsService {
           latitude: data.latitude,
           districtId: data.districtId,
           longitude: data.longitude,
-          Type: data.type,
+          type: data.type,
           ownerId: user.id,
         },
       });
@@ -93,17 +112,16 @@ export class BuildingsService {
   ): Promise<BuildingResponse> {
     const building = await this.prismaService.building.findUnique({
       where: { id: id },
-      select: { health: true, Type: true },
+      select: { health: true, type: true },
     });
     if (!building) {
       throw new NotFoundException("Nie ma takiego budynku");
     }
     let maxHealth = 0;
-    console.log(building.Type);
-    if (building.Type === "MINE") {
+    if (building.type === "MINE") {
       maxHealth = 75;
     }
-    if (building.Type === "WATCHTOWER") {
+    if (building.type === "WATCHTOWER") {
       maxHealth = 100;
     }
     const newHealth = Math.min(building.health + gnomeIncrement * 2, maxHealth);
