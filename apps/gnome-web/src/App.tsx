@@ -1,8 +1,10 @@
 import { useEffect } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import AdminPage from "@/pages/admin";
+import BuildDetail from "@/pages/builds/builds-detail-panel";
 import BuildsPanel from "@/pages/builds/builds-panel";
 import EventsPanel from "@/pages/events/events-panel";
+import GnomeEvents from "@/pages/events/gnome-event";
 import GnomesPanel from "@/pages/gnomes/gnomes-panel";
 import HomePage from "@/pages/home";
 import LoginPage from "@/pages/login";
@@ -46,8 +48,16 @@ const router = createBrowserRouter([
         element: <BuildsPanel />,
       },
       {
+        path: "builds/:id",
+        element: <BuildDetail />,
+      },
+      {
         path: "events",
         element: <EventsPanel />,
+      },
+      {
+        path: "events/:id",
+        element: <GnomeEvents />,
       },
       {
         path: "users",

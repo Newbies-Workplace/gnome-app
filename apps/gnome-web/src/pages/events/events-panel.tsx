@@ -10,7 +10,7 @@ function EventsPanel() {
         Wydarzenie krasnala
       </Button>
       <Button className="text-center text-white font-Afacad bg-primary-color border-none rounded-4xl">
-        Wydarenie dzielnicowe
+        Wydarzenie dzielnicowe
       </Button>
       <Button className="text-center text-white font-Afacad bg-primary-color border-none rounded-4xl">
         Wydarzenie miejscowe

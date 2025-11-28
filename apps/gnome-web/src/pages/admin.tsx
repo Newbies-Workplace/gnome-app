@@ -31,9 +31,9 @@ export default function AdminPage() {
   };
 
   const currentTab = (() => {
-    if (location.pathname.endsWith("/users")) return "users";
-    if (location.pathname.endsWith("/builds")) return "builds";
-    if (location.pathname.endsWith("/events")) return "events";
+    if (location.pathname.startsWith("/admin/users")) return "users";
+    if (location.pathname.startsWith("/admin/builds")) return "builds";
+    if (location.pathname.startsWith("/admin/events")) return "events";
     return "gnomes"; // default tab
   })();
 
