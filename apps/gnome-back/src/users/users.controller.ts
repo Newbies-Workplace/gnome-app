@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Body,
   Controller,
+  Delete,
   FileTypeValidator,
   Get,
   MaxFileSizeValidator,
@@ -87,5 +88,11 @@ export class UsersController {
   @UseGuards(JwtGuard)
   async getUserResources(@User() user: JwtUser): Promise<UserResource> {
     return await this.usersService.getUserResources(user.id);
+  }
+
+  @Delete("@me")
+  @UseGuards(JwtGuard)
+  async deleteUserAccount(@User() user: JwtUser) {
+    return this.usersService.deleteAccount(user.id);
   }
 }

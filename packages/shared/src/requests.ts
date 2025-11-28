@@ -82,6 +82,12 @@ export class CreateInteractionRequest {
   gnomeId!: string;
 }
 
+export class CreateUserAchievementRequest {
+  @IsString()
+  @IsNotEmpty()
+  achievementId!: string;
+}
+
 export class AddFriendRequest {
   @Matches(/^[0-9]{16}$/)
   inviteCode!: string;
