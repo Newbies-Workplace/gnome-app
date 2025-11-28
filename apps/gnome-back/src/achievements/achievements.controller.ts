@@ -24,7 +24,7 @@ import { AchievementsService } from "./achievements.service";
 export class AchievementsController {
   constructor(private readonly achievementsService: AchievementsService) {}
 
-  @Get("@me/achievements")
+  @Get("@me")
   @UseGuards(JwtGuard)
   async getMyAchievements(
     @User() user: JwtUser,
