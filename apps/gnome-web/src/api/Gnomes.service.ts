@@ -20,9 +20,18 @@ const removeGnome = async (id: string): Promise<void> => {
   await axiosInstance.delete(`/gnomes/${id}`);
 };
 
+const updateGnome = async (
+  id: string,
+  gnome: Partial<GnomeResponse>,
+): Promise<GnomeResponse> => {
+  const response = await axiosInstance.put(`/gnomes/${id}`, gnome);
+  return response.data;
+};
+
 export const GnomesService = {
   getGnomes,
   getGnomeById,
   addGnome,
   removeGnome,
+  updateGnome,
 };

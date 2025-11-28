@@ -10,6 +10,7 @@ interface GnomeState {
   fetchGnomes: () => Promise<void>;
   addGnome: (gnome: GnomeResponse) => Promise<void>;
   removeGnome: (id: string) => Promise<void>;
+  updateGnome: (id: string, gnome: Partial<GnomeResponse>) => Promise<void>;
 }
 
 export const useGnomeStore = create<GnomeState>((set) => ({
@@ -48,6 +49,19 @@ export const useGnomeStore = create<GnomeState>((set) => ({
       }));
     } catch (error) {
       console.error("Remove gnome error:", error);
+    }
+  },
+
+  updateGnome: async (id, gnome) => {
+    try {
+      const updated = await GnomesService.updateGnome(id, gnome);
+      set((state) => ({
+        gnomes: state.gnomes.map((g) =>
+          g.id === id ? { ...g, ...updated } : g,
+        ),
+      }));
+    } catch (error) {
+      console.error("Update gnome error:", error);
     }
   },
 }));

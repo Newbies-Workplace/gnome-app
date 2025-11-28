@@ -1,9 +1,11 @@
 import { useEffect } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import GnomeDetails from "@/components/ui/admin/gnome-details";
 import AdminPage from "@/pages/admin";
 import BuildsPanel from "@/pages/builds/builds-panel";
 import EventsPanel from "@/pages/events/events-panel";
+import GnomeDetails from "@/pages/gnomes/[gnome-id]";
+import GnomeEdit from "@/pages/gnomes/[gnome-id]-edit";
+import GnomeAdd from "@/pages/gnomes/gnome-add";
 import GnomesPanel from "@/pages/gnomes/gnomes-panel";
 import HomePage from "@/pages/home";
 import LoginPage from "@/pages/login";
@@ -41,6 +43,14 @@ const router = createBrowserRouter([
       {
         index: true,
         element: <GnomesPanel />,
+      },
+      {
+        path: "gnomes/add",
+        element: <GnomeAdd />,
+      },
+      {
+        path: "gnomes/edit/:id",
+        element: <GnomeEdit />,
       },
       {
         path: "gnomes/:id",

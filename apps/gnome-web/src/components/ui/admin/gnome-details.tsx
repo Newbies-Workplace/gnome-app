@@ -8,7 +8,7 @@ import { useGnomeStore } from "@/store/useGnomeStore";
 function GnomeDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { gnomes } = useGnomeStore();
+  const { gnomes, removeGnome } = useGnomeStore();
   const { districts } = useDistrictStore();
 
   const gnome = gnomes.find((g) => g.id.toString() === id);
@@ -17,6 +17,20 @@ function GnomeDetail() {
   if (!gnome) {
     return <p className="text-white">Nie znaleziono krasnala o ID {id}</p>;
   }
+
+  const handleEdit = () => {
+    navigate(`/admin/gnomes/edit/${id}`);
+  };
+
+  const handleDelete = async () => {
+    const confirmed = window.confirm(
+      "Czy na pewno chcesz usunąć tego krasnala?",
+    );
+    if (!confirmed) return;
+
+    await removeGnome(gnome.id);
+    navigate("/admin");
+  };
 
   return (
     <div className="text-white p-4 font-Afacad flex flex-col gap-4">
@@ -30,7 +44,7 @@ function GnomeDetail() {
         <img
           src={gnome.imageUrl || PlaceHolder}
           alt={gnome.name}
-          className="w-32 h-32 object-cover rounded"
+          className="w-32 h-40 object-cover rounded"
         />
         <div className="flex flex-col justify-between h-32">
           <div className="text-2xl font-bold text-center">{gnome.name}</div>
@@ -38,7 +52,6 @@ function GnomeDetail() {
             {districtName || "Brak przypisanej dzielnicy"}
           </div>
           <div className="text-m flex flex-row gap-2">
-            {" "}
             <img src={UserIcon} alt="location" className="w-6 h-6" />
             {gnome.location}
           </div>
@@ -51,11 +64,17 @@ function GnomeDetail() {
           </div>
         </div>
       </div>
-      <div className="flex flex-row justify-center">
-        <Button className="w-1/2 text-center text-white font-Afacad bg-primary-color border-none rounded-4xl">
+      <div className="flex flex-row justify-center gap-4">
+        <Button
+          onClick={handleEdit}
+          className="w-1/2 text-center text-white font-Afacad bg-primary-color border-none rounded-4xl"
+        >
           Edytuj gnoma
         </Button>
-        <Button className="w-1/2 text-center text-white font-Afacad bg-primary-color border-none rounded-4xl">
+        <Button
+          onClick={handleDelete}
+          className="w-1/2 text-center text-white font-Afacad bg-primary-color border-none rounded-4xl"
+        >
           Usuń gnoma
         </Button>
       </div>
