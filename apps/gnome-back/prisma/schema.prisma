@@ -54,7 +54,6 @@ model Achievement {
   id          String            @id @unique @default(uuid())
   name        String
   description String
-  pictureUrl  String
   users       UserAchievement[]
 }
 
