@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import AdminPage from "@/pages/admin";
 import BuildsPanel from "@/pages/builds/builds-panel";
@@ -6,7 +7,9 @@ import GnomesPanel from "@/pages/gnomes/gnomes-panel";
 import HomePage from "@/pages/home";
 import LoginPage from "@/pages/login";
 import LoginCallback from "@/pages/login-callback";
+import { RequireAuth } from "@/pages/requireAuth";
 import UsersPanel from "@/pages/users/users-panel";
+import { useAuthStore } from "./store/useAuthStore";
 
 const router = createBrowserRouter([
   {
@@ -28,7 +31,11 @@ const router = createBrowserRouter([
   },
   {
     path: "admin",
-    element: <AdminPage />,
+    element: (
+      <RequireAuth>
+        <AdminPage />
+      </RequireAuth>
+    ),
     children: [
       {
         index: true,
@@ -51,6 +58,11 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
+  const init = useAuthStore((s) => s.init);
+
+  useEffect(() => {
+    void init();
+  }, []);
   return <RouterProvider router={router} />;
 }
 

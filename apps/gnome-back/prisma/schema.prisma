@@ -59,14 +59,13 @@ model Achievement {
 }
 
 model UserAchievement {
-  id            String      @id @default(uuid())
   userId        String
   achievementId String
   earnedAt      DateTime    @default(now())
-  user          User        @relation(fields: [userId], references: [id])
+  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
   achievement   Achievement @relation(fields: [achievementId], references: [id])
 
-  @@unique([userId, achievementId])
+  @@id([userId, achievementId])
 }
 
 model Report {
@@ -81,8 +80,8 @@ model Report {
 
 model GnomeInteraction {
   id              String   @id @unique @default(uuid())
-  user            User     @relation(fields: [userId], references: [id])
-  gnome           Gnome    @relation(fields: [gnomeId], references: [id])
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  gnome           Gnome    @relation(fields: [gnomeId], references: [id], onDelete: Cascade)
   interactionDate DateTime
   userId          String
   gnomeId         String
@@ -90,8 +89,8 @@ model GnomeInteraction {
 
 model Friendship {
   id         String @id @unique @default(cuid())
-  sender     User   @relation("sender", fields: [senderId], references: [id])
-  receiver   User   @relation("receiver", fields: [receiverId], references: [id])
+  sender     User   @relation("sender", fields: [senderId], references: [id], onDelete: Cascade)
+  receiver   User   @relation("receiver", fields: [receiverId], references: [id], onDelete: Cascade)
   senderId   String
   receiverId String
 }
@@ -105,14 +104,14 @@ model Building {
   District   String
   Type       BuildingType
   createdAt  DateTime     @default(now())
-  Owner      User         @relation(fields: [ownerId], references: [id])
+  Owner      User         @relation(fields: [ownerId], references: [id], onDelete: Cascade)
   ownerId    String
 }
 
 model BuildingInteraction {
   id              String                  @id @unique @default(cuid())
   interactionType BuildingInteractionType
-  user            User                    @relation(fields: [userId], references: [id])
+  user            User                    @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId          String
   createdAt       DateTime                @default(now())
   amount          Int // ilosc surowcow przy wzmocnieniu/ilosc gnomow przy ataku
