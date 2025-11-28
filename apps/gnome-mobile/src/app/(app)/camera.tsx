@@ -37,7 +37,7 @@ const CameraScreen = () => {
     navigation.setOptions({
       headerLeft: () => (
         <TouchableOpacity className="p-5" onPress={() => router.back()}>
-          <BackIcon className="w-7 h-7" />
+          <BackIcon className="w-7 h-7 text-tekst" />
         </TouchableOpacity>
       ),
       headerTitle: () => (
@@ -60,10 +60,10 @@ const CameraScreen = () => {
           </Text>
         </TouchableOpacity>
       ),
+      headerBackground: () => (
+        <View className="absolute inset-0 bg-primary-foreground" />
+      ),
       headerTitleAlign: "center",
-      headerStyle: {
-        backgroundColor: "#131413",
-      },
       headerShadowVisible: false,
       headerShown: true,
     });
@@ -149,7 +149,7 @@ const CameraScreen = () => {
   };
 
   return (
-    <SafeAreaView className="flex-1 items-center bg-background p-4">
+    <SafeAreaView className="flex-1 items-center bg-primary-foreground p-4">
       <View className=" w-full h-[80%] rounded-2xl border-4 border-red-500 overflow-hidden flex justify-center items-center p-4">
         {device && hasPermission ? (
           <Camera
@@ -162,7 +162,7 @@ const CameraScreen = () => {
           />
         ) : (
           <View className="flex-1 justify-center items-center">
-            <Text className="text-white text-lg">No camera available</Text>
+            <Text className="text-tekst text-lg">No camera available</Text>
           </View>
         )}
       </View>
