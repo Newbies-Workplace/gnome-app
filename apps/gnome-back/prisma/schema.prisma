@@ -59,13 +59,14 @@ model Achievement {
 }
 
 model UserAchievement {
+  id            String      @id @default(uuid())
   userId        String
   achievementId String
   earnedAt      DateTime    @default(now())
-  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user          User        @relation(fields: [userId], references: [id])
   achievement   Achievement @relation(fields: [achievementId], references: [id])
 
-  @@id([userId, achievementId])
+  @@unique([userId, achievementId])
 }
 
 model Report {
