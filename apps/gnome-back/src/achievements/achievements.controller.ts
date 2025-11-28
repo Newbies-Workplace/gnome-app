@@ -17,45 +17,47 @@ import { NotFoundError } from "rxjs";
 import { User } from "@/auth/decorators/jwt-user.decorator";
 import { JwtGuard } from "@/auth/guards/jwt.guard";
 import { JwtUser } from "@/auth/types/jwt-user";
+import { Role } from "@/role/role.decorator";
 import { AchievementsService } from "./achievements.service";
 
 @Controller("achievements")
 export class AchievementsController {
   constructor(private readonly achievementsService: AchievementsService) {}
 
-  // Endpointy niżej
-
-  @Get(":id")
-  @UseGuards()
-  async getAchievementData(
-    @Param("id") achievementId: string,
-  ): Promise<AchievementDataResponse> {
-    const achievement =
-      await this.achievementsService.getAchievementData(achievementId);
-    if (!achievement) {
-      throw new NotFoundException("Achievement not found");
-    }
-    return achievement;
-  }
-
-  @Get("user/:id/achievements")
-  @UseGuards()
-  async getUserAchievements(
-    @Param("id") userId: string,
+  @Get("@me/achievements")
+  @UseGuards(JwtGuard)
+  async getMyAchievements(
+    @User() user: JwtUser,
   ): Promise<UserAchievementResponse[]> {
-    const achievements =
-      await this.achievementsService.getUserAchievements(userId);
+    const achievements = await this.achievementsService.getUserAchievements(
+      user.id,
+    );
 
     return achievements;
   }
 
-  @Post()
+  @Get("@me/:id")
   @UseGuards(JwtGuard)
+  async getAchievementData(
+    @Param("id") achievementId: string,
+    @User() user: JwtUser,
+  ): Promise<UserAchievementResponse> {
+    const userAchievement = await this.achievementsService.getAchievementData(
+      user.id,
+      achievementId,
+    );
+
+    return userAchievement;
+  }
+
+  @Post("")
+  @UseGuards(JwtGuard)
+  @Role(["ADMIN"])
   async giveAchievement(
     @User() user: JwtUser,
     @Body() body: CreateUserAchievementRequest,
   ): Promise<UserAchievementResponse> {
-    const achievement = await this.achievementsService.getAchievementData(
+    const achievement = await this.achievementsService.getAchievement(
       body.achievementId,
     );
 

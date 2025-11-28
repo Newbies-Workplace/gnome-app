@@ -9,25 +9,24 @@ import { PrismaService } from "@/db/prisma.service";
 export class AchievementsService {
   constructor(private readonly prismaService: PrismaService) {}
 
-  async getAchievementData(id: string): Promise<AchievementDataResponse> {
-    const achievement = await this.prismaService.achievement.findUnique({
-      where: { id },
+  async getAchievementData(
+    userId: string,
+    achievementId: string,
+  ): Promise<UserAchievementResponse> {
+    const achievement = await this.prismaService.userAchievement.findFirst({
+      where: {
+        achievementId: achievementId,
+        userId: userId,
+      },
     });
 
     if (!achievement) {
-      throw new NotFoundException("Achievement not found");
+      throw new NotFoundException("Achievement not found in user");
     }
 
-    const collection = await this.prismaService.userAchievement.findMany({
-      where: { achievementId: id },
-    });
-
     return {
-      id: achievement.id,
-      name: achievement.name,
-      description: achievement.description,
-      pictureUrl: achievement.pictureUrl,
-      users: collection.length,
+      achievementId: achievement.achievementId,
+      earnedAt: achievement.earnedAt,
     };
   }
 
@@ -40,6 +39,7 @@ export class AchievementsService {
 
     return achievements.map((a) => ({
       achievementId: a.achievementId,
+      earnedAt: a.earnedAt,
     }));
   }
 
@@ -56,6 +56,28 @@ export class AchievementsService {
 
     return {
       achievementId: achievement.achievementId,
+      earnedAt: achievement.earnedAt,
+    };
+  }
+
+  async getAchievement(id: string): Promise<AchievementDataResponse> {
+    const achievement = await this.prismaService.achievement.findUnique({
+      where: { id },
+    });
+
+    if (!achievement) {
+      throw new NotFoundException("Achievement not found");
+    }
+
+    const collection = await this.prismaService.userAchievement.findMany({
+      where: { achievementId: id },
+    });
+
+    return {
+      id: achievement.id,
+      name: achievement.name,
+      description: achievement.description,
+      users: collection.length,
     };
   }
 }
