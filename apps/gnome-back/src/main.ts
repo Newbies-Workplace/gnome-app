@@ -9,7 +9,11 @@ async function bootstrap() {
 
   app.use(morgan("tiny"));
   app.setGlobalPrefix("api/rest/v1");
-  app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalPipes(
+    new ValidationPipe({
+      transform: true,
+    }),
+  );
   app.enableCors({
     origin: "*",
     allowedHeaders: ["Authorization", "Content-Type"],

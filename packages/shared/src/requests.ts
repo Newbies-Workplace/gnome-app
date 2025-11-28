@@ -1,6 +1,8 @@
 import { Type } from "class-transformer";
 import {
   IsDate,
+  IsEnum,
+  IsInt,
   IsLatitude,
   IsLongitude,
   IsNotEmpty,
@@ -8,6 +10,7 @@ import {
   IsString,
   IsUrl,
   IsUUID,
+  isNotEmpty,
   Matches,
 } from "class-validator";
 
@@ -96,4 +99,39 @@ export class AddFriendRequest {
 export class DeleteFriend {
   @IsUUID()
   friendId!: string;
+}
+
+export enum BuildingType {
+  WATCHTOWER = "WATCHTOWER",
+  MINE = "MINE",
+}
+export class CreateBuildingRequest {
+  @Type(() => Number)
+  @IsInt()
+  @IsNotEmpty()
+  gnomeCount!: number;
+
+  @Type(() => Number)
+  @IsLatitude()
+  @IsNotEmpty()
+  latitude!: number;
+
+  @Type(() => Number)
+  @IsLongitude()
+  @IsNotEmpty()
+  longitude!: number;
+  @Type(() => Number)
+  @IsInt()
+  @IsNotEmpty()
+  districtId!: number;
+
+  @IsEnum(BuildingType)
+  @IsNotEmpty()
+  type!: BuildingType;
+}
+export class updateBuildingRequest {
+  @Type(() => Number)
+  @IsInt()
+  @IsNotEmpty()
+  gnomeCount!: number;
 }
