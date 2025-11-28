@@ -68,7 +68,7 @@ const Compass: React.FC = () => {
   }, []);
 
   return (
-    <View style={styles.container} className={"bg-primary-foreground"}>
+    <View style={styles.container} className={"bg-background"}>
       <Animated.View style={[styles.compass, { transform: [{ translateX }] }]}>
         <Svg
           width={COMPASS_WIDTH * 3}
