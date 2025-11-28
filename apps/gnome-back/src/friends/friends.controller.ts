@@ -5,6 +5,7 @@ import {
   Delete,
   Get,
   NotFoundException,
+  Param,
   Post,
   UseGuards,
 } from "@nestjs/common";
@@ -13,6 +14,7 @@ import { AddFriendRequest, DeleteFriend } from "@repo/shared/requests";
 import {
   FriendResponse,
   FriendSearchResponse,
+  UserFriendResponse,
   UserResponse,
 } from "@repo/shared/responses";
 import { User } from "@/auth/decorators/jwt-user.decorator";
@@ -33,6 +35,15 @@ export class FriendsController {
   async findUserFriends(@User() user: JwtUser): Promise<FriendResponse[]> {
     const myFriends = await this.friendsService.findUserFriends(user.id);
     return myFriends;
+  }
+
+  @Get("@me/:id")
+  @UseGuards(JwtGuard)
+  async getUserById(
+    @Param("id") id: string,
+    @User() user: JwtUser,
+  ): Promise<UserFriendResponse> {
+    return this.friendsService.getFriendData(id, user.id);
   }
 
   @Post("@me")
