@@ -111,7 +111,17 @@ export interface DistrictsResponse {
   id: number;
   name: string;
 }
-
+export interface BuildingResponse {
+  id: string;
+  gnomeCount: number;
+  health: number;
+  latitude: number;
+  longitude: number;
+  districtId: number;
+  type: string;
+  createdAt: Date;
+  ownerId: string;
+}
 export interface AchievementDataResponse {
   id: string;
   name: string;
