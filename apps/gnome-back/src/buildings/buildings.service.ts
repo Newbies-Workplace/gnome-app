@@ -14,6 +14,19 @@ import { identity } from "rxjs";
 import { User } from "@/auth/decorators/jwt-user.decorator";
 import { JwtUser } from "@/auth/types/jwt-user";
 import { PrismaService } from "@/db/prisma.service";
+
+const BUILDINGS = [
+  {
+    type: "MINE",
+    costs: { berries: 15, sticks: 15, stones: 15 },
+    maxHealth: 75,
+  },
+  {
+    type: "WATCHTOWER",
+    costs: { berries: 15, sticks: 15, stones: 15 },
+    maxHealth: 100,
+  },
+];
 @Injectable()
 export class BuildingsService {
   constructor(private readonly prismaService: PrismaService) {}
@@ -24,29 +37,26 @@ export class BuildingsService {
         longitude: true,
       },
     });
-
-    const healthByType = {
-      MINE: 75,
-      WATCHTOWER: 100,
-    };
+    const buildingData = BUILDINGS.find((b) => b.type === data.type);
+    const { berries, sticks, stones } = buildingData.costs;
     const resources = await this.prismaService.userResource.findUnique({
       where: {
         userId: user.id,
       },
     });
     if (
-      resources.berries > 15 &&
-      resources.sticks > 15 &&
-      resources.stones > 15
+      resources.berries > berries &&
+      resources.sticks > sticks &&
+      resources.stones > stones
     ) {
       const removeResources = await this.prismaService.userResource.update({
         where: {
           userId: user.id,
         },
         data: {
-          berries: { increment: -15 },
-          sticks: { increment: -15 },
-          stones: { increment: -15 },
+          berries: { decrement: berries },
+          sticks: { decrement: sticks },
+          stones: { decrement: stones },
         },
       });
       const newPoint = point([data.longitude, data.latitude]);
@@ -65,7 +75,7 @@ export class BuildingsService {
       return this.prismaService.building.create({
         data: {
           gnomeCount: data.gnomeCount,
-          health: healthByType[data.type],
+          health: buildingData.maxHealth,
           latitude: data.latitude,
           districtId: data.districtId,
           longitude: data.longitude,
@@ -117,13 +127,8 @@ export class BuildingsService {
     if (!building) {
       throw new NotFoundException("Nie ma takiego budynku");
     }
-    let maxHealth = 0;
-    if (building.type === "MINE") {
-      maxHealth = 75;
-    }
-    if (building.type === "WATCHTOWER") {
-      maxHealth = 100;
-    }
+    const buildingData = BUILDINGS.find((b) => b.type === building.type);
+    const maxHealth = buildingData.maxHealth;
     const newHealth = Math.min(building.health + gnomeIncrement * 2, maxHealth);
     return await this.prismaService.building.update({
       where: {
