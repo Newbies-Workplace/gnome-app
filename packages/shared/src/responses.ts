@@ -6,6 +6,15 @@ export interface UserResponse {
   inviteCode: string;
 }
 
+export interface UserFriendResponse {
+  id: string;
+  name: string;
+  pictureUrl: string;
+  gnomeInteractions: InteractionResponse[];
+  achievements: UserAchievementResponse[];
+  inviteCode: string;
+}
+
 export interface UserPatchResponse {
   id: string;
   name: string;
