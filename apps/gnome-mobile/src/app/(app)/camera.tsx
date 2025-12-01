@@ -1,4 +1,5 @@
 import * as MediaLibrary from "expo-media-library";
+import * as Network from "expo-network";
 import { useLocalSearchParams, useNavigation, useRouter } from "expo-router";
 import { useEffect, useRef, useState } from "react";
 import {
@@ -16,10 +17,14 @@ import {
   useCameraDevices,
 } from "react-native-vision-camera";
 import BackIcon from "@/assets/icons/arrow-left.svg";
+import { useGnomeImageStore } from "@/store/useGnomeImageStore";
 import { useGnomeStore } from "@/store/useGnomeStore";
+import { useOfflineInteractionStore } from "@/store/useOfflineInteractionStore";
 
 const CameraScreen = () => {
   const { addInteraction } = useGnomeStore();
+  const { setImageForGnome } = useGnomeImageStore();
+  const { addPendingInteraction } = useOfflineInteractionStore();
   const { gnomeid } = useLocalSearchParams<{ gnomeid: string }>();
   const devices = useCameraDevices();
   const [device, setDevice] = useState<CameraDevice | null>(null);
@@ -37,7 +42,7 @@ const CameraScreen = () => {
     navigation.setOptions({
       headerLeft: () => (
         <TouchableOpacity className="p-5" onPress={() => router.back()}>
-          <BackIcon className="w-7 h-7" />
+          <BackIcon className="w-7 h-7 text-tekst" />
         </TouchableOpacity>
       ),
       headerTitle: () => (
@@ -60,10 +65,10 @@ const CameraScreen = () => {
           </Text>
         </TouchableOpacity>
       ),
+      headerBackground: () => (
+        <View className="absolute inset-0 bg-primary-foreground" />
+      ),
       headerTitleAlign: "center",
-      headerStyle: {
-        backgroundColor: "#131413",
-      },
       headerShadowVisible: false,
       headerShown: true,
     });
@@ -96,14 +101,11 @@ const CameraScreen = () => {
         flash: flashMode,
       });
 
-      const photoPath = photo.path.startsWith("file://")
-        ? photo.path
-        : `file://${photo.path}`;
       console.log("Media permission:", mediaPermissionResponse);
 
       if (mediaPermissionResponse?.status === "granted") {
         try {
-          const asset = await MediaLibrary.createAssetAsync(photoPath);
+          const asset = await MediaLibrary.createAssetAsync(photo.path);
           const albumName = "GnomeCollection";
 
           let album = await MediaLibrary.getAlbumAsync(albumName);
@@ -117,17 +119,31 @@ const CameraScreen = () => {
           } else {
             await MediaLibrary.addAssetsToAlbumAsync([asset], album.id, false);
           }
-
           console.log("Saved to album: ", asset.uri);
+
+          setImageForGnome({
+            gnomeId: gnomeid,
+            assetUri: asset.uri,
+          });
         } catch (error) {
           console.error("Error saving photo: ", error);
         }
       }
-      await addInteraction(gnomeid).catch(() => {
-        ToastAndroid.show(
-          "Nie udało się zapisać interakcji. Spróbuj później.",
-          ToastAndroid.LONG,
-        );
+      await addInteraction(gnomeid).catch(async () => {
+        // Zapisywanie interakcji gnoma w trybie offline
+        const net = await Network.getNetworkStateAsync();
+        if (!net.isConnected || net.isInternetReachable === false) {
+          await addPendingInteraction(gnomeid);
+          ToastAndroid.show(
+            "Zapisano interakcję w trybie offline",
+            ToastAndroid.SHORT,
+          );
+        } else {
+          ToastAndroid.show(
+            "Nie udało się zapisać interakcji. Spróbuj później.",
+            ToastAndroid.SHORT,
+          );
+        }
       });
       router.push("/collection");
     }
@@ -149,7 +165,7 @@ const CameraScreen = () => {
   };
 
   return (
-    <SafeAreaView className="flex-1 items-center bg-background p-4">
+    <SafeAreaView className="flex-1 items-center bg-primary-foreground p-4">
       <View className=" w-full h-[80%] rounded-2xl border-4 border-red-500 overflow-hidden flex justify-center items-center p-4">
         {device && hasPermission ? (
           <Camera
@@ -162,7 +178,7 @@ const CameraScreen = () => {
           />
         ) : (
           <View className="flex-1 justify-center items-center">
-            <Text className="text-white text-lg">No camera available</Text>
+            <Text className="text-tekst text-lg">No camera available</Text>
           </View>
         )}
       </View>
