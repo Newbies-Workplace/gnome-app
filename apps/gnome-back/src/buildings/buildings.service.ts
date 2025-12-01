@@ -137,4 +137,35 @@ export class BuildingsService {
       },
     });
   }
+  private attackCounters = new Map<
+    string,
+    { count: number; timeout: NodeJS.Timeout }
+  >();
+
+  async attackBuilding(id: string) {
+    const entry = this.attackCounters.get(id);
+
+    if (!entry) {
+      const timeout = setTimeout(() => {
+        const data = this.attackCounters.get(id);
+        this.attackSummary(id, data.count);
+        this.attackCounters.delete(id);
+      }, 6000);
+      this.attackCounters.set(id, { count: 1, timeout });
+    } else {
+      entry.count += 1;
+    }
+    return { clicked: "True" };
+  }
+  async attackSummary(id: string, clicks: number): Promise<BuildingResponse> {
+    const damage = Math.min(clicks * 0.2);
+    return this.prismaService.building.update({
+      where: {
+        id: id,
+      },
+      data: {
+        health: { decrement: damage },
+      },
+    });
+  }
 }

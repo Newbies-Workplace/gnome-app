@@ -3,12 +3,10 @@ import {
   Controller,
   Delete,
   Get,
-  InternalServerErrorException,
   NotFoundException,
   Param,
   Patch,
   Post,
-  Req,
   UseGuards,
 } from "@nestjs/common";
 import { UserRole } from "@prisma/client";
@@ -78,5 +76,10 @@ export class BuildingsController {
       buildingId,
       body.gnomeCount,
     );
+  }
+  @Patch(":id/attack")
+  @UseGuards(JwtGuard)
+  async attackBuilding(@Param("id") buildingId: string) {
+    return await this.buildingsService.attackBuilding(buildingId);
   }
 }
