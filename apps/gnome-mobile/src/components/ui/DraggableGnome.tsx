@@ -38,6 +38,7 @@ const DraggableGnome: React.FC<DraggableGnomeProps> = ({ onUnlock }) => {
     <View className="flex-1 justify-end items-center pb-10">
       <View className="flex-row items-center bg-background rounded-full relative h-[70px] w-full">
         <DraggerIcon
+          className="text-tekst"
           style={{
             width: 232,
             height: 11,
@@ -45,7 +46,7 @@ const DraggableGnome: React.FC<DraggableGnomeProps> = ({ onUnlock }) => {
           }}
         />
         <View className="absolute right-[10px]">
-          <LockIcon width={40} height={40} />
+          <LockIcon width={40} height={40} className="text-tekst" />
         </View>
       </View>
 

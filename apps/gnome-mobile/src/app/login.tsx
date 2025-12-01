@@ -44,7 +44,7 @@ export default function SignInScreen() {
   };
 
   return (
-    <SafeAreaView className="flex-1 justify-end bg-primary-foreground">
+    <SafeAreaView className="flex-1 justify-end bg-background">
       <Image
         source={require("@/assets/images/bgmax.png")}
         className="w-full h-full flex-1 object-cover"
@@ -52,17 +52,17 @@ export default function SignInScreen() {
           transform: "scale(1)",
         }}
       />
-      <View className="bg-primary-foreground p-10">
+      <View className="bg-background p-10">
         <Text className="text-tekst text-2xl font-bold mb-5 text-center">
           Zaloguj się!
         </Text>
         <TextInput
-          className="bg-primary-foreground text-tekst w-full p-2.5 mb-2.5 rounded-3xl placeholder:text-[tekst] border border-[primary-foreground]"
+          className="text-tekst w-full p-2.5 mb-2.5 rounded-3xl placeholder:text-[tekst] border border-[primary-foreground]"
           placeholder="Email"
           secureTextEntry
         />
         <TextInput
-          className="bg-primary-foreground text-tekst w-full p-2.5 mb-2.5 rounded-3xl placeholder:text-[tekst] border border-[primary-foreground]"
+          className="text-tekst w-full p-2.5 mb-2.5 rounded-3xl placeholder:text-[tekst] border border-[primary-foreground]"
           placeholder="Hasło"
           secureTextEntry
         />

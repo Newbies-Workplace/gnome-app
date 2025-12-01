@@ -7549,6 +7549,11 @@ expo-modules-core@3.0.26:
   dependencies:
     invariant "^2.2.4"
 
+expo-network@^8.0.7:
+  version "8.0.7"
+  resolved "https://registry.yarnpkg.com/expo-network/-/expo-network-8.0.7.tgz#37f0ed984f4cc57482d3c1c3bf4d4eb3359e0b03"
+  integrity sha512-qmISU2tcSHmy1PD3Zd83XXxegcvGPlZSxACTSjE+bD9o3miQRT0HS5YP5MeH97PLiRduGpyUq38kMF5N//mqrQ==
+
 expo-router@~6.0.12:
   version "6.0.15"
   resolved "https://registry.yarnpkg.com/expo-router/-/expo-router-6.0.15.tgz#9ac3a0b83923588108856b43308b21301ea251ba"
