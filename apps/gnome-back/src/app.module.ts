@@ -7,6 +7,7 @@ import { PrismaModule } from "@/db/prisma.module";
 import { GnomesModule } from "@/gnomes/gnomes.module";
 import { UsersModule } from "@/users/users.module";
 import { AchievementsModule } from "./achievements/achievements.module";
+import { BuildingsModule } from "./buildings/buildings.module";
 import { DistrictsController } from "./districts/districts.controller";
 import { DistrictsModule } from "./districts/districts.module";
 import { DistrictsService } from "./districts/districts.service";
@@ -28,6 +29,7 @@ import { ReportsModule } from "./reports/reports.module";
     ReportsModule,
     MinioModule,
     DistrictsModule,
+    BuildingsModule,
     ThrottlerModule.forRoot({
       throttlers: [
         {
