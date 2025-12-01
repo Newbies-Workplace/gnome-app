@@ -1,3 +1,4 @@
+import BottomSheet from "@gorhom/bottom-sheet";
 import { GnomeResponse } from "@repo/shared/responses";
 import { LinearGradient } from "expo-linear-gradient";
 import * as Location from "expo-location";
@@ -137,6 +138,7 @@ const MapScreen = () => {
   });
   const [distance, setDistance] = useState<number>();
   const [closestGnomeId, setClosestGnomeId] = useState<string>();
+  const GnomeDetailsBottomSheetRef = useRef<BottomSheet>(null);
 
   const defaultRegion = {
     latitude: 51.109967,
@@ -291,6 +293,9 @@ const MapScreen = () => {
       >
         {filteredGnomes.map((gnome) => (
           <Marker
+            onPress={() => {
+              GnomeDetailsBottomSheetRef.current?.expand();
+            }}
             key={gnome.id}
             coordinate={{
               latitude: gnome.latitude,
@@ -324,6 +329,18 @@ const MapScreen = () => {
           colors={["transparent", "hsl(359 63.4% 56.1%)"]}
         />
       )}
+
+      <SafeAreaView>
+        <BottomSheet
+          ref={GnomeDetailsBottomSheetRef}
+          index={-1}
+          enablePanDownToClose
+          backgroundClassName={"bg-background"}
+          handleIndicatorClassName={"bg-tekst w-24 mt-2 rounded-lg"}
+        >
+          <Text>elo</Text>
+        </BottomSheet>
+      </SafeAreaView>
     </SafeAreaView>
   );
 };
