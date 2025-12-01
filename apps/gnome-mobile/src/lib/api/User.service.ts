@@ -8,6 +8,15 @@ const regenerateInviteCode = async () => {
     });
 };
 
+const deleteAccount = async () => {
+  return await axiosInstance
+    .delete("api/rest/v1/users/@me")
+    .then((response) => {
+      return response.data;
+    });
+};
+
 export const UserService = {
   regenerateInviteCode,
+  deleteAccount,
 };

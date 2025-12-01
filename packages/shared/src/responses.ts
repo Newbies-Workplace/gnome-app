@@ -4,7 +4,15 @@ export interface UserResponse {
   name: string;
   pictureUrl: string;
   inviteCode: string;
-  role: string;
+}
+
+export interface UserFriendResponse {
+  id: string;
+  name: string;
+  pictureUrl: string;
+  gnomeInteractions: InteractionResponse[];
+  achievements: UserAchievementResponse[];
+  inviteCode: string;
 }
 
 export interface UserPatchResponse {
@@ -101,4 +109,16 @@ export interface TeamResponse {
 export interface DistrictsResponse {
   id: number;
   name: string;
+}
+
+export interface AchievementDataResponse {
+  id: string;
+  name: string;
+  description: string;
+  users: number;
+}
+
+export interface UserAchievementResponse {
+  achievementId: string;
+  earnedAt: Date;
 }
