@@ -25,7 +25,7 @@ export const SettingsOption: React.FC<SettingsOptionProps> = ({
     >
       {/* Lewa strona: Ikona + Tekst */}
       <View className="flex flex-row items-center">
-        <Icon width={28} height={28} className="mr-3" />
+        <Icon width={28} height={28} className="mr-3 text-tekst" />
         <Text className="text-tekst text-lg ml-4 font-bold">{text}</Text>
       </View>
 
@@ -34,7 +34,7 @@ export const SettingsOption: React.FC<SettingsOptionProps> = ({
         {extraText && (
           <Text className="text-tekst/50 text-lg mr-3">{extraText}</Text>
         )}
-        <ArrowRight width={24} height={24} />
+        <ArrowRight width={24} height={24} className={"text-tekst"} />
       </View>
     </TouchableOpacity>
   );
