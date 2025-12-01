@@ -120,7 +120,7 @@ export interface BuildingResponse {
   type: string;
   createdAt: Date;
   ownerId: string;
-
+}
 export interface AchievementDataResponse {
   id: string;
   name: string;
