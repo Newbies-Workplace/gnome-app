@@ -9,9 +9,6 @@ import { Building, UserRole } from "@prisma/client";
 import { CreateBuildingRequest } from "@repo/shared/requests";
 import { BuildingResponse } from "@repo/shared/responses";
 import { distance, featureCollection, nearestPoint, point } from "@turf/turf";
-import { create } from "domain";
-import { identity } from "rxjs";
-import { User } from "@/auth/decorators/jwt-user.decorator";
 import { JwtUser } from "@/auth/types/jwt-user";
 import { PrismaService } from "@/db/prisma.service";
 
