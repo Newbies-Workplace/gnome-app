@@ -97,11 +97,12 @@ model Friendship {
 model Building {
   id         String       @id @unique @default(cuid())
   gnomeCount Int
-  Health     Int
+  health     Int
   latitude   Float
   longitude  Float
-  District   String
-  Type       BuildingType
+  district    District?    @relation(fields: [districtId], references: [id])
+  districtId  Int?
+  type       BuildingType @default(MINE)
   createdAt  DateTime     @default(now())
   Owner      User         @relation(fields: [ownerId], references: [id], onDelete: Cascade)
   ownerId    String
@@ -135,6 +136,7 @@ model District {
   minY   Float
   maxY   Float
   gnomes Gnome[]
+  buildings Building[]
 }
 
 enum UserRole {
