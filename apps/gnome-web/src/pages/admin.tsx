@@ -1,4 +1,5 @@
 import { GoogleMap, useJsApiLoader } from "@react-google-maps/api";
+import { useState } from "react";
 import { NavLink, Outlet, useLocation } from "react-router-dom";
 import BuildsIcon from "@/assets/icons/builds-icon.svg";
 import EventsIcon from "@/assets/icons/events-icon.svg";
@@ -14,6 +15,11 @@ export default function AdminPage() {
     id: "google-map-script",
     googleMapsApiKey: import.meta.env.VITE_PUBLIC_GOOGLE_MAPS_API_KEY,
   });
+
+  const [selectedPosition, setSelectedPosition] = useState<{
+    lat: number;
+    lng: number;
+  } | null>(null);
 
   if (loadError) {
     console.error("Error while loading google map:", loadError);
@@ -63,6 +69,13 @@ export default function AdminPage() {
               center={{ lat: 51.105, lng: 17.038 }}
               zoom={12}
               options={mapOptions}
+              onClick={(e) => {
+                const lat = e.latLng?.lat();
+                const lng = e.latLng?.lng();
+                if (lat && lng && currentTab === "gnomes") {
+                  setSelectedPosition({ lat, lng });
+                }
+              }}
             />
           )}
         </div>
@@ -77,19 +90,16 @@ export default function AdminPage() {
                   <img src={GnomeIcon} alt="gnome" />
                 </NavLink>
               </TabsTrigger>
-
               <TabsTrigger value="builds">
                 <NavLink to="/admin/builds">
                   <img src={BuildsIcon} alt="builds" />
                 </NavLink>
               </TabsTrigger>
-
               <TabsTrigger value="events">
                 <NavLink to="/admin/events">
                   <img src={EventsIcon} alt="events" />
                 </NavLink>
               </TabsTrigger>
-
               <TabsTrigger value="users">
                 <NavLink to="/admin/users">
                   <img src={UsersIcon} alt="users" />
@@ -100,7 +110,7 @@ export default function AdminPage() {
 
           {/* Podstrony */}
           <div className="flex-1 p-4 overflow-y-auto">
-            <Outlet />
+            <Outlet context={{ selectedPosition }} />
           </div>
         </div>
       </div>
