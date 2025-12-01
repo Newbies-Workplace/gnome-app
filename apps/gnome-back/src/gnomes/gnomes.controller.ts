@@ -69,14 +69,23 @@ export class GnomesController {
 
   @Get(":id/interactions/count")
   @UseGuards(JwtGuard)
-  async getInteractionCount(@Param("id") gnomeId: string): Promise<number> {
-    const interactionCount = this.gnomeService.getInteractionCount(gnomeId);
+  async getGnomeInteractionCount(
+    @Param("id") gnomeId: string,
+  ): Promise<number> {
     const findGnome = await this.gnomeService.getGnomeData(gnomeId);
     if (!findGnome) {
       throw new NotFoundException("Nie znaleziono gnoma");
     }
+    const interactionCount =
+      this.gnomeService.getGnomeInteractionCount(gnomeId);
     return interactionCount;
   }
+
+  // Pobieranie swojej ilości interakcji z gnomem TO CHYBA NIE POTRZEBNE
+
+  // @Get("@me/interactions/count")
+  // @UseGuards(JwtGuard)
+  // async getMyInteractionCount()
 
   // Wyświetlanie swojej interakcji z gnomem
 

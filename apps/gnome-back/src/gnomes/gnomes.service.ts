@@ -40,11 +40,18 @@ export class GnomesService {
     return { ...gnome, nearest };
   }
 
-  async getInteractionCount(gnomeId: string): Promise<number> {
+  async getGnomeInteractionCount(gnomeId: string): Promise<number> {
     const collection = await this.prismaService.gnomeInteraction.findMany({
-      where: {
-        gnomeId,
-      },
+      where: { gnomeId },
+      distinct: ["userId"],
+    });
+    return collection.length;
+  }
+
+  async getUserInteractionCount(userId: string): Promise<number> {
+    const collection = await this.prismaService.gnomeInteraction.findMany({
+      where: { userId },
+      distinct: ["gnomeId"],
     });
     return collection.length;
   }

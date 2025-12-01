@@ -37,7 +37,7 @@ export class FriendsService {
 
     return Promise.all(
       friends.map(async (friend) => {
-        const interactions = await this.gnomesService.getInteractionCount(
+        const interactions = await this.gnomesService.getUserInteractionCount(
           friend.id,
         );
         return {

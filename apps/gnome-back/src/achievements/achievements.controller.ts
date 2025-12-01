@@ -1,5 +1,6 @@
 import {
   Body,
+  ConflictException,
   Controller,
   Get,
   NotFoundException,
@@ -17,12 +18,18 @@ import { NotFoundError } from "rxjs";
 import { User } from "@/auth/decorators/jwt-user.decorator";
 import { JwtGuard } from "@/auth/guards/jwt.guard";
 import { JwtUser } from "@/auth/types/jwt-user";
+import { FriendsService } from "@/friends/friends.service";
 import { Role } from "@/role/role.decorator";
 import { AchievementsService } from "./achievements.service";
 
 @Controller("achievements")
 export class AchievementsController {
-  constructor(private readonly achievementsService: AchievementsService) {}
+  constructor(
+    private readonly achievementsService: AchievementsService,
+    private readonly friendsService: FriendsService,
+  ) {}
+
+  // Wyszukiwanie swoich achievementów
 
   @Get("@me")
   @UseGuards(JwtGuard)
@@ -36,11 +43,34 @@ export class AchievementsController {
     return achievements;
   }
 
+  @Get(":id")
+  @UseGuards(JwtGuard)
+  async getFriendAchievements(
+    @Param("id") friendId: string,
+    @User() user: JwtUser,
+  ): Promise<UserAchievementResponse[]> {
+    const friends = await this.friendsService.findFriendship(user.id, friendId);
+
+    if (!friends) {
+      throw new ConflictException(
+        "No friendship found - cannot check achievements",
+      );
+    }
+
+    const achievements =
+      await this.achievementsService.getUserAchievements(friendId);
+
+    return achievements;
+  }
+
+  // Wyszukiwanie daty zdobycia danego achievementu
+
   @Get("@me/:id")
   @UseGuards(JwtGuard)
   async getAchievementData(
     @Param("id") achievementId: string,
     @User() user: JwtUser,
+    // @xd // DODAC SPRAWDZANIE ZNAJOMEGO + , OPROCZ TEGO WYJEBAC ZE SCHEMY ID Z USERACHIEVEMETNS +  I ZMIENIC W ENDPOINCIE PARAMETR WYSZUKIWANIA + (ZROBIONE WSZYSKTO)
   ): Promise<UserAchievementResponse> {
     const userAchievement = await this.achievementsService.getAchievementData(
       user.id,
