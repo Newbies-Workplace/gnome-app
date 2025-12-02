@@ -129,9 +129,15 @@ export class CreateBuildingRequest {
   @IsNotEmpty()
   type!: BuildingType;
 }
-export class updateBuildingRequest {
+export class EmpowerBuildingRequest {
   @Type(() => Number)
   @IsInt()
   @IsNotEmpty()
   gnomeCount!: number;
+}
+export class AttackBuildingRequest {
+  @Type(() => Number)
+  @IsInt()
+  @IsNotEmpty()
+  clicks!: number;
 }

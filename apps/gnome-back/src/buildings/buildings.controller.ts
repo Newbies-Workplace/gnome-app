@@ -11,8 +11,9 @@ import {
 } from "@nestjs/common";
 import { UserRole } from "@prisma/client";
 import {
+  AttackBuildingRequest,
   CreateBuildingRequest,
-  updateBuildingRequest,
+  EmpowerBuildingRequest,
 } from "@repo/shared/requests";
 import { BuildingResponse } from "@repo/shared/responses";
 import { User } from "@/auth/decorators/jwt-user.decorator";
@@ -70,7 +71,7 @@ export class BuildingsController {
   @UseGuards(JwtGuard)
   async updateBuilding(
     @Param("id") buildingId: string,
-    @Body() body: updateBuildingRequest,
+    @Body() body: EmpowerBuildingRequest,
   ) {
     return await this.buildingsService.empowerBuilding(
       buildingId,
@@ -79,7 +80,10 @@ export class BuildingsController {
   }
   @Patch(":id/attack")
   @UseGuards(JwtGuard)
-  async attackBuilding(@Param("id") buildingId: string) {
-    return await this.buildingsService.attackBuilding(buildingId);
+  async attackBuilding(
+    @Param("id") buildingId: string,
+    @Body() body: AttackBuildingRequest,
+  ) {
+    return await this.buildingsService.attackBuilding(buildingId, body.clicks);
   }
 }
