@@ -125,7 +125,7 @@ export class GnomesService {
     const { resource1, resource2, amount1, amount2 } =
       await this.getRandomResources();
 
-    await this.prismaService.userResource.update({
+    const updatedResources = await this.prismaService.userResource.update({
       where: {
         userId: userId,
       },
@@ -138,6 +138,10 @@ export class GnomesService {
     return {
       ...createGnome,
       gnome: findGnome,
+      resources: {
+        [resource1]: updatedResources[resource1],
+        [resource2]: updatedResources[resource2],
+      },
     };
   }
 }
