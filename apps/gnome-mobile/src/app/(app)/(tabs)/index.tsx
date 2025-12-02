@@ -1,10 +1,13 @@
-import BottomSheet from "@gorhom/bottom-sheet";
+import BottomSheet, {
+  BottomSheetBackdrop,
+  BottomSheetView,
+} from "@gorhom/bottom-sheet";
 import { GnomeResponse } from "@repo/shared/responses";
 import { LinearGradient } from "expo-linear-gradient";
 import * as Location from "expo-location";
 import { useRouter } from "expo-router";
 import { getDistance } from "geolib";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
   Alert,
   Linking,
@@ -15,6 +18,10 @@ import {
 import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
 import { SafeAreaView } from "react-native-safe-area-context";
 import FriendIcon from "@/assets/icons/add-friend.svg";
+import GnomeDetailsFullScreenIcon from "@/assets/icons/FullscreenButton.svg";
+import GnomeCaughtCountIcon from "@/assets/icons/GnomeCaughtCount.svg";
+import GnomeHowFarAwayIcon from "@/assets/icons/GnomeHowFarAway.svg";
+import GnomeLocationIcon from "@/assets/icons/GnomeLocation.svg";
 import LocationOffIcon from "@/assets/icons/location-off.svg";
 import TeamIcon from "@/assets/icons/team.svg";
 import GnomePin from "@/assets/images/GnomePin.svg";
@@ -138,7 +145,7 @@ const MapScreen = () => {
   });
   const [distance, setDistance] = useState<number>();
   const [closestGnomeId, setClosestGnomeId] = useState<string>();
-  const GnomeDetailsBottomSheetRef = useRef<BottomSheet>(null);
+  const gnomeDetailsBottomSheetRef = useRef<BottomSheet>(null);
 
   const defaultRegion = {
     latitude: 51.109967,
@@ -294,7 +301,7 @@ const MapScreen = () => {
         {filteredGnomes.map((gnome) => (
           <Marker
             onPress={() => {
-              GnomeDetailsBottomSheetRef.current?.expand();
+              gnomeDetailsBottomSheetRef.current?.expand();
             }}
             key={gnome.id}
             coordinate={{
@@ -330,17 +337,46 @@ const MapScreen = () => {
         />
       )}
 
-      <SafeAreaView>
-        <BottomSheet
-          ref={GnomeDetailsBottomSheetRef}
-          index={-1}
-          enablePanDownToClose
-          backgroundClassName={"bg-background"}
-          handleIndicatorClassName={"bg-tekst w-24 mt-2 rounded-lg"}
-        >
-          <Text>elo</Text>
-        </BottomSheet>
-      </SafeAreaView>
+      <BottomSheet
+        ref={gnomeDetailsBottomSheetRef}
+        enablePanDownToClose
+        backgroundClassName="bg-background"
+        handleIndicatorClassName="bg-tekst w-20 mt-2 rounded-lg"
+        index={-1}
+      >
+        <BottomSheetView className="p-5 rounded-t-2xl relative">
+          <GnomeDetailsFullScreenIcon className="absolute top-3 right-3" />
+
+          <View className="mb-5">
+            <Text className="text-2xl font-semibold text-tekst">
+              Nazwa krasnala
+            </Text>
+          </View>
+
+          <View className="space-y-4">
+            <View className="flex-row items-center">
+              <GnomeLocationIcon />
+              <Text className="ml-3 text-base text-tekst">
+                Lokalizacja krasnala
+              </Text>
+            </View>
+
+            <View className="flex-row items-center">
+              <GnomeHowFarAwayIcon />
+              <Text className="ml-3 text-base text-tekst">
+                Odległość od krasnala
+              </Text>
+            </View>
+
+            <View className="flex-row items-center">
+              <GnomeCaughtCountIcon />
+              <Text className="ml-3 text-base text-tekst">
+                Ilość razy zebrany krasnal
+              </Text>
+            </View>
+          </View>
+        </BottomSheetView>
+      </BottomSheet>
     </SafeAreaView>
   );
 };
