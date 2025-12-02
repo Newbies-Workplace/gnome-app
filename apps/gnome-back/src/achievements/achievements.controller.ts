@@ -8,7 +8,6 @@ import {
   Post,
   UseGuards,
 } from "@nestjs/common";
-import { Achievement } from "@prisma/client";
 import { CreateUserAchievementRequest } from "@repo/shared/requests";
 import {
   AchievementDataResponse,
@@ -70,7 +69,6 @@ export class AchievementsController {
   async getAchievementData(
     @Param("id") achievementId: string,
     @User() user: JwtUser,
-    // @xd // DODAC SPRAWDZANIE ZNAJOMEGO + , OPROCZ TEGO WYJEBAC ZE SCHEMY ID Z USERACHIEVEMETNS +  I ZMIENIC W ENDPOINCIE PARAMETR WYSZUKIWANIA + (ZROBIONE WSZYSKTO)
   ): Promise<UserAchievementResponse> {
     const userAchievement = await this.achievementsService.getAchievementData(
       user.id,

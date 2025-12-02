@@ -4,7 +4,6 @@ import {
   Controller,
   FileTypeValidator,
   Get,
-  InternalServerErrorException,
   MaxFileSizeValidator,
   NotFoundException,
   Param,
