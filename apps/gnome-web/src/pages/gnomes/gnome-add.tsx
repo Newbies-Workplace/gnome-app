@@ -1,10 +1,11 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import type { CreateGnomeRequest } from "@repo/shared/requests";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/Input";
+import { Input } from "@/components/ui/input";
 import type { GnomeFormData } from "@/schemas/gnomeSchema";
 import { gnomeSchema } from "@/schemas/gnomeSchema";
 import { useDistrictStore } from "@/store/useDistrictStore";
@@ -52,21 +53,18 @@ function GnomeAdd() {
   }, [selectedPosition, setValue]);
 
   const onSubmit = async (data: GnomeFormData) => {
-    const file = data.pictureURL[0];
-    const formData = new FormData();
-    formData.append("pictureUrl", file);
-    formData.append("name", data.name);
-    formData.append("description", data.description);
-    formData.append("location", data.location);
-    formData.append("funFact", data.funFact || "");
-    formData.append("districtId", data.districtId);
-    formData.append("latitude", String(data.latitude));
-    formData.append("longitude", String(data.longitude));
-    formData.append("creationDate", new Date().toISOString());
-    formData.append("id", Date.now().toString());
-    formData.append("exists", "true");
+    const newGnome: CreateGnomeRequest = {
+      name: data.name,
+      description: data.description,
+      location: data.location,
+      funFact: data.funFact,
+      latitude: data.latitude,
+      longitude: data.longitude,
+      creationDate: new Date(),
+      pictureUrl: preview ?? "",
+    };
 
-    await addGnome(formData);
+    await addGnome(newGnome);
     toast.success(`Dodano nowego krasnala "${data.name}"`);
     navigate("/gnomes");
   };

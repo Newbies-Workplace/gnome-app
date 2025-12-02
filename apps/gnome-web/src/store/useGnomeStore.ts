@@ -1,3 +1,4 @@
+import type { CreateGnomeRequest } from "@repo/shared/requests";
 import type { GnomeResponse } from "@repo/shared/responses";
 import { create } from "zustand";
 import { GnomesService } from "@/api/Gnomes.service";
@@ -52,7 +53,7 @@ export const useGnomeStore = create<GnomeState>((set) => ({
     }
   },
 
-  updateGnome: async (id, gnome) => {
+  updateGnome: async (id: string, gnome: Partial<CreateGnomeRequest>) => {
     try {
       const updated = await GnomesService.updateGnome(id, gnome);
       set((state) => ({
@@ -62,6 +63,7 @@ export const useGnomeStore = create<GnomeState>((set) => ({
       }));
     } catch (error) {
       console.error("Update gnome error:", error);
+      set({ error: "Failed to update gnome" });
     }
   },
 }));

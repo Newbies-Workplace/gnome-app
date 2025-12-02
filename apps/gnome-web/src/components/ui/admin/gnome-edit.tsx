@@ -1,4 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import type { CreateGnomeRequest } from "@repo/shared/requests";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate, useOutletContext, useParams } from "react-router-dom";
@@ -77,23 +78,19 @@ function GnomeEdit() {
   const onSubmit = async (data: GnomeFormData) => {
     if (!gnome) return;
 
-    const file = data.pictureURL?.[0];
-    const formData = new FormData();
-    if (file) {
-      formData.append("pictureUrl", file);
-    }
-    formData.append("name", data.name);
-    formData.append("description", data.description);
-    formData.append("location", data.location);
-    formData.append("funFact", data.funFact || "");
-    formData.append("districtId", data.districtId);
-    formData.append("latitude", String(data.latitude));
-    formData.append("longitude", String(data.longitude));
-    formData.append("id", gnome.id.toString());
-    formData.append("creationDate", gnome.creationDate);
-    formData.append("exists", "true");
+    const updatedGnome: Partial<CreateGnomeRequest> = {
+      name: data.name,
+      description: data.description,
+      location: data.location,
+      funFact: data.funFact,
+      latitude: data.latitude,
+      longitude: data.longitude,
+      creationDate: new Date(gnome.creationDate),
+      districtId: data.districtId,
+      pictureUrl: preview ?? gnome.pictureUrl,
+    };
 
-    await updateGnome(gnome.id, formData);
+    await updateGnome(gnome.id, updatedGnome);
     toast.success(`Zapisano zmiany dla gnoma "${data.name}"`);
     navigate("/admin");
   };

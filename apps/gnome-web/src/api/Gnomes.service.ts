@@ -1,3 +1,4 @@
+import type { CreateGnomeRequest } from "@repo/shared/requests";
 import type { GnomeIdResponse, GnomeResponse } from "@repo/shared/responses";
 import { axiosInstance } from "@/api/axios";
 
@@ -22,7 +23,7 @@ const removeGnome = async (id: string): Promise<void> => {
 
 const updateGnome = async (
   id: string,
-  gnome: Partial<GnomeResponse>,
+  gnome: Partial<CreateGnomeRequest>,
 ): Promise<GnomeResponse> => {
   const response = await axiosInstance.put(`/gnomes/${id}`, gnome);
   return response.data;
