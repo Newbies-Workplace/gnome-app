@@ -138,15 +138,33 @@ export class BuildingsService {
     });
   }
 
-  async attackBuilding(id: string, clicks: number): Promise<BuildingResponse> {
-    const damage = Math.min(clicks * 0.2);
-    return this.prismaService.building.update({
+  async attackBuilding(id: string, damage: number): Promise<BuildingResponse> {
+    const buildingData = await this.prismaService.building.findUnique({
       where: {
         id: id,
       },
-      data: {
-        health: { decrement: damage },
+      select: {
+        health: true,
       },
     });
+    if (!buildingData) {
+      throw new NotFoundException("Budynek nie istnieje");
+    }
+    if (damage >= buildingData.health) {
+      return this.prismaService.building.delete({
+        where: {
+          id: id,
+        },
+      });
+    } else {
+      return this.prismaService.building.update({
+        where: {
+          id: id,
+        },
+        data: {
+          health: { decrement: damage },
+        },
+      });
+    }
   }
 }

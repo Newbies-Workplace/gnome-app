@@ -16,6 +16,7 @@ import {
   EmpowerBuildingRequest,
 } from "@repo/shared/requests";
 import { BuildingResponse } from "@repo/shared/responses";
+import { max } from "class-validator";
 import { User } from "@/auth/decorators/jwt-user.decorator";
 import { JwtGuard } from "@/auth/guards/jwt.guard";
 import { JwtUser } from "@/auth/types/jwt-user";
@@ -84,6 +85,8 @@ export class BuildingsController {
     @Param("id") buildingId: string,
     @Body() body: AttackBuildingRequest,
   ) {
-    return await this.buildingsService.attackBuilding(buildingId, body.clicks);
+    const maxDamage = 40;
+    const damage = Math.min(body.clicks * 0.2, maxDamage);
+    return await this.buildingsService.attackBuilding(buildingId, damage);
   }
 }
