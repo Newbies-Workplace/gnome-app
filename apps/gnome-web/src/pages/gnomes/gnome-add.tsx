@@ -76,7 +76,7 @@ function GnomeAdd() {
     >
       <h2 className="text-2xl font-bold mb-4">Dodaj nowego krasnala</h2>
       <div className="flex flex-row items-stretch gap-4">
-        <div className="relative w-32 h-40 rounded overflow-hidden bg-gray-700">
+        <label className="relative w-32 h-40 rounded overflow-hidden bg-gray-700 cursor-pointer">
           {preview ? (
             <img
               src={preview}
@@ -92,9 +92,9 @@ function GnomeAdd() {
             type="file"
             accept="image/*"
             {...register("pictureURL")}
-            className="absolute inset-0 opacity-0 cursor-pointer"
+            className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
           />
-        </div>
+        </label>
         {errors.pictureURL && (
           <span className="text-red-400">{errors.pictureURL.message}</span>
         )}
@@ -109,10 +109,9 @@ function GnomeAdd() {
           {errors.name && (
             <span className="text-red-400">{errors.name.message}</span>
           )}
-
           <select
-            {...register("districtId")}
-            className="p-2 rounded bg-gray-800 text-white"
+            {...register("districtId", { valueAsNumber: true })}
+            className="p-2 rounded bg-gray-800 text-white w-full focus:outline-none focus:ring-2 focus:ring-primary-color"
           >
             <option value="">-- Wybierz dzielnicę --</option>
             {districts.map((d) => (
@@ -121,6 +120,10 @@ function GnomeAdd() {
               </option>
             ))}
           </select>
+          {errors.districtId && (
+            <span className="text-red-400">{errors.districtId.message}</span>
+          )}
+
           {errors.districtId && (
             <span className="text-red-400">{errors.districtId.message}</span>
           )}

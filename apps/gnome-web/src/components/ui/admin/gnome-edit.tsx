@@ -44,7 +44,7 @@ function GnomeEdit() {
       funFact: gnome?.funFact || "",
       latitude: gnome?.latitude || 0,
       longitude: gnome?.longitude || 0,
-      districtId: gnome?.districtId || "",
+      districtId: gnome?.districtId ?? 0,
       pictureURL: [] as any,
     },
   });
@@ -86,7 +86,7 @@ function GnomeEdit() {
       latitude: data.latitude,
       longitude: data.longitude,
       creationDate: new Date(gnome.creationDate),
-      districtId: data.districtId,
+      districtId: Number(data.districtId),
       pictureUrl: preview ?? gnome.pictureUrl,
     };
 
@@ -105,7 +105,7 @@ function GnomeEdit() {
       <h2 className="text-2xl font-bold mb-4">Edytuj krasnala</h2>
 
       <div className="flex flex-row items-stretch gap-4">
-        <div className="relative w-32 h-40 rounded overflow-hidden bg-gray-700">
+        <label className="relative w-32 h-40 rounded overflow-hidden bg-gray-700 cursor-pointer">
           {preview ? (
             <img
               src={preview}
@@ -117,16 +117,16 @@ function GnomeEdit() {
             />
           ) : (
             <span className="absolute inset-0 flex items-center justify-center text-gray-300">
-              Brak zdjęcia
+              Nowe zdjęcie
             </span>
           )}
-          <Input
+          <input
             type="file"
             accept="image/*"
             {...register("pictureURL")}
-            className="absolute inset-0 opacity-0 cursor-pointer"
+            className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
           />
-        </div>
+        </label>
         {errors.pictureURL && (
           <span className="text-red-400">{errors.pictureURL.message}</span>
         )}
@@ -143,8 +143,8 @@ function GnomeEdit() {
           )}
 
           <select
-            {...register("districtId")}
-            className="p-2 rounded bg-gray-800 text-white"
+            {...register("districtId", { valueAsNumber: true })}
+            className="p-2 rounded bg-gray-800 text-white w-full focus:outline-none focus:ring-2 focus:ring-primary-color"
           >
             <option value="">-- Wybierz dzielnicę --</option>
             {districts.map((d) => (
