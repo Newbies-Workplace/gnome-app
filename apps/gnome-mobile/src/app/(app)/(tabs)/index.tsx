@@ -97,15 +97,25 @@ const HeaderControls: React.FC<HeaderControlsProps> = ({
           )}
           <TouchableOpacity
             onPress={() => router.push("/addfriend")}
-            className="w-10 h-10 bg-background rounded-full flex justify-center items-center mr-2"
+            className="w-10 h-10 bg-background rounded-full flex justify-center items-center mr-2 "
           >
-            <FriendIcon width={20} height={20} fill="#000" />
+            <FriendIcon
+              width={20}
+              height={20}
+              fill="#000"
+              className={"text-tekst"}
+            />
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => router.push("/teams")}
             className="w-10 h-10 bg-background rounded-full flex justify-center items-center"
           >
-            <TeamIcon width={20} height={20} fill="#000" />
+            <TeamIcon
+              width={20}
+              height={20}
+              fill="#000"
+              className={"text-tekst"}
+            />
           </TouchableOpacity>
         </View>
       </View>
@@ -281,14 +291,11 @@ const MapScreen = () => {
       >
         {filteredGnomes.map((gnome) => (
           <Marker
-            className=""
             key={gnome.id}
             coordinate={{
               latitude: gnome.latitude,
               longitude: gnome.longitude,
             }}
-            title={gnome.name}
-            description={gnome.description}
           >
             {interactions.find(
               (interactions) => interactions.gnomeId === gnome.id,

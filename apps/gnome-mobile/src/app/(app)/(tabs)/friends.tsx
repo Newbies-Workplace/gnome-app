@@ -1,64 +1,56 @@
-import { useNavigation, useRouter } from "expo-router";
-import { useEffect } from "react";
+import { useRouter } from "expo-router";
 import { FlatList, Image, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import AddUser from "@/assets/icons/add-user.svg";
 import GnomeIcon from "@/assets/icons/gnome-icon.svg";
+import SadGnome from "@/assets/images/SadGnome.svg";
+import { NoFriendsAlert } from "@/components/ui/EmptyState";
 import { Text } from "@/components/ui/text";
 import { useFriendsStore } from "@/store/useFriendsStore";
 
-const placeholder = { uri: "https://i.pravatar.cc/150?img=1" };
-
-const FriendItem = ({
-  name,
-  avatar,
-  score,
-}: {
-  name: string;
-  avatar: string;
-  score: string;
-}) => (
-  <View className="px-4 flex flex-row items-center justify-between py-2">
-    <View className="flex flex-row items-center">
-      <Image source={{ uri: avatar }} className="w-10 h-10 rounded-full mr-4" />
-      <Text className="text-tekst text-lg font-semibold">{name}</Text>
-    </View>
-    <View className="flex flex-row items-center">
-      <Text className="text-tekst text-lg font-semibold mr-2">{score}</Text>
-      <GnomeIcon width={25} height={25} />
-    </View>
-  </View>
-);
-
 export default function Friends() {
   const router = useRouter();
-  const navigation = useNavigation();
   const { friends } = useFriendsStore();
+  const placeholder = { uri: "https://i.pravatar.cc/150?img=1" };
 
-  useEffect(() => {
-    navigation.setOptions({
-      headerRight: () => (
-        <TouchableOpacity
-          className="p-5"
-          onPress={() => router.push("/addfriend")}
-        >
-          <AddUser className="w-7 h-7" />
-        </TouchableOpacity>
-      ),
-      headerTitle: () => (
-        <Text className="text-tekst text-2xl font-bold text-center tracking-wide">
-          Twoi znajomi
-        </Text>
-      ),
-      headerTitleAlign: "center",
-      headerShadowVisible: false,
-      headerShown: true,
-      headerBackground: () => (
-        <View className="absolute inset-0 bg-primary-foreground" />
-      ),
-    });
-  }, [navigation, router]);
+  const FriendItem = ({
+    name,
+    avatar,
+    score,
+  }: {
+    name: string;
+    avatar: string;
+    score: string;
+  }) => (
+    <View className="px-4 flex flex-row items-center justify-between py-2">
+      <View className="flex flex-row items-center">
+        <Image
+          source={{ uri: avatar }}
+          className="w-10 h-10 rounded-full mr-4"
+        />
+        <Text className="text-tekst text-lg font-semibold">{name}</Text>
+      </View>
+      <View className="flex flex-row items-center">
+        <Text className="text-tekst text-lg font-semibold mr-2">{score}</Text>
+        <GnomeIcon width={25} height={25} className="text-tekst" />
+      </View>
+    </View>
+  );
 
+  const EmptyState = () => (
+    <View className="flex-1 items-center justify-center">
+      <NoFriendsAlert
+        image={<SadGnome className="mb-4" />}
+        title="Hej Poszukiwaczu!"
+        alert={
+          "Twoja lista znajomych jest całkiem pusta,\n nawet żaden z wrocławskhich krasnali tutaj\n nie zawitał."
+        }
+        description={"W końcu nawet krasnale wiedzą, że w\n drużynie raźniej!"}
+        ButtonTitle="Dodaj znajomego"
+        onClick={() => router.push("/addfriend")}
+      />
+    </View>
+  );
   return (
     <SafeAreaView className="flex-1 bg-primary-foreground">
       <FlatList
@@ -69,7 +61,7 @@ export default function Friends() {
             className="p-5"
             onPress={() => router.push("/addfriend")}
           >
-            <AddUser className="w-7 h-7" />
+            <AddUser className="w-7 h-7 text-tekst" />
           </TouchableOpacity>
         }
         renderItem={({ item }) => (
@@ -79,7 +71,12 @@ export default function Friends() {
             score={item.interactions.toString()}
           />
         )}
-        contentContainerStyle={{ marginTop: 20 }}
+        ListEmptyComponent={EmptyState}
+        contentContainerStyle={
+          friends.length === 0
+            ? { flexGrow: 1, justifyContent: "center" }
+            : undefined
+        }
       />
     </SafeAreaView>
   );
