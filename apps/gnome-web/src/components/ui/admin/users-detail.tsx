@@ -110,7 +110,6 @@ export default function UsersDetail() {
         <BuildsList />
         <BuildsList />
         <BuildsList />
-        <BuildsList />
       </div>
     </div>
   );
