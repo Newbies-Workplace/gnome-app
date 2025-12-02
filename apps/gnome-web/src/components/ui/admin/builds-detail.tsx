@@ -12,8 +12,8 @@ import {
 
 export default function BuildsDetail() {
   return (
-    <div className="overflow-y-auto flex flex-col gap-2">
-      <div className="flex flex-1 h-0 p-4 gap-4">
+    <div className="overflow-hidden flex flex-col gap-2">
+      <div className="flex p-4 gap-4">
         <div className="w-1/4">
           <img className="w-full" src={GnomeAvatar} alt="Avatar" />
         </div>
