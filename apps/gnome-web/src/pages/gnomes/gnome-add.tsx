@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/Input";
 import type { GnomeFormData } from "@/schemas/gnomeSchema";
 import { gnomeSchema } from "@/schemas/gnomeSchema";
 import { useDistrictStore } from "@/store/useDistrictStore";
@@ -89,7 +90,7 @@ function GnomeAdd() {
               Brak zdjęcia
             </span>
           )}
-          <input
+          <Input
             type="file"
             accept="image/*"
             {...register("pictureURL")}
@@ -101,7 +102,7 @@ function GnomeAdd() {
         )}
 
         <div className="flex flex-col justify-between h-40 flex-1">
-          <input
+          <Input
             type="text"
             placeholder="Nazwa"
             {...register("name")}
@@ -126,7 +127,7 @@ function GnomeAdd() {
             <span className="text-red-400">{errors.districtId.message}</span>
           )}
 
-          <input
+          <Input
             type="text"
             placeholder="Lokalizacja (nazwa miejsca)"
             {...register("location")}
@@ -137,8 +138,8 @@ function GnomeAdd() {
           )}
         </div>
       </div>
-      <input type="hidden" {...register("latitude", { valueAsNumber: true })} />
-      <input
+      <Input type="hidden" {...register("latitude", { valueAsNumber: true })} />
+      <Input
         type="hidden"
         {...register("longitude", { valueAsNumber: true })}
       />
@@ -165,7 +166,7 @@ function GnomeAdd() {
       </label>
       <label className="flex flex-col gap-2">
         Ciekawostka:
-        <input
+        <Input
           type="text"
           {...register("funFact")}
           className="p-2 rounded bg-gray-800 text-white"

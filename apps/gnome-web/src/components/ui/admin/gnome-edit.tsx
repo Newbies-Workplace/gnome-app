@@ -5,6 +5,7 @@ import { useNavigate, useOutletContext, useParams } from "react-router-dom";
 import { toast } from "sonner";
 import placeholderImage from "@/assets/images/placeholder.png";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import type { GnomeFormData } from "@/schemas/gnomeSchema";
 import { gnomeSchema } from "@/schemas/gnomeSchema";
 import { useDistrictStore } from "@/store/useDistrictStore";
@@ -122,7 +123,7 @@ function GnomeEdit() {
               Brak zdjęcia
             </span>
           )}
-          <input
+          <Input
             type="file"
             accept="image/*"
             {...register("pictureURL")}
@@ -134,7 +135,7 @@ function GnomeEdit() {
         )}
 
         <div className="flex flex-col justify-between h-40 flex-1">
-          <input
+          <Input
             type="text"
             placeholder="Nazwa"
             {...register("name")}
@@ -159,7 +160,7 @@ function GnomeEdit() {
             <span className="text-red-400">{errors.districtId.message}</span>
           )}
 
-          <input
+          <Input
             type="text"
             placeholder="Lokalizacja (nazwa miejsca)"
             {...register("location")}
@@ -171,8 +172,8 @@ function GnomeEdit() {
         </div>
       </div>
 
-      <input type="hidden" {...register("latitude", { valueAsNumber: true })} />
-      <input
+      <Input type="hidden" {...register("latitude", { valueAsNumber: true })} />
+      <Input
         type="hidden"
         {...register("longitude", { valueAsNumber: true })}
       />
@@ -202,7 +203,7 @@ function GnomeEdit() {
 
       <label className="flex flex-col gap-2">
         Ciekawostka:
-        <input
+        <Input
           type="text"
           {...register("funFact")}
           className="p-2 rounded bg-gray-800 text-white"
