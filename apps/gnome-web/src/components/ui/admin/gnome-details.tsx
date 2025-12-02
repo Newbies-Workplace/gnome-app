@@ -1,21 +1,48 @@
 import { useNavigate, useParams } from "react-router-dom";
+import { toast } from "sonner";
 import UserIcon from "@/assets/icons/users-icon.svg";
 import PlaceHolder from "@/assets/images/placeholder.png";
 import { Button } from "@/components/ui/button";
 import { useDistrictStore } from "@/store/useDistrictStore";
 import { useGnomeStore } from "@/store/useGnomeStore";
 
+function useToastNavigate() {
+  const navigate = useNavigate();
+
+  const toastNavigate = (
+    path: string,
+    message: string,
+    type: "success" | "error" | "info" = "info",
+  ) => {
+    switch (type) {
+      case "success":
+        toast.success(message);
+        break;
+      case "error":
+        toast.error(message);
+        break;
+      default:
+        toast(message);
+    }
+    navigate(path);
+  };
+
+  return toastNavigate;
+}
+
 function GnomeDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { gnomes, removeGnome } = useGnomeStore();
   const { districts } = useDistrictStore();
+  const toastNavigate = useToastNavigate();
 
   const gnome = gnomes.find((g) => g.id.toString() === id);
   const districtName = districts.find((d) => d.id === gnome?.districtId)?.name;
 
   if (!gnome) {
-    return <p className="text-white">Nie znaleziono krasnala o ID {id}</p>;
+    toastNavigate("/admin", `Nie znaleziono krasnala o ID ${id}`, "error");
+    return null;
   }
 
   const handleEdit = () => {
@@ -29,7 +56,7 @@ function GnomeDetail() {
     if (!confirmed) return;
 
     await removeGnome(gnome.id);
-    navigate("/admin");
+    toastNavigate("/admin", `Gnom "${gnome.name}" został usunięty`, "success");
   };
 
   return (
@@ -42,7 +69,7 @@ function GnomeDetail() {
       </Button>
       <div className="flex flex-row items-stretch gap-4">
         <img
-          src={gnome.imageUrl || PlaceHolder}
+          src={gnome.pictureUrl || PlaceHolder}
           alt={gnome.name}
           className="w-32 h-40 object-cover rounded"
         />

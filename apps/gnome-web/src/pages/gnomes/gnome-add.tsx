@@ -2,6 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate, useOutletContext } from "react-router-dom";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import type { GnomeFormData } from "@/schemas/gnomeSchema";
 import { gnomeSchema } from "@/schemas/gnomeSchema";
@@ -65,6 +66,7 @@ function GnomeAdd() {
     formData.append("exists", "true");
 
     await addGnome(formData);
+    toast.success(`Dodano nowego krasnala "${data.name}"`);
     navigate("/gnomes");
   };
 
