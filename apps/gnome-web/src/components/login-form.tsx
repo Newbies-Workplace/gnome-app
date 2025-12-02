@@ -1,13 +1,8 @@
+import { Link } from "react-router-dom";
 import GoogleLogo from "@/assets/icons/google-logo.svg";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  Field,
-  FieldGroup,
-  FieldLabel,
-  FieldSeparator,
-} from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
+import { Field, FieldGroup, FieldSeparator } from "@/components/ui/field";
 import { cn } from "@/lib/utils";
 
 export function LoginForm({
@@ -23,65 +18,36 @@ export function LoginForm({
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <form>
-            <FieldGroup>
-              <Field>
-                <FieldLabel htmlFor="login" className="text-white font-Afacad">
-                  Login
-                </FieldLabel>
-                <Input
-                  id="login"
-                  type="text"
-                  placeholder="Podaj login"
-                  className="text-white font-Afacad border-2xl rounded-4xl"
-                  required
+          <FieldGroup>
+            <Field>
+              <FieldSeparator />
+            </Field>
+            <Field>
+              <Button
+                type="submit"
+                onClick={() => {
+                  window.location.href =
+                    import.meta.env.VITE_PUBLIC_API_URL +
+                    "/auth/google/redirect";
+                }}
+                className="bg-white text-black border-none rounded-4xl"
+              >
+                Zaloguj się z{" "}
+                <img
+                  src={GoogleLogo}
+                  alt="Logo Google"
+                  className="inline-block"
                 />
-              </Field>
-              <Field>
-                <div className="flex items-center">
-                  <FieldLabel
-                    htmlFor="password"
-                    className="text-white font-Afacad"
-                  >
-                    Hasło
-                  </FieldLabel>
+              </Button>
+            </Field>
+            <Field>
+              <Link to="/privacy">
+                <div className="text-white text-Afacad text-lg text-center">
+                  Polityka prywatności
                 </div>
-                <Input
-                  className="text-white font-Afacad border-2xl rounded-4xl"
-                  id="password"
-                  type="password"
-                  placeholder="Podaj hasło"
-                  required
-                />
-              </Field>
-              <Field>
-                <Button className="text-white font-Afacad bg-primary-color border-none rounded-4xl">
-                  ZALOGUJ SIĘ
-                </Button>
-              </Field>
-              <Field>
-                <FieldSeparator />
-              </Field>
-              <Field>
-                <Button
-                  type="submit"
-                  onClick={() => {
-                    window.location.href =
-                      import.meta.env.VITE_PUBLIC_API_URL +
-                      "/auth/google/redirect";
-                  }}
-                  className="bg-white text-black border-none rounded-4xl"
-                >
-                  Zaloguj się z{" "}
-                  <img
-                    src={GoogleLogo}
-                    alt="Logo Google"
-                    className="inline-block"
-                  />
-                </Button>
-              </Field>
-            </FieldGroup>
-          </form>
+              </Link>
+            </Field>
+          </FieldGroup>
         </CardContent>
       </Card>
     </div>

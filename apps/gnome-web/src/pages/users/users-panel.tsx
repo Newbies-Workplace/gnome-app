@@ -7,6 +7,7 @@ function UsersPanel() {
       <div className="text-center text-white text-3xl font-bold font-Afacad">
         Panel Użytkowników
       </div>
+
       <Input
         id="search-user"
         type="text"
