@@ -95,8 +95,6 @@ function GnomeEdit() {
     navigate("/admin");
   };
 
-  if (!gnome) return null;
-
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
