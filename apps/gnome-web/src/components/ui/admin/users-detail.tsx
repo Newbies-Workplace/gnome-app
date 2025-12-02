@@ -1,12 +1,10 @@
 import BerryIcon from "@/assets/icons/berry-icon.svg";
 import BlockIcon from "@/assets/icons/block-icon.svg";
-import ClockIcon from "@/assets/icons/clock-icon.svg";
 import DeleteIcon from "@/assets/icons/delete-icon.svg";
 import GreenTeam from "@/assets/icons/green-team.svg";
 import PlusIcon from "@/assets/icons/plus-icon.svg";
 import StoneIcon from "@/assets/icons/stone-icon.svg";
 import WoodIcon from "@/assets/icons/wood-icon.svg";
-import BuildPlaceHolder from "@/assets/images/placeholder.png";
 import GnomeAvatar from "@/assets/images/placeholder-user.png";
 import BuildsList from "@/components/ui/admin/builds-list";
 import { Button } from "@/components/ui/button";
