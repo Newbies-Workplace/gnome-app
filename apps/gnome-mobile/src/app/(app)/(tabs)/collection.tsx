@@ -48,7 +48,7 @@ const Collection = () => {
         renderItem={({ item }) => {
           const img = getImageForGnome(item.id);
           return (
-            <View style={{ width: "33.3333%" }}>
+            <View className="w-1/3">
               <GnomeCard
                 image={img?.assetUri || item.pictureUrl}
                 text={item.name}
