@@ -65,16 +65,9 @@ CREATE TABLE "Achievement" (
 
 -- CreateTable
 CREATE TABLE "UserAchievement" (
-    "id" TEXT NOT NULL,
     "userId" TEXT NOT NULL,
     "achievementId" TEXT NOT NULL,
-<<<<<<<< HEAD:apps/gnome-back/prisma/migrations/20251201124005/migration.sql
     "earnedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
-========
-    "earnedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-
-    CONSTRAINT "UserAchievement_pkey" PRIMARY KEY ("id")
->>>>>>>> 0731caea17c4daec4416e81ab89c8f4d87bc7517:apps/gnome-back/prisma/migrations/20251201101502_final/migration.sql
 );
 
 -- CreateTable

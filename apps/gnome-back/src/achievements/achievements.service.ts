@@ -5,6 +5,18 @@ import {
 } from "@repo/shared/responses";
 import { PrismaService } from "@/db/prisma.service";
 
+const GNOME_ACHIEVEMENT_MAP: Record<number, string> = {
+  1: "To jest ich więcej?",
+  10: "Początkujący zbieracz",
+  20: "Młodszy zbieracz",
+  50: "Doświadczony zbieracz",
+  80: "Kolekcjoner krasnali",
+  100: "Stary wyjadacz",
+  150: "Mistrz zbieractwa krasnali",
+  200: "Boski zbieracz",
+  300: "Legendarny zbieracz", // To 300 to do zmiany bo nie wiem ile krasnali jest
+};
+
 @Injectable()
 export class AchievementsService {
   constructor(private readonly prismaService: PrismaService) {}
@@ -79,5 +91,23 @@ export class AchievementsService {
       description: achievement.description,
       users: collection.length,
     };
+  }
+
+  async unlockGnomeAchievement(userId: string, gnomeCount: number) {
+    const achievementName = GNOME_ACHIEVEMENT_MAP[gnomeCount];
+    if (!achievementName) return null;
+
+    const achievement = await this.prismaService.achievement.findFirst({
+      where: { name: achievementName },
+    });
+
+    if (!achievement) return null;
+
+    return this.prismaService.userAchievement.create({
+      data: {
+        userId,
+        achievementId: achievement.id,
+      },
+    });
   }
 }

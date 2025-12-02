@@ -4,6 +4,7 @@ import {
   Controller,
   FileTypeValidator,
   Get,
+  InternalServerErrorException,
   MaxFileSizeValidator,
   NotFoundException,
   Param,
@@ -24,6 +25,7 @@ import {
   InteractionResponse,
 } from "@repo/shared/responses";
 import { Express } from "express";
+import { AchievementsService } from "@/achievements/achievements.service";
 import { User } from "@/auth/decorators/jwt-user.decorator";
 import { JwtGuard } from "@/auth/guards/jwt.guard";
 import { JwtUser } from "@/auth/types/jwt-user";
@@ -39,6 +41,7 @@ export class GnomesController {
   constructor(
     private readonly gnomeService: GnomesService,
     private readonly minioService: MinioService,
+    private readonly achievementService: AchievementsService,
   ) {}
 
   // Pobieranie wszystkich gnomów
@@ -65,8 +68,7 @@ export class GnomesController {
     return gnomeData;
   }
 
-  // Pobieranie interakcji gnomów
-
+  // Pobieranie interakcji gnoma
   @Get(":id/interactions/count")
   @UseGuards(JwtGuard)
   async getGnomeInteractionCount(
@@ -80,12 +82,6 @@ export class GnomesController {
       this.gnomeService.getGnomeInteractionCount(gnomeId);
     return interactionCount;
   }
-
-  // Pobieranie swojej ilości interakcji z gnomem TO CHYBA NIE POTRZEBNE
-
-  // @Get("@me/interactions/count")
-  // @UseGuards(JwtGuard)
-  // async getMyInteractionCount()
 
   // Wyświetlanie swojej interakcji z gnomem
 
@@ -159,6 +155,10 @@ export class GnomesController {
       body.interactionDate,
       body.gnomeId,
     );
+
+    const gnomeCount = await this.gnomeService.getUserInteractionCount(user.id);
+
+    await this.achievementService.unlockGnomeAchievement(user.id, gnomeCount);
 
     return interaction;
   }

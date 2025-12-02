@@ -208,6 +208,62 @@ async function main() {
       },
     });
   }
+
+  const achievements = [
+    {
+      name: "To jest ich więcej?",
+      description:
+        "Twoja podróż jako zbieracz krasnali dopiero się rozpoczęła.",
+    },
+    {
+      name: "Początkujący zbieracz",
+      description:
+        "Twoja podróż jako zbieracz krasnali dopiero się rozpoczęła.",
+    },
+    {
+      name: "Młodszy zbieracz",
+      description: "Wygląda na to, że zaczynasz rozumieć o co w tym chodzi.",
+    },
+    {
+      name: "Doświadczony zbieracz",
+      description:
+        "Wygląda na to, że zaczynasz naprawdę doceniać rzadkość niektórych okazów.",
+    },
+    {
+      name: "Kolekcjoner krasnali",
+      description:
+        "Twoja kolekcja zaczyna budzić szaczunek. Niektórzy twierdzą, że czują twoją aurę z daleka.",
+    },
+    {
+      name: "Stary wyjadacz",
+      description:
+        "Wiesz o krasnalach więcej, niż powinno być możliwe. Powoli stajesz się legendą.",
+    },
+    {
+      name: "Mistrz zbieractwa krasnali",
+      description:
+        "Zbierasz takie okazy, o których inni tylko słyszeli w opowieściach przy ognisku.",
+    },
+    {
+      name: "Boski zbieracz",
+      description:
+        "Twoje imię krąży wśród zbieraczy jak mit. Niektórzy nie wierzą, że naprawdę istniejesz.",
+    },
+    {
+      name: "Legendarny zbieracz",
+      description:
+        "Twoje zbiory są tak imponujące, że bogowie zaczęli się zastanawiać, czy nie zabrać od ciebie kilku sztuk. Pora dotknąć trawy...",
+    },
+  ];
+
+  for (const achievement of achievements) {
+    await prisma.achievement.create({
+      data: {
+        name: achievement.name,
+        description: achievement.description,
+      },
+    });
+  }
 }
 
 main()
