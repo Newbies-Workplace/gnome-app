@@ -1,38 +1,39 @@
 import type { CreateGnomeRequest } from "@repo/shared/requests";
-import type { GnomeIdResponse, GnomeResponse } from "@repo/shared/responses";
-import { axiosInstance } from "@/api/axios";
+import type { GnomeResponse } from "@repo/shared/responses";
 
-const getGnomes = async (): Promise<GnomeResponse[]> => {
-  const response = await axiosInstance.get("/gnomes");
-  return Array.isArray(response.data) ? response.data : response.data.gnomes;
-};
+const BASE_URL = "/gnomes";
 
-const getGnomeById = async (id: string): Promise<GnomeIdResponse> => {
-  const response = await axiosInstance.get(`/gnomes/${id}`);
-  return response.data;
-};
+export class GnomesService {
+  static async getGnomes(): Promise<GnomeResponse[]> {
+    const res = await fetch(BASE_URL, { method: "GET" });
+    if (!res.ok) throw new Error("Failed to load gnomes");
+    return res.json();
+  }
 
-const addGnome = async (gnome: GnomeResponse): Promise<GnomeResponse> => {
-  const response = await axiosInstance.post("/gnomes", gnome);
-  return response.data;
-};
+  static async addGnome(payload: FormData): Promise<GnomeResponse> {
+    const res = await fetch(BASE_URL, {
+      method: "POST",
+      body: payload,
+    });
+    if (!res.ok) throw new Error("Failed to add gnome");
+    return res.json();
+  }
 
-const removeGnome = async (id: string): Promise<void> => {
-  await axiosInstance.delete(`/gnomes/${id}`);
-};
+  static async updateGnome(
+    id: string,
+    payload: Partial<CreateGnomeRequest>,
+  ): Promise<GnomeResponse> {
+    const res = await fetch(`${BASE_URL}/${id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+    if (!res.ok) throw new Error("Failed to update gnome");
+    return res.json();
+  }
 
-const updateGnome = async (
-  id: string,
-  gnome: Partial<CreateGnomeRequest>,
-): Promise<GnomeResponse> => {
-  const response = await axiosInstance.put(`/gnomes/${id}`, gnome);
-  return response.data;
-};
-
-export const GnomesService = {
-  getGnomes,
-  getGnomeById,
-  addGnome,
-  removeGnome,
-  updateGnome,
-};
+  static async removeGnome(id: string): Promise<void> {
+    const res = await fetch(`${BASE_URL}/${id}`, { method: "DELETE" });
+    if (!res.ok) throw new Error("Failed to remove gnome");
+  }
+}

@@ -127,10 +127,11 @@ function GnomeEdit() {
             className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
           />
         </label>
-        {errors.pictureURL && (
-          <span className="text-red-400">{errors.pictureURL.message}</span>
+        {errors.pictureURL?.message && (
+          <span className="text-red-400">
+            {String(errors.pictureURL.message)}
+          </span>
         )}
-
         <div className="flex flex-col justify-between h-40 flex-1">
           <Input
             type="text"

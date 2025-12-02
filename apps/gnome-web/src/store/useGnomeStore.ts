@@ -9,9 +9,12 @@ interface GnomeState {
   error: string | null;
 
   fetchGnomes: () => Promise<void>;
-  addGnome: (gnome: GnomeResponse) => Promise<void>;
+  addGnome: (payload: FormData) => Promise<GnomeResponse>;
   removeGnome: (id: string) => Promise<void>;
-  updateGnome: (id: string, gnome: Partial<GnomeResponse>) => Promise<void>;
+  updateGnome: (
+    id: string,
+    payload: Partial<CreateGnomeRequest>,
+  ) => Promise<GnomeResponse>;
 }
 
 export const useGnomeStore = create<GnomeState>((set) => ({
@@ -33,37 +36,24 @@ export const useGnomeStore = create<GnomeState>((set) => ({
     }
   },
 
-  addGnome: async (gnome) => {
-    try {
-      const newGnome = await GnomesService.addGnome(gnome);
-      set((state) => ({ gnomes: [...state.gnomes, newGnome] }));
-    } catch (error) {
-      console.error("Add gnome error:", error);
-    }
+  addGnome: async (payload: FormData) => {
+    const newGnome = await GnomesService.addGnome(payload);
+    set((state) => ({ gnomes: [...state.gnomes, newGnome] }));
+    return newGnome;
   },
 
-  removeGnome: async (id) => {
-    try {
-      await GnomesService.removeGnome(id);
-      set((state) => ({
-        gnomes: state.gnomes.filter((gnome) => gnome.id !== id),
-      }));
-    } catch (error) {
-      console.error("Remove gnome error:", error);
-    }
+  removeGnome: async (id: string) => {
+    await GnomesService.removeGnome(id);
+    set((state) => ({
+      gnomes: state.gnomes.filter((gnome) => gnome.id !== id),
+    }));
   },
 
-  updateGnome: async (id: string, gnome: Partial<CreateGnomeRequest>) => {
-    try {
-      const updated = await GnomesService.updateGnome(id, gnome);
-      set((state) => ({
-        gnomes: state.gnomes.map((g) =>
-          g.id === id ? { ...g, ...updated } : g,
-        ),
-      }));
-    } catch (error) {
-      console.error("Update gnome error:", error);
-      set({ error: "Failed to update gnome" });
-    }
+  updateGnome: async (id: string, payload: Partial<CreateGnomeRequest>) => {
+    const updated = await GnomesService.updateGnome(id, payload);
+    set((state) => ({
+      gnomes: state.gnomes.map((g) => (g.id === id ? { ...g, ...updated } : g)),
+    }));
+    return updated;
   },
 }));

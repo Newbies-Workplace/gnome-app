@@ -1,5 +1,4 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import type { CreateGnomeRequest } from "@repo/shared/requests";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate, useOutletContext } from "react-router-dom";
@@ -53,19 +52,19 @@ function GnomeAdd() {
   }, [selectedPosition, setValue]);
 
   const onSubmit = async (data: GnomeFormData) => {
-    const newGnome: CreateGnomeRequest = {
-      name: data.name,
-      description: data.description,
-      location: data.location,
-      funFact: data.funFact,
-      latitude: data.latitude,
-      longitude: data.longitude,
-      creationDate: new Date(),
-      pictureUrl: preview ?? "",
-    };
-
-    await addGnome(newGnome);
-    toast.success(`Dodano nowego krasnala "${data.name}"`);
+    const formData = new FormData();
+    formData.append("name", data.name);
+    formData.append("description", data.description);
+    formData.append("location", data.location);
+    formData.append("funFact", data.funFact ?? "");
+    formData.append("latitude", String(data.latitude ?? 0));
+    formData.append("longitude", String(data.longitude ?? 0));
+    formData.append("districtId", String(Number(data.districtId)));
+    if (data.pictureURL && data.pictureURL.length > 0) {
+      formData.append("file", data.pictureURL[0]);
+    }
+    const created = await addGnome(formData);
+    toast.success(`Dodano nowego krasnala "${created.name}"`);
     navigate("/gnomes");
   };
 
@@ -95,10 +94,11 @@ function GnomeAdd() {
             className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
           />
         </label>
-        {errors.pictureURL && (
-          <span className="text-red-400">{errors.pictureURL.message}</span>
+        {errors.pictureURL?.message && (
+          <span className="text-red-400">
+            {String(errors.pictureURL.message)}
+          </span>
         )}
-
         <div className="flex flex-col justify-between h-40 flex-1">
           <Input
             type="text"
@@ -106,8 +106,8 @@ function GnomeAdd() {
             {...register("name")}
             className="p-2 rounded bg-gray-800 text-white"
           />
-          {errors.name && (
-            <span className="text-red-400">{errors.name.message}</span>
+          {errors.name?.message && (
+            <span className="text-red-400">{String(errors.name.message)}</span>
           )}
           <select
             {...register("districtId", { valueAsNumber: true })}
@@ -120,22 +120,21 @@ function GnomeAdd() {
               </option>
             ))}
           </select>
-          {errors.districtId && (
-            <span className="text-red-400">{errors.districtId.message}</span>
+          {errors.districtId?.message && (
+            <span className="text-red-400">
+              {String(errors.districtId.message)}
+            </span>
           )}
-
-          {errors.districtId && (
-            <span className="text-red-400">{errors.districtId.message}</span>
-          )}
-
           <Input
             type="text"
             placeholder="Lokalizacja (nazwa miejsca)"
             {...register("location")}
             className="p-2 rounded bg-gray-800 text-white"
           />
-          {errors.location && (
-            <span className="text-red-400">{errors.location.message}</span>
+          {errors.location?.message && (
+            <span className="text-red-400">
+              {String(errors.location.message)}
+            </span>
           )}
         </div>
       </div>
@@ -161,8 +160,10 @@ function GnomeAdd() {
           {...register("description")}
           className="p-2 rounded bg-gray-800 text-white"
         />
-        {errors.description && (
-          <span className="text-red-400">{errors.description.message}</span>
+        {errors.description?.message && (
+          <span className="text-red-400">
+            {String(errors.description.message)}
+          </span>
         )}
       </label>
       <label className="flex flex-col gap-2">
@@ -172,8 +173,8 @@ function GnomeAdd() {
           {...register("funFact")}
           className="p-2 rounded bg-gray-800 text-white"
         />
-        {errors.funFact && (
-          <span className="text-red-400">{errors.funFact.message}</span>
+        {errors.funFact?.message && (
+          <span className="text-red-400">{String(errors.funFact.message)}</span>
         )}
       </label>
       <div className="flex gap-4 mt-4">
