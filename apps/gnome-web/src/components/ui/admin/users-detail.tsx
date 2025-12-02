@@ -8,21 +8,19 @@ import StoneIcon from "@/assets/icons/stone-icon.svg";
 import WoodIcon from "@/assets/icons/wood-icon.svg";
 import BuildPlaceHolder from "@/assets/images/placeholder.png";
 import GnomeAvatar from "@/assets/images/placeholder-user.png";
+import BuildsList from "@/components/ui/admin/builds-list";
 import { Button } from "@/components/ui/button";
-import {
-  Item,
-  ItemContent,
-  ItemDescription,
-  ItemTitle,
-} from "@/components/ui/item";
+import { Item, ItemContent, ItemTitle } from "@/components/ui/item";
 
 export default function UsersDetail() {
   return (
-    <div className="overflow-y-auto flex flex-col gap-2">
-      <div className="flex flex-1 h-0 p-4 gap-4">
+    <div className="overflow-hidden flex flex-col px-4 gap-4 h-full">
+      {/* Górna część */}
+      <div className="flex gap-4">
         <div className="w-1/4">
           <img className="w-full" src={GnomeAvatar} alt="Avatar" />
         </div>
+
         <Item>
           <div className="flex flex-col gap-2">
             <ItemContent>
@@ -36,72 +34,85 @@ export default function UsersDetail() {
           </div>
         </Item>
       </div>
-      <div className="flex flex-col gap-2 ">
-        {/* Statystyki */}
-        <div className="flex flex-row w-full gap-4">
-          {/* Sekcja 3/4 */}
-          <div className="w-3/4 flex items-center justify-between px-4 py-2 rounded-4xl border border-black text-2xl text-white font-Afacad">
-            <div className="flex items-center gap-2">
-              <img src={BerryIcon} alt="berry" className="h-10 w-10" />
-              <span>12</span>
+
+      {/* Statystyki */}
+      <div className="flex flex-row gap-4">
+        {/* Sekcja 3/4 */}
+        <div className="flex flex-row rounded-4xl border-solid border-1 border-black text-2xl text-white font-Afacad px-4 py-2 w-full items-center">
+          <div className="flex flex-row w-full justify-between">
+            <div className="flex flex-row items-center">
+              <img
+                src={BerryIcon}
+                alt="berry"
+                className="w-8 h-8 flex-shrink-0"
+              />
+              <div>12</div>
             </div>
 
-            <div className="flex items-center gap-2">
-              <img src={StoneIcon} alt="stone" className="h-10 w-10" />
-              <span>10</span>
+            <div className="flex flex-row items-center">
+              <img
+                src={StoneIcon}
+                alt="stone"
+                className="w-8 h-8 flex-shrink-0"
+              />
+              <div>10</div>
             </div>
 
-            <div className="flex items-center gap-2">
-              <img src={WoodIcon} alt="wood" className="h-10 w-10 " />
-              <span>5</span>
+            <div className="flex flex-row items-center">
+              <img
+                src={WoodIcon}
+                alt="wood"
+                className="w-8 h-8 flex-shrink-0"
+              />
+              <div>5</div>
             </div>
-          </div>
-
-          {/* Sekcja 1/4 */}
-          <div className="w-1/4 flex">
-            <Button className="h-full w-full flex items-center justify-center text-4xl leading-none border border-black rounded-4xl bg-primary-gray">
-              <img src={PlusIcon} alt="Plus" />
-            </Button>
           </div>
         </div>
-        {/* Przyciski */}
 
-        <div className="flex flex-col gap-2 w-full">
-          <Button className="bg-primary-color rounded-4xl">
-            <img src={BlockIcon} alt="block" />
-            Zbanuj użytkownika
+        {/* Sekcja 1/4 */}
+        <div>
+          <Button className="h-full w-full flex items-center justify-center text-4xl leading-none border border-black rounded-4xl bg-primary-gray">
+            <img src={PlusIcon} alt="Plus" />
           </Button>
-          <Button className="bg-primary-color rounded-4xl">
-            <img src={DeleteIcon} alt="delete" />
-            Usuń budowle użytkownika
-          </Button>
         </div>
+      </div>
+      {/* Przyciski */}
+      <div className="flex flex-col gap-2 w-full">
+        <Button className="bg-primary-color rounded-4xl">
+          <img src={BlockIcon} />
+          Zbanuj użytkownika
+        </Button>
 
-        {/* Budowle użytkownika */}
-        <div className="flex flex-col gap-4">
-          <div className="text-white text-left font-Afacad text-lg">
-            Budowle:
-          </div>
-          <div className="flex w-full h-full items-center text-left text-white font-Afacad">
-            <img
-              src={BuildPlaceHolder}
-              alt="user"
-              className="w-16 h-16 object-cover rounded flex-shrink-0"
-            />
-            <div className="flex flex-col ml-4 h-16 justify-between flex-1">
-              <div className="text-white font-bold text-lg leading-tight">
-                Strażnicza
-              </div>
-              <div className="flex flex-row justify-end items-center">
-                <img src={ClockIcon} alt="clock" className="w-4 h-4 mr-1" />
-                <span className="text-gray-300 text-sm">15h</span>
-              </div>
-              <div className="text-gray-400 text-xs leading-tight">
-                Psie pole
-              </div>
-            </div>
-          </div>
-        </div>
+        <Button className="bg-primary-color rounded-4xl">
+          <img src={DeleteIcon} />
+          Usuń budowle użytkownika
+        </Button>
+      </div>
+
+      <div className="text-white text-Afacad text-xl">Budowle:</div>
+
+      {/* LISTA — jedyna przewijana */}
+      <div className="flex-1 overflow-y-auto min-h-0">
+        <BuildsList />
+        <BuildsList />
+        <BuildsList />
+        <BuildsList />
+        <BuildsList />
+        <BuildsList />
+        <BuildsList />
+        <BuildsList />
+        <BuildsList />
+        <BuildsList />
+        <BuildsList />
+        <BuildsList />
+        <BuildsList />
+        <BuildsList />
+        <BuildsList />
+        <BuildsList />
+        <BuildsList />
+        <BuildsList />
+        <BuildsList />
+        <BuildsList />
       </div>
     </div>
   );
