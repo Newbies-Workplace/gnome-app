@@ -2,12 +2,12 @@ import { ConfigContext, ExpoConfig } from "expo/config";
 
 export default ({ config }: ConfigContext): ExpoConfig => ({
   ...config,
-  name: "gnome-mobile",
-  slug: "gnome-mobile",
+  name: "Krasnal GO",
+  slug: "Krasnal GO",
   owner: "rstnewbies",
   version: "1.0.0",
   orientation: "portrait",
-  icon: "./src/assets/images/icon.png",
+  icon: "./src/assets/images/applogo.png",
   scheme: "gnome-mobile",
   userInterfaceStyle: "automatic",
   newArchEnabled: true,
@@ -17,7 +17,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   },
   android: {
     adaptiveIcon: {
-      foregroundImage: "./src/assets/images/adaptive-icon.png",
+      foregroundImage: "./src/assets/images/applogo.png",
       backgroundColor: "#ffffff",
     },
     package: "pl.newbies.gnomes",
