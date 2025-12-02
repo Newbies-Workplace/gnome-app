@@ -1,4 +1,15 @@
 services:
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    restart: unless-stopped
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - '9090:9090'
+
+
   minio:
     image: docker.io/minio/minio:RELEASE.2022-12-12T19-27-27Z
     command: server /data --console-address ":9001"
@@ -12,17 +23,33 @@ services:
       - 'minio_data:/data'
 
   gnome-db:
+    container_name: gnome-db
     image: postgres:15.3
     restart: unless-stopped
     environment:
       POSTGRES_USER: gnome
       POSTGRES_PASSWORD: gnome
     ports:
-      - "5432:5432"
+      - "5432:5432" 
     volumes:
       - gnome-db-data:/var/lib/postgresql/data
 
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    restart: unless-stopped
+    ports:
+      - '3001:3000'
+    volumes:
+      - grafana-storage:/var/lib/grafana
+      - ./grafana/provisioning:/etc/grafana/provisioning
+      - ./grafana/dashboards:/var/lib/grafana/dashboards
+    depends_on:
+     - prometheus
+     - gnome-db
+
 volumes:
+  grafana-storage: {}
   gnome-db-data:
   minio_data:
     driver: local
