@@ -1,4 +1,3 @@
-import BottomSheet, { BottomSheetView } from "@gorhom/bottom-sheet";
 import { GnomeResponse } from "@repo/shared/responses";
 import { Portal } from "@rn-primitives/portal";
 import { LinearGradient } from "expo-linear-gradient";
@@ -16,10 +15,6 @@ import {
 import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
 import { SafeAreaView } from "react-native-safe-area-context";
 import FriendIcon from "@/assets/icons/add-friend.svg";
-import GnomeDetailsFullScreenIcon from "@/assets/icons/FullscreenButton.svg";
-import GnomeCaughtCountIcon from "@/assets/icons/GnomeCaughtCount.svg";
-import GnomeHowFarAwayIcon from "@/assets/icons/GnomeHowFarAway.svg";
-import GnomeLocationIcon from "@/assets/icons/GnomeLocation.svg";
 import LocationOffIcon from "@/assets/icons/location-off.svg";
 import TeamIcon from "@/assets/icons/team.svg";
 import GnomePin from "@/assets/images/GnomePin.svg";
@@ -29,6 +24,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Compass from "@/components/ui/compass";
 import DistanceTracker from "@/components/ui/DistanceTracker";
 import DraggableGnome from "@/components/ui/DraggableGnome";
+import { GnomeDetailsBottomSheet } from "@/components/ui/GnomeDetailsBottomSheet";
 import { Text } from "@/components/ui/text";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useFriendsStore } from "@/store/useFriendsStore";
@@ -143,7 +139,7 @@ const MapScreen = () => {
   });
   const [distance, setDistance] = useState<number>();
   const [closestGnomeId, setClosestGnomeId] = useState<string>();
-  const gnomeDetailsBottomSheetRef = useRef<BottomSheet>(null);
+  const bottomSheetRef = useRef<any>(null);
   const [selectedGnome, setSelectedGnome] = useState<GnomeResponse | null>(
     null,
   );
@@ -320,7 +316,7 @@ const MapScreen = () => {
           <Marker
             onPress={() => {
               setSelectedGnome(gnome);
-              gnomeDetailsBottomSheetRef.current?.expand();
+              bottomSheetRef.current?.expand();
             }}
             key={gnome.id}
             coordinate={{
@@ -356,56 +352,12 @@ const MapScreen = () => {
         />
       )}
       <Portal name="BottomSheet">
-        <BottomSheet
-          ref={gnomeDetailsBottomSheetRef}
-          enablePanDownToClose
-          backgroundClassName="bg-background"
-          handleIndicatorClassName="bg-tekst w-20 mt-2 rounded-lg"
-          index={-1}
-        >
-          <BottomSheetView className="p-5 rounded-t-2xl relative">
-            <TouchableOpacity
-              onPress={() => {
-                gnomeDetailsBottomSheetRef.current?.close();
-                router.push(`/gnomes/${selectedGnome?.id}`);
-              }}
-            >
-              <GnomeDetailsFullScreenIcon className="absolute top-3 right-3" />
-            </TouchableOpacity>
-            <View className="mb-5">
-              <Text className="text-2xl font-semibold text-tekst">
-                {selectedGnome?.name}
-              </Text>
-            </View>
-
-            <View className="space-y-4">
-              <View className="flex-row items-center">
-                <GnomeLocationIcon />
-                <Text className="ml-3 text-base text-tekst">
-                  {selectedGnome?.location}
-                </Text>
-              </View>
-
-              <View className="flex-row items-center">
-                <GnomeHowFarAwayIcon />
-                <Text className="ml-3 text-base text-tekst">
-                  {formattedDistance ?? "Brak danych"}
-                </Text>
-              </View>
-
-              <View className="flex-row items-center">
-                <GnomeCaughtCountIcon />
-                <Text className="ml-3 text-base text-tekst">
-                  {
-                    interactions.filter((i) => i.gnomeId === selectedGnome?.id)
-                      .length
-                  }{" "}
-                  osób
-                </Text>
-              </View>
-            </View>
-          </BottomSheetView>
-        </BottomSheet>
+        <GnomeDetailsBottomSheet
+          ref={bottomSheetRef}
+          selectedGnome={selectedGnome}
+          formattedDistance={formattedDistance}
+          interactions={interactions}
+        />
       </Portal>
     </SafeAreaView>
   );
