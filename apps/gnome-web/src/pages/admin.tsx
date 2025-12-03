@@ -1,9 +1,10 @@
-import { GoogleMap, useJsApiLoader } from "@react-google-maps/api";
+import { GoogleMap, Marker, useJsApiLoader } from "@react-google-maps/api";
 import { useState } from "react";
 import { NavLink, Outlet, useLocation } from "react-router-dom";
 import BuildsIcon from "@/assets/icons/builds-icon.svg";
 import EventsIcon from "@/assets/icons/events-icon.svg";
 import GnomeIcon from "@/assets/icons/gnome-icon.svg";
+import MarkerIcon from "@/assets/icons/mark-icon.svg";
 import UsersIcon from "@/assets/icons/users-icon.svg";
 import backgroundImage from "@/assets/images/background.png";
 import { MapStyle } from "@/components/map-styles";
@@ -76,7 +77,17 @@ export default function AdminPage() {
                   setSelectedPosition({ lat, lng });
                 }
               }}
-            />
+            >
+              {selectedPosition && (
+                <Marker
+                  position={selectedPosition}
+                  icon={{
+                    url: MarkerIcon,
+                    scaledSize: new window.google.maps.Size(40, 40),
+                  }}
+                />
+              )}
+            </GoogleMap>
           )}
         </div>
         <div className="w-1/4 h-full bg-primary-gray flex flex-col">

@@ -88,11 +88,11 @@ function GnomeDetail() {
               {gnome.location}
             </div>
             <div className="text-m flex flex-row gap-2">
-              <img src={FoundIcon} alt="date" className="w-6 h-6" />
+              <img src={CreationIcon} alt="date" className="w-6 h-6" />
               {new Date(gnome.creationDate).toLocaleDateString()}
             </div>
             <div className="text-m flex flex-row gap-2">
-              <img src={CreationIcon} alt="users" className="w-6 h-6" />0 osób
+              <img src={FoundIcon} alt="users" className="w-6 h-6" />0 osób
             </div>
           </div>
         </div>
