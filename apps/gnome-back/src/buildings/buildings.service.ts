@@ -139,7 +139,7 @@ export class BuildingsService {
   }
   async removeDeadBuildings() {
     await this.prismaService.building.deleteMany({
-      where: { health: { lte: 1 } },
+      where: { health: { lte: 0 } },
     });
   }
   async attackBuilding(id: string, damage: number): Promise<BuildingResponse> {
@@ -170,9 +170,8 @@ export class BuildingsService {
       },
     });
   }
-  async decayBuilding() {
-    await this.removeDeadBuildings();
-    return this.prismaService.building.updateMany({
+  async decayBuildings() {
+    await this.prismaService.building.updateMany({
       where: {
         health: { gt: 0 },
       },
@@ -180,5 +179,6 @@ export class BuildingsService {
         health: { decrement: 1 },
       },
     });
+    await this.removeDeadBuildings();
   }
 }

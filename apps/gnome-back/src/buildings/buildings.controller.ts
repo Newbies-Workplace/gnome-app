@@ -91,7 +91,7 @@ export class BuildingsController {
     return await this.buildingsService.attackBuilding(buildingId, damage);
   }
   @Cron(CronExpression.EVERY_HOUR)
-  async decayBuilding() {
-    return await this.buildingsService.decayBuilding();
+  async decayBuildings() {
+    await this.buildingsService.decayBuildings();
   }
 }
