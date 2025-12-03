@@ -211,54 +211,54 @@ async function main() {
 
   const achievements = [
     {
-      id: "47bb20ea-2ae9-4f97-9012-095a04ae3ee9",
+      id: "gnomeCollect-1",
       name: "To jest ich więcej?",
       description:
         "Twoja podróż jako zbieracz krasnali dopiero się rozpoczęła.",
     },
     {
-      id: "224553b4-ae02-4aa0-9e99-5c3a50134a29",
+      id: "gnomeCollect-10",
       name: "Początkujący zbieracz",
       description:
         "Twoja podróż jako zbieracz krasnali dopiero się rozpoczęła.",
     },
     {
-      id: "fab5d7c0-46db-4ed2-8426-a18f5d263da9",
+      id: "gnomeCollect-20",
       name: "Młodszy zbieracz",
       description: "Wygląda na to, że zaczynasz rozumieć o co w tym chodzi.",
     },
     {
-      id: "a1c31786-8c2d-4503-890a-4e519dd2e885",
+      id: "gnomeCollect-50",
       name: "Doświadczony zbieracz",
       description:
         "Wygląda na to, że zaczynasz naprawdę doceniać rzadkość niektórych okazów.",
     },
     {
-      id: "274707cb-c457-443a-878e-05c8e4330f2f",
+      id: "gnomeCollect-80",
       name: "Kolekcjoner krasnali",
       description:
         "Twoja kolekcja zaczyna budzić szaczunek. Niektórzy twierdzą, że czują twoją aurę z daleka.",
     },
     {
-      id: "b8d07d69-2004-4462-8b92-dc34d0a32697",
+      id: "gnomeCollect-100",
       name: "Stary wyjadacz",
       description:
         "Wiesz o krasnalach więcej, niż powinno być możliwe. Powoli stajesz się legendą.",
     },
     {
-      id: "762117ca-71b7-4e74-9b79-f41e0834ca66",
+      id: "gnomeCollect-150",
       name: "Mistrz zbieractwa krasnali",
       description:
         "Zbierasz takie okazy, o których inni tylko słyszeli w opowieściach przy ognisku.",
     },
     {
-      id: "204b0de2-4165-4759-b6ff-ff6147ccb97c",
+      id: "gnomeCollect-200",
       name: "Boski zbieracz",
       description:
         "Twoje imię krąży wśród zbieraczy jak mit. Niektórzy nie wierzą, że naprawdę istniejesz.",
     },
     {
-      id: "1ae1dd28-223f-4073-bdfe-d59e5fb55e6f",
+      id: "gnomeCollect-all",
       name: "Legendarny zbieracz",
       description:
         "Twoje zbiory są tak imponujące, że bogowie zaczęli się zastanawiać, czy nie zabrać od ciebie kilku sztuk. Pora dotknąć trawy...",
@@ -268,6 +268,7 @@ async function main() {
   for (const achievement of achievements) {
     await prisma.achievement.create({
       data: {
+        id: achievement.id,
         name: achievement.name,
         description: achievement.description,
       },
