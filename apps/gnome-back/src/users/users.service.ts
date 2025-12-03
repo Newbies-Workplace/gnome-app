@@ -1,5 +1,6 @@
 import { Injectable } from "@nestjs/common";
-import { User, UserResource } from "@prisma/client";
+import { Team, User, UserResource } from "@prisma/client";
+import { AssignTeam } from "@repo/shared/requests";
 import { customAlphabet } from "nanoid";
 import { GoogleUser } from "@/auth/types/google-user";
 import { PrismaService } from "@/db/prisma.service";
@@ -101,6 +102,13 @@ export class UsersService {
       where: {
         userId: userId,
       },
+    });
+  }
+
+  async assignTeam(userId: string, team: Team) {
+    return this.prismaService.user.update({
+      where: { id: userId },
+      data: { Team: team },
     });
   }
 }

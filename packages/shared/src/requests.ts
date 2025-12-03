@@ -141,3 +141,15 @@ export class AttackBuildingRequest {
   @IsNotEmpty()
   clicks!: number;
 }
+
+export enum Team {
+  TEAM1 = "Leśny Ród",
+  TEAM2 = "Górnicza Brać",
+  TEAM3 = "Miejska Gwardia",
+}
+
+export class AssignTeam {
+  @IsEnum(Team)
+  @IsNotEmpty()
+  team!: Team;
+}
