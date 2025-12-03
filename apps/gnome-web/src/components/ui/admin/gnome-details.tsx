@@ -1,6 +1,10 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "sonner";
-import UserIcon from "@/assets/icons/users-icon.svg";
+import CreationIcon from "@/assets/icons/creation-icon.svg";
+import DeleteIcon from "@/assets/icons/delete-icon.svg";
+import EditIcon from "@/assets/icons/edit-icon.svg";
+import FoundIcon from "@/assets/icons/found-icon.svg";
+import LocationIcon from "@/assets/icons/location-icon.svg";
 import PlaceHolder from "@/assets/images/placeholder.png";
 import { Button } from "@/components/ui/button";
 import { useDistrictStore } from "@/store/useDistrictStore";
@@ -78,16 +82,18 @@ function GnomeDetail() {
           <div className="text-sm text-gray-300 text-center">
             {districtName || "Brak przypisanej dzielnicy"}
           </div>
-          <div className="text-m flex flex-row gap-2">
-            <img src={UserIcon} alt="location" className="w-6 h-6" />
-            {gnome.location}
-          </div>
-          <div className="text-m flex flex-row gap-2">
-            <img src={UserIcon} alt="date" className="w-6 h-6" />
-            {new Date(gnome.creationDate).toLocaleDateString()}
-          </div>
-          <div className="text-m flex flex-row gap-2">
-            <img src={UserIcon} alt="users" className="w-6 h-6" />0 osób
+          <div className="flex flex-col gap-2">
+            <div className="text-m flex flex-row gap-2">
+              <img src={LocationIcon} alt="location" className="w-6 h-6" />
+              {gnome.location}
+            </div>
+            <div className="text-m flex flex-row gap-2">
+              <img src={FoundIcon} alt="date" className="w-6 h-6" />
+              {new Date(gnome.creationDate).toLocaleDateString()}
+            </div>
+            <div className="text-m flex flex-row gap-2">
+              <img src={CreationIcon} alt="users" className="w-6 h-6" />0 osób
+            </div>
           </div>
         </div>
       </div>
@@ -96,13 +102,19 @@ function GnomeDetail() {
           onClick={handleEdit}
           className="w-1/2 text-center text-white font-Afacad bg-primary-color border-none rounded-4xl"
         >
-          Edytuj gnoma
+          <div className="flex flex-row gap-2 items-center">
+            <img src={EditIcon} alt="delete" className="w-6 h-6" />
+            Edytuj gnoma
+          </div>
         </Button>
         <Button
           onClick={handleDelete}
           className="w-1/2 text-center text-white font-Afacad bg-primary-color border-none rounded-4xl"
         >
-          Usuń gnoma
+          <div className="flex flex-row gap-2 items-center">
+            <img src={DeleteIcon} alt="delete" className="w-6 h-6" />
+            Usuń gnoma
+          </div>
         </Button>
       </div>
       <hr className="border-t-2 border-primary-color " />
