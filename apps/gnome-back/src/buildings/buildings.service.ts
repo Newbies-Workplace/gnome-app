@@ -137,4 +137,48 @@ export class BuildingsService {
       },
     });
   }
+  async removeDeadBuildings() {
+    await this.prismaService.building.deleteMany({
+      where: { health: { lte: 0 } },
+    });
+  }
+  async attackBuilding(id: string, damage: number): Promise<BuildingResponse> {
+    const buildingData = await this.prismaService.building.findUnique({
+      where: {
+        id: id,
+      },
+      select: {
+        health: true,
+      },
+    });
+    if (!buildingData) {
+      throw new NotFoundException("Budynek nie istnieje");
+    }
+    await this.prismaService.building.update({
+      where: {
+        id: id,
+      },
+      data: {
+        health: { decrement: damage },
+      },
+    });
+    await this.removeDeadBuildings();
+
+    return this.prismaService.building.findUnique({
+      where: {
+        id: id,
+      },
+    });
+  }
+  async decayBuildings() {
+    await this.prismaService.building.updateMany({
+      where: {
+        health: { gt: 0 },
+      },
+      data: {
+        health: { decrement: 1 },
+      },
+    });
+    await this.removeDeadBuildings();
+  }
 }
