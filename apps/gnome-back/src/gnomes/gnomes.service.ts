@@ -40,7 +40,7 @@ export class GnomesService {
     return { ...gnome, nearest };
   }
 
-  async getGnomeInteractionCount(gnomeId: string): Promise<number> {
+  async getGnomeUniqueInteractionCount(gnomeId: string): Promise<number> {
     const collection = await this.prismaService.gnomeInteraction.findMany({
       where: { gnomeId },
       distinct: ["userId"],
@@ -48,7 +48,7 @@ export class GnomesService {
     return collection.length;
   }
 
-  async getUserInteractionCount(userId: string): Promise<number> {
+  async getUserUniqueInteractionCount(userId: string): Promise<number> {
     const collection = await this.prismaService.gnomeInteraction.findMany({
       where: { userId },
       distinct: ["gnomeId"],

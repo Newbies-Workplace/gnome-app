@@ -28,8 +28,6 @@ export class AchievementsController {
     private readonly friendsService: FriendsService,
   ) {}
 
-  // Wyszukiwanie swoich achievementów
-
   @Get("@me")
   @UseGuards(JwtGuard)
   async getMyAchievements(
@@ -42,7 +40,7 @@ export class AchievementsController {
     return achievements;
   }
 
-  @Get(":id")
+  @Get("friend/:id")
   @UseGuards(JwtGuard)
   async getFriendAchievements(
     @Param("id") friendId: string,
@@ -61,8 +59,6 @@ export class AchievementsController {
 
     return achievements;
   }
-
-  // Wyszukiwanie daty zdobycia danego achievementu
 
   @Get("@me/:id")
   @UseGuards(JwtGuard)

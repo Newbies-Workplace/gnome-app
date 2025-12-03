@@ -78,7 +78,7 @@ export class GnomesController {
       throw new NotFoundException("Nie znaleziono gnoma");
     }
     const interactionCount =
-      this.gnomeService.getGnomeInteractionCount(gnomeId);
+      this.gnomeService.getGnomeUniqueInteractionCount(gnomeId);
     return interactionCount;
   }
 
@@ -155,7 +155,9 @@ export class GnomesController {
       body.gnomeId,
     );
 
-    const gnomeCount = await this.gnomeService.getUserInteractionCount(user.id);
+    const gnomeCount = await this.gnomeService.getUserUniqueInteractionCount(
+      user.id,
+    );
 
     await this.achievementService.unlockGnomeAchievement(user.id, gnomeCount);
 
