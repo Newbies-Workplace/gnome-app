@@ -134,13 +134,29 @@ export class GnomesService {
         [resource2]: { increment: amount2 },
       },
     });
-
+    const newResources = await this.prismaService.userResource.findUnique({
+      where: {
+        userId: userId,
+      },
+      select: {
+        berries: true,
+        stones: true,
+        sticks: true,
+      },
+    });
     return {
       ...createGnome,
       gnome: findGnome,
-      resources: {
-        [resource1]: updatedResources[resource1],
-        [resource2]: updatedResources[resource2],
+      _metadata: {
+        user_resources: {
+          berries: newResources.berries,
+          stones: newResources.stones,
+          sticks: newResources.sticks,
+        },
+        gathered_resources: {
+          [resource1]: amount1,
+          [resource2]: amount2,
+        },
       },
     };
   }
