@@ -25,6 +25,7 @@ import {
   InteractionResponse,
 } from "@repo/shared/responses";
 import { Express } from "express";
+import { AchievementsService } from "@/achievements/achievements.service";
 import { User } from "@/auth/decorators/jwt-user.decorator";
 import { JwtGuard } from "@/auth/guards/jwt.guard";
 import { JwtUser } from "@/auth/types/jwt-user";
@@ -40,6 +41,7 @@ export class GnomesController {
   constructor(
     private readonly gnomeService: GnomesService,
     private readonly minioService: MinioService,
+    private readonly achievementService: AchievementsService,
   ) {}
 
   // Pobieranie wszystkich gnomów
@@ -66,16 +68,18 @@ export class GnomesController {
     return gnomeData;
   }
 
-  // Pobieranie interakcji gnomów
-
+  // Pobieranie interakcji gnoma
   @Get(":id/interactions/count")
   @UseGuards(JwtGuard)
-  async getInteractionCount(@Param("id") gnomeId: string): Promise<number> {
-    const interactionCount = this.gnomeService.getInteractionCount(gnomeId);
+  async getGnomeInteractionCount(
+    @Param("id") gnomeId: string,
+  ): Promise<number> {
     const findGnome = await this.gnomeService.getGnomeData(gnomeId);
     if (!findGnome) {
       throw new NotFoundException("Nie znaleziono gnoma");
     }
+    const interactionCount =
+      this.gnomeService.getGnomeUniqueInteractionCount(gnomeId);
     return interactionCount;
   }
 
@@ -151,6 +155,12 @@ export class GnomesController {
       body.interactionDate,
       body.gnomeId,
     );
+
+    const gnomeCount = await this.gnomeService.getUserUniqueInteractionCount(
+      user.id,
+    );
+
+    await this.achievementService.unlockGnomeAchievement(user.id, gnomeCount);
 
     return interaction;
   }
