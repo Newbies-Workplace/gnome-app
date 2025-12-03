@@ -1,11 +1,9 @@
-import BottomSheet, {
-  BottomSheetBackdrop,
-  BottomSheetView,
-} from "@gorhom/bottom-sheet";
+import BottomSheet, { BottomSheetView } from "@gorhom/bottom-sheet";
 import { GnomeResponse } from "@repo/shared/responses";
+import { Portal } from "@rn-primitives/portal";
 import { LinearGradient } from "expo-linear-gradient";
 import * as Location from "expo-location";
-import { useRouter } from "expo-router";
+import { router, useRouter } from "expo-router";
 import { getDistance } from "geolib";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
@@ -37,7 +35,7 @@ import { useFriendsStore } from "@/store/useFriendsStore";
 import { useGnomeStore } from "@/store/useGnomeStore";
 
 // Maksymalna odległość w metrach
-const MAX_GNOME_RENDER_DISTANCE = 400;
+const MAX_GNOME_RENDER_DISTANCE = 1000;
 
 const MIN_TRACKER_DISTANCE = 50;
 const MIN_REACHED_DISTANCE = 15;
@@ -357,50 +355,58 @@ const MapScreen = () => {
           colors={["transparent", "hsl(359 63.4% 56.1%)"]}
         />
       )}
-
-      <BottomSheet
-        ref={gnomeDetailsBottomSheetRef}
-        enablePanDownToClose
-        backgroundClassName="bg-background"
-        handleIndicatorClassName="bg-tekst w-20 mt-2 rounded-lg"
-        index={-1}
-      >
-        <BottomSheetView className="p-5 rounded-t-2xl relative">
-          <GnomeDetailsFullScreenIcon className="absolute top-3 right-3" />
-
-          <View className="mb-5">
-            <Text className="text-2xl font-semibold text-tekst">
-              {selectedGnome?.name}
-            </Text>
-          </View>
-
-          <View className="space-y-4">
-            <View className="flex-row items-center">
-              <GnomeLocationIcon />
-              <Text className="ml-3 text-base text-tekst">
-                {selectedGnome?.location}
+      <Portal name="BottomSheet">
+        <BottomSheet
+          ref={gnomeDetailsBottomSheetRef}
+          enablePanDownToClose
+          backgroundClassName="bg-background"
+          handleIndicatorClassName="bg-tekst w-20 mt-2 rounded-lg"
+          index={-1}
+        >
+          <BottomSheetView className="p-5 rounded-t-2xl relative">
+            <TouchableOpacity
+              onPress={() => {
+                gnomeDetailsBottomSheetRef.current?.close();
+                router.push(`/gnomes/${selectedGnome?.id}`);
+              }}
+            >
+              <GnomeDetailsFullScreenIcon className="absolute top-3 right-3" />
+            </TouchableOpacity>
+            <View className="mb-5">
+              <Text className="text-2xl font-semibold text-tekst">
+                {selectedGnome?.name}
               </Text>
             </View>
 
-            <View className="flex-row items-center">
-              <GnomeHowFarAwayIcon />
-              <Text className="ml-3 text-base text-tekst">
-                {formattedDistance ?? "Brak danych"}
-              </Text>
-            </View>
+            <View className="space-y-4">
+              <View className="flex-row items-center">
+                <GnomeLocationIcon />
+                <Text className="ml-3 text-base text-tekst">
+                  {selectedGnome?.location}
+                </Text>
+              </View>
 
-            <View className="flex-row items-center">
-              <GnomeCaughtCountIcon />
-              <Text className="ml-3 text-base text-tekst">
-                {
-                  interactions.filter((i) => i.gnomeId === selectedGnome?.id)
-                    .length
-                }
-              </Text>
+              <View className="flex-row items-center">
+                <GnomeHowFarAwayIcon />
+                <Text className="ml-3 text-base text-tekst">
+                  {formattedDistance ?? "Brak danych"}
+                </Text>
+              </View>
+
+              <View className="flex-row items-center">
+                <GnomeCaughtCountIcon />
+                <Text className="ml-3 text-base text-tekst">
+                  {
+                    interactions.filter((i) => i.gnomeId === selectedGnome?.id)
+                      .length
+                  }{" "}
+                  osób
+                </Text>
+              </View>
             </View>
-          </View>
-        </BottomSheetView>
-      </BottomSheet>
+          </BottomSheetView>
+        </BottomSheet>
+      </Portal>
     </SafeAreaView>
   );
 };
