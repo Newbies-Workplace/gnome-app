@@ -48,15 +48,17 @@ const Collection = () => {
         renderItem={({ item }) => {
           const img = getImageForGnome(item.id);
           return (
-            <GnomeCard
-              image={img?.assetUri || item.pictureUrl}
-              text={item.name}
-              onClick={() => router.push(`/gnomes/${item.id}`)}
-              interaction={{
-                found: !!img,
-                userPicture: img?.assetUri,
-              }}
-            />
+            <View className="w-1/3">
+              <GnomeCard
+                image={img?.assetUri || item.pictureUrl}
+                text={item.name}
+                onClick={() => router.push(`/gnomes/${item.id}`)}
+                interaction={{
+                  found: !!img,
+                  userPicture: img?.assetUri,
+                }}
+              />
+            </View>
           );
         }}
         ListEmptyComponent={() =>
