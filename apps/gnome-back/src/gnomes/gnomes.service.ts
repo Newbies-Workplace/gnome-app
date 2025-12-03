@@ -1,7 +1,11 @@
 import { Injectable } from "@nestjs/common";
 import { Gnome } from "@prisma/client";
-import { CreateGnomeRequest } from "@repo/shared/requests";
-import { GnomeIdResponse } from "@repo/shared/responses";
+import {
+  CreateGnomeRequest,
+  CreateInteractionRequest,
+} from "@repo/shared/requests";
+import { GnomeIdResponse, InteractionResponse } from "@repo/shared/responses";
+import { promises } from "dns";
 import { PrismaService } from "@/db/prisma.service";
 import { DistrictsService } from "@/districts/districts.service";
 
@@ -108,7 +112,7 @@ export class GnomesService {
     userId: string,
     interactionDate: Date,
     gnomeId: string,
-  ) {
+  ): Promise<InteractionResponse> {
     const createGnome = await this.prismaService.gnomeInteraction.create({
       data: {
         userId,

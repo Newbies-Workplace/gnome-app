@@ -66,8 +66,23 @@ export interface InteractionResponse {
   gnomeId: string;
   userId: string;
   interactionDate: Date;
+  gnome: {
+    id: string;
+    name: string;
+  };
+  _metadata: {
+    user_resources: {
+      berries: number;
+      stones: number;
+      sticks: number;
+    };
+    gathered_resources: {
+      berries?: number;
+      stones?: number;
+      sticks?: number;
+    };
+  };
 }
-
 export interface ReportResponse {
   id: string;
   gnomeName: string;
