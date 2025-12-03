@@ -146,6 +146,9 @@ const MapScreen = () => {
   const [distance, setDistance] = useState<number>();
   const [closestGnomeId, setClosestGnomeId] = useState<string>();
   const gnomeDetailsBottomSheetRef = useRef<BottomSheet>(null);
+  const [selectedGnome, setSelectedGnome] = useState<GnomeResponse | null>(
+    null,
+  );
 
   const defaultRegion = {
     latitude: 51.109967,
@@ -261,6 +264,23 @@ const MapScreen = () => {
   const isGnomeCatcherVisible =
     distance !== undefined && distance <= MIN_REACHED_DISTANCE;
 
+  const selectedGnomeDistance = selectedGnome
+    ? getDistance(
+        { latitude: userLocation.latitude, longitude: userLocation.longitude },
+        {
+          latitude: selectedGnome.latitude,
+          longitude: selectedGnome.longitude,
+        },
+      )
+    : null;
+
+  const formattedDistance =
+    selectedGnomeDistance !== null
+      ? selectedGnomeDistance < 1000
+        ? `${selectedGnomeDistance} m`
+        : `${(selectedGnomeDistance / 1000).toFixed(2)} km`
+      : null;
+
   return (
     <SafeAreaView className="flex-1">
       <View className="absolute top-10 left-1/2 -translate-x-1/2 px-10 gap-2 z-10">
@@ -301,6 +321,7 @@ const MapScreen = () => {
         {filteredGnomes.map((gnome) => (
           <Marker
             onPress={() => {
+              setSelectedGnome(gnome);
               gnomeDetailsBottomSheetRef.current?.expand();
             }}
             key={gnome.id}
@@ -349,7 +370,7 @@ const MapScreen = () => {
 
           <View className="mb-5">
             <Text className="text-2xl font-semibold text-tekst">
-              Nazwa krasnala
+              {selectedGnome?.name}
             </Text>
           </View>
 
@@ -357,21 +378,24 @@ const MapScreen = () => {
             <View className="flex-row items-center">
               <GnomeLocationIcon />
               <Text className="ml-3 text-base text-tekst">
-                Lokalizacja krasnala
+                {selectedGnome?.location}
               </Text>
             </View>
 
             <View className="flex-row items-center">
               <GnomeHowFarAwayIcon />
               <Text className="ml-3 text-base text-tekst">
-                Odległość od krasnala
+                {formattedDistance ?? "Brak danych"}
               </Text>
             </View>
 
             <View className="flex-row items-center">
               <GnomeCaughtCountIcon />
               <Text className="ml-3 text-base text-tekst">
-                Ilość razy zebrany krasnal
+                {
+                  interactions.filter((i) => i.gnomeId === selectedGnome?.id)
+                    .length
+                }
               </Text>
             </View>
           </View>
