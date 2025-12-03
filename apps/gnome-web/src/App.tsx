@@ -9,7 +9,9 @@ import GnomesPanel from "@/pages/gnomes/gnomes-panel";
 import HomePage from "@/pages/home";
 import LoginPage from "@/pages/login";
 import LoginCallback from "@/pages/login-callback";
+import Privacy from "@/pages/privacy";
 import { RequireAuth } from "@/pages/requireAuth";
+import UserDetail from "@/pages/users/users-detail-panel";
 import UsersPanel from "@/pages/users/users-panel";
 import { useAuthStore } from "./store/useAuthStore";
 
@@ -17,6 +19,10 @@ const router = createBrowserRouter([
   {
     path: "/",
     element: <HomePage />,
+  },
+  {
+    path: "privacy",
+    element: <Privacy />,
   },
   {
     path: "login",
@@ -62,6 +68,10 @@ const router = createBrowserRouter([
       {
         path: "users",
         element: <UsersPanel />,
+      },
+      {
+        path: "users/:id",
+        element: <UserDetail />,
       },
     ],
   },

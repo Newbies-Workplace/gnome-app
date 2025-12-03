@@ -101,8 +101,8 @@ model Building {
   health     Int
   latitude   Float
   longitude  Float
-  district    District?    @relation(fields: [districtId], references: [id])
-  districtId  Int?
+  district   District?    @relation(fields: [districtId], references: [id])
+  districtId Int?
   type       BuildingType @default(MINE)
   createdAt  DateTime     @default(now())
   Owner      User         @relation(fields: [ownerId], references: [id], onDelete: Cascade)
@@ -129,14 +129,14 @@ enum BuildingInteractionType {
 }
 
 model District {
-  id     Int     @id @default(autoincrement())
-  name   String
-  points Json
-  minX   Float
-  maxX   Float
-  minY   Float
-  maxY   Float
-  gnomes Gnome[]
+  id        Int        @id @default(autoincrement())
+  name      String
+  points    Json
+  minX      Float
+  maxX      Float
+  minY      Float
+  maxY      Float
+  gnomes    Gnome[]
   buildings Building[]
 }
 
