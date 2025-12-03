@@ -1,39 +1,32 @@
 import type { CreateGnomeRequest } from "@repo/shared/requests";
 import type { GnomeResponse } from "@repo/shared/responses";
+import { axiosInstance } from "@/api/axios";
 
-const BASE_URL = "/gnomes";
+const getGnomes = async (): Promise<GnomeResponse[]> => {
+  const response = await axiosInstance.get("/gnomes");
+  return response.data;
+};
 
-export class GnomesService {
-  static async getGnomes(): Promise<GnomeResponse[]> {
-    const res = await fetch(BASE_URL, { method: "GET" });
-    if (!res.ok) throw new Error("Failed to load gnomes");
-    return res.json();
-  }
+const addGnome = async (payload: FormData): Promise<GnomeResponse> => {
+  const response = await axiosInstance.post("/gnomes", payload);
+  return response.data;
+};
 
-  static async addGnome(payload: FormData): Promise<GnomeResponse> {
-    const res = await fetch(BASE_URL, {
-      method: "POST",
-      body: payload,
-    });
-    if (!res.ok) throw new Error("Failed to add gnome");
-    return res.json();
-  }
+const updateGnome = async (
+  id: string,
+  payload: Partial<CreateGnomeRequest>,
+): Promise<GnomeResponse> => {
+  const response = await axiosInstance.put(`/gnomes/${id}`, payload);
+  return response.data;
+};
 
-  static async updateGnome(
-    id: string,
-    payload: Partial<CreateGnomeRequest>,
-  ): Promise<GnomeResponse> {
-    const res = await fetch(`${BASE_URL}/${id}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-    });
-    if (!res.ok) throw new Error("Failed to update gnome");
-    return res.json();
-  }
+const removeGnome = async (id: string): Promise<void> => {
+  await axiosInstance.delete(`/gnomes/${id}`);
+};
 
-  static async removeGnome(id: string): Promise<void> {
-    const res = await fetch(`${BASE_URL}/${id}`, { method: "DELETE" });
-    if (!res.ok) throw new Error("Failed to remove gnome");
-  }
-}
+export const GnomesService = {
+  getGnomes,
+  addGnome,
+  updateGnome,
+  removeGnome,
+};

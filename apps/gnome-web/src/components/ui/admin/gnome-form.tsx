@@ -8,7 +8,6 @@ import type { GnomeFormData } from "@/schemas/gnomeSchema";
 import { gnomeSchema } from "@/schemas/gnomeSchema";
 
 type GnomeFormProps = {
-  defaultValues?: Partial<GnomeFormData>;
   districts: { id: number; name: string }[];
   selectedPosition?: { lat: number; lng: number } | null;
   onSubmit: (data: GnomeFormData, preview: string | null) => void;
@@ -16,15 +15,12 @@ type GnomeFormProps = {
 };
 
 export function GnomeForm({
-  defaultValues,
   districts,
   selectedPosition,
   onSubmit,
   onCancel,
 }: GnomeFormProps) {
-  const [preview, setPreview] = useState<string | null>(
-    defaultValues?.pictureURL?.[0] || null,
-  );
+  const [preview, setPreview] = useState<string | null>(null);
 
   const {
     register,
@@ -35,17 +31,19 @@ export function GnomeForm({
   } = useForm<GnomeFormData>({
     resolver: zodResolver(gnomeSchema),
     defaultValues: {
-      name: defaultValues?.name || "",
-      description: defaultValues?.description || "",
-      location: defaultValues?.location || "",
-      funFact: defaultValues?.funFact || "",
-      latitude: defaultValues?.latitude || 0,
-      longitude: defaultValues?.longitude || 0,
-      districtId: defaultValues?.districtId ?? 0,
+      name: "",
+      description: "",
+      location: "",
+      funFact: "",
+      latitude: 0,
+      longitude: 0,
+      districtId: 0,
       pictureURL: [] as any,
     },
   });
+
   const pictureFile = watch("pictureURL");
+
   useEffect(() => {
     if (pictureFile && pictureFile.length > 0) {
       const file = pictureFile[0];
@@ -54,6 +52,7 @@ export function GnomeForm({
       reader.readAsDataURL(file);
     }
   }, [pictureFile]);
+
   useEffect(() => {
     if (selectedPosition) {
       setValue("latitude", selectedPosition.lat);
@@ -66,7 +65,8 @@ export function GnomeForm({
       onSubmit={handleSubmit((data) => onSubmit(data, preview))}
       className="text-white p-6 flex flex-col gap-4 font-Afacad max-w-2xl mx-auto"
     >
-      <h2 className="text-2xl font-bold mb-4">Edytuj krasnala</h2>
+      <h2 className="text-2xl font-bold mb-4">Dodaj krasnala</h2>
+
       <div className="flex flex-row items-stretch gap-4">
         <label className="relative w-32 h-40 rounded overflow-hidden bg-gray-700 cursor-pointer">
           {preview ? (
@@ -83,6 +83,7 @@ export function GnomeForm({
               Nowe zdjęcie
             </div>
           )}
+
           <input
             type="file"
             accept="image/*"
@@ -90,11 +91,13 @@ export function GnomeForm({
             className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
           />
         </label>
+
         {errors.pictureURL?.message && (
           <div className="text-red-400">
             {String(errors.pictureURL.message)}
           </div>
         )}
+
         <div className="flex flex-col justify-between h-40 flex-1">
           <Input
             type="text"
@@ -108,7 +111,7 @@ export function GnomeForm({
 
           <select
             {...register("districtId", { valueAsNumber: true })}
-            className="p-2 rounded bg-gray-800 text-white w-full focus:outline-none focus:ring-2 focus:ring-primary-color"
+            className="p-2 rounded bg-gray-800 text-white w-full"
           >
             <option value="">-- Wybierz dzielnicę --</option>
             {districts.map((d) => (
@@ -117,6 +120,7 @@ export function GnomeForm({
               </option>
             ))}
           </select>
+
           {errors.districtId && (
             <div className="text-red-400">{errors.districtId.message}</div>
           )}
@@ -132,11 +136,13 @@ export function GnomeForm({
           )}
         </div>
       </div>
+
       <Input type="hidden" {...register("latitude", { valueAsNumber: true })} />
       <Input
         type="hidden"
         {...register("longitude", { valueAsNumber: true })}
       />
+
       {selectedPosition ? (
         <div className="bg-gray-800 p-2 rounded text-sm text-gray-300">
           <p>📍 Wybrany punkt na mapie:</p>
@@ -148,6 +154,7 @@ export function GnomeForm({
           Kliknij na mapie, aby wybrać punkt
         </div>
       )}
+
       <label className="flex flex-col gap-2">
         Opis:
         <textarea
@@ -158,6 +165,7 @@ export function GnomeForm({
           <div className="text-red-400">{errors.description.message}</div>
         )}
       </label>
+
       <label className="flex flex-col gap-2">
         Ciekawostka:
         <Input
@@ -169,12 +177,13 @@ export function GnomeForm({
           <div className="text-red-400">{errors.funFact.message}</div>
         )}
       </label>
+
       <div className="flex gap-4 mt-4">
         <Button
           type="submit"
           className="flex-1 bg-primary-color text-white rounded-2xl"
         >
-          Zapisz zmiany
+          Dodaj
         </Button>
         <Button
           type="button"

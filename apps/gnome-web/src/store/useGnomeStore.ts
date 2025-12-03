@@ -24,36 +24,69 @@ export const useGnomeStore = create<GnomeState>((set) => ({
 
   fetchGnomes: async () => {
     set({ loading: true, error: null });
+
     try {
       const data = await GnomesService.getGnomes();
       set({ gnomes: data, loading: false });
     } catch (error: any) {
-      if (error.response?.status === 401) {
-        set({ error: "Brak autoryzacji – zaloguj się", loading: false });
-      } else {
-        set({ error: "Failed to load gnomes", loading: false });
-      }
+      const message =
+        error?.response?.status === 401
+          ? "Brak autoryzacji – zaloguj się"
+          : "Nie udało się pobrać gnomów";
+
+      set({ error: message, loading: false });
     }
   },
 
   addGnome: async (payload: FormData) => {
-    const newGnome = await GnomesService.addGnome(payload);
-    set((state) => ({ gnomes: [...state.gnomes, newGnome] }));
-    return newGnome;
+    try {
+      set({ loading: true, error: null });
+
+      const newGnome = await GnomesService.addGnome(payload);
+
+      set((state) => ({
+        gnomes: [...state.gnomes, newGnome],
+        loading: false,
+      }));
+
+      return newGnome;
+    } catch (error) {
+      set({ loading: false, error: "Nie udało się dodać gnoma" });
+      throw error;
+    }
   },
 
   removeGnome: async (id: string) => {
-    await GnomesService.removeGnome(id);
-    set((state) => ({
-      gnomes: state.gnomes.filter((gnome) => gnome.id !== id),
-    }));
+    try {
+      set({ loading: true, error: null });
+
+      await GnomesService.removeGnome(id);
+
+      set((state) => ({
+        gnomes: state.gnomes.filter((g) => g.id !== id),
+        loading: false,
+      }));
+    } catch (error) {
+      set({ loading: false, error: "Nie udało się usunąć gnoma" });
+      throw error;
+    }
   },
 
-  updateGnome: async (id: string, payload: Partial<CreateGnomeRequest>) => {
-    const updated = await GnomesService.updateGnome(id, payload);
-    set((state) => ({
-      gnomes: state.gnomes.map((g) => (g.id === id ? { ...g, ...updated } : g)),
-    }));
-    return updated;
+  updateGnome: async (id, payload) => {
+    try {
+      set({ loading: true, error: null });
+
+      const updated = await GnomesService.updateGnome(id, payload);
+
+      set((state) => ({
+        gnomes: state.gnomes.map((g) => (g.id === id ? updated : g)),
+        loading: false,
+      }));
+
+      return updated;
+    } catch (error) {
+      set({ loading: false, error: "Nie udało się zaktualizować gnoma" });
+      throw error;
+    }
   },
 }));

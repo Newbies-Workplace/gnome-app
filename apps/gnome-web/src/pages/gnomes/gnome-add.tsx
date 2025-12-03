@@ -12,22 +12,27 @@ type OutletContextType = {
 export default function GnomeAddPage() {
   const { selectedPosition } = useOutletContext<OutletContextType>();
   const navigate = useNavigate();
-  const { addGnome } = useGnomeStore();
-  const { districts } = useDistrictStore();
+
+  const addGnome = useGnomeStore((s) => s.addGnome);
+  const districts = useDistrictStore((s) => s.districts);
 
   const handleSubmit = async (data: GnomeFormData, preview: string | null) => {
     const formData = new FormData();
+
     formData.append("name", data.name);
     formData.append("description", data.description);
     formData.append("location", data.location);
-    formData.append("funFact", data.funFact ?? "");
-    formData.append("latitude", String(data.latitude ?? 0));
-    formData.append("longitude", String(data.longitude ?? 0));
+
+    formData.append("funFact", data.funFact || "");
+    formData.append("latitude", String(data.latitude || 0));
+    formData.append("longitude", String(data.longitude || 0));
 
     if (data.pictureURL && data.pictureURL.length > 0) {
       formData.append("file", data.pictureURL[0]);
     }
+
     const created = await addGnome(formData);
+
     toast.success(`Dodano nowego krasnala "${created.name}"`);
     navigate("/gnomes");
   };
