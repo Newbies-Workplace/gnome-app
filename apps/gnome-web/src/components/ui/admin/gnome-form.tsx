@@ -15,7 +15,6 @@ type GnomeFormProps = {
 };
 
 export function GnomeForm({
-  districts,
   selectedPosition,
   onSubmit,
   onCancel,
@@ -37,7 +36,6 @@ export function GnomeForm({
       funFact: "",
       latitude: 0,
       longitude: 0,
-      districtId: 0,
       pictureURL: [] as any,
     },
   });
@@ -108,23 +106,6 @@ export function GnomeForm({
           {errors.name && (
             <div className="text-red-400">{errors.name.message}</div>
           )}
-
-          <select
-            {...register("districtId", { valueAsNumber: true })}
-            className="p-2 rounded bg-gray-800 text-white w-full"
-          >
-            <option value="">-- Wybierz dzielnicę --</option>
-            {districts.map((d) => (
-              <option key={d.id} value={d.id}>
-                {d.name}
-              </option>
-            ))}
-          </select>
-
-          {errors.districtId && (
-            <div className="text-red-400">{errors.districtId.message}</div>
-          )}
-
           <Input
             type="text"
             placeholder="Lokalizacja (nazwa miejsca)"
