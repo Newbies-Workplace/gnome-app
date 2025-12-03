@@ -5,6 +5,9 @@ import BuildDetail from "@/pages/builds/builds-detail-panel";
 import BuildsPanel from "@/pages/builds/builds-panel";
 import EventsPanel from "@/pages/events/events-panel";
 import GnomeEvents from "@/pages/events/gnome-event";
+import GnomeDetails from "@/pages/gnomes/[gnome-id]";
+import GnomeEdit from "@/pages/gnomes/[gnome-id]-edit";
+import GnomeAdd from "@/pages/gnomes/gnome-add";
 import GnomesPanel from "@/pages/gnomes/gnomes-panel";
 import HomePage from "@/pages/home";
 import LoginPage from "@/pages/login";
@@ -48,6 +51,18 @@ const router = createBrowserRouter([
       {
         index: true,
         element: <GnomesPanel />,
+      },
+      {
+        path: "gnomes/add",
+        element: <GnomeAdd />,
+      },
+      {
+        path: "gnomes/edit/:id",
+        element: <GnomeEdit />,
+      },
+      {
+        path: "gnomes/:id",
+        element: <GnomeDetails />,
       },
       {
         path: "builds",
