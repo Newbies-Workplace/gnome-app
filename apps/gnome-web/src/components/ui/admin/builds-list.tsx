@@ -5,8 +5,8 @@ import { Item } from "@/components/ui/item";
 
 function BuildsList() {
   return (
-    <Item className="w-full h-20 rounded-4xl bg-primary-gray hover:bg-white/10 transition p-4">
-      <Link to="1">
+    <Link to="1">
+      <Item className="w-full h-20 rounded-4xl bg-primary-gray hover:bg-white/10 transition p-4">
         <div className="flex w-full h-full items-center text-left text-white font-Afacad">
           <img
             src={BuildPlaceHolder}
@@ -24,8 +24,8 @@ function BuildsList() {
             <div className="text-gray-400 text-xs leading-tight">Autor</div>
           </div>
         </div>
-      </Link>
-    </Item>
+      </Item>
+    </Link>
   );
 }
 

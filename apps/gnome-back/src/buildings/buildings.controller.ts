@@ -3,20 +3,20 @@ import {
   Controller,
   Delete,
   Get,
-  InternalServerErrorException,
   NotFoundException,
   Param,
   Patch,
   Post,
-  Req,
   UseGuards,
 } from "@nestjs/common";
 import { UserRole } from "@prisma/client";
 import {
+  AttackBuildingRequest,
   CreateBuildingRequest,
-  updateBuildingRequest,
+  EmpowerBuildingRequest,
 } from "@repo/shared/requests";
 import { BuildingResponse } from "@repo/shared/responses";
+import { max } from "class-validator";
 import { User } from "@/auth/decorators/jwt-user.decorator";
 import { JwtGuard } from "@/auth/guards/jwt.guard";
 import { JwtUser } from "@/auth/types/jwt-user";
@@ -72,11 +72,21 @@ export class BuildingsController {
   @UseGuards(JwtGuard)
   async updateBuilding(
     @Param("id") buildingId: string,
-    @Body() body: updateBuildingRequest,
+    @Body() body: EmpowerBuildingRequest,
   ) {
     return await this.buildingsService.empowerBuilding(
       buildingId,
       body.gnomeCount,
     );
+  }
+  @Patch(":id/attack")
+  @UseGuards(JwtGuard)
+  async attackBuilding(
+    @Param("id") buildingId: string,
+    @Body() body: AttackBuildingRequest,
+  ) {
+    const maxDamage = 40;
+    const damage = Math.min(body.clicks * 0.2, maxDamage);
+    return await this.buildingsService.attackBuilding(buildingId, damage);
   }
 }
