@@ -4,7 +4,11 @@ import {
   CreateGnomeRequest,
   CreateInteractionRequest,
 } from "@repo/shared/requests";
-import { GnomeIdResponse, InteractionResponse } from "@repo/shared/responses";
+import {
+  GnomeIdResponse,
+  InteractionExtendedResponse,
+  InteractionResponse,
+} from "@repo/shared/responses";
 import { promises } from "dns";
 import { PrismaService } from "@/db/prisma.service";
 import { DistrictsService } from "@/districts/districts.service";
@@ -112,7 +116,7 @@ export class GnomesService {
     userId: string,
     interactionDate: Date,
     gnomeId: string,
-  ): Promise<InteractionResponse> {
+  ): Promise<InteractionExtendedResponse> {
     const createGnome = await this.prismaService.gnomeInteraction.create({
       data: {
         userId,
@@ -152,12 +156,12 @@ export class GnomesService {
       ...createGnome,
       gnome: findGnome,
       _metadata: {
-        user_resources: {
+        userResources: {
           berries: newResources.berries,
           stones: newResources.stones,
           sticks: newResources.sticks,
         },
-        gathered_resources: {
+        gatheredResources: {
           [resource1]: amount1,
           [resource2]: amount2,
         },
