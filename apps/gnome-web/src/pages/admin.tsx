@@ -50,12 +50,12 @@ export default function AdminPage() {
     >
       <div className="w-full p-4 flex justify-between items-center bg-transparent">
         <div className="flex gap-4">
-          <button className="bg-primary-gray text-white text-xl font-Afacad px-6 py-2 rounded-3xl hover:opacity-90 transition">
+          <button className="bg-primary-gray text-white text-xl font-Afacad px-6 py-2 rounded-4xl hover:opacity-90 transition">
             Główna
           </button>
           <button
             onClick={logout}
-            className="bg-primary-color text-white text-xl font-Afacad px-6 py-2 rounded-3xl hover:opacity-90 transition"
+            className="bg-primary-color text-white text-xl font-Afacad px-6 py-2 rounded-4xl hover:opacity-90 transition"
           >
             Wyloguj
           </button>
@@ -79,28 +79,28 @@ export default function AdminPage() {
             />
           )}
         </div>
-        <div className="w-1/4 h-full bg-primary-gray rounded-4xl flex flex-col">
-          <Tabs
-            value={currentTab}
-            className="bg-primary-gray rounded-4xl p-2 m-2"
-          >
-            <TabsList className="grid grid-cols-4 gap-2 p-2 w-full bg-primary-gray rounded-4xl">
-              <TabsTrigger value="gnomes">
+        <div className="w-1/4 h-full bg-primary-gray flex flex-col">
+          <Tabs value={currentTab} className="bg-primary-gray p-2 m-2">
+            <TabsList className="grid grid-cols-4 gap-2 p-2 w-full bg-primary-gray">
+              <TabsTrigger value="gnomes" className="rounded-4xl">
                 <NavLink to="/admin">
                   <img src={GnomeIcon} alt="gnome" />
                 </NavLink>
               </TabsTrigger>
-              <TabsTrigger value="builds">
+
+              <TabsTrigger value="builds" className="rounded-4xl">
                 <NavLink to="/admin/builds">
                   <img src={BuildsIcon} alt="builds" />
                 </NavLink>
               </TabsTrigger>
-              <TabsTrigger value="events">
+
+              <TabsTrigger value="events" className="rounded-4xl">
                 <NavLink to="/admin/events">
                   <img src={EventsIcon} alt="events" />
                 </NavLink>
               </TabsTrigger>
-              <TabsTrigger value="users">
+
+              <TabsTrigger value="users" className="rounded-4xl">
                 <NavLink to="/admin/users">
                   <img src={UsersIcon} alt="users" />
                 </NavLink>
