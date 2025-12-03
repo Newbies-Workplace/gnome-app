@@ -8,7 +8,7 @@ const getGnomes = async (): Promise<GnomeResponse[]> => {
 };
 
 const addGnome = async (payload: FormData): Promise<GnomeResponse> => {
-  const response = await axiosInstance.post("/gnomes", payload);
+  const response = await axiosInstance.postForm("/gnomes", payload);
   return response.data;
 };
 

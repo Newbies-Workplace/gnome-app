@@ -26,6 +26,7 @@ export default function GnomeAddPage() {
     formData.append("funFact", data.funFact || "");
     formData.append("latitude", String(data.latitude || 0));
     formData.append("longitude", String(data.longitude || 0));
+    formData.append("creationDate", new Date().toISOString());
 
     if (data.pictureURL && data.pictureURL.length > 0) {
       formData.append("file", data.pictureURL[0]);
@@ -34,7 +35,7 @@ export default function GnomeAddPage() {
     const created = await addGnome(formData);
 
     toast.success(`Dodano nowego krasnala "${created.name}"`);
-    navigate("/gnomes");
+    navigate("/admin");
   };
 
   return (

@@ -8,7 +8,6 @@ export const gnomeSchema = z.object({
     .string()
     .max(200, "Ciekawostka nie może przekraczać 200 znaków")
     .optional(),
-  districtId: z.number().int().min(1, "Dzielnica jest wymagana"),
   pictureURL: z
     .any()
     .refine(
