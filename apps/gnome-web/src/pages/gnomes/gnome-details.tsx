@@ -1,38 +1,14 @@
 import { useNavigate, useParams } from "react-router-dom";
-import { toast } from "sonner";
 import CreationIcon from "@/assets/icons/creation-icon.svg";
 import DeleteIcon from "@/assets/icons/delete-icon.svg";
 import EditIcon from "@/assets/icons/edit-icon.svg";
 import FoundIcon from "@/assets/icons/found-icon.svg";
 import LocationIcon from "@/assets/icons/location-icon.svg";
 import PlaceHolder from "@/assets/images/placeholder.png";
+import { useToastNavigate } from "@/components/hooks/useToastNavigate";
 import { Button } from "@/components/ui/button";
 import { useDistrictStore } from "@/store/useDistrictStore";
 import { useGnomeStore } from "@/store/useGnomeStore";
-
-function useToastNavigate() {
-  const navigate = useNavigate();
-
-  const toastNavigate = (
-    path: string,
-    message: string,
-    type: "success" | "error" | "info" = "info",
-  ) => {
-    switch (type) {
-      case "success":
-        toast.success(message);
-        break;
-      case "error":
-        toast.error(message);
-        break;
-      default:
-        toast(message);
-    }
-    navigate(path);
-  };
-
-  return toastNavigate;
-}
 
 function GnomeDetail() {
   const { id } = useParams();
