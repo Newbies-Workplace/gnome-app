@@ -21,6 +21,7 @@ import {
 import {
   GnomeIdResponse,
   GnomeResponse,
+  InteractionExtendedResponse,
   InteractionResponse,
 } from "@repo/shared/responses";
 import { Express } from "express";
@@ -128,7 +129,7 @@ export class GnomesController {
   async createInteraction(
     @User() user: JwtUser,
     @Body() body: CreateInteractionRequest,
-  ): Promise<InteractionResponse> {
+  ): Promise<InteractionExtendedResponse> {
     const lastUserInteraction = await this.gnomeService.getLastInteraction(
       body.gnomeId,
       user.id,
