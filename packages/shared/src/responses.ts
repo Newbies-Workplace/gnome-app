@@ -67,7 +67,24 @@ export interface InteractionResponse {
   userId: string;
   interactionDate: Date;
 }
-
+export interface InteractionExtendedResponse extends InteractionResponse {
+  gnome: {
+    id: string;
+    name: string;
+  };
+  _metadata: {
+    userResources: {
+      berries: number;
+      stones: number;
+      sticks: number;
+    };
+    gatheredResources: {
+      berries?: number;
+      stones?: number;
+      sticks?: number;
+    };
+  };
+}
 export interface ReportResponse {
   id: string;
   gnomeName: string;

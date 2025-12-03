@@ -70,7 +70,7 @@ export class UsersService {
         inviteCode: await this.generateInviteCode(),
       },
     });
-    this.prismaService.userResource.create({
+    const resource = await this.prismaService.userResource.create({
       data: {
         userId: user.id,
       },
