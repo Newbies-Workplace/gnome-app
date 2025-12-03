@@ -1,13 +1,16 @@
 apiVersion: 1
+
 datasources:
   - name: PostgresDB
     type: postgres
     access: proxy
     url: gnome-db:5432
-    database: gnome
     user: gnome
     jsonData:
-      sslmode: disable
+      database: gnome
+      sslmode: disable     
+      postgresVersion: 1500
+      timescaledb: false
     secureJsonData:
       password: gnome
     isDefault: false
