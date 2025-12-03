@@ -4,7 +4,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import * as Location from "expo-location";
 import { router, useRouter } from "expo-router";
 import { getDistance } from "geolib";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Alert,
   Linking,
@@ -357,6 +357,10 @@ const MapScreen = () => {
           selectedGnome={selectedGnome}
           formattedDistance={formattedDistance}
           interactions={interactions}
+          onClick={() => {
+            bottomSheetRef.current?.close();
+            router.push(`/gnomes/${selectedGnome?.id}`);
+          }}
         />
       </Portal>
     </SafeAreaView>

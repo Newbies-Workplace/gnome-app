@@ -1,7 +1,6 @@
 import BottomSheet, { BottomSheetView } from "@gorhom/bottom-sheet";
-import { useRouter } from "expo-router";
-import React, { useRef } from "react";
-import { Text, TouchableOpacity, View } from "react-native";
+import React from "react";
+import { Image, Text, TouchableOpacity, View } from "react-native";
 import GnomeDetailsFullScreenIcon from "@/assets/icons/FullscreenButton.svg";
 import GnomeCaughtCountIcon from "@/assets/icons/GnomeCaughtCount.svg";
 import GnomeHowFarAwayIcon from "@/assets/icons/GnomeHowFarAway.svg";
@@ -12,6 +11,7 @@ interface Props {
     id: string;
     name: string;
     location: string;
+    pictureUrl: string;
   } | null;
 
   formattedDistance?: string | null;
@@ -19,6 +19,8 @@ interface Props {
   interactions: { gnomeId: string }[];
 
   ref: any;
+
+  onClick: any;
 }
 
 export const GnomeDetailsBottomSheet: React.FC<Props> = ({
@@ -26,9 +28,9 @@ export const GnomeDetailsBottomSheet: React.FC<Props> = ({
   formattedDistance,
   interactions,
   ref,
+  onClick,
 }) => {
-  const router = useRouter();
-  const bottomSheetRef = useRef<BottomSheet>(null);
+  const placeholder = require("@/assets/images/placeholder.png");
 
   return (
     <BottomSheet
@@ -39,45 +41,54 @@ export const GnomeDetailsBottomSheet: React.FC<Props> = ({
       index={-1}
     >
       <BottomSheetView className="p-5 rounded-t-2xl relative">
-        <TouchableOpacity
-          onPress={() => {
-            bottomSheetRef.current?.close();
-            router.push(`/gnomes/${selectedGnome?.id}`);
-          }}
-        >
-          <GnomeDetailsFullScreenIcon className="absolute top-3 right-3" />
-        </TouchableOpacity>
+        <View className="flex-row items-start space-x-4">
+          <Image
+            source={
+              selectedGnome?.pictureUrl
+                ? { uri: selectedGnome?.pictureUrl }
+                : placeholder
+            }
+            className="rounded-lg"
+          />
 
-        <View className="mb-5">
-          <Text className="text-2xl font-semibold text-tekst">
-            {selectedGnome?.name}
-          </Text>
-        </View>
+          {/* Teksty po prawej */}
+          <View className="flex-1 space-y-2 ml-3">
+            <View className="flex-row justify-between items-start">
+              <Text className="text-2xl font-semibold text-tekst">
+                {selectedGnome?.name}
+              </Text>
 
-        <View className="space-y-4">
-          <View className="flex-row items-center">
-            <GnomeLocationIcon />
-            <Text className="ml-3 text-base text-tekst">
-              {selectedGnome?.location}
-            </Text>
-          </View>
+              <TouchableOpacity onPress={onClick}>
+                <GnomeDetailsFullScreenIcon />
+              </TouchableOpacity>
+            </View>
 
-          <View className="flex-row items-center">
-            <GnomeHowFarAwayIcon />
-            <Text className="ml-3 text-base text-tekst">
-              {formattedDistance ?? "Brak danych"}
-            </Text>
-          </View>
+            <View className="space-y-1">
+              <View className="flex-row items-center">
+                <GnomeLocationIcon />
+                <Text className="ml-2 text-base text-tekst">
+                  {selectedGnome?.location}
+                </Text>
+              </View>
 
-          <View className="flex-row items-center">
-            <GnomeCaughtCountIcon />
-            <Text className="ml-3 text-base text-tekst">
-              {
-                interactions.filter((i) => i.gnomeId === selectedGnome?.id)
-                  .length
-              }{" "}
-              osób
-            </Text>
+              <View className="flex-row items-center">
+                <GnomeHowFarAwayIcon />
+                <Text className="ml-2 text-base text-tekst">
+                  {formattedDistance ?? "Brak danych"}
+                </Text>
+              </View>
+
+              <View className="flex-row items-center">
+                <GnomeCaughtCountIcon />
+                <Text className="ml-2 text-base text-tekst">
+                  {
+                    interactions.filter((i) => i.gnomeId === selectedGnome?.id)
+                      .length
+                  }{" "}
+                  osób
+                </Text>
+              </View>
+            </View>
           </View>
         </View>
       </BottomSheetView>
