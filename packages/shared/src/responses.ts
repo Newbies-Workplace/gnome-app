@@ -67,7 +67,24 @@ export interface InteractionResponse {
   userId: string;
   interactionDate: Date;
 }
-
+export interface InteractionExtendedResponse extends InteractionResponse {
+  gnome: {
+    id: string;
+    name: string;
+  };
+  _metadata: {
+    userResources: {
+      berries: number;
+      stones: number;
+      sticks: number;
+    };
+    gatheredResources: {
+      berries?: number;
+      stones?: number;
+      sticks?: number;
+    };
+  };
+}
 export interface ReportResponse {
   id: string;
   gnomeName: string;
@@ -111,7 +128,17 @@ export interface DistrictsResponse {
   id: number;
   name: string;
 }
-
+export interface BuildingResponse {
+  id: string;
+  gnomeCount: number;
+  health: number;
+  latitude: number;
+  longitude: number;
+  districtId: number;
+  type: string;
+  createdAt: Date;
+  ownerId: string;
+}
 export interface AchievementDataResponse {
   id: string;
   name: string;

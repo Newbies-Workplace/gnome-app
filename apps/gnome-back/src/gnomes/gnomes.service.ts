@@ -1,7 +1,15 @@
 import { Injectable } from "@nestjs/common";
 import { Gnome } from "@prisma/client";
-import { CreateGnomeRequest } from "@repo/shared/requests";
-import { GnomeIdResponse } from "@repo/shared/responses";
+import {
+  CreateGnomeRequest,
+  CreateInteractionRequest,
+} from "@repo/shared/requests";
+import {
+  GnomeIdResponse,
+  InteractionExtendedResponse,
+  InteractionResponse,
+} from "@repo/shared/responses";
+import { promises } from "dns";
 import { PrismaService } from "@/db/prisma.service";
 import { DistrictsService } from "@/districts/districts.service";
 
@@ -108,7 +116,7 @@ export class GnomesService {
     userId: string,
     interactionDate: Date,
     gnomeId: string,
-  ) {
+  ): Promise<InteractionExtendedResponse> {
     const createGnome = await this.prismaService.gnomeInteraction.create({
       data: {
         userId,
@@ -125,7 +133,7 @@ export class GnomesService {
     const { resource1, resource2, amount1, amount2 } =
       await this.getRandomResources();
 
-    await this.prismaService.userResource.update({
+    const updatedResources = await this.prismaService.userResource.update({
       where: {
         userId: userId,
       },
@@ -134,10 +142,30 @@ export class GnomesService {
         [resource2]: { increment: amount2 },
       },
     });
-
+    const newResources = await this.prismaService.userResource.findUnique({
+      where: {
+        userId: userId,
+      },
+      select: {
+        berries: true,
+        stones: true,
+        sticks: true,
+      },
+    });
     return {
       ...createGnome,
       gnome: findGnome,
+      _metadata: {
+        userResources: {
+          berries: newResources.berries,
+          stones: newResources.stones,
+          sticks: newResources.sticks,
+        },
+        gatheredResources: {
+          [resource1]: amount1,
+          [resource2]: amount2,
+        },
+      },
     };
   }
 }

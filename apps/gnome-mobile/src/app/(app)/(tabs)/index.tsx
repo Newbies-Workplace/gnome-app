@@ -25,6 +25,7 @@ import Compass from "@/components/ui/compass";
 import DistanceTracker from "@/components/ui/DistanceTracker";
 import DraggableGnome from "@/components/ui/DraggableGnome";
 import { GnomeDetailsBottomSheet } from "@/components/ui/GnomeDetailsBottomSheet";
+import ResourcesBar from "@/components/ui/ResourcesBar";
 import { Text } from "@/components/ui/text";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useFriendsStore } from "@/store/useFriendsStore";
@@ -79,15 +80,22 @@ const HeaderControls: React.FC<HeaderControlsProps> = ({
   return (
     <View className="flex-row justify-between items-center">
       <View className="flex flex-row items-center gap-5 w-full justify-between">
-        <TouchableOpacity onPress={() => router.push("/profile")}>
-          <Avatar alt="Your avatar" className="w-10 h-10">
-            <AvatarImage source={{ uri: user.pictureUrl }} />
-            <AvatarFallback>
-              <Text className="text-md">You</Text>
-            </AvatarFallback>
-          </Avatar>
-        </TouchableOpacity>
-
+        <View className="flex-row gap-3">
+          <TouchableOpacity onPress={() => router.push("/profile")}>
+            <Avatar alt="Your avatar" className="w-10 h-10">
+              <AvatarImage source={{ uri: user.pictureUrl }} />
+              <AvatarFallback>
+                <Text className="text-md">You</Text>
+              </AvatarFallback>
+            </Avatar>
+          </TouchableOpacity>
+          <ResourcesBar
+            onClick={() => router.push("/profile")}
+            berries={200}
+            stones={4500}
+            sticks={100}
+          />
+        </View>
         <View className="flex-row">
           {errorMsg && (
             <TouchableOpacity
