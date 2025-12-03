@@ -1,5 +1,7 @@
 import { GnomeResponse } from "@repo/shared/responses";
 
+const GNOME_CATCH_DELAY = 5 * 60 * 1000;
+
 export function getClosestGnome(
   distances: {
     gnome: GnomeResponse;
@@ -21,11 +23,8 @@ export function getClosestGnome(
       gnomeInteraction.interactionDate,
     ).getTime();
     const ageMs = Date.now() - interactionTime;
-    const FIVE_MIN_MS = 5 * 60 * 1000;
 
-    console.log(ageMs);
-
-    return ageMs > FIVE_MIN_MS;
+    return ageMs > GNOME_CATCH_DELAY;
   });
 
   const closestGnome = updatedDistances.reduce<{
