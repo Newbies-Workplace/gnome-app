@@ -5,13 +5,13 @@ datasources:
     type: postgres
     access: proxy
     url: gnome-db:5432
-    user: gnome
+    user: $GF_DB_USER
     jsonData:
-      database: gnome
+      database: $GF_DB_NAME
       sslmode: disable     
       postgresVersion: 1500
       timescaledb: false
     secureJsonData:
-      password: gnome
+      password: $GF_DB_PASSWORD
     isDefault: false
     editable: true

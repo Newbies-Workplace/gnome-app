@@ -1,15 +1,5 @@
 services:
 
-  prometheus:
-    image: prom/prometheus:latest
-    container_name: prometheus
-    restart: unless-stopped
-    volumes:
-      - ./prometheus.yml:/etc/prometheus/prometheus.yml
-    ports:
-      - '9090:9090'
-
-
   minio:
     image: docker.io/minio/minio:RELEASE.2022-12-12T19-27-27Z
     command: server /data --console-address ":9001"
@@ -38,6 +28,7 @@ services:
     image: grafana/grafana:latest
     container_name: grafana
     restart: unless-stopped
+    env_file: ./apps/gnome-back/.env
     ports:
       - '3001:3000'
     volumes:
@@ -48,6 +39,15 @@ services:
     depends_on:
      - prometheus
      - gnome-db
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    restart: unless-stopped
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - '9090:9090'
 
 volumes:
   grafana-storage: {}
