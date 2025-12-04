@@ -38,14 +38,14 @@ export const GnomeDetailsBottomSheet: React.FC<
     }
   }, [selectedGnome]);
 
-  const renderBackdrop = (props: BottomSheetBackdropProps) => (
-    <BottomSheetBackdrop
-      {...props}
-      pressBehavior="close"
-      appearsOnIndex={0}
-      disappearsOnIndex={-1}
-    />
-  );
+  // const renderBackdrop = (props: BottomSheetBackdropProps) => (
+  //   <BottomSheetBackdrop
+  //     {...props}
+  //     pressBehavior="close"
+  //     appearsOnIndex={0}
+  //     disappearsOnIndex={-1}
+  //   />
+  // );
 
   return (
     <BottomSheet
@@ -53,7 +53,7 @@ export const GnomeDetailsBottomSheet: React.FC<
       enablePanDownToClose
       backgroundClassName="bg-background"
       handleIndicatorClassName="bg-tekst w-20 mt-2 rounded-lg"
-      backdropComponent={renderBackdrop}
+      // backdropComponent={renderBackdrop}
       index={-1}
     >
       <BottomSheetView className="p-5 rounded-t-2xl relative">
@@ -81,21 +81,21 @@ export const GnomeDetailsBottomSheet: React.FC<
 
             <View className="space-y-1">
               <View className="flex-row items-center">
-                <GnomeLocationIcon />
+                <GnomeLocationIcon className="text-tekst" />
                 <Text className="ml-2 text-base text-tekst">
                   {selectedGnome?.location}
                 </Text>
               </View>
 
               <View className="flex-row items-center">
-                <GnomeHowFarAwayIcon />
+                <GnomeHowFarAwayIcon className="text-tekst" />
                 <Text className="ml-2 text-base text-tekst">
                   {formattedDistance ?? "Brak danych"}
                 </Text>
               </View>
 
               <View className="flex-row items-center">
-                <GnomeCaughtCountIcon />
+                <GnomeCaughtCountIcon className="text-tekst" />
                 <Text className="ml-2 text-base text-tekst">
                   {selectedGnome
                     ? (interactionCount[selectedGnome.id] ?? 0)
