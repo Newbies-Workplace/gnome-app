@@ -23,7 +23,7 @@ function SettingsScreen() {
   const themeBottomSheetRef = useRef<BottomSheet>(null);
   const languageBottomSheetRef = useRef<BottomSheet>(null);
   const { setColorScheme } = useColorScheme();
-
+  const { accessToken } = useAuthStore();
   const { deleteAccount } = useAuthStore();
 
   const handleAccountDelete = () => {
@@ -155,6 +155,12 @@ function SettingsScreen() {
           text="Usuń konto"
           image={AccoutDeleteIcon}
           onClick={handleAccountDelete}
+          customClass="mb-8 text-primary"
+        />
+        <SettingsOption
+          text="Usuń konto"
+          image={AccoutDeleteIcon}
+          onClick={() => console.log(accessToken)}
           customClass="mb-8 text-primary"
         />
       </View>

@@ -142,14 +142,9 @@ export class AttackBuildingRequest {
   clicks!: number;
 }
 
-export enum Team {
-  TEAM1 = "Leśny Ród",
-  TEAM2 = "Górnicza Brać",
-  TEAM3 = "Miejska Gwardia",
-}
+export type Team = "TEAM1" | "TEAM2" | "TEAM3";
 
 export class AssignTeam {
-  @IsEnum(Team)
   @IsNotEmpty()
   team!: Team;
 }

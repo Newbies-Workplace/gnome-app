@@ -1,6 +1,6 @@
-import { Injectable } from "@nestjs/common";
-import { Team, User, UserResource } from "@prisma/client";
-import { AssignTeam } from "@repo/shared/requests";
+import { ConflictException, Injectable } from "@nestjs/common";
+import { Team as PrismaTeam, User, UserResource } from "@prisma/client";
+import { AssignTeam, Team } from "@repo/shared/requests";
 import { customAlphabet } from "nanoid";
 import { GoogleUser } from "@/auth/types/google-user";
 import { PrismaService } from "@/db/prisma.service";
@@ -106,9 +106,18 @@ export class UsersService {
   }
 
   async assignTeam(userId: string, team: Team) {
+    const hasAssigned = await this.prismaService.user.findFirst({
+      where: {
+        id: userId,
+      },
+    });
+
+    if (hasAssigned.Team)
+      throw new ConflictException("User already have assigned team");
+
     return this.prismaService.user.update({
       where: { id: userId },
-      data: { Team: team },
+      data: { Team: team as unknown as PrismaTeam },
     });
   }
 }
