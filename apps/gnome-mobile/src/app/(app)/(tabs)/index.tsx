@@ -152,6 +152,18 @@ const MapScreen = () => {
   });
   const [distance, setDistance] = useState<number>();
   const [closestGnomeId, setClosestGnomeId] = useState<string>();
+  const resourceSheetRef = useRef<BottomSheet | null>(null);
+  const [isResourceSheetVisible, setIsResourceSheetVisible] = useState(false);
+  const openResourcesSheet = () => {
+    setIsResourceSheetVisible(true);
+    resourceSheetRef.current?.expand();
+  };
+  const handlecloseResourcesSheet = () => {
+    resourceSheetRef.current?.close();
+    setIsResourceSheetVisible(false);
+  };
+  const { addPendingInteraction, latestInteractions } =
+    useGnomeInteractionStore();
 
   const defaultRegion = {
     latitude: 51.109967,
