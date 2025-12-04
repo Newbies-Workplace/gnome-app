@@ -32,9 +32,9 @@ export const GnomeDetailsBottomSheet: React.FC<
   const renderBackdrop = (props: BottomSheetBackdropProps) => (
     <BottomSheetBackdrop
       {...props}
-      disappearsOnIndex={-1}
-      appearsOnIndex={0}
       pressBehavior="close"
+      appearsOnIndex={0}
+      disappearsOnIndex={-1}
     />
   );
 
@@ -44,8 +44,8 @@ export const GnomeDetailsBottomSheet: React.FC<
       enablePanDownToClose
       backgroundClassName="bg-background"
       handleIndicatorClassName="bg-tekst w-20 mt-2 rounded-lg"
-      index={-1}
       backdropComponent={renderBackdrop}
+      index={-1}
     >
       <BottomSheetView className="p-5 rounded-t-2xl relative">
         <View className="flex-row items-start space-x-4">
