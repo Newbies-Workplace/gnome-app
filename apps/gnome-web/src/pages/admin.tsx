@@ -37,6 +37,8 @@ export default function AdminPage() {
     lat: number;
     lng: number;
   } | null>(null);
+  const [mapRef, setMapRef] = useState<google.maps.Map | null>(null);
+  const [clusterer, setClusterer] = useState<MarkerClusterer | null>(null);
 
   if (loadError) {
     console.error("Error while loading google map:", loadError);
@@ -55,27 +57,9 @@ export default function AdminPage() {
     navigate(`/admin/gnomes/${gnomeId}`);
   };
 
-  const onMapLoad = useCallback(
-    (map: google.maps.Map) => {
-      if (!Array.isArray(gnomes)) return;
-
-      const markers = gnomes.map((gnome) => {
-        const marker = new google.maps.Marker({
-          position: { lat: gnome.latitude, lng: gnome.longitude },
-          icon: {
-            url: GnomePinIcon,
-            scaledSize: new google.maps.Size(40, 40),
-          },
-        });
-
-        marker.addListener("click", () => onGnomeMarkerClick(gnome.id));
-        return marker;
-      });
-
-      new MarkerClusterer({ markers, map });
-    },
-    [gnomes, onGnomeMarkerClick],
-  );
+  const onMapLoad = useCallback((map: google.maps.Map) => {
+    setMapRef(map);
+  }, []);
 
   const mapOptions = {
     fullscreenControl: false,
@@ -95,11 +79,39 @@ export default function AdminPage() {
   const [showGnomesOnMap, setShowGnomesOnMap] = useState<Checked>(true);
   const [showBuildsOnMap, setShowBuildsOnMap] = useState<Checked>(false);
 
+  useEffect(() => {
+    if (!mapRef) return;
+
+    if (clusterer) {
+      clusterer.clearMarkers();
+      setClusterer(null);
+    }
+
+    if (showGnomesOnMap && Array.isArray(gnomes)) {
+      const markers = gnomes.map((gnome) => {
+        const marker = new google.maps.Marker({
+          position: { lat: gnome.latitude, lng: gnome.longitude },
+          icon: {
+            url: GnomePinIcon,
+            scaledSize: new google.maps.Size(40, 40),
+          },
+        });
+
+        marker.addListener("click", () => onGnomeMarkerClick(gnome.id));
+        return marker;
+      });
+
+      const newClusterer = new MarkerClusterer({ markers, map: mapRef });
+      setClusterer(newClusterer);
+    }
+  }, [showGnomesOnMap, gnomes, mapRef]);
+
   return (
     <div
       className="h-screen w-screen bg-cover bg-center bg-no-repeat flex flex-col overflow-hidden"
       style={{ backgroundImage: `url(${backgroundImage})` }}
     >
+      {/* Header */}
       <div className="w-full p-4 flex justify-between items-center bg-transparent">
         <div className="flex gap-4">
           <button className="bg-primary-gray text-white text-xl font-Afacad px-6 py-2 rounded-4xl hover:opacity-90 transition">
