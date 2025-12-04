@@ -3,12 +3,13 @@ import BottomSheet, {
   BottomSheetBackdropProps,
   BottomSheetView,
 } from "@gorhom/bottom-sheet";
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect } from "react";
 import { Image, Text, TouchableOpacity, View } from "react-native";
 import GnomeDetailsFullScreenIcon from "@/assets/icons/FullscreenButton.svg";
 import GnomeCaughtCountIcon from "@/assets/icons/GnomeCaughtCount.svg";
 import GnomeHowFarAwayIcon from "@/assets/icons/GnomeHowFarAway.svg";
 import GnomeLocationIcon from "@/assets/icons/GnomeLocation.svg";
+import { useGnomeInteractionStore } from "@/store/useGnomeInteractionStore";
 
 interface GnomeDetailsBottomSheetProps {
   selectedGnome: {
@@ -26,8 +27,16 @@ interface GnomeDetailsBottomSheetProps {
 
 export const GnomeDetailsBottomSheet: React.FC<
   GnomeDetailsBottomSheetProps
-> = ({ selectedGnome, formattedDistance, interactions, ref, onClick }) => {
+> = ({ selectedGnome, formattedDistance, ref, onClick }) => {
   const placeholder = require("@/assets/images/placeholder.png");
+  const { interactionCount, fetchInteractionCount } =
+    useGnomeInteractionStore();
+
+  useEffect(() => {
+    if (selectedGnome) {
+      fetchInteractionCount(selectedGnome.id);
+    }
+  }, [selectedGnome]);
 
   const renderBackdrop = (props: BottomSheetBackdropProps) => (
     <BottomSheetBackdrop
@@ -88,10 +97,9 @@ export const GnomeDetailsBottomSheet: React.FC<
               <View className="flex-row items-center">
                 <GnomeCaughtCountIcon />
                 <Text className="ml-2 text-base text-tekst">
-                  {
-                    interactions.filter((i) => i.gnomeId === selectedGnome?.id)
-                      .length
-                  }{" "}
+                  {selectedGnome
+                    ? (interactionCount[selectedGnome.id] ?? 0)
+                    : 0}{" "}
                   osób
                 </Text>
               </View>

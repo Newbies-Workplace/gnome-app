@@ -33,9 +33,6 @@ import { useFriendsStore } from "@/store/useFriendsStore";
 import { useGnomeInteractionStore } from "@/store/useGnomeInteractionStore";
 import { useGnomeStore } from "@/store/useGnomeStore";
 
-// Maksymalna odległość w metrach
-const MAX_GNOME_RENDER_DISTANCE = 1000;
-
 const MIN_TRACKER_DISTANCE = 50;
 const MIN_REACHED_DISTANCE = 15;
 
@@ -227,7 +224,7 @@ const MapScreen = () => {
       longitude: gnome.longitude,
     });
 
-    return distance <= MAX_GNOME_RENDER_DISTANCE;
+    return distance;
   });
 
   useEffect(() => {
@@ -322,6 +319,7 @@ const MapScreen = () => {
           <Marker
             onPress={() => {
               setSelectedGnome(gnome);
+              gnome.location;
               bottomSheetRef.current?.expand();
             }}
             key={gnome.id}
@@ -359,7 +357,7 @@ const MapScreen = () => {
           colors={["transparent", "hsl(359 63.4% 56.1%)"]}
         />
       )}
-      <Portal name="GnomeDetailsBottomSheet">
+      <Portal name="GnomeDetailsBottomSheet" hostName="Maps">
         <GnomeDetailsBottomSheet
           ref={bottomSheetRef}
           selectedGnome={selectedGnome}
