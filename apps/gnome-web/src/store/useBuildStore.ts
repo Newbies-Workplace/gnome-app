@@ -19,7 +19,6 @@ export const useBuildStore = create<BuildState>((set) => ({
 
     try {
       const data = await BuildingsService.getBuildings();
-      console.log("API ZWRÓCIŁO:", data); // 👈 DODAJ TO
 
       set({
         buildings: Array.isArray(data) ? data : [data],
