@@ -383,6 +383,7 @@ const MapScreen = () => {
             router.push(`/gnomes/${selectedGnome?.id}`);
           }}
         />
+      </Portal>
       <Portal name="ResourcesInfoSheet">
         {isResourceSheetVisible && (
           <ResourcesBottomSheet
