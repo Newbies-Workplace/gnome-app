@@ -27,8 +27,10 @@ import DraggableGnome from "@/components/ui/DraggableGnome";
 import { GnomeDetailsBottomSheet } from "@/components/ui/GnomeDetailsBottomSheet";
 import ResourcesBar from "@/components/ui/ResourcesBar";
 import { Text } from "@/components/ui/text";
+import { getClosestGnome } from "@/lib/getClosestGnome";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useFriendsStore } from "@/store/useFriendsStore";
+import { useGnomeInteractionStore } from "@/store/useGnomeInteractionStore";
 import { useGnomeStore } from "@/store/useGnomeStore";
 
 // Maksymalna odległość w metrach
@@ -151,6 +153,8 @@ const MapScreen = () => {
   const [selectedGnome, setSelectedGnome] = useState<GnomeResponse | null>(
     null,
   );
+  const { addPendingInteraction, latestInteractions } =
+    useGnomeInteractionStore();
 
   const defaultRegion = {
     latitude: 51.109967,
@@ -239,22 +243,14 @@ const MapScreen = () => {
       return { gnome, distance };
     });
 
-    // Znajdź najbliższego gnoma
-    const closestGnome = distances.reduce<{
-      gnome: GnomeResponse;
-      distance: number;
-    } | null>((closest, current) => {
-      if (!closest || current.distance < closest.distance) {
-        return current;
-      }
-      return closest;
-    }, null);
+    const closestGnome = getClosestGnome(distances, latestInteractions);
 
     if (closestGnome) {
       setClosestGnomeId(closestGnome.gnome.id);
     }
 
     if (closestGnome) {
+      console.log(closestGnome.gnome.id);
       setDistance(Math.round(closestGnome.distance));
     }
   }, [userLocation, gnomes]);
@@ -264,7 +260,9 @@ const MapScreen = () => {
     distance > MIN_REACHED_DISTANCE &&
     distance <= MIN_TRACKER_DISTANCE;
   const isGnomeCatcherVisible =
-    distance !== undefined && distance <= MIN_REACHED_DISTANCE;
+    distance !== undefined &&
+    distance <= MIN_REACHED_DISTANCE &&
+    closestGnomeId !== undefined;
 
   const selectedGnomeDistance = selectedGnome
     ? getDistance(
@@ -347,11 +345,13 @@ const MapScreen = () => {
         {isGnomeTrackerVisible && <DistanceTracker distance={distance} />}
         {isGnomeCatcherVisible && (
           <DraggableGnome
-            onUnlock={() => navigate(`/camera?gnomeid=${closestGnomeId}`)}
+            onUnlock={() => {
+              addPendingInteraction(closestGnomeId);
+              navigate(`/camera?gnomeid=${closestGnomeId}`);
+            }}
           />
         )}
       </View>
-
       {isGnomeCatcherVisible && (
         <LinearGradient
           className={"absolute bottom-0 left-0 right-0 h-[130px]"}

@@ -7,5 +7,6 @@ import { FriendsService } from "./friends.service";
 @Module({
   controllers: [FriendsController],
   providers: [FriendsService, GnomesService, DistrictsService],
+  exports: [FriendsService],
 })
 export class FriendsModule {}
