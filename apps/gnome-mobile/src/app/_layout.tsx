@@ -78,7 +78,6 @@ export default function RootLayout() {
             headerShown: false,
           }}
         />
-        <PortalHost />
       </BottomSheetModalProvider>
     </GestureHandlerRootView>
   );
