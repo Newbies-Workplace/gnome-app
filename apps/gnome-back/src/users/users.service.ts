@@ -16,8 +16,19 @@ export class UsersService {
     });
   }
 
-  async findAll(): Promise<User[]> {
-    return this.prismaService.user.findMany();
+  async getUsers(page = 0, name?: string): Promise<User[]> {
+    const LIMIT = 50;
+    const OFFSET = page * LIMIT;
+
+    return this.prismaService.user.findMany({
+      take: LIMIT,
+      skip: OFFSET,
+      where: name
+        ? {
+            name: { contains: name },
+          }
+        : undefined,
+    });
   }
 
   async changeUserData(

@@ -8,19 +8,26 @@ import {
   MaxFileSizeValidator,
   ParseFilePipe,
   Patch,
+  Query,
   UploadedFile,
   UseGuards,
   UseInterceptors,
 } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { User as PrismaUser, UserResource } from "@prisma/client";
-import { UserUpdate } from "@repo/shared/requests";
+import {
+  PaginationRequest,
+  SearchByNameReuqest,
+  UserUpdate,
+} from "@repo/shared/requests";
 import { UserPatchResponse } from "@repo/shared/responses";
 import { userInfo } from "os";
 import { User } from "@/auth/decorators/jwt-user.decorator";
 import { JwtGuard } from "@/auth/guards/jwt.guard";
 import { JwtUser } from "@/auth/types/jwt-user";
 import { MinioService } from "@/minio/minio.service";
+import { Role } from "@/role/role.decorator";
+import { RoleGuard } from "@/roleguard/role.guard";
 import { UsersService } from "@/users/users.service";
 
 @Controller("users")
@@ -29,6 +36,16 @@ export class UsersController {
     private readonly usersService: UsersService,
     private readonly minioService?: MinioService,
   ) {}
+
+  @Get()
+  // @UseGuards(JwtGuard, RoleGuard)
+  // @Role(['ADMIN'])
+  async getUsers(
+    @Query() { page }: PaginationRequest,
+    @Query() { name }: SearchByNameReuqest,
+  ) {
+    return this.usersService.getUsers(page, name);
+  }
 
   @Get("@me") // moj profil
   @UseGuards(JwtGuard)

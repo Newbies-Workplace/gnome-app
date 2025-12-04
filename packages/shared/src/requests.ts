@@ -141,3 +141,13 @@ export class AttackBuildingRequest {
   @IsNotEmpty()
   clicks!: number;
 }
+
+export class PaginationRequest {
+  @Type(() => Number)
+  page?: number;
+}
+
+export class SearchByNameReuqest {
+  @Type(() => String)
+  name?: string;
+}
