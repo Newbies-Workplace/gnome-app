@@ -146,7 +146,7 @@ const MapScreen = () => {
   });
   const [distance, setDistance] = useState<number>();
   const [closestGnomeId, setClosestGnomeId] = useState<string>();
-  const bottomSheetRef = useRef<any>(null);
+  const gnomeDetailsRef = useRef<any>(null);
   const [selectedGnome, setSelectedGnome] = useState<GnomeResponse | null>(
     null,
   );
@@ -320,7 +320,7 @@ const MapScreen = () => {
             onPress={() => {
               setSelectedGnome(gnome);
               gnome.location;
-              bottomSheetRef.current?.expand();
+              gnomeDetailsRef.current?.expand();
             }}
             key={gnome.id}
             coordinate={{
@@ -359,12 +359,12 @@ const MapScreen = () => {
       )}
       <Portal name="GnomeDetailsBottomSheet" hostName="Maps">
         <GnomeDetailsBottomSheet
-          ref={bottomSheetRef}
+          ref={gnomeDetailsRef}
           selectedGnome={selectedGnome}
           formattedDistance={formattedDistance}
           interactions={interactions}
           onClick={() => {
-            bottomSheetRef.current?.close();
+            gnomeDetailsRef.current?.close();
             router.push(`/gnomes/${selectedGnome?.id}`);
           }}
         />
