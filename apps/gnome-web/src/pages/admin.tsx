@@ -1,5 +1,6 @@
+import { MarkerClusterer } from "@googlemaps/markerclusterer";
 import { GoogleMap, Marker, useJsApiLoader } from "@react-google-maps/api";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { NavLink, Outlet, useLocation, useNavigate } from "react-router-dom";
 import BuildsIcon from "@/assets/icons/builds-icon.svg";
 import EventsIcon from "@/assets/icons/events-icon.svg";
@@ -40,6 +41,28 @@ export default function AdminPage() {
   const onGnomeMarkerClick = (gnomeId: string | number) => {
     navigate(`/admin/gnomes/${gnomeId}`);
   };
+
+  const onMapLoad = useCallback(
+    (map: google.maps.Map) => {
+      if (!Array.isArray(gnomes)) return;
+
+      const markers = gnomes.map((gnome) => {
+        const marker = new google.maps.Marker({
+          position: { lat: gnome.latitude, lng: gnome.longitude },
+          icon: {
+            url: GnomePinIcon,
+            scaledSize: new google.maps.Size(40, 40),
+          },
+        });
+
+        marker.addListener("click", () => onGnomeMarkerClick(gnome.id));
+        return marker;
+      });
+
+      new MarkerClusterer({ markers, map });
+    },
+    [gnomes, onGnomeMarkerClick],
+  );
 
   const mapOptions = {
     fullscreenControl: false,
@@ -82,6 +105,7 @@ export default function AdminPage() {
               center={{ lat: 51.105, lng: 17.038 }}
               zoom={12}
               options={mapOptions}
+              onLoad={onMapLoad}
               onClick={(e) => {
                 const lat = e.latLng?.lat();
                 const lng = e.latLng?.lng();
@@ -90,19 +114,6 @@ export default function AdminPage() {
                 }
               }}
             >
-              {Array.isArray(gnomes) &&
-                gnomes.map((gnome) => (
-                  <Marker
-                    key={gnome.id}
-                    position={{ lat: gnome.latitude, lng: gnome.longitude }}
-                    icon={{
-                      url: GnomePinIcon,
-                      scaledSize: new window.google.maps.Size(40, 40),
-                    }}
-                    onClick={() => onGnomeMarkerClick(gnome.id)}
-                  />
-                ))}
-
               {selectedPosition && (
                 <Marker
                   position={selectedPosition}
@@ -123,19 +134,16 @@ export default function AdminPage() {
                   <img src={GnomeIcon} alt="gnome" />
                 </NavLink>
               </TabsTrigger>
-
               <TabsTrigger value="builds" className="rounded-4xl">
                 <NavLink to="/admin/builds">
                   <img src={BuildsIcon} alt="builds" />
                 </NavLink>
               </TabsTrigger>
-
               <TabsTrigger value="events" className="rounded-4xl">
                 <NavLink to="/admin/events">
                   <img src={EventsIcon} alt="events" />
                 </NavLink>
               </TabsTrigger>
-
               <TabsTrigger value="users" className="rounded-4xl">
                 <NavLink to="/admin/users">
                   <img src={UsersIcon} alt="users" />
@@ -143,8 +151,6 @@ export default function AdminPage() {
               </TabsTrigger>
             </TabsList>
           </Tabs>
-
-          {/* Podstrony */}
           <div className="flex-1 p-4 overflow-y-auto">
             <Outlet context={{ selectedPosition }} />
           </div>
