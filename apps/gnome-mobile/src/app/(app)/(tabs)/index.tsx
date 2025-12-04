@@ -1,4 +1,6 @@
+import BottomSheet from "@gorhom/bottom-sheet";
 import { GnomeResponse } from "@repo/shared/responses";
+import { Portal } from "@rn-primitives/portal";
 import { LinearGradient } from "expo-linear-gradient";
 import * as Location from "expo-location";
 import { useRouter } from "expo-router";
@@ -19,14 +21,17 @@ import TeamIcon from "@/assets/icons/team.svg";
 import GnomePin from "@/assets/images/GnomePin.svg";
 import GnomePinCatch from "@/assets/images/GnomePinCatch.svg";
 import { MapStyle } from "@/components/map-styles";
+import ResourcesBottomSheet from "@/components/ResourcesInfoBottomSheet";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Compass from "@/components/ui/compass";
 import DistanceTracker from "@/components/ui/DistanceTracker";
 import DraggableGnome from "@/components/ui/DraggableGnome";
 import ResourcesBar from "@/components/ui/ResourcesBar";
 import { Text } from "@/components/ui/text";
+import { getClosestGnome } from "@/lib/getClosestGnome";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useFriendsStore } from "@/store/useFriendsStore";
+import { useGnomeInteractionStore } from "@/store/useGnomeInteractionStore";
 import { useGnomeStore } from "@/store/useGnomeStore";
 
 // Maksymalna odległość w metrach
@@ -39,12 +44,14 @@ interface HeaderControlsProps {
   user: { pictureUrl: string }; // Adjust the type based on your user object structure
   errorMsg: string | null;
   setErrorMsg: (msg: string | null) => void;
+  openResourcesInfo: () => void;
 }
 
 const HeaderControls: React.FC<HeaderControlsProps> = ({
   user,
   errorMsg,
   setErrorMsg,
+  openResourcesInfo,
 }) => {
   const router = useRouter();
   const requestLocationPermission = async () => {
@@ -88,7 +95,7 @@ const HeaderControls: React.FC<HeaderControlsProps> = ({
             </Avatar>
           </TouchableOpacity>
           <ResourcesBar
-            onClick={() => router.push("/profile")}
+            onClick={openResourcesInfo}
             berries={200}
             stones={4500}
             sticks={100}
@@ -145,6 +152,18 @@ const MapScreen = () => {
   });
   const [distance, setDistance] = useState<number>();
   const [closestGnomeId, setClosestGnomeId] = useState<string>();
+  const resourceSheetRef = useRef<BottomSheet | null>(null);
+  const [isResourceSheetVisible, setIsResourceSheetVisible] = useState(false);
+  const openResourcesSheet = () => {
+    setIsResourceSheetVisible(true);
+    resourceSheetRef.current?.expand();
+  };
+  const handlecloseResourcesSheet = () => {
+    resourceSheetRef.current?.close();
+    setIsResourceSheetVisible(false);
+  };
+  const { addPendingInteraction, latestInteractions } =
+    useGnomeInteractionStore();
 
   const defaultRegion = {
     latitude: 51.109967,
@@ -233,22 +252,14 @@ const MapScreen = () => {
       return { gnome, distance };
     });
 
-    // Znajdź najbliższego gnoma
-    const closestGnome = distances.reduce<{
-      gnome: GnomeResponse;
-      distance: number;
-    } | null>((closest, current) => {
-      if (!closest || current.distance < closest.distance) {
-        return current;
-      }
-      return closest;
-    }, null);
+    const closestGnome = getClosestGnome(distances, latestInteractions);
 
     if (closestGnome) {
       setClosestGnomeId(closestGnome.gnome.id);
     }
 
     if (closestGnome) {
+      console.log(closestGnome.gnome.id);
       setDistance(Math.round(closestGnome.distance));
     }
   }, [userLocation, gnomes]);
@@ -258,7 +269,9 @@ const MapScreen = () => {
     distance > MIN_REACHED_DISTANCE &&
     distance <= MIN_TRACKER_DISTANCE;
   const isGnomeCatcherVisible =
-    distance !== undefined && distance <= MIN_REACHED_DISTANCE;
+    distance !== undefined &&
+    distance <= MIN_REACHED_DISTANCE &&
+    closestGnomeId !== undefined;
 
   return (
     <SafeAreaView className="flex-1">
@@ -270,6 +283,7 @@ const MapScreen = () => {
             user={user}
             errorMsg={errorMsg}
             setErrorMsg={setErrorMsg}
+            openResourcesInfo={openResourcesSheet}
           />
         )}
       </View>
@@ -320,11 +334,13 @@ const MapScreen = () => {
         {isGnomeTrackerVisible && <DistanceTracker distance={distance} />}
         {isGnomeCatcherVisible && (
           <DraggableGnome
-            onUnlock={() => navigate(`/camera?gnomeid=${closestGnomeId}`)}
+            onUnlock={() => {
+              addPendingInteraction(closestGnomeId);
+              navigate(`/camera?gnomeid=${closestGnomeId}`);
+            }}
           />
         )}
       </View>
-
       {isGnomeCatcherVisible && (
         <LinearGradient
           className={"absolute bottom-0 left-0 right-0 h-[130px]"}
@@ -332,6 +348,14 @@ const MapScreen = () => {
           colors={["transparent", "hsl(359 63.4% 56.1%)"]}
         />
       )}
+      <Portal name="ResourcesInfoSheet">
+        {isResourceSheetVisible && (
+          <ResourcesBottomSheet
+            onClose={handlecloseResourcesSheet}
+            sheetRef={resourceSheetRef}
+          />
+        )}
+      </Portal>
     </SafeAreaView>
   );
 };
