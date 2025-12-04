@@ -4,22 +4,24 @@ import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 import { GnomesService } from "@/lib/api/Gnomes.service";
 
-interface OfflineInteraction {
+interface GnomeInteraction {
   gnomeId: string;
   interactionDate: Date;
 }
 
-interface OfflineInteractionStore {
-  pending: OfflineInteraction[];
+interface GnomeInteractionStore {
+  pending: GnomeInteraction[];
+  latestInteractions: GnomeInteraction[];
 
   addPendingInteraction: (gnomeId: string) => Promise<void>;
   syncPending: () => Promise<void>;
 }
 
-export const useOfflineInteractionStore = create<OfflineInteractionStore>()(
+export const useGnomeInteractionStore = create<GnomeInteractionStore>()(
   persist(
     (set, get) => ({
       pending: [],
+      latestInteractions: [],
 
       addPendingInteraction: async (gnomeId) => {
         const interaction = {
@@ -27,9 +29,26 @@ export const useOfflineInteractionStore = create<OfflineInteractionStore>()(
           interactionDate: new Date(),
         };
 
-        set((state) => ({
-          pending: [...state.pending, interaction],
-        }));
+        const isInteractionAdded = get().latestInteractions.find(
+          (interaction) => interaction.gnomeId === gnomeId,
+        );
+
+        if (isInteractionAdded) {
+          set((state) => ({
+            pending: [...state.pending, interaction],
+            latestInteractions: state.latestInteractions.map(
+              (existingInteraction) =>
+                existingInteraction.gnomeId === gnomeId
+                  ? { ...existingInteraction, interactionDate: new Date() }
+                  : existingInteraction,
+            ),
+          }));
+        } else {
+          set((state) => ({
+            pending: [...state.pending, interaction],
+            latestInteractions: [...state.latestInteractions, interaction],
+          }));
+        }
       },
 
       syncPending: async () => {
@@ -39,7 +58,7 @@ export const useOfflineInteractionStore = create<OfflineInteractionStore>()(
         const { pending } = get();
         if (pending.length === 0) return;
 
-        const stillPending: OfflineInteraction[] = [];
+        const stillPending: GnomeInteraction[] = [];
 
         for (const interaction of pending) {
           try {
