@@ -4,7 +4,7 @@ import BottomSheet, {
   BottomSheetModal,
   BottomSheetModalProvider,
 } from "@gorhom/bottom-sheet";
-import { PortalHost } from "@rn-primitives/portal";
+import { Portal, PortalHost } from "@rn-primitives/portal";
 import { StatusBar } from "expo-status-bar";
 import { cssInterop } from "nativewind";
 import React, { useEffect } from "react";
@@ -78,6 +78,7 @@ export default function RootLayout() {
             headerShown: false,
           }}
         />
+        <PortalHost />
       </BottomSheetModalProvider>
     </GestureHandlerRootView>
   );

@@ -47,7 +47,6 @@ export default function AppLayout() {
           setIsFirstAppEntryToFalse={setIsFirstAppEntryToFalse}
         />
       )}
-      <PortalHost name="Maps" />
     </SafeAreaView>
   );
 }

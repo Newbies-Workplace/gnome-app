@@ -357,7 +357,7 @@ const MapScreen = () => {
           colors={["transparent", "hsl(359 63.4% 56.1%)"]}
         />
       )}
-      <Portal name="GnomeDetailsBottomSheet" hostName="Maps">
+      <Portal name="GnomeDetailsBottomSheet">
         <GnomeDetailsBottomSheet
           ref={gnomeDetailsRef}
           selectedGnome={selectedGnome}
