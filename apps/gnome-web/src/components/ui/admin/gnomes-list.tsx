@@ -20,13 +20,13 @@ const GnomesList = () => {
     return <p>Brak krasnali do wyświetlenia</p>;
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col">
       {gnomes.map((gnome) => {
         const district = districts.find((d) => d.id === gnome.districtId);
 
         return (
           <Link key={gnome.id} to={`/admin/gnomes/${gnome.id}`}>
-            <Item className="p-4 rounded-4xl hover:bg-white/10 cursor-pointer">
+            <Item className="rounded-4xl hover:bg-white/10 cursor-pointer">
               <div className="flex items-center">
                 <img
                   src={gnome.pictureUrl || PlaceHolder}
@@ -34,7 +34,7 @@ const GnomesList = () => {
                   onError={(e) => (e.currentTarget.src = PlaceHolder)}
                   className="w-16 h-16 object-cover rounded"
                 />
-                <div className="ml-4">
+                <div className="flex flex-col ml-4">
                   <div className="text-white font-bold text-lg">
                     {gnome.name}
                   </div>
