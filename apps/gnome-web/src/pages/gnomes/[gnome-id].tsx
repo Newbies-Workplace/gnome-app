@@ -1,4 +1,4 @@
-import GnomeDetail from "@/components/ui/admin/gnome-details";
+import GnomeDetail from "@/pages/gnomes/gnome-details";
 
 export default function GnomeIdPage() {
   return <GnomeDetail />;
