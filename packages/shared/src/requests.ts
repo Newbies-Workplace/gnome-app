@@ -141,3 +141,10 @@ export class AttackBuildingRequest {
   @IsNotEmpty()
   clicks!: number;
 }
+
+export type Team = "TEAM1" | "TEAM2" | "TEAM3";
+
+export class AssignTeam {
+  @IsNotEmpty()
+  team!: Team;
+}
