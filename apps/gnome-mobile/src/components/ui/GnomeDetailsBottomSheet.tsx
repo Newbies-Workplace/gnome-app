@@ -1,12 +1,16 @@
-import BottomSheet, { BottomSheetView } from "@gorhom/bottom-sheet";
-import React from "react";
+import BottomSheet, {
+  BottomSheetBackdrop,
+  BottomSheetBackdropProps,
+  BottomSheetView,
+} from "@gorhom/bottom-sheet";
+import React, { useCallback } from "react";
 import { Image, Text, TouchableOpacity, View } from "react-native";
 import GnomeDetailsFullScreenIcon from "@/assets/icons/FullscreenButton.svg";
 import GnomeCaughtCountIcon from "@/assets/icons/GnomeCaughtCount.svg";
 import GnomeHowFarAwayIcon from "@/assets/icons/GnomeHowFarAway.svg";
 import GnomeLocationIcon from "@/assets/icons/GnomeLocation.svg";
 
-interface Props {
+interface GnomeDetailsBottomSheetProps {
   selectedGnome: {
     id: string;
     name: string;
@@ -15,22 +19,24 @@ interface Props {
   } | null;
 
   formattedDistance?: string | null;
-
   interactions: { gnomeId: string }[];
-
   ref: any;
-
   onClick: any;
 }
 
-export const GnomeDetailsBottomSheet: React.FC<Props> = ({
-  selectedGnome,
-  formattedDistance,
-  interactions,
-  ref,
-  onClick,
-}) => {
+export const GnomeDetailsBottomSheet: React.FC<
+  GnomeDetailsBottomSheetProps
+> = ({ selectedGnome, formattedDistance, interactions, ref, onClick }) => {
   const placeholder = require("@/assets/images/placeholder.png");
+
+  const renderBackdrop = (props: BottomSheetBackdropProps) => (
+    <BottomSheetBackdrop
+      {...props}
+      disappearsOnIndex={-1}
+      appearsOnIndex={0}
+      pressBehavior="close"
+    />
+  );
 
   return (
     <BottomSheet
@@ -39,6 +45,7 @@ export const GnomeDetailsBottomSheet: React.FC<Props> = ({
       backgroundClassName="bg-background"
       handleIndicatorClassName="bg-tekst w-20 mt-2 rounded-lg"
       index={-1}
+      backdropComponent={renderBackdrop}
     >
       <BottomSheetView className="p-5 rounded-t-2xl relative">
         <View className="flex-row items-start space-x-4">
