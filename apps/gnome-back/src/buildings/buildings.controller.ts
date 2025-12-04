@@ -9,6 +9,7 @@ import {
   Post,
   UseGuards,
 } from "@nestjs/common";
+import { Cron, CronExpression } from "@nestjs/schedule";
 import { UserRole } from "@prisma/client";
 import {
   AttackBuildingRequest,
@@ -88,5 +89,9 @@ export class BuildingsController {
     const maxDamage = 40;
     const damage = Math.min(body.clicks * 0.2, maxDamage);
     return await this.buildingsService.attackBuilding(buildingId, damage);
+  }
+  @Cron(CronExpression.EVERY_HOUR)
+  async decayBuildings() {
+    await this.buildingsService.decayBuildings();
   }
 }

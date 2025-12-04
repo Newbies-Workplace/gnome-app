@@ -18,13 +18,13 @@ import {
 } from "react-native-vision-camera";
 import BackIcon from "@/assets/icons/arrow-left.svg";
 import { useGnomeImageStore } from "@/store/useGnomeImageStore";
+import { useGnomeInteractionStore } from "@/store/useGnomeInteractionStore";
 import { useGnomeStore } from "@/store/useGnomeStore";
-import { useOfflineInteractionStore } from "@/store/useOfflineInteractionStore";
 
 const CameraScreen = () => {
   const { addInteraction } = useGnomeStore();
   const { setImageForGnome } = useGnomeImageStore();
-  const { addPendingInteraction } = useOfflineInteractionStore();
+  const { addPendingInteraction } = useGnomeInteractionStore();
   const { gnomeid } = useLocalSearchParams<{ gnomeid: string }>();
   const devices = useCameraDevices();
   const [device, setDevice] = useState<CameraDevice | null>(null);
@@ -186,7 +186,9 @@ const CameraScreen = () => {
       <View className="absolute inset-x-0 bottom-5 flex-row justify-center gap-5">
         <TouchableOpacity
           onPress={toggleFlash}
-          className={`p-4 rounded-full ${device && hasPermission ? "bg-background" : "bg-gray-500"}`}
+          className={`p-4 rounded-full ${
+            device && hasPermission ? "bg-background" : "bg-gray-500"
+          }`}
           disabled={!device || !hasPermission}
         >
           <Image
@@ -197,13 +199,17 @@ const CameraScreen = () => {
 
         <TouchableOpacity
           onPress={takePhoto}
-          className={`w-16 h-16 rounded-full flex justify-center items-center ${device && hasPermission ? "bg-white" : "bg-gray-700"}`}
+          className={`w-16 h-16 rounded-full flex justify-center items-center ${
+            device && hasPermission ? "bg-white" : "bg-gray-700"
+          }`}
           disabled={!device || !hasPermission}
         />
 
         <TouchableOpacity
           onPress={switchCamera}
-          className={`p-4 rounded-full ${device && hasPermission ? "bg-background" : "bg-gray-500"}`}
+          className={`p-4 rounded-full ${
+            device && hasPermission ? "bg-background" : "bg-gray-500"
+          }`}
           disabled={!device || !hasPermission}
         >
           <Image

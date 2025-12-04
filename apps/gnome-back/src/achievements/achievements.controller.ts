@@ -1,5 +1,6 @@
 import {
   Body,
+  ConflictException,
   Controller,
   Get,
   NotFoundException,
@@ -7,7 +8,6 @@ import {
   Post,
   UseGuards,
 } from "@nestjs/common";
-import { Achievement } from "@prisma/client";
 import { CreateUserAchievementRequest } from "@repo/shared/requests";
 import {
   AchievementDataResponse,
@@ -17,12 +17,16 @@ import { NotFoundError } from "rxjs";
 import { User } from "@/auth/decorators/jwt-user.decorator";
 import { JwtGuard } from "@/auth/guards/jwt.guard";
 import { JwtUser } from "@/auth/types/jwt-user";
+import { FriendsService } from "@/friends/friends.service";
 import { Role } from "@/role/role.decorator";
 import { AchievementsService } from "./achievements.service";
 
 @Controller("achievements")
 export class AchievementsController {
-  constructor(private readonly achievementsService: AchievementsService) {}
+  constructor(
+    private readonly achievementsService: AchievementsService,
+    private readonly friendsService: FriendsService,
+  ) {}
 
   @Get("@me")
   @UseGuards(JwtGuard)
@@ -32,6 +36,26 @@ export class AchievementsController {
     const achievements = await this.achievementsService.getUserAchievements(
       user.id,
     );
+
+    return achievements;
+  }
+
+  @Get("friend/:id")
+  @UseGuards(JwtGuard)
+  async getFriendAchievements(
+    @Param("id") friendId: string,
+    @User() user: JwtUser,
+  ): Promise<UserAchievementResponse[]> {
+    const friends = await this.friendsService.findFriendship(user.id, friendId);
+
+    if (!friends) {
+      throw new ConflictException(
+        "No friendship found - cannot check achievements",
+      );
+    }
+
+    const achievements =
+      await this.achievementsService.getUserAchievements(friendId);
 
     return achievements;
   }
