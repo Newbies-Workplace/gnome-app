@@ -38,8 +38,8 @@ export class UsersController {
   ) {}
 
   @Get()
-  // @UseGuards(JwtGuard, RoleGuard)
-  // @Role(['ADMIN'])
+  @UseGuards(JwtGuard, RoleGuard)
+  @Role(["ADMIN"])
   async getUsers(
     @Query() { page }: PaginationRequest,
     @Query() { name }: SearchByNameReuqest,
