@@ -1,15 +1,17 @@
 import { GoogleMap, Marker, useJsApiLoader } from "@react-google-maps/api";
-import { useState } from "react";
-import { NavLink, Outlet, useLocation } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { NavLink, Outlet, useLocation, useNavigate } from "react-router-dom";
 import BuildsIcon from "@/assets/icons/builds-icon.svg";
 import EventsIcon from "@/assets/icons/events-icon.svg";
 import GnomeIcon from "@/assets/icons/gnome-icon.svg";
+import GnomePinIcon from "@/assets/icons/gnome-pin-icon.svg";
 import MarkerIcon from "@/assets/icons/mark-icon.svg";
 import UsersIcon from "@/assets/icons/users-icon.svg";
 import backgroundImage from "@/assets/images/background.png";
 import { MapStyle } from "@/components/map-styles";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAuthStore } from "@/store/useAuthStore";
+import { useGnomeStore } from "@/store/useGnomeStore";
 
 export default function AdminPage() {
   const { isLoaded, loadError } = useJsApiLoader({
@@ -28,6 +30,16 @@ export default function AdminPage() {
 
   const { logout } = useAuthStore();
   const location = useLocation();
+  const navigate = useNavigate();
+  const { gnomes, fetchGnomes } = useGnomeStore();
+
+  useEffect(() => {
+    fetchGnomes();
+  }, [fetchGnomes]);
+
+  const onGnomeMarkerClick = (gnomeId: string | number) => {
+    navigate(`/admin/gnomes/${gnomeId}`);
+  };
 
   const mapOptions = {
     fullscreenControl: false,
@@ -78,6 +90,19 @@ export default function AdminPage() {
                 }
               }}
             >
+              {Array.isArray(gnomes) &&
+                gnomes.map((gnome) => (
+                  <Marker
+                    key={gnome.id}
+                    position={{ lat: gnome.latitude, lng: gnome.longitude }}
+                    icon={{
+                      url: GnomePinIcon,
+                      scaledSize: new window.google.maps.Size(40, 40),
+                    }}
+                    onClick={() => onGnomeMarkerClick(gnome.id)}
+                  />
+                ))}
+
               {selectedPosition && (
                 <Marker
                   position={selectedPosition}
