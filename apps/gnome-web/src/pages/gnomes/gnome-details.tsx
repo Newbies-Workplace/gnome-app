@@ -55,7 +55,7 @@ function GnomeDetail() {
         />
         <div className="flex flex-col justify-between h-32">
           <div className="text-2xl font-bold text-center">{gnome.name}</div>
-          <div className="text-sm text-gray-300 text-center">
+          <div className="text-sm text-gray-300 text-center text-nowrap">
             {districtName || "Brak przypisanej dzielnicy"}
           </div>
           <div className="flex flex-col gap-2">
