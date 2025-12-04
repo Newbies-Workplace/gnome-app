@@ -4,7 +4,7 @@ datasources:
   - name: PostgresDB
     type: postgres
     access: proxy
-    url: gnome-db:5432
+    url: $GF_DB_URL
     user: $GF_DB_USER
     jsonData:
       database: $GF_DB_NAME
