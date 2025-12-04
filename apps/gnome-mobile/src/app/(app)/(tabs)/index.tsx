@@ -33,6 +33,7 @@ import { useAuthStore } from "@/store/useAuthStore";
 import { useFriendsStore } from "@/store/useFriendsStore";
 import { useGnomeInteractionStore } from "@/store/useGnomeInteractionStore";
 import { useGnomeStore } from "@/store/useGnomeStore";
+import InteractionBottomSheet from "../interactionsheet";
 
 // Maksymalna odległość w metrach
 const MAX_GNOME_RENDER_DISTANCE = 400;
@@ -152,6 +153,8 @@ const MapScreen = () => {
   });
   const [distance, setDistance] = useState<number>();
   const [closestGnomeId, setClosestGnomeId] = useState<string>();
+  const [closestGnomeData, setClosestGnomeData] =
+    useState<GnomeResponse | null>(null);
   const resourceSheetRef = useRef<BottomSheet | null>(null);
   const [isResourceSheetVisible, setIsResourceSheetVisible] = useState(false);
   const openResourcesSheet = () => {
@@ -164,6 +167,17 @@ const MapScreen = () => {
   };
   const { addPendingInteraction, latestInteractions } =
     useGnomeInteractionStore();
+  const interactionSheetRef = useRef<BottomSheet | null>(null);
+  const [isInteractionSheetVisible, setIsInteractionSheetVisible] =
+    useState(false);
+  const openInteractionSheet = () => {
+    setIsInteractionSheetVisible(true);
+    interactionSheetRef.current?.expand();
+  };
+  const handlecloseInteractionSheet = () => {
+    setIsInteractionSheetVisible(false);
+    interactionSheetRef.current?.close();
+  };
 
   const defaultRegion = {
     latitude: 51.109967,
@@ -262,6 +276,10 @@ const MapScreen = () => {
       console.log(closestGnome.gnome.id);
       setDistance(Math.round(closestGnome.distance));
     }
+
+    if (closestGnome) {
+      setClosestGnomeData(closestGnome.gnome);
+    }
   }, [userLocation, gnomes]);
 
   const isGnomeTrackerVisible =
@@ -335,8 +353,9 @@ const MapScreen = () => {
         {isGnomeCatcherVisible && (
           <DraggableGnome
             onUnlock={() => {
-              addPendingInteraction(closestGnomeId);
-              navigate(`/camera?gnomeid=${closestGnomeId}`);
+              // addPendingInteraction(closestGnomeId);
+              openInteractionSheet();
+              // navigate(`/camera?gnomeid=${closestGnomeId}`);
             }}
           />
         )}
@@ -351,8 +370,18 @@ const MapScreen = () => {
       <Portal name="ResourcesInfoSheet">
         {isResourceSheetVisible && (
           <ResourcesBottomSheet
-            onClose={handlecloseResourcesSheet}
             sheetRef={resourceSheetRef}
+            onClose={handlecloseResourcesSheet}
+          />
+        )}
+      </Portal>
+      <Portal name="InteractionSheet">
+        {isInteractionSheetVisible && (
+          <InteractionBottomSheet
+            sheetRef={interactionSheetRef}
+            onClose={handlecloseInteractionSheet}
+            name={closestGnomeData?.name}
+            pictureUrl={closestGnomeData?.pictureUrl}
           />
         )}
       </Portal>
