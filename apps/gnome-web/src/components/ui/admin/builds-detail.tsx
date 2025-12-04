@@ -9,11 +9,12 @@ import {
   ItemDescription,
   ItemTitle,
 } from "@/components/ui/item";
+import BuildsHistoryList from "./builds-history-list";
 
 export default function BuildsDetail() {
   return (
-    <div className="overflow-hidden flex flex-col gap-2">
-      <div className="flex p-4 gap-4">
+    <div className="h-full flex flex-col gap-2">
+      <div className="flex p-4 gap-4 shrink-0">
         <div className="w-1/4">
           <img className="w-full" src={GnomeAvatar} alt="Avatar" />
         </div>
@@ -38,7 +39,8 @@ export default function BuildsDetail() {
           </Item>
         </div>
       </div>
-      <Item className="flex flex-col gap-2">
+
+      <Item className="flex flex-col gap-2 shrink-0">
         <ItemContent className="justify-between w-full flex flex-row">
           <ItemDescription className="text-lg text-white font-Afacad">
             Pozostały czas:
@@ -50,6 +52,7 @@ export default function BuildsDetail() {
             </div>
           </ItemDescription>
         </ItemContent>
+
         <ItemContent className="w-full flex flex-col gap-4">
           <ItemDescription className="text-lg text-white font-Afacad">
             Wytrzymałość:
@@ -59,56 +62,26 @@ export default function BuildsDetail() {
           </ItemDescription>
         </ItemContent>
       </Item>
-      <div>
+
+      <div className="shrink-0">
         <img src={Line} alt="line" className="w-full" />
       </div>
-      <Item className="flex flex-col gap-4">
-        <ItemContent className="w-full flex flex-col">
-          <ItemDescription className="font-Afacad text-white text-lg">
+
+      <Item className="flex flex-col gap-4 flex-1 min-h-0">
+        <ItemContent className="w-full flex flex-col flex-1 min-h-0">
+          <ItemDescription className="font-Afacad text-white text-lg shrink-0">
             Historia:
           </ItemDescription>
 
-          {/* Lista powiadomień */}
-          <ItemContent className="flex flex-row gap-4 w-full hover:bg-white/10 rounded-4xl">
-            <Item className="flex flex-row justify-between gap-4 w-full">
-              <div>
-                <img className="w-full" src={GnomeAvatar} alt="Avatar" />
-              </div>
-              <ItemContent>
-                <ItemDescription className="text-2xl text-white font-Afacad">
-                  Autor3
-                </ItemDescription>
-                <div>
-                  <ItemDescription className="text-lg text-white font-Afacad ">
-                    Zaatakowano
-                  </ItemDescription>
-                </div>
-              </ItemContent>
-              <ItemContent>
-                <div className="text-lg text-white font-Afacad">23.09.2025</div>
-              </ItemContent>
-            </Item>
-          </ItemContent>
-          <ItemContent className="flex flex-row gap-4 w-full hover:bg-white/10 rounded-4xl">
-            <Item className="flex flex-row justify-between gap-4 w-full">
-              <div>
-                <img className="w-full" src={GnomeAvatar} alt="Avatar" />
-              </div>
-              <ItemContent>
-                <ItemDescription className="text-2xl text-white font-Afacad">
-                  Autor2
-                </ItemDescription>
-                <div>
-                  <ItemDescription className="text-lg text-white font-Afacad ">
-                    Zbudowano
-                  </ItemDescription>
-                </div>
-              </ItemContent>
-              <ItemContent>
-                <div className="text-lg text-white font-Afacad">22.09.2025</div>
-              </ItemContent>
-            </Item>
-          </ItemContent>
+          <div className="flex-1 overflow-y-auto flex flex-col gap-2 pr-2">
+            <BuildsHistoryList />
+            <BuildsHistoryList />
+            <BuildsHistoryList />
+            <BuildsHistoryList />
+            <BuildsHistoryList />
+            <BuildsHistoryList />
+            <BuildsHistoryList />
+          </div>
         </ItemContent>
       </Item>
     </div>
