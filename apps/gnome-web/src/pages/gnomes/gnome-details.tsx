@@ -1,34 +1,14 @@
 import { useNavigate, useParams } from "react-router-dom";
-import { toast } from "sonner";
-import UserIcon from "@/assets/icons/users-icon.svg";
+import CreationIcon from "@/assets/icons/creation-icon.svg";
+import DeleteIcon from "@/assets/icons/delete-icon.svg";
+import EditIcon from "@/assets/icons/edit-icon.svg";
+import FoundIcon from "@/assets/icons/found-icon.svg";
+import LocationIcon from "@/assets/icons/location-icon.svg";
 import PlaceHolder from "@/assets/images/placeholder.png";
+import { useToastNavigate } from "@/components/hooks/useToastNavigate";
 import { Button } from "@/components/ui/button";
 import { useDistrictStore } from "@/store/useDistrictStore";
 import { useGnomeStore } from "@/store/useGnomeStore";
-
-function useToastNavigate() {
-  const navigate = useNavigate();
-
-  const toastNavigate = (
-    path: string,
-    message: string,
-    type: "success" | "error" | "info" = "info",
-  ) => {
-    switch (type) {
-      case "success":
-        toast.success(message);
-        break;
-      case "error":
-        toast.error(message);
-        break;
-      default:
-        toast(message);
-    }
-    navigate(path);
-  };
-
-  return toastNavigate;
-}
 
 function GnomeDetail() {
   const { id } = useParams();
@@ -75,19 +55,21 @@ function GnomeDetail() {
         />
         <div className="flex flex-col justify-between h-32">
           <div className="text-2xl font-bold text-center">{gnome.name}</div>
-          <div className="text-sm text-gray-300 text-center">
+          <div className="text-sm text-gray-300 text-center text-nowrap">
             {districtName || "Brak przypisanej dzielnicy"}
           </div>
-          <div className="text-m flex flex-row gap-2">
-            <img src={UserIcon} alt="location" className="w-6 h-6" />
-            {gnome.location}
-          </div>
-          <div className="text-m flex flex-row gap-2">
-            <img src={UserIcon} alt="date" className="w-6 h-6" />
-            {new Date(gnome.creationDate).toLocaleDateString()}
-          </div>
-          <div className="text-m flex flex-row gap-2">
-            <img src={UserIcon} alt="users" className="w-6 h-6" />0 osób
+          <div className="flex flex-col gap-2">
+            <div className="text-m flex flex-row gap-2">
+              <img src={LocationIcon} alt="location" className="w-6 h-6" />
+              {gnome.location}
+            </div>
+            <div className="text-m flex flex-row gap-2">
+              <img src={CreationIcon} alt="date" className="w-6 h-6" />
+              {new Date(gnome.creationDate).toLocaleDateString()}
+            </div>
+            <div className="text-m flex flex-row gap-2">
+              <img src={FoundIcon} alt="users" className="w-6 h-6" />0 osób
+            </div>
           </div>
         </div>
       </div>
@@ -96,13 +78,19 @@ function GnomeDetail() {
           onClick={handleEdit}
           className="w-1/2 text-center text-white font-Afacad bg-primary-color border-none rounded-4xl"
         >
-          Edytuj gnoma
+          <div className="flex flex-row gap-2 items-center">
+            <img src={EditIcon} alt="delete" className="w-6 h-6" />
+            Edytuj gnoma
+          </div>
         </Button>
         <Button
           onClick={handleDelete}
           className="w-1/2 text-center text-white font-Afacad bg-primary-color border-none rounded-4xl"
         >
-          Usuń gnoma
+          <div className="flex flex-row gap-2 items-center">
+            <img src={DeleteIcon} alt="delete" className="w-6 h-6" />
+            Usuń gnoma
+          </div>
         </Button>
       </div>
       <hr className="border-t-2 border-primary-color " />

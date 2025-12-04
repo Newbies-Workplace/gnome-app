@@ -1,0 +1,17 @@
+apiVersion: 1
+
+datasources:
+  - name: PostgresDB
+    type: postgres
+    access: proxy
+    url: $GF_DB_URL
+    user: $GF_DB_USER
+    jsonData:
+      database: $GF_DB_NAME
+      sslmode: disable     
+      postgresVersion: 1500
+      timescaledb: false
+    secureJsonData:
+      password: $GF_DB_PASSWORD
+    isDefault: false
+    editable: true
