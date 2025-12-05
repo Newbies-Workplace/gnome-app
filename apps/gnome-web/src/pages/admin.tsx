@@ -121,7 +121,7 @@ export default function AdminPage() {
         </div>
       </div>
       <div className="flex flex-1 h-0 p-4 gap-4">
-        <div className="relative w-3/4 h-full">
+        <div className="relative w-3/4 h-full rounded-4xl overflow-hidden">
           {isLoaded && (
             <GoogleMap
               mapContainerStyle={{ width: "100%", height: "100%" }}
@@ -152,7 +152,7 @@ export default function AdminPage() {
             <MapOptions filters={filters} setFilters={setFilters} />
           </div>
         </div>
-        <div className="w-1/4 h-full bg-primary-gray flex flex-col">
+        <div className="w-1/4 h-full bg-primary-gray flex flex-col rounded-4xl">
           <Tabs value={currentTab} className="bg-primary-gray p-2 m-2">
             <TabsList className="grid grid-cols-4 gap-2 p-2 w-full bg-primary-gray justify-between">
               <TabsTrigger value="gnomes" className="rounded-4xl" asChild>
