@@ -1,11 +1,13 @@
 import { Type } from "class-transformer";
 import {
+  IsBoolean,
   IsDate,
   IsEnum,
   IsInt,
   IsLatitude,
   IsLongitude,
   IsNotEmpty,
+  IsNumber,
   IsOptional,
   IsString,
   IsUrl,
@@ -157,4 +159,41 @@ export type Team = "TEAM1" | "TEAM2" | "TEAM3";
 export class AssignTeam {
   @IsNotEmpty()
   team!: Team;
+}
+
+export class UpdateGnomeRequest {
+  @IsOptional()
+  @IsString()
+  name?: string;
+
+  @IsOptional()
+  @IsString()
+  funFact?: string;
+
+  @IsOptional()
+  @Type(() => Number)
+  @IsNumber()
+  latitude?: number;
+
+  @IsOptional()
+  @Type(() => Number)
+  @IsNumber()
+  longitude?: number;
+
+  @IsOptional()
+  @IsString()
+  location?: string;
+
+  @IsOptional()
+  @IsDate()
+  @Type(() => Date)
+  creationDate!: Date;
+
+  @IsOptional()
+  @IsString()
+  description?: string;
+
+  @IsOptional()
+  @IsBoolean()
+  exists?: boolean;
 }
