@@ -10,18 +10,17 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 type MapOptionsProps = {
-  showGnomesOnMap: boolean;
-  setShowGnomesOnMap: (checked: boolean) => void;
-  showBuildsOnMap: boolean;
-  setShowBuildsOnMap: (checked: boolean) => void;
+  filters: {
+    gnomesVisible: boolean;
+    buildingsVisible: boolean;
+  };
+  setFilters: (filters: {
+    gnomesVisible: boolean;
+    buildingsVisible: boolean;
+  }) => void;
 };
 
-export default function MapOptions({
-  showGnomesOnMap,
-  setShowGnomesOnMap,
-  showBuildsOnMap,
-  setShowBuildsOnMap,
-}: MapOptionsProps) {
+export default function MapOptions({ filters, setFilters }: MapOptionsProps) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -35,15 +34,18 @@ export default function MapOptions({
         <DropdownMenuLabel>Widoczność na mapie</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuCheckboxItem
-          checked={showGnomesOnMap}
-          onCheckedChange={(checked) => setShowGnomesOnMap(checked === true)}
+          checked={filters.gnomesVisible}
+          onCheckedChange={(checked) =>
+            setFilters({ ...filters, gnomesVisible: checked === true })
+          }
         >
           Pokaż gnomy
         </DropdownMenuCheckboxItem>
-
         <DropdownMenuCheckboxItem
-          checked={showBuildsOnMap}
-          onCheckedChange={(checked) => setShowBuildsOnMap(checked === true)}
+          checked={filters.buildingsVisible}
+          onCheckedChange={(checked) =>
+            setFilters({ ...filters, buildingsVisible: checked === true })
+          }
         >
           Pokaż budowle
         </DropdownMenuCheckboxItem>

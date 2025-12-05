@@ -64,8 +64,10 @@ export default function AdminPage() {
     return "gnomes"; // default tab
   })();
 
-  const [showGnomesOnMap, setShowGnomesOnMap] = useState<boolean>(true);
-  const [showBuildsOnMap, setShowBuildsOnMap] = useState<boolean>(false);
+  const [filters, setFilters] = useState({
+    gnomesVisible: true,
+    buildingsVisible: false,
+  });
 
   useEffect(() => {
     if (!mapRef) return;
@@ -75,7 +77,7 @@ export default function AdminPage() {
       setClusterer(null);
     }
 
-    if (showGnomesOnMap && Array.isArray(gnomes)) {
+    if (filters.gnomesVisible && Array.isArray(gnomes)) {
       const markers = gnomes.map((gnome) => {
         const marker = new google.maps.Marker({
           position: { lat: gnome.latitude, lng: gnome.longitude },
@@ -92,7 +94,7 @@ export default function AdminPage() {
       const newClusterer = new MarkerClusterer({ markers, map: mapRef });
       setClusterer(newClusterer);
     }
-  }, [showGnomesOnMap, gnomes, mapRef]);
+  }, [filters.gnomesVisible, gnomes, mapRef]);
 
   return (
     <div
@@ -142,12 +144,7 @@ export default function AdminPage() {
             </GoogleMap>
           )}
           <div className="absolute bottom-4 left-4 z-10">
-            <MapOptions
-              showGnomesOnMap={showGnomesOnMap}
-              setShowGnomesOnMap={setShowGnomesOnMap}
-              showBuildsOnMap={showBuildsOnMap}
-              setShowBuildsOnMap={setShowBuildsOnMap}
-            />
+            <MapOptions filters={filters} setFilters={setFilters} />
           </div>
         </div>
         <div className="w-1/4 h-full bg-primary-gray flex flex-col">
