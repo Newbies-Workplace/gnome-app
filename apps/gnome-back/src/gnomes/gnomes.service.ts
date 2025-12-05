@@ -1,22 +1,19 @@
 import { Injectable } from "@nestjs/common";
 import { Gnome } from "@prisma/client";
-import {
-  CreateGnomeRequest,
-  CreateInteractionRequest,
-} from "@repo/shared/requests";
+import { CreateGnomeRequest, DeleteGnomeRequest } from "@repo/shared/requests";
 import {
   GnomeIdResponse,
   InteractionExtendedResponse,
-  InteractionResponse,
 } from "@repo/shared/responses";
-import { promises } from "dns";
+
 import { PrismaService } from "@/db/prisma.service";
 import { DistrictsService } from "@/districts/districts.service";
-
+import { MinioService } from "@/minio/minio.service";
 @Injectable()
 export class GnomesService {
   constructor(
     private readonly prismaService: PrismaService,
+    private readonly minioService: MinioService,
     private readonly districtsService: DistrictsService,
   ) {}
 
@@ -174,5 +171,15 @@ export class GnomesService {
         },
       },
     };
+  }
+  async deleteGnome(id: string, data: DeleteGnomeRequest) {
+    const bucketName = "images";
+    const fullUrl = `defaultGnomePictures/${data.name}.jpg`;
+    await this.minioService.deleteFile(bucketName, fullUrl);
+    await this.prismaService.gnome.delete({
+      where: {
+        id: id,
+      },
+    });
   }
 }

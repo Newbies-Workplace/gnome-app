@@ -74,7 +74,11 @@ export class CreateGnomeRequest {
   @IsString()
   funFact!: string;
 }
-
+export class DeleteGnomeRequest {
+  @IsString()
+  @IsNotEmpty()
+  name!: string;
+}
 export class CreateInteractionRequest {
   @IsDate()
   @Type(() => Date)

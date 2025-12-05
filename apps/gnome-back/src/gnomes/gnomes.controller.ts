@@ -2,6 +2,7 @@ import {
   Body,
   ConflictException,
   Controller,
+  Delete,
   FileTypeValidator,
   Get,
   MaxFileSizeValidator,
@@ -17,6 +18,7 @@ import { FileInterceptor } from "@nestjs/platform-express";
 import {
   CreateGnomeRequest,
   CreateInteractionRequest,
+  DeleteGnomeRequest,
 } from "@repo/shared/requests";
 import {
   GnomeIdResponse,
@@ -163,5 +165,11 @@ export class GnomesController {
     await this.achievementService.unlockGnomeAchievement(user.id, gnomeCount);
 
     return interaction;
+  }
+  @Delete(":id")
+  @UseGuards(JwtGuard, RoleGuard)
+  @Role(["ADMIN"])
+  async deleteGnome(@Param("id") id: string, @Body() body: DeleteGnomeRequest) {
+    await this.gnomeService.deleteGnome(id, body);
   }
 }
