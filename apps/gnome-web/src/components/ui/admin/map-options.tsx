@@ -14,10 +14,12 @@ type MapOptionsProps = {
     gnomesVisible: boolean;
     buildingsVisible: boolean;
   };
-  setFilters: (filters: {
-    gnomesVisible: boolean;
-    buildingsVisible: boolean;
-  }) => void;
+  setFilters: React.Dispatch<
+    React.SetStateAction<{
+      gnomesVisible: boolean;
+      buildingsVisible: boolean;
+    }>
+  >;
 };
 
 export default function MapOptions({ filters, setFilters }: MapOptionsProps) {
@@ -35,16 +37,22 @@ export default function MapOptions({ filters, setFilters }: MapOptionsProps) {
         <DropdownMenuSeparator />
         <DropdownMenuCheckboxItem
           checked={filters.gnomesVisible}
-          onCheckedChange={(checked) =>
-            setFilters({ ...filters, gnomesVisible: checked === true })
+          onCheckedChange={() =>
+            setFilters((prev) => ({
+              ...prev,
+              gnomesVisible: !prev.gnomesVisible,
+            }))
           }
         >
           Pokaż gnomy
         </DropdownMenuCheckboxItem>
         <DropdownMenuCheckboxItem
           checked={filters.buildingsVisible}
-          onCheckedChange={(checked) =>
-            setFilters({ ...filters, buildingsVisible: checked === true })
+          onCheckedChange={() =>
+            setFilters((prev) => ({
+              ...prev,
+              buildingsVisible: !prev.buildingsVisible,
+            }))
           }
         >
           Pokaż budowle
