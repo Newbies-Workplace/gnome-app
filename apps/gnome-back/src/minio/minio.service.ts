@@ -73,4 +73,7 @@ export class MinioService {
     const URL = URLArray[0];
     return URL;
   }
+  async deleteFile(bucketName: string, objectName: string) {
+    await this.minioClient.removeObject(bucketName, objectName);
+  }
 }

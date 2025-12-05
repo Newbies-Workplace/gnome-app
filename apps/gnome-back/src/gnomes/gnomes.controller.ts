@@ -2,6 +2,7 @@ import {
   Body,
   ConflictException,
   Controller,
+  Delete,
   FileTypeValidator,
   Get,
   MaxFileSizeValidator,
@@ -163,5 +164,11 @@ export class GnomesController {
     await this.achievementService.unlockGnomeAchievement(user.id, gnomeCount);
 
     return interaction;
+  }
+  @Delete(":id")
+  @UseGuards(JwtGuard, RoleGuard)
+  @Role(["ADMIN"])
+  async deleteGnome(@Param("id") id: string) {
+    await this.gnomeService.deleteGnome(id);
   }
 }
