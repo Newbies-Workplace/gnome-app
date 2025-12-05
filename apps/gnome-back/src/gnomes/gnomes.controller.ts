@@ -175,8 +175,8 @@ export class GnomesController {
   }
 
   @Patch(":id")
-  // @UseGuards(JwtGuard)
-  // @Role(["ADMIN"])
+  @UseGuards(JwtGuard)
+  @Role(["ADMIN"])
   async updateGnome(
     @Param("id") gnomeId: string,
     @Body() body: UpdateGnomeRequest,
