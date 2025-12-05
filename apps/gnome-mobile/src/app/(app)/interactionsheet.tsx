@@ -10,7 +10,6 @@ import BerryIcon from "@/assets/icons/berry-icon.svg";
 import CameraIcon from "@/assets/icons/camera.svg";
 import StoneIcon from "@/assets/icons/stone-icon.svg";
 import WoodIcon from "@/assets/icons/wood-icon.svg";
-import { getClosestGnome } from "@/lib/getClosestGnome";
 
 const placeholder = require("@/assets/images/placeholder.png");
 

@@ -3,9 +3,9 @@ import { GnomeResponse } from "@repo/shared/responses";
 import { Portal } from "@rn-primitives/portal";
 import { LinearGradient } from "expo-linear-gradient";
 import * as Location from "expo-location";
-import { useRouter } from "expo-router";
+import { useFocusEffect, useRouter } from "expo-router";
 import { getDistance } from "geolib";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
   Alert,
   Linking,
@@ -153,8 +153,6 @@ const MapScreen = () => {
   });
   const [distance, setDistance] = useState<number>();
   const [closestGnomeId, setClosestGnomeId] = useState<string>();
-  const [closestGnomeData, setClosestGnomeData] =
-    useState<GnomeResponse | null>(null);
   const resourceSheetRef = useRef<BottomSheet | null>(null);
   const [isResourceSheetVisible, setIsResourceSheetVisible] = useState(false);
   const openResourcesSheet = () => {
@@ -167,17 +165,11 @@ const MapScreen = () => {
   };
   const { addPendingInteraction, latestInteractions } =
     useGnomeInteractionStore();
-  const interactionSheetRef = useRef<BottomSheet | null>(null);
+
+  const [closestGnomeData, setClosestGnomeData] =
+    useState<GnomeResponse | null>(null);
   const [isInteractionSheetVisible, setIsInteractionSheetVisible] =
     useState(false);
-  const openInteractionSheet = () => {
-    setIsInteractionSheetVisible(true);
-    interactionSheetRef.current?.expand();
-  };
-  const handlecloseInteractionSheet = () => {
-    setIsInteractionSheetVisible(false);
-    interactionSheetRef.current?.close();
-  };
 
   const defaultRegion = {
     latitude: 51.109967,
@@ -185,6 +177,19 @@ const MapScreen = () => {
     latitudeDelta: 0.01,
     longitudeDelta: 0.05,
   };
+
+  useFocusEffect(
+    useCallback(() => {
+      return () => {
+        console.log(
+          "Map screen unfocused, resetting selected gnome and closing sheets",
+        );
+
+        setIsResourceSheetVisible(false);
+        setIsInteractionSheetVisible(false);
+      };
+    }, []),
+  );
 
   useEffect(() => {
     fetchGnomes();
@@ -353,9 +358,8 @@ const MapScreen = () => {
         {isGnomeCatcherVisible && (
           <DraggableGnome
             onUnlock={() => {
-              // addPendingInteraction(closestGnomeId);
-              openInteractionSheet();
-              // navigate(`/camera?gnomeid=${closestGnomeId}`);
+              addPendingInteraction(closestGnomeId);
+              setIsInteractionSheetVisible(true);
             }}
           />
         )}
@@ -378,10 +382,10 @@ const MapScreen = () => {
       <Portal name="InteractionSheet">
         {isInteractionSheetVisible && (
           <InteractionBottomSheet
-            sheetRef={interactionSheetRef}
-            onClose={handlecloseInteractionSheet}
+            onClose={() => setIsInteractionSheetVisible(false)}
             name={closestGnomeData?.name}
             pictureUrl={closestGnomeData?.pictureUrl}
+            gnomeId={closestGnomeId!}
           />
         )}
       </Portal>
