@@ -1,5 +1,4 @@
 import { MarkerClusterer } from "@googlemaps/markerclusterer";
-import type { DropdownMenuCheckboxItemProps } from "@radix-ui/react-dropdown-menu";
 import { GoogleMap, Marker, useJsApiLoader } from "@react-google-maps/api";
 import { useCallback, useEffect, useState } from "react";
 import { NavLink, Outlet, useLocation, useNavigate } from "react-router-dom";
@@ -7,25 +6,14 @@ import BuildsIcon from "@/assets/icons/builds-icon.svg";
 import EventsIcon from "@/assets/icons/events-icon.svg";
 import GnomeIcon from "@/assets/icons/gnome-icon.svg";
 import GnomePinIcon from "@/assets/icons/gnome-pin-icon.svg";
-import MapOptionIcon from "@/assets/icons/map-option-icon.svg";
 import MarkerIcon from "@/assets/icons/mark-icon.svg";
 import UsersIcon from "@/assets/icons/users-icon.svg";
 import backgroundImage from "@/assets/images/background.png";
 import { MapStyle } from "@/components/map-styles";
-import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import MapOptions from "@/components/ui/admin/map-options";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useGnomeStore } from "@/store/useGnomeStore";
-
-type Checked = DropdownMenuCheckboxItemProps["checked"];
 
 export default function AdminPage() {
   const { isLoaded, loadError } = useJsApiLoader({
@@ -76,8 +64,8 @@ export default function AdminPage() {
     return "gnomes"; // default tab
   })();
 
-  const [showGnomesOnMap, setShowGnomesOnMap] = useState<Checked>(true);
-  const [showBuildsOnMap, setShowBuildsOnMap] = useState<Checked>(false);
+  const [showGnomesOnMap, setShowGnomesOnMap] = useState<boolean>(true);
+  const [showBuildsOnMap, setShowBuildsOnMap] = useState<boolean>(false);
 
   useEffect(() => {
     if (!mapRef) return;
@@ -154,32 +142,12 @@ export default function AdminPage() {
             </GoogleMap>
           )}
           <div className="absolute bottom-4 left-4 z-10">
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button className="rounded-4xl">
-                  <div className="flex flex-row gap-4 items-center">
-                    <img src={MapOptionIcon} alt="map" className="w-6 h-6" />{" "}
-                    Opcje
-                  </div>
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-56">
-                <DropdownMenuLabel>Widoczność na mapie</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuCheckboxItem
-                  checked={showGnomesOnMap}
-                  onCheckedChange={setShowGnomesOnMap}
-                >
-                  Pokaż gnomy
-                </DropdownMenuCheckboxItem>
-                <DropdownMenuCheckboxItem
-                  checked={showBuildsOnMap}
-                  onCheckedChange={setShowBuildsOnMap}
-                >
-                  Pokaż budowle
-                </DropdownMenuCheckboxItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <MapOptions
+              showGnomesOnMap={showGnomesOnMap}
+              setShowGnomesOnMap={setShowGnomesOnMap}
+              showBuildsOnMap={showBuildsOnMap}
+              setShowBuildsOnMap={setShowBuildsOnMap}
+            />
           </div>
         </div>
         <div className="w-1/4 h-full bg-primary-gray flex flex-col">
