@@ -1,3 +1,4 @@
+import { PortalHost } from "@rn-primitives/portal";
 import * as Network from "expo-network";
 import { Redirect, Slot } from "expo-router";
 import { useEffect } from "react";

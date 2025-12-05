@@ -12,9 +12,11 @@ interface GnomeInteraction {
 interface GnomeInteractionStore {
   pending: GnomeInteraction[];
   latestInteractions: GnomeInteraction[];
+  interactionCount: Record<string, number>;
 
   addPendingInteraction: (gnomeId: string) => Promise<void>;
   syncPending: () => Promise<void>;
+  fetchInteractionCount: (gnomeId: string) => Promise<void>;
 }
 
 export const useGnomeInteractionStore = create<GnomeInteractionStore>()(
@@ -22,6 +24,7 @@ export const useGnomeInteractionStore = create<GnomeInteractionStore>()(
     (set, get) => ({
       pending: [],
       latestInteractions: [],
+      interactionCount: {},
 
       addPendingInteraction: async (gnomeId) => {
         const interaction = {
@@ -48,6 +51,17 @@ export const useGnomeInteractionStore = create<GnomeInteractionStore>()(
             pending: [...state.pending, interaction],
             latestInteractions: [...state.latestInteractions, interaction],
           }));
+        }
+      },
+
+      fetchInteractionCount: async (gnomeId: string) => {
+        try {
+          const count = await GnomesService.getInteractionCount(gnomeId);
+          set((state) => ({
+            interactionCount: { ...state.interactionCount, [gnomeId]: count },
+          }));
+        } catch (error) {
+          console.error("Nie udało się pobrać liczby interakcji:", error);
         }
       },
 
