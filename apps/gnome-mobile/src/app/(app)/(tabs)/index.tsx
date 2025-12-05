@@ -297,6 +297,7 @@ const MapScreen = () => {
         showsMyLocationButton={false}
         rotateEnabled={true}
         poiClickEnabled={false}
+        toolbarEnabled={false}
         mapPadding={{
           top: 100,
           right: 5,
