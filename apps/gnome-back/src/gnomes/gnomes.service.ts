@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { Gnome } from "@prisma/client";
-import { CreateGnomeRequest, DeleteGnomeRequest } from "@repo/shared/requests";
+import { CreateGnomeRequest } from "@repo/shared/requests";
 import {
   GnomeIdResponse,
   InteractionExtendedResponse,
@@ -172,9 +172,15 @@ export class GnomesService {
       },
     };
   }
-  async deleteGnome(id: string, data: DeleteGnomeRequest) {
+  async deleteGnome(id: string) {
+    const gnomes = await this.prismaService.gnome.findUnique({
+      where: {
+        id: id,
+      },
+    });
+
     const bucketName = "images";
-    const fullUrl = `defaultGnomePictures/${data.name}.jpg`;
+    const fullUrl = `defaultGnomePictures/${gnomes.pictureUrl}`;
     await this.minioService.deleteFile(bucketName, fullUrl);
     await this.prismaService.gnome.delete({
       where: {
