@@ -23,15 +23,15 @@ export default function SignInScreen() {
         <Text className="text-tekst text-[18px] mb-5 text-center font-Afacad">
           Dołącz do nas i odkryj swojego idealnego krasnala we Wrocławiu!
         </Text>
-        <Button
+        {/* <Button
           onPress={() => replace("/register")}
           className="items-center justify-center w-full mb-4 rounded-3xl bg-primary font-Afacad"
         >
           <Text className="text-tekst">Załóż konto</Text>
-        </Button>
+        </Button> */}
         <Button
           onPress={() => replace("/login")}
-          className="w-full rounded-3xl bg-secondary font-Afacad"
+          className="w-full rounded-3xl bg-primary font-Afacad"
         >
           <Text className="text-tekst">Zaloguj się</Text>
         </Button>
