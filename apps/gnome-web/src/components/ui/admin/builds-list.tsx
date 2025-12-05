@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import ClockIcon from "@/assets/icons/clock-icon.svg";
 import BuildPlaceHolder from "@/assets/images/placeholder.png";
+import { TimeCount } from "@/components/ui/admin/time-count";
 import { Item } from "@/components/ui/item";
 import { useBuildStore } from "@/store/useBuildStore";
 
@@ -44,7 +45,9 @@ const BuildsList = () => {
 
                 <div className="flex flex-row justify-end items-center">
                   <img src={ClockIcon} alt="clock" className="w-4 h-4 mr-1" />
-                  <div className="text-gray-300 text-sm">{build.type}</div>
+                  <div className="text-gray-300 text-sm">
+                    {TimeCount(build.health)}
+                  </div>
                 </div>
 
                 <div className="text-gray-400 text-xs leading-tight">
