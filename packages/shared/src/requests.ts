@@ -141,3 +141,20 @@ export class AttackBuildingRequest {
   @IsNotEmpty()
   clicks!: number;
 }
+
+export class PaginationRequest {
+  @Type(() => Number)
+  page?: number;
+}
+
+export class SearchByNameReuqest {
+  @Type(() => String)
+  name?: string;
+}
+
+export type Team = "TEAM1" | "TEAM2" | "TEAM3";
+
+export class AssignTeam {
+  @IsNotEmpty()
+  team!: Team;
+}

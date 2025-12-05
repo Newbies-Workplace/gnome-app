@@ -1,9 +1,8 @@
-import BottomSheet from "@gorhom/bottom-sheet";
 import { GnomeResponse } from "@repo/shared/responses";
 import { Portal } from "@rn-primitives/portal";
 import { LinearGradient } from "expo-linear-gradient";
 import * as Location from "expo-location";
-import { useFocusEffect, useRouter } from "expo-router";
+import { router, useFocusEffect, useRouter } from "expo-router";
 import { getDistance } from "geolib";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
@@ -26,6 +25,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Compass from "@/components/ui/compass";
 import DistanceTracker from "@/components/ui/DistanceTracker";
 import DraggableGnome from "@/components/ui/DraggableGnome";
+import { GnomeDetailsBottomSheet } from "@/components/ui/GnomeDetailsBottomSheet";
 import ResourcesBar from "@/components/ui/ResourcesBar";
 import { Text } from "@/components/ui/text";
 import { getClosestGnome } from "@/lib/getClosestGnome";
@@ -34,9 +34,6 @@ import { useFriendsStore } from "@/store/useFriendsStore";
 import { useGnomeInteractionStore } from "@/store/useGnomeInteractionStore";
 import { useGnomeStore } from "@/store/useGnomeStore";
 import InteractionBottomSheet from "../interactionsheet";
-
-// Maksymalna odległość w metrach
-const MAX_GNOME_RENDER_DISTANCE = 400;
 
 const MIN_TRACKER_DISTANCE = 50;
 const MIN_REACHED_DISTANCE = 15;
@@ -153,16 +150,12 @@ const MapScreen = () => {
   });
   const [distance, setDistance] = useState<number>();
   const [closestGnomeId, setClosestGnomeId] = useState<string>();
-  const resourceSheetRef = useRef<BottomSheet | null>(null);
+
+  const [selectedGnome, setSelectedGnome] = useState<GnomeResponse | null>(
+    null,
+  );
   const [isResourceSheetVisible, setIsResourceSheetVisible] = useState(false);
-  const openResourcesSheet = () => {
-    setIsResourceSheetVisible(true);
-    resourceSheetRef.current?.expand();
-  };
-  const handlecloseResourcesSheet = () => {
-    resourceSheetRef.current?.close();
-    setIsResourceSheetVisible(false);
-  };
+
   const { addPendingInteraction, latestInteractions } =
     useGnomeInteractionStore();
 
@@ -187,6 +180,7 @@ const MapScreen = () => {
 
         setIsResourceSheetVisible(false);
         setIsInteractionSheetVisible(false);
+        setSelectedGnome(null);
       };
     }, []),
   );
@@ -217,10 +211,6 @@ const MapScreen = () => {
           (newLocation) => {
             const { latitude, longitude } = newLocation.coords;
             setUserLocation({ latitude, longitude });
-
-            ref.current?.animateCamera({
-              center: { latitude, longitude },
-            });
           },
         );
         headingSubscription = await Location.watchHeadingAsync(
@@ -255,7 +245,7 @@ const MapScreen = () => {
       longitude: gnome.longitude,
     });
 
-    return distance <= MAX_GNOME_RENDER_DISTANCE;
+    return distance;
   });
 
   useEffect(() => {
@@ -296,6 +286,23 @@ const MapScreen = () => {
     distance <= MIN_REACHED_DISTANCE &&
     closestGnomeId !== undefined;
 
+  const selectedGnomeDistance = selectedGnome
+    ? getDistance(
+        { latitude: userLocation.latitude, longitude: userLocation.longitude },
+        {
+          latitude: selectedGnome.latitude,
+          longitude: selectedGnome.longitude,
+        },
+      )
+    : null;
+
+  const formattedDistance =
+    selectedGnomeDistance !== null
+      ? selectedGnomeDistance < 1000
+        ? `${selectedGnomeDistance} m`
+        : `${(selectedGnomeDistance / 1000).toFixed(2)} km`
+      : null;
+
   return (
     <SafeAreaView className="flex-1">
       <View className="absolute top-10 left-1/2 -translate-x-1/2 px-10 gap-2 z-10">
@@ -306,7 +313,7 @@ const MapScreen = () => {
             user={user}
             errorMsg={errorMsg}
             setErrorMsg={setErrorMsg}
-            openResourcesInfo={openResourcesSheet}
+            openResourcesInfo={() => setIsResourceSheetVisible(true)}
           />
         )}
       </View>
@@ -324,6 +331,7 @@ const MapScreen = () => {
         showsMyLocationButton={false}
         rotateEnabled={true}
         poiClickEnabled={false}
+        toolbarEnabled={false}
         mapPadding={{
           top: 100,
           right: 5,
@@ -336,6 +344,10 @@ const MapScreen = () => {
       >
         {filteredGnomes.map((gnome) => (
           <Marker
+            onPress={() => {
+              setSelectedGnome(gnome);
+              gnome.location;
+            }}
             key={gnome.id}
             coordinate={{
               latitude: gnome.latitude,
@@ -371,21 +383,32 @@ const MapScreen = () => {
           colors={["transparent", "hsl(359 63.4% 56.1%)"]}
         />
       )}
-      <Portal name="ResourcesInfoSheet">
-        {isResourceSheetVisible && (
-          <ResourcesBottomSheet
-            sheetRef={resourceSheetRef}
-            onClose={handlecloseResourcesSheet}
+      <Portal name={"bottom-sheets"}>
+        {selectedGnome !== null && (
+          <GnomeDetailsBottomSheet
+            selectedGnome={selectedGnome}
+            formattedDistance={formattedDistance}
+            interactions={interactions}
+            onClick={() => {
+              setSelectedGnome(null);
+              router.push(`/gnomes/${selectedGnome?.id}`);
+            }}
+            onClose={() => setSelectedGnome(null)}
           />
         )}
-      </Portal>
-      <Portal name="InteractionSheet">
+
         {isInteractionSheetVisible && (
           <InteractionBottomSheet
             onClose={() => setIsInteractionSheetVisible(false)}
             name={closestGnomeData?.name}
             pictureUrl={closestGnomeData?.pictureUrl}
             gnomeId={closestGnomeId!}
+          />
+        )}
+
+        {isResourceSheetVisible && (
+          <ResourcesBottomSheet
+            onClose={() => setIsResourceSheetVisible(false)}
           />
         )}
       </Portal>

@@ -13,6 +13,7 @@ import { DistrictsModule } from "./districts/districts.module";
 import { DistrictsService } from "./districts/districts.service";
 import { FriendsModule } from "./friends/friends.module";
 import { MinioModule } from "./minio/minio.module";
+import { MetricsModule } from "./prometheus/metrics.module";
 import { ReportsModule } from "./reports/reports.module";
 
 @Module({
@@ -30,6 +31,7 @@ import { ReportsModule } from "./reports/reports.module";
     MinioModule,
     DistrictsModule,
     BuildingsModule,
+    MetricsModule,
     ThrottlerModule.forRoot({
       throttlers: [
         {

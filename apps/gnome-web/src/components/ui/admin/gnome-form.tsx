@@ -1,6 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import MarkerIcon from "@/assets/icons/mark-icon.svg";
 import placeholderImage from "@/assets/images/placeholder.png";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -63,10 +64,8 @@ export function GnomeForm({
       onSubmit={handleSubmit((data) => onSubmit(data, preview))}
       className="text-white p-6 flex flex-col gap-4 font-Afacad max-w-2xl mx-auto"
     >
-      <h2 className="text-2xl font-bold mb-4">Dodaj krasnala</h2>
-
       <div className="flex flex-row items-stretch gap-4">
-        <label className="relative w-32 h-40 rounded overflow-hidden bg-gray-700 cursor-pointer">
+        <label className="relative w-32 h-40 rounded overflow-hidden bg-[#282B28] cursor-pointer">
           {preview ? (
             <img
               src={preview}
@@ -101,7 +100,7 @@ export function GnomeForm({
             type="text"
             placeholder="Nazwa"
             {...register("name")}
-            className="p-2 rounded bg-gray-800 text-white"
+            className="p-2 rounded bg-[#282B28] text-white"
           />
           {errors.name && (
             <div className="text-red-400">{errors.name.message}</div>
@@ -110,37 +109,42 @@ export function GnomeForm({
             type="text"
             placeholder="Lokalizacja (nazwa miejsca)"
             {...register("location")}
-            className="p-2 rounded bg-gray-800 text-white"
+            className="p-2 rounded bg-[#282B28] text-white"
           />
           {errors.location && (
             <div className="text-red-400">{errors.location.message}</div>
           )}
+
+          <Input
+            type="hidden"
+            {...register("latitude", { valueAsNumber: true })}
+          />
+          <Input
+            type="hidden"
+            {...register("longitude", { valueAsNumber: true })}
+          />
+
+          {selectedPosition ? (
+            <div className="bg-[#282B28] p-2 rounded text-sm text-gray-300">
+              <div className="flex flex-row items-center">
+                <img src={MarkerIcon} alt="icon" className="w-6 h-6" />
+                <div>Wybrany punkt na mapie:</div>
+              </div>
+              <div>Latitude: {selectedPosition.lat}</div>
+              <div>Longitude: {selectedPosition.lng}</div>
+            </div>
+          ) : (
+            <div className="bg-[#282B28] p-2 rounded text-sm text-gray-400">
+              Kliknij na mapie, aby wybrać punkt
+            </div>
+          )}
         </div>
       </div>
-
-      <Input type="hidden" {...register("latitude", { valueAsNumber: true })} />
-      <Input
-        type="hidden"
-        {...register("longitude", { valueAsNumber: true })}
-      />
-
-      {selectedPosition ? (
-        <div className="bg-gray-800 p-2 rounded text-sm text-gray-300">
-          <p>📍 Wybrany punkt na mapie:</p>
-          <p>Latitude: {selectedPosition.lat}</p>
-          <p>Longitude: {selectedPosition.lng}</p>
-        </div>
-      ) : (
-        <div className="bg-gray-800 p-2 rounded text-sm text-gray-400">
-          Kliknij na mapie, aby wybrać punkt
-        </div>
-      )}
-
       <label className="flex flex-col gap-2">
         Opis:
         <textarea
           {...register("description")}
-          className="p-2 rounded bg-gray-800 text-white"
+          className="p-2 rounded bg-[#282B28] text-white h-40"
         />
         {errors.description && (
           <div className="text-red-400">{errors.description.message}</div>
@@ -149,10 +153,9 @@ export function GnomeForm({
 
       <label className="flex flex-col gap-2">
         Ciekawostka:
-        <Input
-          type="text"
+        <textarea
           {...register("funFact")}
-          className="p-2 rounded bg-gray-800 text-white"
+          className="p-2 rounded bg-[#282B28] text-white h-20"
         />
         {errors.funFact && (
           <div className="text-red-400">{errors.funFact.message}</div>
@@ -169,7 +172,7 @@ export function GnomeForm({
         <Button
           type="button"
           onClick={onCancel}
-          className="flex-1 bg-gray-600 text-white rounded-2xl hover:bg-white/10"
+          className="flex-1 bg-[#282B28] text-white rounded-2xl hover:bg-white/10"
         >
           Anuluj
         </Button>

@@ -3,20 +3,18 @@ import BottomSheet, {
   BottomSheetBackdropProps,
   BottomSheetView,
 } from "@gorhom/bottom-sheet";
-import React, { useRef } from "react";
-import { Text, TouchableOpacity, View } from "react-native";
+import React from "react";
+import { Text, View } from "react-native";
 import BerryIcon from "@/assets/icons/berry-icon.svg";
 import StoneIcon from "@/assets/icons/stone-icon.svg";
 import WoodIcon from "@/assets/icons/wood-icon.svg";
 import StandingGnomeImage from "@/assets/images/StandingGnome.svg";
 
 interface ResourcesBottomSheetProps {
-  sheetRef: React.RefObject<BottomSheet | null>;
   onClose?: () => void;
 }
 
 const ResourcesBottomSheet: React.FC<ResourcesBottomSheetProps> = ({
-  sheetRef,
   onClose,
 }) => {
   const renderBackdrop = (props: BottomSheetBackdropProps) => (
@@ -35,7 +33,6 @@ const ResourcesBottomSheet: React.FC<ResourcesBottomSheetProps> = ({
       enablePanDownToClose
       onClose={onClose}
       backdropComponent={renderBackdrop}
-      ref={sheetRef}
     >
       <BottomSheetView className="flex flex-col gap-3 px-4 pt-2 pb-14 z-10">
         <Text className="text-tekst font-bold text-2xl">Surowce</Text>
