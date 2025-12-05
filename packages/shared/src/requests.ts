@@ -150,4 +150,9 @@ export class PaginationRequest {
 export class SearchByNameReuqest {
   @Type(() => String)
   name?: string;
+export type Team = "TEAM1" | "TEAM2" | "TEAM3";
+
+export class AssignTeam {
+  @IsNotEmpty()
+  team!: Team;
 }

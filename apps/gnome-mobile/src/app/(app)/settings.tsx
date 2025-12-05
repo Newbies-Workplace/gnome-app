@@ -23,7 +23,6 @@ function SettingsScreen() {
   const themeBottomSheetRef = useRef<BottomSheet>(null);
   const languageBottomSheetRef = useRef<BottomSheet>(null);
   const { setColorScheme } = useColorScheme();
-
   const { deleteAccount } = useAuthStore();
 
   const handleAccountDelete = () => {

@@ -15,11 +15,7 @@ import {
 } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { User as PrismaUser, UserResource } from "@prisma/client";
-import {
-  PaginationRequest,
-  SearchByNameReuqest,
-  UserUpdate,
-} from "@repo/shared/requests";
+import { AssignTeam, UserUpdate, PaginationRequest, SearchByNameReuqest, UserUpdate } from "@repo/shared/requests";
 import { UserPatchResponse } from "@repo/shared/responses";
 import { userInfo } from "os";
 import { User } from "@/auth/decorators/jwt-user.decorator";
@@ -111,5 +107,11 @@ export class UsersController {
   @UseGuards(JwtGuard)
   async deleteUserAccount(@User() user: JwtUser) {
     return this.usersService.deleteAccount(user.id);
+  }
+
+  @Patch("@me/team")
+  @UseGuards(JwtGuard)
+  async assignTeam(@User() user: JwtUser, @Body() body: AssignTeam) {
+    return this.usersService.assignTeam(user.id, body.team);
   }
 }
