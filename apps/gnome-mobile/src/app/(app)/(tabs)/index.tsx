@@ -198,10 +198,6 @@ const MapScreen = () => {
           (newLocation) => {
             const { latitude, longitude } = newLocation.coords;
             setUserLocation({ latitude, longitude });
-
-            ref.current?.animateCamera({
-              center: { latitude, longitude },
-            });
           },
         );
         headingSubscription = await Location.watchHeadingAsync(
@@ -301,6 +297,7 @@ const MapScreen = () => {
         showsMyLocationButton={false}
         rotateEnabled={true}
         poiClickEnabled={false}
+        toolbarEnabled={false}
         mapPadding={{
           top: 100,
           right: 5,
