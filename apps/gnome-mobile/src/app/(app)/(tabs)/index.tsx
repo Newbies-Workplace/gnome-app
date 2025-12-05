@@ -198,10 +198,6 @@ const MapScreen = () => {
           (newLocation) => {
             const { latitude, longitude } = newLocation.coords;
             setUserLocation({ latitude, longitude });
-
-            ref.current?.animateCamera({
-              center: { latitude, longitude },
-            });
           },
         );
         headingSubscription = await Location.watchHeadingAsync(
