@@ -15,7 +15,6 @@ const BuildsList = () => {
   } = useBuildStore();
 
   useEffect(() => {
-    // Najpierw pobieramy użytkowników, potem budowle
     fetchUsers();
     fetchBuildings();
   }, [fetchUsers, fetchBuildings]);

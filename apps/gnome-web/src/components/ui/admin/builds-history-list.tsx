@@ -1,27 +1,54 @@
+import { useEffect } from "react";
 import GnomeAvatar from "@/assets/images/placeholder-user.png";
 import { Item, ItemContent, ItemDescription } from "@/components/ui/item";
+import { useBuildStore } from "@/store/useBuildStore";
 
-export default function BuildsHistoryList() {
+const BuildsHistoryList = () => {
+  const {
+    fetchBuildings,
+    fetchUsers,
+    getBuildingsWithOwnerName,
+    loading,
+    error,
+  } = useBuildStore();
+
+  useEffect(() => {
+    fetchUsers();
+    fetchBuildings();
+  }, [fetchUsers, fetchBuildings]);
+
+  const buildings = getBuildingsWithOwnerName();
+
+  if (loading) return <p>Ładowanie...</p>;
+  if (error) return <p className="text-red-500">{error}</p>;
+  if (!buildings || buildings.length === 0)
+    return <p>Brak budowli do wyświetlenia</p>;
+
   return (
-    <ItemContent className="flex flex-row gap-4 w-full hover:bg-white/10 rounded-4xl">
-      <Item className="flex flex-row justify-between gap-4 w-full">
-        <div>
-          <img className="w-full" src={GnomeAvatar} alt="Avatar" />
-        </div>
-        <ItemContent>
-          <ItemDescription className="text-2xl text-white font-Afacad">
-            Autor3
-          </ItemDescription>
-          <div>
-            <ItemDescription className="text-lg text-white font-Afacad ">
-              Zaatakowano
-            </ItemDescription>
-          </div>
-        </ItemContent>
-        <ItemContent>
-          <div className="text-lg text-white font-Afacad">23.09.2025</div>
-        </ItemContent>
-      </Item>
-    </ItemContent>
+    <div className="flex flex-row gap-2">
+      <ItemContent className="gap-4 w-full hover:bg-white/10 rounded-4xl">
+        {buildings.map((build) => (
+          <Item key={build.id} className="justify-between gap-4 w-full">
+            <div>
+              <img className="w-full" src={GnomeAvatar} alt="Avatar" />
+            </div>
+            <ItemContent>
+              <ItemDescription className="text-2xl text-white font-Afacad">
+                Autor
+              </ItemDescription>
+              <div>
+                <ItemDescription className="text-lg text-white font-Afacad ">
+                  Zaatakowano
+                </ItemDescription>
+              </div>
+            </ItemContent>
+            <ItemContent>
+              <div className="text-lg text-white font-Afacad">12.01.2000</div>
+            </ItemContent>
+          </Item>
+        ))}
+      </ItemContent>
+    </div>
   );
-}
+};
+export default BuildsHistoryList;

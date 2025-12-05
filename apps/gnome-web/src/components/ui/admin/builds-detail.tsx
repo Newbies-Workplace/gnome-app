@@ -75,12 +75,6 @@ export default function BuildsDetail() {
 
           <div className="flex-1 overflow-y-auto flex flex-col gap-2 pr-2">
             <BuildsHistoryList />
-            <BuildsHistoryList />
-            <BuildsHistoryList />
-            <BuildsHistoryList />
-            <BuildsHistoryList />
-            <BuildsHistoryList />
-            <BuildsHistoryList />
           </div>
         </ItemContent>
       </Item>
