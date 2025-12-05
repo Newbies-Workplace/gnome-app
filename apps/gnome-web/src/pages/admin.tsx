@@ -179,7 +179,7 @@ export default function AdminPage() {
           </Tabs>
           {/* Podstrony */}
           <div className="flex-1 p-4 overflow-y-auto">
-            <Outlet context={{ selectedPosition }} />
+            <Outlet context={{ selectedPosition, onGnomeMarkerClick }} />
           </div>
         </div>
       </div>
