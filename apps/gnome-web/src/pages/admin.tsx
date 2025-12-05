@@ -41,7 +41,12 @@ export default function AdminPage() {
     fetchGnomes();
   }, [fetchGnomes]);
 
-  const onGnomeMarkerClick = (gnomeId: string | number) => {
+  const onGnomeMarkerClick = (gnomeId: string) => {
+    const gnome = gnomes.find((g) => g.id === gnomeId);
+    if (mapRef && gnome) {
+      mapRef.panTo({ lat: gnome.latitude, lng: gnome.longitude });
+      mapRef.setZoom(16);
+    }
     navigate(`/admin/gnomes/${gnomeId}`);
   };
 
@@ -174,7 +179,7 @@ export default function AdminPage() {
           </Tabs>
           {/* Podstrony */}
           <div className="flex-1 p-4 overflow-y-auto">
-            <Outlet context={{ selectedPosition }} />
+            <Outlet context={{ selectedPosition, onGnomeMarkerClick }} />
           </div>
         </div>
       </div>
