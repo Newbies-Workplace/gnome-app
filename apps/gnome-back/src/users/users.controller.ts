@@ -15,9 +15,13 @@ import {
 } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { User as PrismaUser, UserResource } from "@prisma/client";
-import { AssignTeam, UserUpdate, PaginationRequest, SearchByNameReuqest } from "@repo/shared/requests";
+import {
+  AssignTeam,
+  PaginationRequest,
+  SearchByNameReuqest,
+  UserUpdate,
+} from "@repo/shared/requests";
 import { UserPatchResponse } from "@repo/shared/responses";
-import { userInfo } from "os";
 import { User } from "@/auth/decorators/jwt-user.decorator";
 import { JwtGuard } from "@/auth/guards/jwt.guard";
 import { JwtUser } from "@/auth/types/jwt-user";
