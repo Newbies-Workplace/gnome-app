@@ -25,13 +25,12 @@ export default function AdminPage() {
     lat: number;
     lng: number;
   } | null>(null);
+
   const [mapRef, setMapRef] = useState<google.maps.Map | null>(null);
   const [clusterer, setClusterer] = useState<MarkerClusterer | null>(null);
-
   if (loadError) {
     console.error("Error while loading google map:", loadError);
   }
-
   const { logout } = useAuthStore();
   const location = useLocation();
   const navigate = useNavigate();
@@ -103,7 +102,7 @@ export default function AdminPage() {
 
   return (
     <div
-      className="h-screen w-screen bg-cover bg-center bg-no-repeat flex flex-col overflow-hidden"
+      className="h-screen w-screen bg-cover bg-center bg-no-repeat flex flex-col min-w-[375px]"
       style={{ backgroundImage: `url(${backgroundImage})` }}
     >
       {/* Header */}
@@ -120,22 +119,18 @@ export default function AdminPage() {
           </button>
         </div>
       </div>
-      <div className="flex flex-1 h-0 p-4 gap-4">
-        <div className="relative w-3/4 h-full rounded-4xl overflow-hidden">
+      <div className="flex flex-1 flex-col md:flex-row gap-4 p-4 overflow-hidden">
+        <div className="relative w-full md:flex-1 rounded-4xl overflow-hidden">
           {isLoaded && (
             <GoogleMap
-              mapContainerStyle={{ width: "100%", height: "100%" }}
+              mapContainerStyle={{
+                width: "100%",
+                height: "90vh",
+              }}
               center={{ lat: 51.105, lng: 17.038 }}
               zoom={12}
               options={mapOptions}
               onLoad={onMapLoad}
-              onClick={(e) => {
-                const lat = e.latLng?.lat();
-                const lng = e.latLng?.lng();
-                if (lat && lng && currentTab === "gnomes") {
-                  setSelectedPosition({ lat, lng });
-                }
-              }}
             >
               {selectedPosition && (
                 <Marker
@@ -152,7 +147,7 @@ export default function AdminPage() {
             <MapOptions filters={filters} setFilters={setFilters} />
           </div>
         </div>
-        <div className="w-1/4 h-full bg-primary-gray flex flex-col rounded-4xl">
+        <div className="w-full md:w-[420px] min-w-[300px] bg-primary-gray flex flex-col rounded-4xl overflow-auto">
           <Tabs value={currentTab} className="bg-primary-gray p-2 m-2">
             <TabsList className="grid grid-cols-4 gap-2 p-2 w-full bg-primary-gray justify-between">
               <TabsTrigger value="gnomes" className="rounded-4xl" asChild>
@@ -177,8 +172,7 @@ export default function AdminPage() {
               </TabsTrigger>
             </TabsList>
           </Tabs>
-          {/* Podstrony */}
-          <div className="flex-1 p-4 overflow-y-auto">
+          <div className="flex-1 p-4 mb-4 overflow-auto">
             <Outlet context={{ selectedPosition, onGnomeMarkerClick }} />
           </div>
         </div>
