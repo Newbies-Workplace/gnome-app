@@ -127,11 +127,11 @@ export function GnomeForm({
           {selectedPosition ? (
             <div className="bg-[#282B28] p-2 rounded text-sm text-gray-300">
               <div className="flex flex-row items-center">
-                <img src={MarkerIcon} alt="icon" className="w-6 h-6" />
-                <div>Wybrany punkt na mapie:</div>
+                <img src={MarkerIcon} alt="icon" className="w-5 h-5" />
+                <div className="text-xs">Wybrany punkt na mapie:</div>
               </div>
-              <div>Latitude: {selectedPosition.lat}</div>
-              <div>Longitude: {selectedPosition.lng}</div>
+              <div className="text-xs">Latitude: {selectedPosition.lat}</div>
+              <div className="text-xs">Longitude: {selectedPosition.lng}</div>
             </div>
           ) : (
             <div className="bg-[#282B28] p-2 rounded text-sm text-gray-400">
