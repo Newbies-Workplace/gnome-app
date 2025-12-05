@@ -3,7 +3,7 @@ import BottomSheet, {
   BottomSheetBackdropProps,
   BottomSheetView,
 } from "@gorhom/bottom-sheet";
-import React, { useCallback, useEffect } from "react";
+import React, { useEffect } from "react";
 import { Image, Text, TouchableOpacity, View } from "react-native";
 import GnomeDetailsFullScreenIcon from "@/assets/icons/FullscreenButton.svg";
 import GnomeCaughtCountIcon from "@/assets/icons/GnomeCaughtCount.svg";
@@ -21,13 +21,13 @@ interface GnomeDetailsBottomSheetProps {
 
   formattedDistance?: string | null;
   interactions: { gnomeId: string }[];
-  ref: any;
+  onClose?: () => void;
   onClick: any;
 }
 
 export const GnomeDetailsBottomSheet: React.FC<
   GnomeDetailsBottomSheetProps
-> = ({ selectedGnome, formattedDistance, ref, onClick }) => {
+> = ({ selectedGnome, formattedDistance, onClose, onClick }) => {
   const placeholder = require("@/assets/images/placeholder.png");
   const { interactionCount, fetchInteractionCount } =
     useGnomeInteractionStore();
@@ -38,25 +38,24 @@ export const GnomeDetailsBottomSheet: React.FC<
     }
   }, [selectedGnome]);
 
-  // const renderBackdrop = (props: BottomSheetBackdropProps) => (
-  //   <BottomSheetBackdrop
-  //     {...props}
-  //     pressBehavior="close"
-  //     appearsOnIndex={0}
-  //     disappearsOnIndex={-1}
-  //   />
-  // );
+  const renderBackdrop = (props: BottomSheetBackdropProps) => (
+    <BottomSheetBackdrop
+      {...props}
+      disappearsOnIndex={-1}
+      appearsOnIndex={0}
+      pressBehavior="close"
+    />
+  );
 
   return (
     <BottomSheet
-      ref={ref}
-      enablePanDownToClose
       backgroundClassName="bg-background"
       handleIndicatorClassName="bg-tekst w-20 mt-2 rounded-lg"
-      // backdropComponent={renderBackdrop}
-      index={-1}
+      enablePanDownToClose
+      backdropComponent={renderBackdrop}
+      onClose={onClose}
     >
-      <BottomSheetView className="p-5 rounded-t-2xl relative">
+      <BottomSheetView className="p-5 rounded-t-2xl relative z-10">
         <View className="flex-row items-start space-x-4">
           <Image
             source={

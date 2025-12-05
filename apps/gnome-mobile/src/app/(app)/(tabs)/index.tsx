@@ -1,11 +1,10 @@
-import BottomSheet from "@gorhom/bottom-sheet";
 import { GnomeResponse } from "@repo/shared/responses";
 import { Portal } from "@rn-primitives/portal";
 import { LinearGradient } from "expo-linear-gradient";
 import * as Location from "expo-location";
-import { router, useRouter } from "expo-router";
+import { router, useFocusEffect, useRouter } from "expo-router";
 import { getDistance } from "geolib";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
   Alert,
   Linking,
@@ -150,20 +149,12 @@ const MapScreen = () => {
   });
   const [distance, setDistance] = useState<number>();
   const [closestGnomeId, setClosestGnomeId] = useState<string>();
-  const gnomeDetailsRef = useRef<any>(null);
+
   const [selectedGnome, setSelectedGnome] = useState<GnomeResponse | null>(
     null,
   );
-  const resourceSheetRef = useRef<BottomSheet | null>(null);
   const [isResourceSheetVisible, setIsResourceSheetVisible] = useState(false);
-  const openResourcesSheet = () => {
-    setIsResourceSheetVisible(true);
-    resourceSheetRef.current?.expand();
-  };
-  const handlecloseResourcesSheet = () => {
-    resourceSheetRef.current?.close();
-    setIsResourceSheetVisible(false);
-  };
+
   const { addPendingInteraction, latestInteractions } =
     useGnomeInteractionStore();
 
@@ -173,6 +164,19 @@ const MapScreen = () => {
     latitudeDelta: 0.01,
     longitudeDelta: 0.05,
   };
+
+  useFocusEffect(
+    useCallback(() => {
+      return () => {
+        console.log(
+          "Map screen unfocused, resetting selected gnome and closing sheets",
+        );
+
+        setSelectedGnome(null);
+        setIsResourceSheetVisible(false);
+      };
+    }, []),
+  );
 
   useEffect(() => {
     fetchGnomes();
@@ -302,7 +306,7 @@ const MapScreen = () => {
             user={user}
             errorMsg={errorMsg}
             setErrorMsg={setErrorMsg}
-            openResourcesInfo={openResourcesSheet}
+            openResourcesInfo={() => setIsResourceSheetVisible(true)}
           />
         )}
       </View>
@@ -335,7 +339,6 @@ const MapScreen = () => {
             onPress={() => {
               setSelectedGnome(gnome);
               gnome.location;
-              gnomeDetailsRef.current?.expand();
             }}
             key={gnome.id}
             coordinate={{
@@ -372,23 +375,23 @@ const MapScreen = () => {
           colors={["transparent", "hsl(359 63.4% 56.1%)"]}
         />
       )}
-      <Portal name="GnomeDetailsBottomSheet">
-        <GnomeDetailsBottomSheet
-          ref={gnomeDetailsRef}
-          selectedGnome={selectedGnome}
-          formattedDistance={formattedDistance}
-          interactions={interactions}
-          onClick={() => {
-            gnomeDetailsRef.current?.close();
-            router.push(`/gnomes/${selectedGnome?.id}`);
-          }}
-        />
-      </Portal>
-      <Portal name="ResourcesInfoSheet">
+      <Portal name={"bottom-sheets"}>
+        {selectedGnome !== null && (
+          <GnomeDetailsBottomSheet
+            selectedGnome={selectedGnome}
+            formattedDistance={formattedDistance}
+            interactions={interactions}
+            onClick={() => {
+              setSelectedGnome(null);
+              router.push(`/gnomes/${selectedGnome?.id}`);
+            }}
+            onClose={() => setSelectedGnome(null)}
+          />
+        )}
+
         {isResourceSheetVisible && (
           <ResourcesBottomSheet
-            onClose={handlecloseResourcesSheet}
-            sheetRef={resourceSheetRef}
+            onClose={() => setIsResourceSheetVisible(false)}
           />
         )}
       </Portal>
