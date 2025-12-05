@@ -41,7 +41,7 @@ export default function AdminPage() {
     fetchGnomes();
   }, [fetchGnomes]);
 
-  const onGnomeMarkerClick = (gnomeId: string | number) => {
+  const onGnomeMarkerClick = (gnomeId: string) => {
     const gnome = gnomes.find((g) => g.id === gnomeId);
     if (mapRef && gnome) {
       mapRef.panTo({ lat: gnome.latitude, lng: gnome.longitude });

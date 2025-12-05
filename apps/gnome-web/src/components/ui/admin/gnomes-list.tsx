@@ -6,7 +6,7 @@ import { useDistrictStore } from "@/store/useDistrictStore";
 import { useGnomeStore } from "@/store/useGnomeStore";
 
 type OutletContextType = {
-  onGnomeMarkerClick: (gnomeId: string | number) => void;
+  onGnomeMarkerClick: (gnomeId: string) => void;
 };
 
 const GnomesList = () => {
