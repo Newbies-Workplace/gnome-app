@@ -42,6 +42,11 @@ export default function AdminPage() {
   }, [fetchGnomes]);
 
   const onGnomeMarkerClick = (gnomeId: string | number) => {
+    const gnome = gnomes.find((g) => g.id === gnomeId);
+    if (mapRef && gnome) {
+      mapRef.panTo({ lat: gnome.latitude, lng: gnome.longitude });
+      mapRef.setZoom(16);
+    }
     navigate(`/admin/gnomes/${gnomeId}`);
   };
 
