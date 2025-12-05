@@ -123,14 +123,18 @@ export default function AdminPage() {
         <div className="relative w-full md:flex-1 rounded-4xl overflow-hidden">
           {isLoaded && (
             <GoogleMap
-              mapContainerStyle={{
-                width: "100%",
-                height: "90vh",
-              }}
+              mapContainerStyle={{ width: "100%", height: "100%" }}
               center={{ lat: 51.105, lng: 17.038 }}
               zoom={12}
               options={mapOptions}
               onLoad={onMapLoad}
+              onClick={(e) => {
+                const lat = e.latLng?.lat();
+                const lng = e.latLng?.lng();
+                if (lat && lng && currentTab === "gnomes") {
+                  setSelectedPosition({ lat, lng });
+                }
+              }}
             >
               {selectedPosition && (
                 <Marker
