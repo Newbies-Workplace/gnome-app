@@ -33,6 +33,7 @@ import { useAuthStore } from "@/store/useAuthStore";
 import { useFriendsStore } from "@/store/useFriendsStore";
 import { useGnomeInteractionStore } from "@/store/useGnomeInteractionStore";
 import { useGnomeStore } from "@/store/useGnomeStore";
+import InteractionBottomSheet from "../interactionsheet";
 
 const MIN_TRACKER_DISTANCE = 50;
 const MIN_REACHED_DISTANCE = 15;
@@ -158,6 +159,11 @@ const MapScreen = () => {
   const { addPendingInteraction, latestInteractions } =
     useGnomeInteractionStore();
 
+  const [closestGnomeData, setClosestGnomeData] =
+    useState<GnomeResponse | null>(null);
+  const [isInteractionSheetVisible, setIsInteractionSheetVisible] =
+    useState(false);
+
   const defaultRegion = {
     latitude: 51.109967,
     longitude: 17.031843,
@@ -172,8 +178,9 @@ const MapScreen = () => {
           "Map screen unfocused, resetting selected gnome and closing sheets",
         );
 
-        setSelectedGnome(null);
         setIsResourceSheetVisible(false);
+        setIsInteractionSheetVisible(false);
+        setSelectedGnome(null);
       };
     }, []),
   );
@@ -263,6 +270,10 @@ const MapScreen = () => {
     if (closestGnome) {
       console.log(closestGnome.gnome.id);
       setDistance(Math.round(closestGnome.distance));
+    }
+
+    if (closestGnome) {
+      setClosestGnomeData(closestGnome.gnome);
     }
   }, [userLocation, gnomes]);
 
@@ -360,7 +371,7 @@ const MapScreen = () => {
           <DraggableGnome
             onUnlock={() => {
               addPendingInteraction(closestGnomeId);
-              navigate(`/camera?gnomeid=${closestGnomeId}`);
+              setIsInteractionSheetVisible(true);
             }}
           />
         )}
@@ -383,6 +394,15 @@ const MapScreen = () => {
               router.push(`/gnomes/${selectedGnome?.id}`);
             }}
             onClose={() => setSelectedGnome(null)}
+          />
+        )}
+
+        {isInteractionSheetVisible && (
+          <InteractionBottomSheet
+            onClose={() => setIsInteractionSheetVisible(false)}
+            name={closestGnomeData?.name}
+            pictureUrl={closestGnomeData?.pictureUrl}
+            gnomeId={closestGnomeId!}
           />
         )}
 
