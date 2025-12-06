@@ -89,7 +89,6 @@ export default function UsersDetail() {
 
       <div className="text-white text-Afacad text-xl">Budowle:</div>
 
-      {/* LISTA — jedyna przewijana */}
       <div className="flex-1 overflow-y-auto min-h-0">
         <BuildsList />
         <BuildsList />
