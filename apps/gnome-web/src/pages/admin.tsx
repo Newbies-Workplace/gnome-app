@@ -12,6 +12,7 @@ import backgroundImage from "@/assets/images/background.png";
 import { MapStyle } from "@/components/map-styles";
 import MapOptions from "@/components/ui/admin/map-options";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { gnomeClusterRenderer } from "@/lib/GnomeClusterRenderer.tsx";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useGnomeStore } from "@/store/useGnomeStore";
 
@@ -96,7 +97,11 @@ export default function AdminPage() {
         return marker;
       });
 
-      const newClusterer = new MarkerClusterer({ markers, map: mapRef });
+      const newClusterer = new MarkerClusterer({
+        markers,
+        map: mapRef,
+        renderer: gnomeClusterRenderer,
+      });
       setClusterer(newClusterer);
     }
   }, [filters.gnomesVisible, gnomes, mapRef]);
