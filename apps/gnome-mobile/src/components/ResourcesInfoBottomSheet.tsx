@@ -28,7 +28,7 @@ const ResourcesBottomSheet: React.FC<ResourcesBottomSheetProps> = ({
 
   return (
     <BottomSheet
-      backgroundClassName="bg-background"
+      backgroundClassName="bg-primary-foreground"
       handleIndicatorClassName="bg-tekst w-20 mt-2 rounded-lg"
       enablePanDownToClose
       onClose={onClose}
