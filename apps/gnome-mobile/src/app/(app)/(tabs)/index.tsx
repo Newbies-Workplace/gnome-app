@@ -155,14 +155,11 @@ const MapScreen = () => {
     null,
   );
   const [isResourceSheetVisible, setIsResourceSheetVisible] = useState(false);
-
   const { addPendingInteraction, latestInteractions } =
     useGnomeInteractionStore();
-
-  const [closestGnomeData, setClosestGnomeData] =
-    useState<GnomeResponse | null>(null);
   const [isInteractionSheetVisible, setIsInteractionSheetVisible] =
     useState(false);
+  const closestGnomeData = gnomes.find((g) => g.id === closestGnomeId);
 
   const defaultRegion = {
     latitude: 51.109967,
@@ -270,10 +267,6 @@ const MapScreen = () => {
     if (closestGnome) {
       console.log(closestGnome.gnome.id);
       setDistance(Math.round(closestGnome.distance));
-    }
-
-    if (closestGnome) {
-      setClosestGnomeData(closestGnome.gnome);
     }
   }, [userLocation, gnomes]);
 
