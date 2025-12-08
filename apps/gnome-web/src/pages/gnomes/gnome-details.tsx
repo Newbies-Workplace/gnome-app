@@ -3,6 +3,7 @@ import CreationIcon from "@/assets/icons/creation-icon.svg";
 import DeleteIcon from "@/assets/icons/delete-icon.svg";
 import EditIcon from "@/assets/icons/edit-icon.svg";
 import FoundIcon from "@/assets/icons/found-icon.svg";
+import GoBack from "@/assets/icons/goBack-icon.svg";
 import LocationIcon from "@/assets/icons/location-icon.svg";
 import PlaceHolder from "@/assets/images/placeholder.png";
 import { useToastNavigate } from "@/components/hooks/useToastNavigate";
@@ -41,12 +42,15 @@ function GnomeDetail() {
 
   return (
     <div className="text-white p-2 sm:p-4 font-Afacad flex flex-col gap-3 min-w-[320px]">
-      <Button
-        onClick={() => navigate("/admin")}
-        className="bg-primary-color px-3 py-2 rounded-2xl w-full text-white text-sm sm:text-base"
-      >
-        go back
-      </Button>
+      <div className="flex flex-row gap-4 items-center">
+        <Button
+          onClick={() => navigate("/admin")}
+          className="bg-primary-gray px-3 py-2 rounded-4xl text-white text-sm sm:text-base"
+        >
+          <img src={GoBack} alt="goback" />
+        </Button>
+        <div className="text-white text-Afacad text-xl">Lista krasnali</div>
+      </div>
       <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 items-center sm:items-start min-w-0">
         <img
           src={gnome.pictureUrl || PlaceHolder}

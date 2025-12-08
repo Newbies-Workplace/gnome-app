@@ -1,6 +1,8 @@
+import { useNavigate } from "react-router-dom";
 import BerryIcon from "@/assets/icons/berry-icon.svg";
 import BlockIcon from "@/assets/icons/block-icon.svg";
 import DeleteIcon from "@/assets/icons/delete-icon.svg";
+import GoBack from "@/assets/icons/goBack-icon.svg";
 import GreenTeam from "@/assets/icons/green-team.svg";
 import PlusIcon from "@/assets/icons/plus-icon.svg";
 import StoneIcon from "@/assets/icons/stone-icon.svg";
@@ -11,8 +13,19 @@ import { Button } from "@/components/ui/button";
 import { Item, ItemContent, ItemTitle } from "@/components/ui/item";
 
 export default function UsersDetail() {
+  const navigate = useNavigate();
   return (
     <div className="overflow-hidden flex flex-col px-4 gap-4 h-full">
+      <div className="flex flex-row gap-4 items-center">
+        <Button
+          className="bg-primary-gray rounded-4xl"
+          onClick={() => navigate("/admin/users")}
+        >
+          <img src={GoBack} alt="goback" />
+        </Button>
+
+        <div className="text-white text-Afacad text-xl">Lista użytkowników</div>
+      </div>
       {/* Górna część */}
       <div className="flex gap-4">
         <div className="w-1/4">
@@ -89,26 +102,7 @@ export default function UsersDetail() {
 
       <div className="text-white text-Afacad text-xl">Budowle:</div>
 
-      {/* LISTA — jedyna przewijana */}
       <div className="flex-1 overflow-y-auto min-h-0">
-        <BuildsList />
-        <BuildsList />
-        <BuildsList />
-        <BuildsList />
-        <BuildsList />
-        <BuildsList />
-        <BuildsList />
-        <BuildsList />
-        <BuildsList />
-        <BuildsList />
-        <BuildsList />
-        <BuildsList />
-        <BuildsList />
-        <BuildsList />
-        <BuildsList />
-        <BuildsList />
-        <BuildsList />
-        <BuildsList />
         <BuildsList />
       </div>
     </div>
