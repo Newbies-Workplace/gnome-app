@@ -1,5 +1,6 @@
-import { Injectable } from "@nestjs/common";
-import { User, UserResource } from "@prisma/client";
+import { ConflictException, Injectable } from "@nestjs/common";
+import { Team as PrismaTeam, User, UserResource } from "@prisma/client";
+import { AssignTeam, Team } from "@repo/shared/requests";
 import { customAlphabet } from "nanoid";
 import { GoogleUser } from "@/auth/types/google-user";
 import { PrismaService } from "@/db/prisma.service";
@@ -16,8 +17,19 @@ export class UsersService {
     });
   }
 
-  async findAll(): Promise<User[]> {
-    return this.prismaService.user.findMany();
+  async getUsers(page = 0, name?: string): Promise<User[]> {
+    const LIMIT = 50;
+    const OFFSET = page * LIMIT;
+
+    return this.prismaService.user.findMany({
+      take: LIMIT,
+      skip: OFFSET,
+      where: name
+        ? {
+            name: { contains: name },
+          }
+        : undefined,
+    });
   }
 
   async changeUserData(
@@ -70,7 +82,7 @@ export class UsersService {
         inviteCode: await this.generateInviteCode(),
       },
     });
-    this.prismaService.userResource.create({
+    const resource = await this.prismaService.userResource.create({
       data: {
         userId: user.id,
       },
@@ -101,6 +113,22 @@ export class UsersService {
       where: {
         userId: userId,
       },
+    });
+  }
+
+  async assignTeam(userId: string, team: Team) {
+    const hasAssigned = await this.prismaService.user.findFirst({
+      where: {
+        id: userId,
+      },
+    });
+
+    if (hasAssigned.Team)
+      throw new ConflictException("User already have assigned team");
+
+    return this.prismaService.user.update({
+      where: { id: userId },
+      data: { Team: team as unknown as PrismaTeam },
     });
   }
 }

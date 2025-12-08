@@ -1,3 +1,4 @@
+import { PortalHost } from "@rn-primitives/portal";
 import * as Network from "expo-network";
 import { Redirect, Slot } from "expo-router";
 import { useEffect } from "react";
@@ -6,13 +7,13 @@ import HomeTabs from "@/app/(app)/navigator/HomeTabs";
 import LoadingScreen from "@/components/LoadingScreen";
 import { WelcomeBottomSheet } from "@/components/WelcomeBottomSheet";
 import { useAuthStore } from "@/store/useAuthStore";
+import { useGnomeInteractionStore } from "@/store/useGnomeInteractionStore";
 import { isFirstAppEntryStore } from "@/store/useisFirstAppEntryStore";
-import { useOfflineInteractionStore } from "@/store/useOfflineInteractionStore";
 
 export default function AppLayout() {
   const { accessToken, isLoading } = useAuthStore();
   const { isFirstAppEntry, setIsFirstAppEntryToFalse } = isFirstAppEntryStore();
-  const syncPending = useOfflineInteractionStore((s) => s.syncPending);
+  const syncPending = useGnomeInteractionStore((s) => s.syncPending);
 
   useEffect(() => {
     const subscription = Network.addNetworkStateListener(

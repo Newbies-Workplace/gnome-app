@@ -1,8 +1,11 @@
+import { useNavigate } from "react-router-dom";
 import ClockIcon from "@/assets/icons/clock-icon.svg";
+import GoBack from "@/assets/icons/goBack-icon.svg";
 import GreenTeam from "@/assets/icons/green-team.svg";
 import Line from "@/assets/icons/line.svg";
 import Bar from "@/assets/icons/placeholder-bar.svg";
 import GnomeAvatar from "@/assets/images/placeholder-user.png";
+import { Button } from "@/components/ui/button";
 import {
   Item,
   ItemContent,
@@ -12,8 +15,19 @@ import {
 import BuildsHistoryList from "./builds-history-list";
 
 export default function BuildsDetail() {
+  const navigate = useNavigate();
   return (
-    <div className="h-full flex flex-col gap-2">
+    <div className="h-full flex flex-col gap-2 mx-4">
+      <div className="flex flex-row gap-4 items-center">
+        <Button
+          className="bg-primary-gray"
+          onClick={() => navigate("/admin/builds")}
+        >
+          <img src={GoBack} alt="goback" />
+        </Button>
+
+        <div className="text-white text-Afacad text-xl">Lista budowli</div>
+      </div>
       <div className="flex p-4 gap-4 shrink-0">
         <div className="w-1/4">
           <img className="w-full" src={GnomeAvatar} alt="Avatar" />

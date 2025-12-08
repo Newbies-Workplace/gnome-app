@@ -2,12 +2,14 @@ import {
   Body,
   ConflictException,
   Controller,
+  Delete,
   FileTypeValidator,
   Get,
   MaxFileSizeValidator,
   NotFoundException,
   Param,
   ParseFilePipe,
+  Patch,
   Post,
   UploadedFile,
   UseGuards,
@@ -17,13 +19,16 @@ import { FileInterceptor } from "@nestjs/platform-express";
 import {
   CreateGnomeRequest,
   CreateInteractionRequest,
+  UpdateGnomeRequest,
 } from "@repo/shared/requests";
 import {
   GnomeIdResponse,
   GnomeResponse,
+  InteractionExtendedResponse,
   InteractionResponse,
 } from "@repo/shared/responses";
 import { Express } from "express";
+import { AchievementsService } from "@/achievements/achievements.service";
 import { User } from "@/auth/decorators/jwt-user.decorator";
 import { JwtGuard } from "@/auth/guards/jwt.guard";
 import { JwtUser } from "@/auth/types/jwt-user";
@@ -39,6 +44,7 @@ export class GnomesController {
   constructor(
     private readonly gnomeService: GnomesService,
     private readonly minioService: MinioService,
+    private readonly achievementService: AchievementsService,
   ) {}
 
   // Pobieranie wszystkich gnomów
@@ -65,16 +71,18 @@ export class GnomesController {
     return gnomeData;
   }
 
-  // Pobieranie interakcji gnomów
-
+  // Pobieranie interakcji gnoma
   @Get(":id/interactions/count")
   @UseGuards(JwtGuard)
-  async getInteractionCount(@Param("id") gnomeId: string): Promise<number> {
-    const interactionCount = this.gnomeService.getInteractionCount(gnomeId);
+  async getGnomeInteractionCount(
+    @Param("id") gnomeId: string,
+  ): Promise<number> {
     const findGnome = await this.gnomeService.getGnomeData(gnomeId);
     if (!findGnome) {
       throw new NotFoundException("Nie znaleziono gnoma");
     }
+    const interactionCount =
+      this.gnomeService.getGnomeUniqueInteractionCount(gnomeId);
     return interactionCount;
   }
 
@@ -128,7 +136,7 @@ export class GnomesController {
   async createInteraction(
     @User() user: JwtUser,
     @Body() body: CreateInteractionRequest,
-  ): Promise<InteractionResponse> {
+  ): Promise<InteractionExtendedResponse> {
     const lastUserInteraction = await this.gnomeService.getLastInteraction(
       body.gnomeId,
       user.id,
@@ -151,6 +159,33 @@ export class GnomesController {
       body.gnomeId,
     );
 
+    const gnomeCount = await this.gnomeService.getUserUniqueInteractionCount(
+      user.id,
+    );
+
+    await this.achievementService.unlockGnomeAchievement(user.id, gnomeCount);
+
     return interaction;
+  }
+  @Delete(":id")
+  @UseGuards(JwtGuard, RoleGuard)
+  @Role(["ADMIN"])
+  async deleteGnome(@Param("id") id: string) {
+    await this.gnomeService.deleteGnome(id);
+  }
+
+  @Patch(":id")
+  @UseGuards(JwtGuard, RoleGuard)
+  @Role(["ADMIN"])
+  async updateGnome(
+    @Param("id") gnomeId: string,
+    @Body() body: UpdateGnomeRequest,
+  ) {
+    const gnome = await this.gnomeService.getGnomeData(gnomeId);
+
+    if (!gnome) {
+      throw new ConflictException("Gnome not found - no data changed");
+    }
+    return await this.gnomeService.updateGnome(gnomeId, body);
   }
 }

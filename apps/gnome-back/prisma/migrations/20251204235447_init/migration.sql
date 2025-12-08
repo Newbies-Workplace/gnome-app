@@ -65,12 +65,9 @@ CREATE TABLE "Achievement" (
 
 -- CreateTable
 CREATE TABLE "UserAchievement" (
-    "id" TEXT NOT NULL,
     "userId" TEXT NOT NULL,
     "achievementId" TEXT NOT NULL,
-    "earnedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-
-    CONSTRAINT "UserAchievement_pkey" PRIMARY KEY ("id")
+    "earnedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 -- CreateTable

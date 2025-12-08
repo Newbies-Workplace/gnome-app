@@ -21,11 +21,7 @@ export const WelcomeBottomSheet = ({
   return (
     <BottomSheet
       backgroundClassName="bg-primary-foreground"
-      handleIndicatorStyle={{
-        backgroundColor: "#FFFFFF",
-        width: 100,
-        marginTop: 8,
-      }}
+      handleIndicatorClassName="bg-tekst w-20 mt-2 rounded-lg"
       enablePanDownToClose
       onClose={handleClose}
       ref={bottomSheetRef}

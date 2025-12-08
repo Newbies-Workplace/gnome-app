@@ -1,14 +1,19 @@
 import { Injectable } from "@nestjs/common";
 import { Gnome } from "@prisma/client";
-import { CreateGnomeRequest } from "@repo/shared/requests";
-import { GnomeIdResponse } from "@repo/shared/responses";
+import { CreateGnomeRequest, UpdateGnomeRequest } from "@repo/shared/requests";
+import {
+  GnomeIdResponse,
+  InteractionExtendedResponse,
+} from "@repo/shared/responses";
+
 import { PrismaService } from "@/db/prisma.service";
 import { DistrictsService } from "@/districts/districts.service";
-
+import { MinioService } from "@/minio/minio.service";
 @Injectable()
 export class GnomesService {
   constructor(
     private readonly prismaService: PrismaService,
+    private readonly minioService: MinioService,
     private readonly districtsService: DistrictsService,
   ) {}
 
@@ -40,11 +45,18 @@ export class GnomesService {
     return { ...gnome, nearest };
   }
 
-  async getInteractionCount(gnomeId: string): Promise<number> {
+  async getGnomeUniqueInteractionCount(gnomeId: string): Promise<number> {
     const collection = await this.prismaService.gnomeInteraction.findMany({
-      where: {
-        gnomeId,
-      },
+      where: { gnomeId },
+      distinct: ["userId"],
+    });
+    return collection.length;
+  }
+
+  async getUserUniqueInteractionCount(userId: string): Promise<number> {
+    const collection = await this.prismaService.gnomeInteraction.findMany({
+      where: { userId },
+      distinct: ["gnomeId"],
     });
     return collection.length;
   }
@@ -108,7 +120,7 @@ export class GnomesService {
     userId: string,
     interactionDate: Date,
     gnomeId: string,
-  ) {
+  ): Promise<InteractionExtendedResponse> {
     const createGnome = await this.prismaService.gnomeInteraction.create({
       data: {
         userId,
@@ -125,7 +137,7 @@ export class GnomesService {
     const { resource1, resource2, amount1, amount2 } =
       await this.getRandomResources();
 
-    await this.prismaService.userResource.update({
+    const updatedResources = await this.prismaService.userResource.update({
       where: {
         userId: userId,
       },
@@ -134,10 +146,53 @@ export class GnomesService {
         [resource2]: { increment: amount2 },
       },
     });
-
+    const newResources = await this.prismaService.userResource.findUnique({
+      where: {
+        userId: userId,
+      },
+      select: {
+        berries: true,
+        stones: true,
+        sticks: true,
+      },
+    });
     return {
       ...createGnome,
       gnome: findGnome,
+      _metadata: {
+        userResources: {
+          berries: newResources.berries,
+          stones: newResources.stones,
+          sticks: newResources.sticks,
+        },
+        gatheredResources: {
+          [resource1]: amount1,
+          [resource2]: amount2,
+        },
+      },
     };
+  }
+  async deleteGnome(id: string) {
+    const gnomes = await this.prismaService.gnome.findUnique({
+      where: {
+        id: id,
+      },
+    });
+
+    const bucketName = "images";
+    const fullUrl = `defaultGnomePictures/${gnomes.pictureUrl}`;
+    await this.minioService.deleteFile(bucketName, fullUrl);
+    await this.prismaService.gnome.delete({
+      where: {
+        id: id,
+      },
+    });
+  }
+
+  async updateGnome(gnomeId: string, gnomeData: UpdateGnomeRequest) {
+    return this.prismaService.gnome.update({
+      where: { id: gnomeId },
+      data: { ...gnomeData },
+    });
   }
 }

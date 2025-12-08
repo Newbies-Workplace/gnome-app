@@ -4,18 +4,7 @@ import { Item, ItemContent, ItemDescription } from "@/components/ui/item";
 import { useBuildStore } from "@/store/useBuildStore";
 
 const BuildsHistoryList = () => {
-  const {
-    fetchBuildings,
-    fetchUsers,
-    getBuildingsWithOwnerName,
-    loading,
-    error,
-  } = useBuildStore();
-
-  useEffect(() => {
-    fetchUsers();
-    fetchBuildings();
-  }, [fetchUsers, fetchBuildings]);
+  const { getBuildingsWithOwnerName, loading, error } = useBuildStore();
 
   const buildings = getBuildingsWithOwnerName();
 
