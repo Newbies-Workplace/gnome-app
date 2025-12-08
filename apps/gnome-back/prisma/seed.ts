@@ -1,10 +1,14 @@
+import { ConfigService } from "@nestjs/config";
 import { PrismaClient } from "@prisma/client";
 import * as fs from "fs/promises";
 import { PrismaService } from "../src/db/prisma.service";
 import { DistrictsService } from "../src/districts/districts.service";
+import { MinioService } from "../src/minio/minio.service";
 
 const prisma = new PrismaClient();
 const prismaService = new PrismaService();
+const configService = new ConfigService();
+const minioService = new MinioService(configService);
 
 function extractCoords(coords: number[][][]) {
   const flat = coords.flat();
@@ -65,6 +69,7 @@ async function main() {
       exists: true,
       funFact:
         "Krążą plotki, że potrafi wypić więcej piwa niż niejeden Duży Człowiek. Podobno zna tajne przejścia między wrocławskimi pubami.",
+      pictureUrl: "Kacuś.jpg",
     },
     {
       id: "b2e4d8c7-9a4b-4a5b-8c9d-2345ef6789ab",
@@ -91,6 +96,7 @@ async function main() {
       exists: true,
       funFact:
         "Testował każdą hulajnogę we Wrocławiu, a niektórzy twierdzą, że ma swoją własną, niewidzialną dla ludzi, dzięki której zawsze jest pierwszy na miejscu.",
+      pictureUrl: "Frugalek.jpg",
     },
     {
       id: "d4e6f7a8-1c2d-4c7d-8abc-4567890abcd1",
@@ -189,12 +195,23 @@ async function main() {
       gnome.longitude,
       gnome.latitude,
     ]);
+    const fs = require("fs");
+    const files = ["Kacuś.jpg", "Frugalek.jpg"];
 
+    for (const filename of files) {
+      const file: Express.Multer.File = {
+        originalname: filename,
+        buffer: fs.readFileSync(`./prisma/assets/${filename}`),
+        mimetype: "image/jpeg",
+      } as Express.Multer.File;
+
+      await minioService.uploadFile(file, filename, "defaultGnomePictures");
+    }
     await prisma.gnome.upsert({
       where: { id: gnome.id },
       update: {},
       create: {
-        pictureUrl: "",
+        pictureUrl: gnome.pictureUrl || "",
         id: gnome.id,
         name: gnome.name,
         latitude: gnome.latitude,
@@ -266,9 +283,12 @@ async function main() {
   ];
 
   for (const achievement of achievements) {
-    await prisma.achievement.create({
-      data: {
+    await prisma.achievement.upsert({
+      where: {
         id: achievement.id,
+      },
+      update: {},
+      create: {
         name: achievement.name,
         description: achievement.description,
       },
