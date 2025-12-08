@@ -20,7 +20,7 @@ export default function BuildsDetail() {
     <div className="h-full flex flex-col gap-2 mx-4">
       <div className="flex flex-row gap-4 items-center">
         <Button
-          className="bg-primary-gray"
+          className="bg-primary-gray rounded-4xl"
           onClick={() => navigate("/admin/builds")}
         >
           <img src={GoBack} alt="goback" />

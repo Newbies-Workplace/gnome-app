@@ -41,63 +41,91 @@ function GnomeDetail() {
   };
 
   return (
-    <div className="text-white p-4 font-Afacad flex flex-col gap-4">
+    <div className="text-white p-2 sm:p-4 font-Afacad flex flex-col gap-3 min-w-[320px]">
       <div className="flex flex-row gap-4 items-center">
-        <Button className="bg-primary-gray" onClick={() => navigate("/admin")}>
+        <Button
+          onClick={() => navigate("/admin")}
+          className="bg-primary-gray px-3 py-2 rounded-4xl text-white text-sm sm:text-base"
+        >
           <img src={GoBack} alt="goback" />
         </Button>
         <div className="text-white text-Afacad text-xl">Lista krasnali</div>
       </div>
-      <div className="flex flex-row items-stretch gap-4">
+      <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 items-center sm:items-start min-w-0">
         <img
           src={gnome.pictureUrl || PlaceHolder}
           alt={gnome.name}
-          className="w-32 h-40 object-cover rounded"
+          className="w-24 h-32 sm:w-32 sm:h-40 object-cover rounded flex-shrink-0"
         />
-        <div className="flex flex-col justify-between h-32">
-          <div className="text-2xl font-bold text-center">{gnome.name}</div>
-          <div className="text-sm text-gray-300 text-center text-nowrap">
+
+        <div className="flex flex-col gap-1 sm:gap-2 w-full min-w-0">
+          <div className="text-xl sm:text-2xl font-bold text-center sm:text-left truncate">
+            {gnome.name}
+          </div>
+          <div className="text-xs sm:text-sm text-gray-300 text-center sm:text-left truncate">
             {districtName || "Brak przypisanej dzielnicy"}
           </div>
-          <div className="flex flex-col gap-2">
-            <div className="text-m flex flex-row gap-2">
-              <img src={LocationIcon} alt="location" className="w-6 h-6" />
-              {gnome.location}
+
+          <div className="flex flex-col gap-1 mt-2 text-xs sm:text-sm">
+            <div className="flex gap-1 sm:gap-2 items-center flex-wrap">
+              <img
+                src={LocationIcon}
+                className="w-4 sm:w-5 h-4 sm:h-5 flex-shrink-0"
+              />
+              <span className="truncate">{gnome.location}</span>
             </div>
-            <div className="text-m flex flex-row gap-2">
-              <img src={CreationIcon} alt="date" className="w-6 h-6" />
-              {new Date(gnome.creationDate).toLocaleDateString()}
+            <div className="flex gap-1 sm:gap-2 items-center flex-wrap">
+              <img
+                src={CreationIcon}
+                className="w-4 sm:w-5 h-4 sm:h-5 flex-shrink-0"
+              />
+              <span className="truncate">
+                {new Date(gnome.creationDate).toLocaleDateString()}
+              </span>
             </div>
-            <div className="text-m flex flex-row gap-2">
-              <img src={FoundIcon} alt="users" className="w-6 h-6" />0 osób
+            <div className="flex gap-1 sm:gap-2 items-center flex-wrap">
+              <img
+                src={FoundIcon}
+                className="w-4 sm:w-5 h-4 sm:h-5 flex-shrink-0"
+              />
+              <span>0 osób</span>
             </div>
           </div>
         </div>
       </div>
-      <div className="flex flex-row justify-center gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-3">
         <Button
           onClick={handleEdit}
-          className="w-1/2 text-center text-white font-Afacad bg-primary-color border-none rounded-4xl"
+          className="text-white bg-primary-color py-2 rounded-2xl w-full text-xs sm:text-sm"
         >
-          <div className="flex flex-row gap-2 items-center">
-            <img src={EditIcon} alt="delete" className="w-6 h-6" />
-            Edytuj gnoma
+          <div className="flex gap-1 sm:gap-2 items-center justify-center flex-wrap">
+            <img
+              src={EditIcon}
+              className="w-4 sm:w-6 h-4 sm:h-6 flex-shrink-0"
+            />
+            <span className="truncate">Edytuj gnoma</span>
           </div>
         </Button>
+
         <Button
           onClick={handleDelete}
-          className="w-1/2 text-center text-white font-Afacad bg-primary-color border-none rounded-4xl"
+          className="text-white bg-primary-color py-2 rounded-2xl w-full text-xs sm:text-sm"
         >
-          <div className="flex flex-row gap-2 items-center">
-            <img src={DeleteIcon} alt="delete" className="w-6 h-6" />
-            Usuń gnoma
+          <div className="flex gap-1 sm:gap-2 items-center justify-center flex-wrap">
+            <img
+              src={DeleteIcon}
+              className="w-4 sm:w-6 h-4 sm:h-6 flex-shrink-0"
+            />
+            <span className="truncate">Usuń gnoma</span>
           </div>
         </Button>
       </div>
-      <hr className="border-t-2 border-primary-color " />
-      <div className="flex flex-col text-left">
+
+      <hr className="border-t-2 border-primary-color mt-3" />
+
+      <div className="flex flex-col text-left mt-2 text-xs sm:text-sm gap-1">
         <div>{gnome.description}</div>
-        <h4 className="mt-2 font-bold">Ciekawostka:</h4>
+        <h4 className="font-bold mt-1">Ciekawostka:</h4>
         <div>{gnome.funFact}</div>
       </div>
     </div>

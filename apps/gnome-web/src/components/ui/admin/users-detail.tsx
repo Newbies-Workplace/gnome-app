@@ -18,7 +18,7 @@ export default function UsersDetail() {
     <div className="overflow-hidden flex flex-col px-4 gap-4 h-full">
       <div className="flex flex-row gap-4 items-center">
         <Button
-          className="bg-primary-gray"
+          className="bg-primary-gray rounded-4xl"
           onClick={() => navigate("/admin/users")}
         >
           <img src={GoBack} alt="goback" />
