@@ -150,16 +150,15 @@ const MapScreen = () => {
   });
   const [distance, setDistance] = useState<number>();
   const [closestGnomeId, setClosestGnomeId] = useState<string>();
-
-  const [selectedGnome, setSelectedGnome] = useState<GnomeResponse | null>(
-    null,
-  );
   const [isResourceSheetVisible, setIsResourceSheetVisible] = useState(false);
   const { addPendingInteraction, latestInteractions } =
     useGnomeInteractionStore();
   const [isInteractionSheetVisible, setIsInteractionSheetVisible] =
     useState(false);
+  const [selectedGnomeId, setSelectedGnomeId] = useState<string | null>(null);
+
   const closestGnomeData = gnomes.find((g) => g.id === closestGnomeId);
+  const selectedGnome = gnomes.find((g) => g.id === selectedGnomeId);
 
   const defaultRegion = {
     latitude: 51.109967,
@@ -177,7 +176,7 @@ const MapScreen = () => {
 
         setIsResourceSheetVisible(false);
         setIsInteractionSheetVisible(false);
-        setSelectedGnome(null);
+        setSelectedGnomeId(null);
       };
     }, []),
   );
@@ -338,7 +337,7 @@ const MapScreen = () => {
         {filteredGnomes.map((gnome) => (
           <Marker
             onPress={() => {
-              setSelectedGnome(gnome);
+              setSelectedGnomeId(gnome.id);
               gnome.location;
             }}
             key={gnome.id}
@@ -377,16 +376,16 @@ const MapScreen = () => {
         />
       )}
       <Portal name={"bottom-sheets"}>
-        {selectedGnome !== null && (
+        {selectedGnomeId !== null && (
           <GnomeDetailsBottomSheet
             selectedGnome={selectedGnome}
             formattedDistance={formattedDistance}
             interactions={interactions}
             onClick={() => {
-              setSelectedGnome(null);
-              router.push(`/gnomes/${selectedGnome?.id}`);
+              setSelectedGnomeId(null);
+              router.push(`/gnomes/${selectedGnomeId}`);
             }}
-            onClose={() => setSelectedGnome(null)}
+            onClose={() => setSelectedGnomeId(null)}
           />
         )}
 
