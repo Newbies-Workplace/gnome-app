@@ -188,4 +188,8 @@ export class GnomesController {
     }
     return await this.gnomeService.updateGnome(gnomeId, body);
   }
+  @Patch(":id/photo")
+  async updateGnomePhoto(@Param("id") id: string) {
+    return await this.gnomeService.updateGnomePicture(id);
+  }
 }
