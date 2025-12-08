@@ -66,7 +66,8 @@ function NavigationMenuTrigger({
     <NavigationMenuPrimitive.Trigger
       data-slot="navigation-menu-trigger"
       className={cn(
-        "inline-flex h-full items-center hover:bg-white/10 justify-center px-4 py-2 text-sm font-medium bg-primary-gray rounded-4xl transition-colors",
+        "group inline-flex h-full items-center justify-center px-4 py-2 text-sm font-medium",
+        "bg-primary-gray rounded-4xl transition-colors hover:bg-white/10",
         className,
       )}
       {...props}

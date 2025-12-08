@@ -108,10 +108,10 @@ export default function AdminPage() {
       style={{ backgroundImage: `url(${backgroundImage})` }}
     >
       <div className="flex flex-col md:flex-row gap-4 p-4 items-center">
-        <div className="order-1 md:order-1 w-full md:flex-1 flex items-stretch">
+        <div className="w-full md:flex-1 flex items-stretch">
           <AdminToolbar />
         </div>
-        <div className="order-3 md:order-2 w-full md:w-[420px] min-w-[300px] bg-primary-gray rounded-4xl h-[60px] flex items-center">
+        <div className="w-full md:w-[420px] min-w-[300px] bg-primary-gray rounded-4xl h-[60px] flex items-center">
           <Tabs value={currentTab} className="w-full">
             <TabsList className="grid grid-cols-4 gap-2 p-2 w-full bg-primary-gray rounded-4xl h-[60px] items-center">
               <TabsTrigger
@@ -155,7 +155,7 @@ export default function AdminPage() {
         </div>
       </div>
       <div className="flex flex-col md:flex-row gap-4 p-4 flex-1 overflow-hidden">
-        <div className="order-2 md:order-1 relative w-full md:flex-1 rounded-4xl overflow-hidden min-h-[300px]">
+        <div className="relative w-full md:flex-1 rounded-4xl overflow-hidden min-h-[300px]">
           {isLoaded && (
             <GoogleMap
               mapContainerStyle={{ width: "100%", height: "100%" }}
@@ -186,7 +186,7 @@ export default function AdminPage() {
             <MapOptions filters={filters} setFilters={setFilters} />
           </div>
         </div>
-        <div className="order-4 md:order-3 w-full md:w-[420px] min-w-[300px] bg-primary-gray flex flex-col rounded-4xl overflow-auto">
+        <div className="w-full md:w-[420px] min-w-[300px] bg-primary-gray flex flex-col rounded-4xl overflow-auto">
           <div className="flex-1 p-4 mb-4 overflow-auto">
             <Outlet context={{ selectedPosition, onGnomeMarkerClick }} />
           </div>
