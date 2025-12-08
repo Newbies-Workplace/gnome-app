@@ -12,6 +12,7 @@ import backgroundImage from "@/assets/images/background.png";
 import { MapStyle } from "@/components/map-styles";
 import MapOptions from "@/components/ui/admin/map-options";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { gnomeClusterRenderer } from "@/lib/GnomeClusterRenderer.tsx";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useGnomeStore } from "@/store/useGnomeStore";
 
@@ -25,13 +26,12 @@ export default function AdminPage() {
     lat: number;
     lng: number;
   } | null>(null);
+
   const [mapRef, setMapRef] = useState<google.maps.Map | null>(null);
   const [clusterer, setClusterer] = useState<MarkerClusterer | null>(null);
-
   if (loadError) {
     console.error("Error while loading google map:", loadError);
   }
-
   const { logout } = useAuthStore();
   const location = useLocation();
   const navigate = useNavigate();
@@ -96,14 +96,18 @@ export default function AdminPage() {
         return marker;
       });
 
-      const newClusterer = new MarkerClusterer({ markers, map: mapRef });
+      const newClusterer = new MarkerClusterer({
+        markers,
+        map: mapRef,
+        renderer: gnomeClusterRenderer,
+      });
       setClusterer(newClusterer);
     }
   }, [filters.gnomesVisible, gnomes, mapRef]);
 
   return (
     <div
-      className="h-screen w-screen bg-cover bg-center bg-no-repeat flex flex-col overflow-hidden"
+      className="h-screen w-screen bg-cover bg-center bg-no-repeat flex flex-col min-w-[375px]"
       style={{ backgroundImage: `url(${backgroundImage})` }}
     >
       {/* Header */}
@@ -120,8 +124,8 @@ export default function AdminPage() {
           </button>
         </div>
       </div>
-      <div className="flex flex-1 h-0 p-4 gap-4">
-        <div className="relative w-3/4 h-full">
+      <div className="flex flex-1 flex-col md:flex-row gap-4 p-4 overflow-hidden">
+        <div className="relative w-full md:flex-1 rounded-4xl overflow-hidden min-h-[300px]">
           {isLoaded && (
             <GoogleMap
               mapContainerStyle={{ width: "100%", height: "100%" }}
@@ -152,33 +156,32 @@ export default function AdminPage() {
             <MapOptions filters={filters} setFilters={setFilters} />
           </div>
         </div>
-        <div className="w-1/4 h-full bg-primary-gray flex flex-col">
+        <div className="w-full md:w-[420px] min-w-[300px] bg-primary-gray flex flex-col rounded-4xl overflow-auto">
           <Tabs value={currentTab} className="bg-primary-gray p-2 m-2">
-            <TabsList className="grid grid-cols-4 gap-2 p-2 w-full bg-primary-gray">
-              <TabsTrigger value="gnomes" className="rounded-4xl">
+            <TabsList className="grid grid-cols-4 gap-2 p-2 w-full bg-primary-gray justify-between">
+              <TabsTrigger value="gnomes" className="rounded-4xl" asChild>
                 <NavLink to="/admin">
                   <img src={GnomeIcon} alt="gnome" />
                 </NavLink>
               </TabsTrigger>
-              <TabsTrigger value="builds" className="rounded-4xl">
+              <TabsTrigger value="builds" className="rounded-4xl" asChild>
                 <NavLink to="/admin/builds">
                   <img src={BuildsIcon} alt="builds" />
                 </NavLink>
               </TabsTrigger>
-              <TabsTrigger value="events" className="rounded-4xl">
+              <TabsTrigger value="events" className="rounded-4xl" asChild>
                 <NavLink to="/admin/events">
                   <img src={EventsIcon} alt="events" />
                 </NavLink>
               </TabsTrigger>
-              <TabsTrigger value="users" className="rounded-4xl">
+              <TabsTrigger value="users" className="rounded-4xl" asChild>
                 <NavLink to="/admin/users">
                   <img src={UsersIcon} alt="users" />
                 </NavLink>
               </TabsTrigger>
             </TabsList>
           </Tabs>
-          {/* Podstrony */}
-          <div className="flex-1 p-4 overflow-y-auto">
+          <div className="flex-1 p-4 mb-4 overflow-auto">
             <Outlet context={{ selectedPosition, onGnomeMarkerClick }} />
           </div>
         </div>

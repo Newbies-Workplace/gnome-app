@@ -9,6 +9,7 @@ import {
   NotFoundException,
   Param,
   ParseFilePipe,
+  Patch,
   Post,
   UploadedFile,
   UseGuards,
@@ -18,6 +19,7 @@ import { FileInterceptor } from "@nestjs/platform-express";
 import {
   CreateGnomeRequest,
   CreateInteractionRequest,
+  UpdateGnomeRequest,
 } from "@repo/shared/requests";
 import {
   GnomeIdResponse,
@@ -106,7 +108,7 @@ export class GnomesController {
         fileIsRequired: false,
         validators: [
           new MaxFileSizeValidator({ maxSize: 10_000_000 }),
-          new FileTypeValidator({ fileType: "image/jpeg" }),
+          new FileTypeValidator({ fileType: /^image/ }),
         ],
       }),
     )
@@ -114,7 +116,9 @@ export class GnomesController {
     @Body() createGnomeDto: CreateGnomeRequest,
   ): Promise<GnomeResponse> {
     await this.minioService.createBucketIfNotExists();
-    const fileName = `${createGnomeDto.name}.jpg`;
+    const typeSplit = file.mimetype.split("/");
+    const type = typeSplit[typeSplit.length - 1];
+    const fileName = `${createGnomeDto.name}.${type}`;
     const catalogueName = "defaultGnomePictures";
     const filePath = `${catalogueName}/${fileName}`;
     await this.minioService.uploadFile(file, fileName, catalogueName);
@@ -170,5 +174,20 @@ export class GnomesController {
   @Role(["ADMIN"])
   async deleteGnome(@Param("id") id: string) {
     await this.gnomeService.deleteGnome(id);
+  }
+
+  @Patch(":id")
+  @UseGuards(JwtGuard, RoleGuard)
+  @Role(["ADMIN"])
+  async updateGnome(
+    @Param("id") gnomeId: string,
+    @Body() body: UpdateGnomeRequest,
+  ) {
+    const gnome = await this.gnomeService.getGnomeData(gnomeId);
+
+    if (!gnome) {
+      throw new ConflictException("Gnome not found - no data changed");
+    }
+    return await this.gnomeService.updateGnome(gnomeId, body);
   }
 }
