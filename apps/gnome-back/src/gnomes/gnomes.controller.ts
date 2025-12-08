@@ -106,7 +106,7 @@ export class GnomesController {
         fileIsRequired: false,
         validators: [
           new MaxFileSizeValidator({ maxSize: 10_000_000 }),
-          new FileTypeValidator({ fileType: "image/jpeg" }),
+          new FileTypeValidator({ fileType: /^image/ }),
         ],
       }),
     )
@@ -114,7 +114,8 @@ export class GnomesController {
     @Body() createGnomeDto: CreateGnomeRequest,
   ): Promise<GnomeResponse> {
     await this.minioService.createBucketIfNotExists();
-    const fileName = `${createGnomeDto.name}.jpg`;
+    const type = file.mimetype.split("/")[1];
+    const fileName = `${createGnomeDto.name}.${type}`;
     const catalogueName = "defaultGnomePictures";
     const filePath = `${catalogueName}/${fileName}`;
     await this.minioService.uploadFile(file, fileName, catalogueName);
