@@ -104,24 +104,6 @@ export default function UsersDetail() {
 
       <div className="flex-1 overflow-y-auto min-h-0">
         <BuildsList />
-        <BuildsList />
-        <BuildsList />
-        <BuildsList />
-        <BuildsList />
-        <BuildsList />
-        <BuildsList />
-        <BuildsList />
-        <BuildsList />
-        <BuildsList />
-        <BuildsList />
-        <BuildsList />
-        <BuildsList />
-        <BuildsList />
-        <BuildsList />
-        <BuildsList />
-        <BuildsList />
-        <BuildsList />
-        <BuildsList />
       </div>
     </div>
   );

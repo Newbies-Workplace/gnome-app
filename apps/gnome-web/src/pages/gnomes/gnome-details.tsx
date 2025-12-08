@@ -43,10 +43,7 @@ function GnomeDetail() {
   return (
     <div className="text-white p-4 font-Afacad flex flex-col gap-4">
       <div className="flex flex-row gap-4 items-center">
-        <Button
-          className="bg-primary-gray"
-          onClick={() => navigate("/admin/gnomes/gnomes")}
-        >
+        <Button className="bg-primary-gray" onClick={() => navigate("/admin")}>
           <img src={GoBack} alt="goback" />
         </Button>
         <div className="text-white text-Afacad text-xl">Lista krasnali</div>
