@@ -95,23 +95,26 @@ model Friendship {
 }
 
 model Building {
-  id         String       @id @unique @default(cuid())
-  gnomeCount Int
-  health     Int
-  latitude   Float
-  longitude  Float
-  district   District?    @relation(fields: [districtId], references: [id])
-  districtId Int?
-  type       BuildingType @default(MINE)
-  createdAt  DateTime     @default(now())
-  Owner      User         @relation(fields: [ownerId], references: [id], onDelete: Cascade)
-  ownerId    String
+  id           String       @id @unique @default(cuid())
+  gnomeCount   Int
+  health       Int
+  latitude     Float
+  longitude    Float
+  district     District?    @relation(fields: [districtId], references: [id])
+  districtId   Int?
+  type         BuildingType @default(MINE)
+  createdAt    DateTime     @default(now())
+  Owner        User         @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  ownerId      String
+  interactions BuildingInteraction[]
 }
 
 model BuildingInteraction {
   id              String                  @id @unique @default(cuid())
   interactionType BuildingInteractionType
+  building        Building                @relation(fields: [buildingId], references: [id])
   user            User                    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  buildingId      String
   userId          String
   createdAt       DateTime                @default(now())
   amount          Int // ilosc surowcow przy wzmocnieniu/ilosc gnomow przy ataku

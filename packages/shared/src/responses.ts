@@ -150,3 +150,10 @@ export interface UserAchievementResponse {
   achievementId: string;
   earnedAt: Date;
 }
+
+export interface BuildingInteractionResponse {
+  userId: string;
+  createdAt: Date;
+  interactionType: string;
+  amount: number;
+}

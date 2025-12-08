@@ -197,3 +197,22 @@ export class UpdateGnomeRequest {
   @IsBoolean()
   exists?: boolean;
 }
+
+export type Action = "ATTACK" | "EMPOWER";
+
+export class BuildingInteractionRequest {
+  @IsNotEmpty()
+  action!: Action;
+
+  @IsNotEmpty()
+  @IsString()
+  buildingId!: string;
+
+  @IsNotEmpty()
+  @IsString()
+  userId!: string;
+
+  @IsNotEmpty()
+  @IsNumber()
+  amount!: number;
+}
