@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { Gnome } from "@prisma/client";
-import { CreateGnomeRequest } from "@repo/shared/requests";
+import { CreateGnomeRequest, UpdateGnomeRequest } from "@repo/shared/requests";
 import {
   GnomeIdResponse,
   InteractionExtendedResponse,
@@ -186,6 +186,13 @@ export class GnomesService {
       where: {
         id: id,
       },
+    });
+  }
+
+  async updateGnome(gnomeId: string, gnomeData: UpdateGnomeRequest) {
+    return this.prismaService.gnome.update({
+      where: { id: gnomeId },
+      data: { ...gnomeData },
     });
   }
 }

@@ -10,7 +10,9 @@ import MarkerIcon from "@/assets/icons/mark-icon.svg";
 import UsersIcon from "@/assets/icons/users-icon.svg";
 import backgroundImage from "@/assets/images/background.png";
 import { MapStyle } from "@/components/map-styles";
+import MapOptions from "@/components/ui/admin/map-options";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { gnomeClusterRenderer } from "@/lib/GnomeClusterRenderer.tsx";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useGnomeStore } from "@/store/useGnomeStore";
 
@@ -24,6 +26,8 @@ export default function AdminPage() {
     lat: number;
     lng: number;
   } | null>(null);
+  const [mapRef, setMapRef] = useState<google.maps.Map | null>(null);
+  const [clusterer, setClusterer] = useState<MarkerClusterer | null>(null);
 
   if (loadError) {
     console.error("Error while loading google map:", loadError);
@@ -38,31 +42,18 @@ export default function AdminPage() {
     fetchGnomes();
   }, [fetchGnomes]);
 
-  const onGnomeMarkerClick = (gnomeId: string | number) => {
+  const onGnomeMarkerClick = (gnomeId: string) => {
+    const gnome = gnomes.find((g) => g.id === gnomeId);
+    if (mapRef && gnome) {
+      mapRef.panTo({ lat: gnome.latitude, lng: gnome.longitude });
+      mapRef.setZoom(16);
+    }
     navigate(`/admin/gnomes/${gnomeId}`);
   };
 
-  const onMapLoad = useCallback(
-    (map: google.maps.Map) => {
-      if (!Array.isArray(gnomes)) return;
-
-      const markers = gnomes.map((gnome) => {
-        const marker = new google.maps.Marker({
-          position: { lat: gnome.latitude, lng: gnome.longitude },
-          icon: {
-            url: GnomePinIcon,
-            scaledSize: new google.maps.Size(40, 40),
-          },
-        });
-
-        marker.addListener("click", () => onGnomeMarkerClick(gnome.id));
-        return marker;
-      });
-
-      new MarkerClusterer({ markers, map });
-    },
-    [gnomes, onGnomeMarkerClick],
-  );
+  const onMapLoad = useCallback((map: google.maps.Map) => {
+    setMapRef(map);
+  }, []);
 
   const mapOptions = {
     fullscreenControl: false,
@@ -79,11 +70,48 @@ export default function AdminPage() {
     return "gnomes"; // default tab
   })();
 
+  const [filters, setFilters] = useState({
+    gnomesVisible: true,
+    buildingsVisible: false,
+  });
+
+  useEffect(() => {
+    if (!mapRef) return;
+
+    if (clusterer) {
+      clusterer.clearMarkers();
+      setClusterer(null);
+    }
+
+    if (filters.gnomesVisible && Array.isArray(gnomes)) {
+      const markers = gnomes.map((gnome) => {
+        const marker = new google.maps.Marker({
+          position: { lat: gnome.latitude, lng: gnome.longitude },
+          icon: {
+            url: GnomePinIcon,
+            scaledSize: new google.maps.Size(40, 40),
+          },
+        });
+
+        marker.addListener("click", () => onGnomeMarkerClick(gnome.id));
+        return marker;
+      });
+
+      const newClusterer = new MarkerClusterer({
+        markers,
+        map: mapRef,
+        renderer: gnomeClusterRenderer,
+      });
+      setClusterer(newClusterer);
+    }
+  }, [filters.gnomesVisible, gnomes, mapRef]);
+
   return (
     <div
       className="h-screen w-screen bg-cover bg-center bg-no-repeat flex flex-col overflow-hidden"
       style={{ backgroundImage: `url(${backgroundImage})` }}
     >
+      {/* Header */}
       <div className="w-full p-4 flex justify-between items-center bg-transparent">
         <div className="flex gap-4">
           <button className="bg-primary-gray text-white text-xl font-Afacad px-6 py-2 rounded-4xl hover:opacity-90 transition">
@@ -98,7 +126,7 @@ export default function AdminPage() {
         </div>
       </div>
       <div className="flex flex-1 h-0 p-4 gap-4">
-        <div className="w-3/4 h-full">
+        <div className="relative w-3/4 h-full">
           {isLoaded && (
             <GoogleMap
               mapContainerStyle={{ width: "100%", height: "100%" }}
@@ -125,6 +153,9 @@ export default function AdminPage() {
               )}
             </GoogleMap>
           )}
+          <div className="absolute bottom-4 left-4 z-10">
+            <MapOptions filters={filters} setFilters={setFilters} />
+          </div>
         </div>
         <div className="w-1/4 h-full bg-primary-gray flex flex-col">
           <Tabs value={currentTab} className="bg-primary-gray p-2 m-2">
@@ -151,8 +182,9 @@ export default function AdminPage() {
               </TabsTrigger>
             </TabsList>
           </Tabs>
+          {/* Podstrony */}
           <div className="flex-1 p-4 overflow-y-auto">
-            <Outlet context={{ selectedPosition }} />
+            <Outlet context={{ selectedPosition, onGnomeMarkerClick }} />
           </div>
         </div>
       </div>

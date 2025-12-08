@@ -9,6 +9,7 @@ import {
   NotFoundException,
   Param,
   ParseFilePipe,
+  Patch,
   Post,
   UploadedFile,
   UseGuards,
@@ -18,6 +19,7 @@ import { FileInterceptor } from "@nestjs/platform-express";
 import {
   CreateGnomeRequest,
   CreateInteractionRequest,
+  UpdateGnomeRequest,
 } from "@repo/shared/requests";
 import {
   GnomeIdResponse,
@@ -171,5 +173,20 @@ export class GnomesController {
   @Role(["ADMIN"])
   async deleteGnome(@Param("id") id: string) {
     await this.gnomeService.deleteGnome(id);
+  }
+
+  @Patch(":id")
+  @UseGuards(JwtGuard, RoleGuard)
+  @Role(["ADMIN"])
+  async updateGnome(
+    @Param("id") gnomeId: string,
+    @Body() body: UpdateGnomeRequest,
+  ) {
+    const gnome = await this.gnomeService.getGnomeData(gnomeId);
+
+    if (!gnome) {
+      throw new ConflictException("Gnome not found - no data changed");
+    }
+    return await this.gnomeService.updateGnome(gnomeId, body);
   }
 }
