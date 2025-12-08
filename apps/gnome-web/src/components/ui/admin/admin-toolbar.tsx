@@ -11,8 +11,7 @@ import {
 
 function AdminToolbar() {
   return (
-    <div className="flex justify-between items-center rounded-4xl bg-primary-gray text-white px-4 py-2">
-      {/* Lewa część */}
+    <div className="flex justify-between items-center rounded-4xl bg-primary-gray text-white px-4 py-2 w-full h-[60px]">
       <NavigationMenu>
         <NavigationMenuList>
           <NavigationMenuItem>
@@ -27,8 +26,6 @@ function AdminToolbar() {
           </NavigationMenuItem>
         </NavigationMenuList>
       </NavigationMenu>
-
-      {/* Prawa część */}
       <NavigationMenu>
         <NavigationMenuList>
           <NavigationMenuItem>
