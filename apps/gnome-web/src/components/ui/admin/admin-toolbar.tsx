@@ -18,7 +18,7 @@ function AdminToolbar() {
             <NavigationMenuLink asChild>
               <Link to="/admin">
                 <div className="flex flex-row gap-2 items-center">
-                  <img src={AppIcon} alt="app-icon" />
+                  <img src={AppIcon} alt="app-icon" className="w-10 h-10" />
                   <div>Krasnal GO</div>
                 </div>
               </Link>
