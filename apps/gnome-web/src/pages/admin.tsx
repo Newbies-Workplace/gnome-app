@@ -10,6 +10,7 @@ import MarkerIcon from "@/assets/icons/mark-icon.svg";
 import UsersIcon from "@/assets/icons/users-icon.svg";
 import backgroundImage from "@/assets/images/background.png";
 import { MapStyle } from "@/components/map-styles";
+import AdminToolbar from "@/components/ui/admin/admin-toolbar";
 import MapOptions from "@/components/ui/admin/map-options";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAuthStore } from "@/store/useAuthStore";
@@ -25,12 +26,13 @@ export default function AdminPage() {
     lat: number;
     lng: number;
   } | null>(null);
-
   const [mapRef, setMapRef] = useState<google.maps.Map | null>(null);
   const [clusterer, setClusterer] = useState<MarkerClusterer | null>(null);
+
   if (loadError) {
     console.error("Error while loading google map:", loadError);
   }
+
   const { logout } = useAuthStore();
   const location = useLocation();
   const navigate = useNavigate();
@@ -105,22 +107,39 @@ export default function AdminPage() {
       className="h-screen w-screen bg-cover bg-center bg-no-repeat flex flex-col min-w-[375px]"
       style={{ backgroundImage: `url(${backgroundImage})` }}
     >
-      {/* Header */}
-      <div className="w-full p-4 flex justify-between items-center bg-transparent">
-        <div className="flex gap-4">
-          <button className="bg-primary-gray text-white text-xl font-Afacad px-6 py-2 rounded-4xl hover:opacity-90 transition">
-            Główna
-          </button>
-          <button
-            onClick={logout}
-            className="bg-primary-color text-white text-xl font-Afacad px-6 py-2 rounded-4xl hover:opacity-90 transition"
-          >
-            Wyloguj
-          </button>
+      <div className="flex flex-col md:flex-row gap-4 p-4 items-center">
+        <div className="order-1 w-full md:flex-1 ">
+          <AdminToolbar />
+        </div>
+        <div className="order-3 w-full md:w-[420px] min-w-[300px] ">
+          <Tabs value={currentTab}>
+            <TabsList className="grid grid-cols-4 gap-2 p-2 w-full bg-primary-gray justify-between">
+              <TabsTrigger value="gnomes" className="rounded-4xl" asChild>
+                <NavLink to="/admin">
+                  <img src={GnomeIcon} alt="gnome" />
+                </NavLink>
+              </TabsTrigger>
+              <TabsTrigger value="builds" className="rounded-4xl" asChild>
+                <NavLink to="/admin/builds">
+                  <img src={BuildsIcon} alt="builds" />
+                </NavLink>
+              </TabsTrigger>
+              <TabsTrigger value="events" className="rounded-4xl" asChild>
+                <NavLink to="/admin/events">
+                  <img src={EventsIcon} alt="events" />
+                </NavLink>
+              </TabsTrigger>
+              <TabsTrigger value="users" className="rounded-4xl" asChild>
+                <NavLink to="/admin/users">
+                  <img src={UsersIcon} alt="users" />
+                </NavLink>
+              </TabsTrigger>
+            </TabsList>
+          </Tabs>
         </div>
       </div>
-      <div className="flex flex-1 flex-col md:flex-row gap-4 p-4 overflow-hidden">
-        <div className="relative w-full md:flex-1 rounded-4xl overflow-hidden min-h-[300px]">
+      <div className="flex flex-col md:flex-row gap-4 p-4 flex-1 overflow-hidden">
+        <div className="order-2 relative w-full md:flex-1 rounded-4xl overflow-hidden min-h-[300px]">
           {isLoaded && (
             <GoogleMap
               mapContainerStyle={{ width: "100%", height: "100%" }}
@@ -151,31 +170,7 @@ export default function AdminPage() {
             <MapOptions filters={filters} setFilters={setFilters} />
           </div>
         </div>
-        <div className="w-full md:w-[420px] min-w-[300px] bg-primary-gray flex flex-col rounded-4xl overflow-auto">
-          <Tabs value={currentTab} className="bg-primary-gray p-2 m-2">
-            <TabsList className="grid grid-cols-4 gap-2 p-2 w-full bg-primary-gray justify-between">
-              <TabsTrigger value="gnomes" className="rounded-4xl" asChild>
-                <NavLink to="/admin">
-                  <img src={GnomeIcon} alt="gnome" />
-                </NavLink>
-              </TabsTrigger>
-              <TabsTrigger value="builds" className="rounded-4xl" asChild>
-                <NavLink to="/admin/builds">
-                  <img src={BuildsIcon} alt="builds" />
-                </NavLink>
-              </TabsTrigger>
-              <TabsTrigger value="events" className="rounded-4xl" asChild>
-                <NavLink to="/admin/events">
-                  <img src={EventsIcon} alt="events" />
-                </NavLink>
-              </TabsTrigger>
-              <TabsTrigger value="users" className="rounded-4xl" asChild>
-                <NavLink to="/admin/users">
-                  <img src={UsersIcon} alt="users" />
-                </NavLink>
-              </TabsTrigger>
-            </TabsList>
-          </Tabs>
+        <div className="order-4 w-full md:w-[420px] min-w-[300px] bg-primary-gray flex flex-col rounded-4xl overflow-auto">
           <div className="flex-1 p-4 mb-4 overflow-auto">
             <Outlet context={{ selectedPosition, onGnomeMarkerClick }} />
           </div>
