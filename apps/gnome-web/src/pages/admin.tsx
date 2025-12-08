@@ -120,7 +120,7 @@ export default function AdminPage() {
         </div>
       </div>
       <div className="flex flex-1 flex-col md:flex-row gap-4 p-4 overflow-hidden">
-        <div className="relative w-full md:flex-1 rounded-4xl overflow-hidden">
+        <div className="relative w-full md:flex-1 rounded-4xl overflow-hidden min-h-[300px]">
           {isLoaded && (
             <GoogleMap
               mapContainerStyle={{ width: "100%", height: "100%" }}
