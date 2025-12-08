@@ -16,7 +16,10 @@ import {
   CreateBuildingRequest,
   EmpowerBuildingRequest,
 } from "@repo/shared/requests";
-import { BuildingResponse } from "@repo/shared/responses";
+import {
+  BuildingInteractionResponse,
+  BuildingResponse,
+} from "@repo/shared/responses";
 import { max } from "class-validator";
 import { User } from "@/auth/decorators/jwt-user.decorator";
 import { JwtGuard } from "@/auth/guards/jwt.guard";
@@ -54,6 +57,20 @@ export class BuildingsController {
   @UseGuards(JwtGuard)
   async getAllBuildings(): Promise<BuildingResponse[]> {
     return await this.buildingsService.getAllBuildings();
+  }
+
+  @Get(":id/interactions")
+  @UseGuards(JwtGuard, RoleGuard)
+  @Role(["ADMIN"])
+  async getBuildingInteractions(
+    @Param("id") buildingId: string,
+  ): Promise<BuildingInteractionResponse[]> {
+    const building = await this.buildingsService.getBuildingById(buildingId);
+
+    if (!building) {
+      throw new NotFoundException("Building not found");
+    }
+    return await this.buildingsService.getBuildingInteractions(buildingId);
   }
 
   @Delete(":id")
