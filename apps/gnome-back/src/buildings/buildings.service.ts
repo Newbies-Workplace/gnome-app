@@ -6,7 +6,7 @@ import {
   UnauthorizedException,
 } from "@nestjs/common";
 import { Building, UserRole } from "@prisma/client";
-import { CreateBuildingRequest } from "@repo/shared/requests";
+import { Action, CreateBuildingRequest } from "@repo/shared/requests";
 import { BuildingResponse } from "@repo/shared/responses";
 import { distance, featureCollection, nearestPoint, point } from "@turf/turf";
 import { JwtUser } from "@/auth/types/jwt-user";
@@ -194,5 +194,21 @@ export class BuildingsService {
       interactionType: e.interactionType,
       amount: e.amount,
     }));
+  }
+
+  async createInteraction(
+    userId: string,
+    buildingId: string,
+    action: Action,
+    amount: number,
+  ) {
+    const interaction = await this.prismaService.buildingInteraction.create({
+      data: {
+        interactionType: action,
+        buildingId,
+        userId,
+        amount,
+      },
+    });
   }
 }

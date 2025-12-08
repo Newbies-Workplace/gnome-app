@@ -90,8 +90,15 @@ export class BuildingsController {
   @UseGuards(JwtGuard)
   async updateBuilding(
     @Param("id") buildingId: string,
+    @User() user: JwtUser,
     @Body() body: EmpowerBuildingRequest,
   ) {
+    await this.buildingsService.createInteraction(
+      user.id,
+      buildingId,
+      "EMPOWER",
+      body.gnomeCount,
+    );
     return await this.buildingsService.empowerBuilding(
       buildingId,
       body.gnomeCount,
@@ -101,10 +108,17 @@ export class BuildingsController {
   @UseGuards(JwtGuard)
   async attackBuilding(
     @Param("id") buildingId: string,
+    @User() user: JwtUser,
     @Body() body: AttackBuildingRequest,
   ) {
     const maxDamage = 40;
     const damage = Math.min(body.clicks * 0.2, maxDamage);
+    await this.buildingsService.createInteraction(
+      user.id,
+      buildingId,
+      "ATTACK",
+      damage,
+    );
     return await this.buildingsService.attackBuilding(buildingId, damage);
   }
   @Cron(CronExpression.EVERY_HOUR)
