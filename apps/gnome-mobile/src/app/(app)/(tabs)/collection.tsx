@@ -10,10 +10,8 @@ import { useGnomeStore } from "@/store/useGnomeStore";
 const Collection = () => {
   const { gnomes, error } = useGnomeStore();
   const { getImageForGnome } = useGnomeImageStore();
-
   const router = useRouter();
   const navigation = useNavigation();
-
   //Header
   useEffect(() => {
     navigation.setOptions({
