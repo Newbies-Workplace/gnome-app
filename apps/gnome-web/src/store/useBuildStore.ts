@@ -27,7 +27,7 @@ export const useBuildStore = create<BuildState>((set, get) => ({
 
   fetchUsers: async () => {
     try {
-      const data = await UserService.getMyUser(); // lub getUsers jeśli jest endpoint wszystkich
+      const data = await UserService.getMyUser();
       set({ users: Array.isArray(data) ? data : [data] });
     } catch (error: any) {
       const message =
