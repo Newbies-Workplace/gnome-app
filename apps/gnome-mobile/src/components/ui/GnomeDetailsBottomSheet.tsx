@@ -9,30 +9,27 @@ import GnomeDetailsFullScreenIcon from "@/assets/icons/FullscreenButton.svg";
 import GnomeCaughtCountIcon from "@/assets/icons/GnomeCaughtCount.svg";
 import GnomeHowFarAwayIcon from "@/assets/icons/GnomeHowFarAway.svg";
 import GnomeLocationIcon from "@/assets/icons/GnomeLocation.svg";
+import { useGnomeImage } from "@/lib/useGnomeImage";
 import { useGnomeInteractionStore } from "@/store/useGnomeInteractionStore";
 
 interface GnomeDetailsBottomSheetProps {
-  selectedGnome:
-    | {
-        id: string;
-        name: string;
-        location: string;
-        pictureUrl: string;
-      }
-    | undefined;
-
+  selectedGnome: {
+    id: string;
+    name: string;
+    location: string;
+    pictureUrl: string;
+  };
   formattedDistance?: string | null;
-  interactions: { gnomeId: string }[];
   onClose?: () => void;
-  onClick: any;
+  onClick: () => void;
 }
 
 export const GnomeDetailsBottomSheet: React.FC<
   GnomeDetailsBottomSheetProps
 > = ({ selectedGnome, formattedDistance, onClose, onClick }) => {
-  const placeholder = require("@/assets/images/placeholder.png");
   const { interactionCount, fetchInteractionCount } =
     useGnomeInteractionStore();
+  const gnomeImage = useGnomeImage(selectedGnome?.id);
 
   useEffect(() => {
     if (selectedGnome) {
@@ -60,12 +57,8 @@ export const GnomeDetailsBottomSheet: React.FC<
       <BottomSheetView className="p-5 rounded-t-2xl relative z-10">
         <View className="flex-row items-start space-x-4">
           <Image
-            source={
-              selectedGnome?.pictureUrl
-                ? { uri: selectedGnome?.pictureUrl }
-                : placeholder
-            }
-            className="rounded-lg"
+            source={gnomeImage}
+            className="rounded-lg w-24 h-32 object-cover"
           />
 
           {/* Teksty po prawej */}
