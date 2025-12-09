@@ -8,7 +8,6 @@ import GreenTeam from "@/assets/icons/green-team.svg";
 import PlusIcon from "@/assets/icons/plus-icon.svg";
 import StoneIcon from "@/assets/icons/stone-icon.svg";
 import WoodIcon from "@/assets/icons/wood-icon.svg";
-import GnomeAvatar from "@/assets/images/placeholder-user.png";
 import BuildingsList from "@/components/admin/buildings-list";
 import { Button } from "@/components/ui/button.tsx";
 import { Item, ItemContent, ItemTitle } from "@/components/ui/item.tsx";
