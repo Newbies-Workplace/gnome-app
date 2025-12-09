@@ -28,6 +28,7 @@ import {
   InteractionResponse,
 } from "@repo/shared/responses";
 import { Express } from "express";
+import multer from "multer";
 import { AchievementsService } from "@/achievements/achievements.service";
 import { User } from "@/auth/decorators/jwt-user.decorator";
 import { JwtGuard } from "@/auth/guards/jwt.guard";
@@ -191,7 +192,28 @@ export class GnomesController {
     return await this.gnomeService.updateGnome(gnomeId, body);
   }
   @Patch(":id/photo")
-  async updateGnomePhoto(@Param("id") id: string) {
-    return await this.gnomeService.updateGnomePicture(id);
+  @UseGuards(JwtGuard, RoleGuard)
+  @Role(["ADMIN"])
+  @UseInterceptors(FileInterceptor("file"))
+  async updateGnomePhoto(
+    @Param("id") id: string,
+    @UploadedFile(
+      new ParseFilePipe({
+        fileIsRequired: false,
+        validators: [
+          new MaxFileSizeValidator({ maxSize: 10_000_000 }),
+          new FileTypeValidator({ fileType: /^image/ }),
+        ],
+      }),
+    )
+    file: Express.Multer.File,
+  ) {
+    return await this.gnomeService.updateGnomePicture(id, file);
+  }
+  @Delete(":id/photo")
+  @UseGuards(JwtGuard, RoleGuard)
+  @Role(["ADMIN"])
+  async deleteGnomePhoto(@Param("id") id: string) {
+    return await this.gnomeService.deleteGnomePicture(id);
   }
 }
