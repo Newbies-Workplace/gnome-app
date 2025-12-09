@@ -30,7 +30,7 @@ function GnomeListPanel() {
         Dodaj nowego krasnala
       </Button>
 
-      <GnomesList />
+      <GnomesList search={search} />
     </div>
   );
 }
