@@ -1,5 +1,5 @@
 import { useNavigation, useRouter } from "expo-router";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { FlatList, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import LoadingScreen from "@/components/LoadingScreen";
@@ -8,8 +8,7 @@ import { useGnomeImageStore } from "@/store/useGnomeImageStore";
 import { useGnomeStore } from "@/store/useGnomeStore";
 
 const Collection = () => {
-  const { gnomes, fetchGnomes, interactions, fetchMyInteractions, error } =
-    useGnomeStore();
+  const { gnomes, error } = useGnomeStore();
   const { getImageForGnome } = useGnomeImageStore();
   const router = useRouter();
   const navigation = useNavigation();
@@ -30,11 +29,6 @@ const Collection = () => {
     });
   }, [navigation]);
 
-  useEffect(() => {
-    fetchGnomes();
-    fetchMyInteractions(); // Fetch interactions when component mounts
-  }, []);
-
   return (
     <SafeAreaView className={"flex-1 bg-primary-foreground"}>
       <FlatList
@@ -46,9 +40,9 @@ const Collection = () => {
         renderItem={({ item }) => {
           const img = getImageForGnome(item.id);
           return (
-            <View className="w-1/3">
+            <View className="w-1/3" key={item.id}>
               <GnomeCard
-                image={img?.assetUri || item.pictureUrl}
+                gnomeId={item.id}
                 text={item.name}
                 onClick={() => router.push(`/gnomes/${item.id}`)}
                 interaction={{
