@@ -34,7 +34,7 @@ export const DeleteAccountBottomSheet: React.FC<
       handleIndicatorClassName={"bg-tekst w-24 mt-2 rounded-lg"}
     >
       <BottomSheetView className="px-5 py-4">
-        <SafeAreaView>
+        <SafeAreaView className="flex-1 justify-center items-center">
           <Text className="text-2xl font-bold text-tekst mb-2 text-center">
             Czy na pewno chcesz usunąć konto?
           </Text>
@@ -47,12 +47,12 @@ export const DeleteAccountBottomSheet: React.FC<
             placeholder={`Wpisz "zgadzam się"`}
             onChangeText={setConfirmation}
             value={confirmation}
-            className="border border-muted rounded-2xl px-3 py-2 text-tekst mb-5"
+            className="border border-muted rounded-2xl px-3 py-2 text-tekst mb-5 w-full"
           />
 
-          <View className="flex-row gap-4">
+          <View className="flex-row gap-4 w-full">
             <Button
-              className="flex-1 w-full flex-row gap-2 iteems-center bg-primary-foreground"
+              className="flex-1 flex-row gap-2 items-center bg-primary-foreground justify-center"
               onPress={() => {
                 closeSheet();
                 Keyboard.dismiss();
@@ -63,7 +63,7 @@ export const DeleteAccountBottomSheet: React.FC<
             </Button>
 
             <Button
-              className={`flex-1 w-full flex-row gap-2 iteems-center ${
+              className={`flex-1 flex-row gap-2 items-center justify-center ${
                 canDelete ? "bg-primary" : "bg-primary"
               }`}
               disabled={!canDelete}
