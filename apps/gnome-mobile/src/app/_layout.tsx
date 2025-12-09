@@ -12,6 +12,7 @@ import React, { useEffect, useState } from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import Svg, { Circle, Rect, Text as SvgText } from "react-native-svg";
 import { useAuthStore } from "@/store/useAuthStore";
+import CustomSplash from "./splashscreen";
 
 SplashScreen.setOptions({
   duration: 800,
@@ -38,11 +39,11 @@ export default function RootLayout() {
 
   useEffect(() => {
     if (isReady) {
-      SplashScreen.hide();
+      SplashScreen.hideAsync();
     }
   }, [isReady]);
   if (!isReady) {
-    return null;
+    return <CustomSplash />;
   }
 
   const sheetInteropConfig = {
