@@ -32,7 +32,6 @@ services:
     ports:
       - '3001:3000'
     volumes:
-      - grafana-storage:/var/lib/grafana
       - ./grafana/provisioning:/etc/grafana/provisioning
       - ./grafana/dashboards:/var/lib/grafana/dashboards
       - ./grafana/grafana.ini:/etc/grafana/grafana.ini
@@ -50,7 +49,6 @@ services:
       - '9090:9090'
 
 volumes:
-  grafana-storage: {}
   gnome-db-data:
   minio_data:
     driver: local
