@@ -134,7 +134,10 @@ export default function AdminPage() {
       const markers = buildings.map((building) => {
         const marker = new google.maps.Marker({
           position: { lat: building.latitude, lng: building.longitude },
-          icon: { url: BuildsIcon, scaledSize: new google.maps.Size(40, 40) },
+          icon: {
+            url: BuildingsIcon,
+            scaledSize: new google.maps.Size(40, 40),
+          },
         });
         marker.addListener("click", () => onBuildingMarkerClick(building.id));
         return marker;

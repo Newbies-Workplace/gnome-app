@@ -8,7 +8,11 @@ type OutletContextType = {
   onGnomeMarkerClick: (gnomeId: string) => void;
 };
 
-const GnomesList = () => {
+type GnomesListProps = {
+  search?: string;
+};
+
+const GnomesList = ({ search = "" }: GnomesListProps) => {
   const { gnomes, loading, error } = useGnomeStore();
   const { districts } = useDistrictStore();
   const { onGnomeMarkerClick } = useOutletContext<OutletContextType>();
@@ -16,11 +20,27 @@ const GnomesList = () => {
   if (loading) return <p>Ładowanie...</p>;
   if (error) return <p className="text-red-500">{error}</p>;
   if (!gnomes || gnomes.length === 0)
-    return <p>Brak krasnali do wyświetlenia</p>;
+    return (
+      <div className="text-white text-lg text-center">
+        Brak krasnali do wyświetlenia
+      </div>
+    );
+
+  const filtered = gnomes.filter((gnome) =>
+    gnome.name.toLowerCase().includes(search.toLowerCase()),
+  );
+
+  if (filtered.length === 0) {
+    return (
+      <div className="text-white text-lg text-center">
+        Brak wyników dla "{search}"
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col overflow-y-auto">
-      {gnomes.map((gnome) => {
+      {filtered.map((gnome) => {
         const district = districts.find((d) => d.id === gnome.districtId);
 
         return (
