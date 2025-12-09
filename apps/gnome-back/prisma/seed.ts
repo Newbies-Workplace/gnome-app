@@ -69,7 +69,7 @@ async function main() {
       exists: true,
       funFact:
         "Krążą plotki, że potrafi wypić więcej piwa niż niejeden Duży Człowiek. Podobno zna tajne przejścia między wrocławskimi pubami.",
-      pictureUrl: "Kacuś.jpg",
+      pictureUrl: "http://localhost:9000/images/defaultGnomePictures/Kacuś.jpg",
     },
     {
       id: "b2e4d8c7-9a4b-4a5b-8c9d-2345ef6789ab",
@@ -96,7 +96,8 @@ async function main() {
       exists: true,
       funFact:
         "Testował każdą hulajnogę we Wrocławiu, a niektórzy twierdzą, że ma swoją własną, niewidzialną dla ludzi, dzięki której zawsze jest pierwszy na miejscu.",
-      pictureUrl: "Frugalek.jpg",
+      pictureUrl:
+        "http://localhost:9000/images/defaultGnomePictures/Frugalek.jpg",
     },
     {
       id: "d4e6f7a8-1c2d-4c7d-8abc-4567890abcd1",
@@ -190,26 +191,28 @@ async function main() {
     },
   ];
 
+  const files = ["Kacuś.jpg", "Frugalek.jpg"];
+  for (const filename of files) {
+    const file: Express.Multer.File = {
+      originalname: filename,
+      buffer: await fs.readFile(`./prisma/assets/${filename}`),
+      mimetype: "image/jpeg",
+    } as unknown as Express.Multer.File;
+
+    await minioService.uploadFile(file, filename, "defaultGnomePictures");
+  }
+
   for (const gnome of gnomes) {
     const districtId = await districtsService.findPointInPolygon([
       gnome.longitude,
       gnome.latitude,
     ]);
-    const fs = require("fs");
-    const files = ["Kacuś.jpg", "Frugalek.jpg"];
-
-    for (const filename of files) {
-      const file: Express.Multer.File = {
-        originalname: filename,
-        buffer: fs.readFileSync(`./prisma/assets/${filename}`),
-        mimetype: "image/jpeg",
-      } as Express.Multer.File;
-
-      await minioService.uploadFile(file, filename, "defaultGnomePictures");
-    }
     await prisma.gnome.upsert({
       where: { id: gnome.id },
-      update: {},
+      update: {
+        pictureUrl: gnome.pictureUrl || "",
+        districtId: districtId,
+      },
       create: {
         pictureUrl: gnome.pictureUrl || "",
         id: gnome.id,

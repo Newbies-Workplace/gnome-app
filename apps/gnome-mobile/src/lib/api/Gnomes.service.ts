@@ -22,7 +22,6 @@ const getGnomeById = async (id: string): Promise<GnomeIdResponse> => {
   return await axiosInstance
     .get(`api/rest/v1/gnomes/${id}`)
     .then((response) => {
-      console.log(response.data);
       return response.data;
     });
 };
