@@ -1,5 +1,5 @@
 import React from "react";
-import MapOptionIcon from "@/assets/icons/map-option-icon.svg";
+import FiltersIcon from "@/assets/icons/filters-icon.svg";
 import { Button } from "@/components/ui/button.tsx";
 import {
   DropdownMenu,
@@ -29,8 +29,8 @@ export default function MapOptions({ filters, setFilters }: MapOptionsProps) {
       <DropdownMenuTrigger asChild>
         <Button className="rounded-2xl">
           <div className="flex flex-row gap-2 items-center">
-            Opcje
-            <img src={MapOptionIcon} alt="map" className="w-6 h-6" />
+            Filtry
+            <img src={FiltersIcon} alt="map" className="w-6 h-6" />
           </div>
         </Button>
       </DropdownMenuTrigger>
