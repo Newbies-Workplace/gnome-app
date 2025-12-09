@@ -92,9 +92,9 @@ export default function ProfileScreen() {
         </Avatar>
         <View>
           <Text className="text-xl font-bold text-tekst">{user.name}</Text>
-          <Button className="mt-2 px-4 py-2 rounded-full bg-background">
+          {/* <Button className="mt-2 px-4 py-2 rounded-full bg-background">
             <Text className="text-tekst">Edytuj profil</Text>
-          </Button>
+          </Button> */}
         </View>
       </View>
 
