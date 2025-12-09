@@ -13,6 +13,7 @@ import {
   UseInterceptors,
 } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
+import { ApiBearerAuth, ApiBody } from "@nestjs/swagger";
 import { CreateReportRequest } from "@repo/shared/requests";
 import { ReportResponse } from "@repo/shared/responses";
 import { JwtGuard } from "@/auth/guards/jwt.guard";
@@ -21,6 +22,7 @@ import { Role } from "@/role/role.decorator";
 import { RoleGuard } from "@/roleguard/role.guard";
 import { ReportsService } from "./reports.service";
 
+@ApiBearerAuth()
 @Controller("reports")
 export class ReportsController {
   constructor(
@@ -35,6 +37,19 @@ export class ReportsController {
 
     return allReports;
   }
+  @ApiBody({
+    schema: {
+      example: {
+        gnomeName: "Frugalek",
+        pictureUrl:
+          "http://localhost:9000/images/defaultGnomePictures/Frugalek.jpg",
+        latitude: "51.12283716204963",
+        longitude: "16.9914869064251",
+        location: "Legnicka 49GA, Wrocław",
+        reportAuthor: "02fcc1f4-ad8b-4ebc-a303-89869986e605",
+      },
+    },
+  })
   @Post("")
   @UseInterceptors(FileInterceptor("file"))
   async createReport(

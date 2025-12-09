@@ -1,5 +1,6 @@
 import { Body, Controller, Get, Post, Res, UseGuards } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
+import { ApiBearerAuth, ApiBody } from "@nestjs/swagger";
 import { UserRole } from "@prisma/client";
 import { GoogleUserResponse, UserResponse } from "@repo/shared/responses";
 import { Response } from "express";
@@ -9,7 +10,7 @@ import { JwtUser } from "@/auth/types/jwt-user";
 import { UsersService } from "@/users/users.service";
 import { User } from "./decorators/jwt-user.decorator";
 import { GoogleGuard } from "./guards/google.guard";
-
+@ApiBearerAuth()
 @Controller("auth")
 export class AuthController {
   constructor(
@@ -39,7 +40,6 @@ export class AuthController {
 
     return res.redirect(`${FRONTEND_URL}/login/callback`);
   }
-
   @Post("google")
   async google(@Body() body: GoogleAuthRequest): Promise<{
     user: UserResponse;
