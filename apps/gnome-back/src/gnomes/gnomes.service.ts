@@ -5,7 +5,6 @@ import {
   GnomeIdResponse,
   InteractionExtendedResponse,
 } from "@repo/shared/responses";
-import { identity } from "rxjs";
 import { PrismaService } from "@/db/prisma.service";
 import { DistrictsService } from "@/districts/districts.service";
 import { MinioService } from "@/minio/minio.service";
@@ -226,11 +225,13 @@ export class GnomesService {
       },
       select: {
         pictureUrl: true,
+        name: true,
       },
     });
     if (gnome.pictureUrl) {
       const bucketName = "images";
-      const fullUrl = `defaultGnomePictures/${gnome.pictureUrl}`;
+      const fullUrl = gnome.pictureUrl.split("/images/")[1];
+      console.log(fullUrl);
       await this.minioService.deleteFile(bucketName, fullUrl);
       await this.prismaService.gnome.update({
         where: {

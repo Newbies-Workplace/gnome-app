@@ -199,7 +199,7 @@ export class GnomesController {
     @Param("id") id: string,
     @UploadedFile(
       new ParseFilePipe({
-        fileIsRequired: false,
+        fileIsRequired: true,
         validators: [
           new MaxFileSizeValidator({ maxSize: 10_000_000 }),
           new FileTypeValidator({ fileType: /^image/ }),
