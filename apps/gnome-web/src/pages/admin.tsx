@@ -1,5 +1,11 @@
 import { MarkerClusterer } from "@googlemaps/markerclusterer";
-import { GoogleMap, Marker, useJsApiLoader } from "@react-google-maps/api";
+import {
+  GoogleMap,
+  Marker,
+  Polygon,
+  Polyline,
+  useJsApiLoader,
+} from "@react-google-maps/api";
 import { useCallback, useEffect, useState } from "react";
 import { NavLink, Outlet, useLocation, useNavigate } from "react-router-dom";
 import BuildingsIcon from "@/assets/icons/buildings-icon.svg";
@@ -15,6 +21,7 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { buildingClusterRenderer } from "@/lib/building-cluster-renderer.tsx";
 import { gnomeClusterRenderer } from "@/lib/gnome-cluster-renderer.tsx";
 import { MapStyle } from "@/lib/map-styles.ts";
+import { points } from "@/lib/wroclaw-coords";
 import { useBuildStore } from "@/store/useBuildStore.ts";
 import { useDistrictStore } from "@/store/useDistrictStore.ts";
 import { useGnomeStore } from "@/store/useGnomeStore";
@@ -216,6 +223,15 @@ export default function AdminPage() {
                   }}
                 />
               )}
+              <Polygon
+                paths={points}
+                options={{
+                  strokeColor: "#8a5416ff",
+                  strokeOpacity: 1,
+                  strokeWeight: 3,
+                  fillOpacity: 0,
+                }}
+              />
             </GoogleMap>
           )}
           <div className="absolute bottom-4 left-4 z-10">
