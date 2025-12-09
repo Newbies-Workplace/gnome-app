@@ -11,6 +11,7 @@ import LogoutIcon from "@/assets/icons/log-out.svg";
 import QuestsIcon from "@/assets/icons/quests.svg";
 import SettingsIcon from "@/assets/icons/settings.svg";
 import ShareIcon from "@/assets/icons/share-right.svg";
+import { Achievement } from "@/components/Achivement";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { GnomeCard } from "@/components/ui/GnomeCard";
@@ -105,11 +106,19 @@ export default function ProfileScreen() {
           image={<FriendsIcon className="text-tekst" />}
           onClick={() => router.navigate("/friends")}
         />
-        <ProfileButton
-          text="Osiągnięcia"
-          image={<AchievementsIcon className="text-tekst" />}
-          onClick={() => router.push("/achievements")}
-        />
+
+        <View>
+          <ProfileButton
+            text="Osiągnięcia"
+            image={<AchievementsIcon className="text-tekst" />}
+            onClick={() => router.push("/achievements")}
+          />
+          <View className="w-full flex-row justify-between px-9">
+            <Achievement title="Zebrane 10 krasnali" />
+            <Achievement title="Zebrano 67 krasnali" />
+            <Achievement title="Odblokowano wszystkie krasnale" />
+          </View>
+        </View>
         <ProfileButton
           text="Zadania"
           image={<QuestsIcon className="text-tekst" />}
