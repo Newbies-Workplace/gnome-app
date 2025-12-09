@@ -30,7 +30,12 @@ export default function AdminPage() {
     lng: number;
   } | null>(null);
   const [mapRef, setMapRef] = useState<google.maps.Map | null>(null);
-  const [clusterer, setClusterer] = useState<MarkerClusterer | null>(null);
+
+  const [gnomeClusterer, setGnomeClusterer] = useState<MarkerClusterer | null>(
+    null,
+  );
+  const [buildingClusterer, setBuildingClusterer] =
+    useState<MarkerClusterer | null>(null);
 
   if (loadError) {
     console.error("Error while loading google map:", loadError);
@@ -85,9 +90,9 @@ export default function AdminPage() {
 
   const currentTab = (() => {
     if (location.pathname.startsWith("/admin/users")) return "users";
-    if (location.pathname.startsWith("/admin/buildings")) return "builds";
+    if (location.pathname.startsWith("/admin/buildings")) return "buildings";
     if (location.pathname.startsWith("/admin/events")) return "events";
-    return "gnomes"; // default tab
+    return "gnomes"; // default
   })();
 
   const [filters, setFilters] = useState({
@@ -98,19 +103,20 @@ export default function AdminPage() {
   useEffect(() => {
     if (!mapRef) return;
 
-    if (clusterer) {
-      clusterer.clearMarkers();
-      setClusterer(null);
+    if (gnomeClusterer) {
+      gnomeClusterer.clearMarkers();
+      setGnomeClusterer(null);
+    }
+    if (buildingClusterer) {
+      buildingClusterer.clearMarkers();
+      setBuildingClusterer(null);
     }
 
     if (filters.gnomesVisible && Array.isArray(gnomes)) {
       const markers = gnomes.map((gnome) => {
         const marker = new google.maps.Marker({
           position: { lat: gnome.latitude, lng: gnome.longitude },
-          icon: {
-            url: GnomePinIcon,
-            scaledSize: new google.maps.Size(40, 40),
-          },
+          icon: { url: GnomePinIcon, scaledSize: new google.maps.Size(40, 40) },
         });
         marker.addListener("click", () => onGnomeMarkerClick(gnome.id));
         return marker;
@@ -121,17 +127,14 @@ export default function AdminPage() {
         map: mapRef,
         renderer: gnomeClusterRenderer,
       });
-      setClusterer(newClusterer);
+      setGnomeClusterer(newClusterer);
     }
 
     if (filters.buildingsVisible && Array.isArray(buildings)) {
       const markers = buildings.map((building) => {
         const marker = new google.maps.Marker({
           position: { lat: building.latitude, lng: building.longitude },
-          icon: {
-            url: BuildsIcon,
-            scaledSize: new google.maps.Size(40, 40),
-          },
+          icon: { url: BuildsIcon, scaledSize: new google.maps.Size(40, 40) },
         });
         marker.addListener("click", () => onBuildingMarkerClick(building.id));
         return marker;
@@ -142,15 +145,9 @@ export default function AdminPage() {
         map: mapRef,
         renderer: buildingClusterRenderer,
       });
-      setClusterer(newClusterer);
+      setBuildingClusterer(newClusterer);
     }
-  }, [
-    filters.gnomesVisible,
-    filters.buildingsVisible,
-    gnomes,
-    buildings,
-    mapRef,
-  ]);
+  }, [filters, gnomes, buildings, mapRef]);
 
   return (
     <div
