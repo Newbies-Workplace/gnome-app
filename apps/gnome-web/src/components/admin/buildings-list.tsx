@@ -3,7 +3,7 @@ import ClockIcon from "@/assets/icons/clock-icon.svg";
 import BuildPlaceHolder from "@/assets/images/placeholder.png";
 import { Item } from "@/components/ui/item.tsx";
 import { convertHealthToRemainingTime } from "@/lib/convert-health-to-remaining-time.ts";
-import { useBuildStore } from "@/store/useBuildStore.ts";
+import { useBuildStore } from "@/store/useBuildStore";
 
 const BuildingsList = () => {
   const { getBuildingsWithOwnerName, loading, error } = useBuildStore();
