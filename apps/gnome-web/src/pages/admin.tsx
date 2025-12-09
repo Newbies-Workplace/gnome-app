@@ -2,7 +2,7 @@ import { MarkerClusterer } from "@googlemaps/markerclusterer";
 import { GoogleMap, Marker, useJsApiLoader } from "@react-google-maps/api";
 import { useCallback, useEffect, useState } from "react";
 import { NavLink, Outlet, useLocation, useNavigate } from "react-router-dom";
-import BuildsIcon from "@/assets/icons/builds-icon.svg";
+import BuildingsIcon from "@/assets/icons/buildings-icon.svg";
 import EventsIcon from "@/assets/icons/events-icon.svg";
 import GnomeIcon from "@/assets/icons/gnome-icon.svg";
 import GnomePinIcon from "@/assets/icons/gnome-pin-icon.svg";
@@ -12,6 +12,7 @@ import backgroundImage from "@/assets/images/background.png";
 import AdminToolbar from "@/components/admin/admin-toolbar";
 import MapOptions from "@/components/admin/map-options";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { buildingClusterRenderer } from "@/lib/building-cluster-renderer.tsx";
 import { gnomeClusterRenderer } from "@/lib/gnome-cluster-renderer.tsx";
 import { MapStyle } from "@/lib/map-styles.ts";
 import { useBuildStore } from "@/store/useBuildStore.ts";
@@ -29,7 +30,12 @@ export default function AdminPage() {
     lng: number;
   } | null>(null);
   const [mapRef, setMapRef] = useState<google.maps.Map | null>(null);
-  const [clusterer, setClusterer] = useState<MarkerClusterer | null>(null);
+
+  const [gnomeClusterer, setGnomeClusterer] = useState<MarkerClusterer | null>(
+    null,
+  );
+  const [buildingClusterer, setBuildingClusterer] =
+    useState<MarkerClusterer | null>(null);
 
   if (loadError) {
     console.error("Error while loading google map:", loadError);
@@ -39,7 +45,7 @@ export default function AdminPage() {
   const navigate = useNavigate();
   const { gnomes, fetchGnomes } = useGnomeStore();
   const { fetchDistricts } = useDistrictStore();
-  const { fetchBuildings, fetchUsers } = useBuildStore();
+  const { buildings, fetchBuildings, fetchUsers } = useBuildStore();
 
   useEffect(() => {
     fetchGnomes();
@@ -51,10 +57,23 @@ export default function AdminPage() {
   const onGnomeMarkerClick = (gnomeId: string) => {
     const gnome = gnomes.find((g) => g.id === gnomeId);
     if (mapRef && gnome) {
-      mapRef.panTo({ lat: gnome.latitude, lng: gnome.longitude });
-      mapRef.setZoom(16);
+      const position = { lat: gnome.latitude, lng: gnome.longitude };
+      mapRef.panTo(position);
+      mapRef.setCenter(position);
+      mapRef.setZoom(18);
     }
     navigate(`/admin/gnomes/${gnomeId}`);
+  };
+
+  const onBuildingMarkerClick = (buildingId: string) => {
+    const building = buildings.find((b) => b.id === buildingId);
+    if (mapRef && building) {
+      const position = { lat: building.latitude, lng: building.longitude };
+      mapRef.panTo(position);
+      mapRef.setCenter(position);
+      mapRef.setZoom(18);
+    }
+    navigate(`/admin/buildings/${buildingId}`);
   };
 
   const onMapLoad = useCallback((map: google.maps.Map) => {
@@ -71,9 +90,9 @@ export default function AdminPage() {
 
   const currentTab = (() => {
     if (location.pathname.startsWith("/admin/users")) return "users";
-    if (location.pathname.startsWith("/admin/buildings")) return "builds";
+    if (location.pathname.startsWith("/admin/buildings")) return "buildings";
     if (location.pathname.startsWith("/admin/events")) return "events";
-    return "gnomes"; // default tab
+    return "gnomes"; // default
   })();
 
   const [filters, setFilters] = useState({
@@ -84,21 +103,21 @@ export default function AdminPage() {
   useEffect(() => {
     if (!mapRef) return;
 
-    if (clusterer) {
-      clusterer.clearMarkers();
-      setClusterer(null);
+    if (gnomeClusterer) {
+      gnomeClusterer.clearMarkers();
+      setGnomeClusterer(null);
+    }
+    if (buildingClusterer) {
+      buildingClusterer.clearMarkers();
+      setBuildingClusterer(null);
     }
 
     if (filters.gnomesVisible && Array.isArray(gnomes)) {
       const markers = gnomes.map((gnome) => {
         const marker = new google.maps.Marker({
           position: { lat: gnome.latitude, lng: gnome.longitude },
-          icon: {
-            url: GnomePinIcon,
-            scaledSize: new google.maps.Size(40, 40),
-          },
+          icon: { url: GnomePinIcon, scaledSize: new google.maps.Size(40, 40) },
         });
-
         marker.addListener("click", () => onGnomeMarkerClick(gnome.id));
         return marker;
       });
@@ -108,9 +127,30 @@ export default function AdminPage() {
         map: mapRef,
         renderer: gnomeClusterRenderer,
       });
-      setClusterer(newClusterer);
+      setGnomeClusterer(newClusterer);
     }
-  }, [filters.gnomesVisible, gnomes, mapRef]);
+
+    if (filters.buildingsVisible && Array.isArray(buildings)) {
+      const markers = buildings.map((building) => {
+        const marker = new google.maps.Marker({
+          position: { lat: building.latitude, lng: building.longitude },
+          icon: {
+            url: BuildingsIcon,
+            scaledSize: new google.maps.Size(40, 40),
+          },
+        });
+        marker.addListener("click", () => onBuildingMarkerClick(building.id));
+        return marker;
+      });
+
+      const newClusterer = new MarkerClusterer({
+        markers,
+        map: mapRef,
+        renderer: buildingClusterRenderer,
+      });
+      setBuildingClusterer(newClusterer);
+    }
+  }, [filters, gnomes, buildings, mapRef]);
 
   return (
     <div
@@ -125,38 +165,22 @@ export default function AdminPage() {
         <div className="w-full md:w-[420px] min-w-[300px] bg-primary-gray rounded-2xl h-16 flex items-center">
           <Tabs value={currentTab} className="w-full">
             <TabsList className="grid grid-cols-4 gap-2 p-2 w-full bg-primary-gray rounded-4xl h-16 items-center">
-              <TabsTrigger
-                value="gnomes"
-                className="rounded-xl flex items-center justify-center h-full"
-                asChild
-              >
+              <TabsTrigger value="gnomes" asChild>
                 <NavLink to="/admin">
                   <img src={GnomeIcon} alt="gnome" />
                 </NavLink>
               </TabsTrigger>
-              <TabsTrigger
-                value="buildings"
-                className="rounded-xl flex items-center justify-center h-full"
-                asChild
-              >
+              <TabsTrigger value="buildings" asChild>
                 <NavLink to="/admin/buildings">
-                  <img src={BuildsIcon} alt="buildings" />
+                  <img src={BuildingsIcon} alt="buildings" />
                 </NavLink>
               </TabsTrigger>
-              <TabsTrigger
-                value="events"
-                className="rounded-xl flex items-center justify-center h-full"
-                asChild
-              >
+              <TabsTrigger value="events" asChild>
                 <NavLink to="/admin/events">
                   <img src={EventsIcon} alt="events" />
                 </NavLink>
               </TabsTrigger>
-              <TabsTrigger
-                value="users"
-                className="rounded-xl flex items-center justify-center h-full"
-                asChild
-              >
+              <TabsTrigger value="users" asChild>
                 <NavLink to="/admin/users">
                   <img src={UsersIcon} alt="users" />
                 </NavLink>
@@ -200,7 +224,13 @@ export default function AdminPage() {
         </div>
 
         <div className="w-full md:w-[420px] min-w-[300px] bg-primary-gray flex flex-col p-2 rounded-2xl overflow-auto">
-          <Outlet context={{ selectedPosition, onGnomeMarkerClick }} />
+          <Outlet
+            context={{
+              selectedPosition,
+              onGnomeMarkerClick,
+              onBuildingMarkerClick,
+            }}
+          />
         </div>
       </div>
     </div>

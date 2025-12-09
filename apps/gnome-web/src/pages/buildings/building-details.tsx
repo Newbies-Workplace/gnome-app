@@ -5,7 +5,7 @@ import GreenTeam from "@/assets/icons/green-team.svg";
 import Line from "@/assets/icons/line.svg";
 import Bar from "@/assets/icons/placeholder-bar.svg";
 import GnomeAvatar from "@/assets/images/placeholder-user.png";
-import BuildsHistoryList from "@/components/admin/builds-history-list.tsx";
+import BuildingsHistoryList from "@/components/admin/buildings-history-list";
 import { Button } from "@/components/ui/button.tsx";
 import {
   Item,
@@ -89,7 +89,7 @@ export default function BuildingDetailsPage() {
           </ItemDescription>
 
           <div className="flex-1 overflow-y-auto flex flex-col gap-2 pr-2">
-            <BuildsHistoryList />
+            <BuildingsHistoryList />
           </div>
         </ItemContent>
       </Item>
