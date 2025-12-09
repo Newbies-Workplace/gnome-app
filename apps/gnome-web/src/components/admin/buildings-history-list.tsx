@@ -2,7 +2,7 @@ import GnomeAvatar from "@/assets/images/placeholder-user.png";
 import { Item, ItemContent, ItemDescription } from "@/components/ui/item.tsx";
 import { useBuildStore } from "@/store/useBuildStore.ts";
 
-const BuildsHistoryList = () => {
+const BuildingsHistoryList = () => {
   const { getBuildingsWithOwnerName, loading, error } = useBuildStore();
 
   const buildings = getBuildingsWithOwnerName();
@@ -39,4 +39,4 @@ const BuildsHistoryList = () => {
     </div>
   );
 };
-export default BuildsHistoryList;
+export default BuildingsHistoryList;

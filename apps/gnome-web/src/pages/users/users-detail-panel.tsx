@@ -8,7 +8,7 @@ import PlusIcon from "@/assets/icons/plus-icon.svg";
 import StoneIcon from "@/assets/icons/stone-icon.svg";
 import WoodIcon from "@/assets/icons/wood-icon.svg";
 import GnomeAvatar from "@/assets/images/placeholder-user.png";
-import BuildsList from "@/components/admin/builds-list.tsx";
+import BuildingsList from "@/components/admin/buildings-list";
 import { Button } from "@/components/ui/button.tsx";
 import { Item, ItemContent, ItemTitle } from "@/components/ui/item.tsx";
 
@@ -103,7 +103,7 @@ export default function UserDetailPanel() {
       <div className="text-white text-Afacad text-xl">Budowle:</div>
 
       <div className="flex-1 overflow-y-auto min-h-0">
-        <BuildsList />
+        <BuildingsList />
       </div>
     </div>
   );

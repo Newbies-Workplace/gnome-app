@@ -2,7 +2,7 @@ import { MarkerClusterer } from "@googlemaps/markerclusterer";
 import { GoogleMap, Marker, useJsApiLoader } from "@react-google-maps/api";
 import { useCallback, useEffect, useState } from "react";
 import { NavLink, Outlet, useLocation, useNavigate } from "react-router-dom";
-import BuildsIcon from "@/assets/icons/builds-icon.svg";
+import BuildingsIcon from "@/assets/icons/buildings-icon.svg";
 import EventsIcon from "@/assets/icons/events-icon.svg";
 import GnomeIcon from "@/assets/icons/gnome-icon.svg";
 import GnomePinIcon from "@/assets/icons/gnome-pin-icon.svg";
@@ -71,7 +71,7 @@ export default function AdminPage() {
 
   const currentTab = (() => {
     if (location.pathname.startsWith("/admin/users")) return "users";
-    if (location.pathname.startsWith("/admin/buildings")) return "builds";
+    if (location.pathname.startsWith("/admin/buildings")) return "buildings";
     if (location.pathname.startsWith("/admin/events")) return "events";
     return "gnomes"; // default tab
   })();
@@ -140,7 +140,7 @@ export default function AdminPage() {
                 asChild
               >
                 <NavLink to="/admin/buildings">
-                  <img src={BuildsIcon} alt="buildings" />
+                  <img src={BuildingsIcon} alt="buildings" />
                 </NavLink>
               </TabsTrigger>
               <TabsTrigger
