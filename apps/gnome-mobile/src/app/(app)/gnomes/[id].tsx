@@ -10,6 +10,7 @@ import DateIcon from "@/assets/icons/date.svg";
 import FoundIcon from "@/assets/icons/found.svg";
 import { GnomeCard } from "@/components/ui/GnomeCard";
 import { GnomesService } from "@/lib/api/Gnomes.service";
+import { useGnomeImage } from "@/lib/useGnomeImage";
 import { useGnomeStore } from "@/store/useGnomeStore";
 
 const GnomeDetail = () => {
@@ -21,6 +22,7 @@ const GnomeDetail = () => {
   const [nearestGnomes, setNearestGnomes] = useState<GnomeResponse[]>([]);
   const router = useRouter();
   const navigation = useNavigation();
+  const gnomeImage = useGnomeImage(gnomeId);
 
   const interaction = useMemo(
     () => interactions.find((i) => i.gnomeId === gnomeId),
@@ -68,13 +70,6 @@ const GnomeDetail = () => {
     );
   }
 
-  const getImageSource = () => {
-    if (!!interaction && interaction?.userPicture)
-      return { uri: interaction.userPicture };
-    if (interaction) return { uri: gnome.pictureUrl };
-    return require("@/assets/images/placeholder.png");
-  };
-
   return (
     <SafeAreaView
       className="bg-primary-foreground flex-1"
@@ -83,7 +78,7 @@ const GnomeDetail = () => {
       <ScrollView className={"px-4"}>
         <View className="items-center mb-5 mt-5">
           <Image
-            source={getImageSource()}
+            source={gnomeImage}
             style={{ width: 379, height: 455 }}
             className={"rounded-xl"}
           />
@@ -126,7 +121,7 @@ const GnomeDetail = () => {
           {nearestGnomes.slice(0, 3).map((gnome) => (
             <GnomeCard
               key={gnome.id}
-              image={require("@/assets/images/placeholder.png")}
+              gnomeId={gnome.id}
               text={gnome.name}
               onClick={() => router.push(`/gnomes/${gnome.id}`)}
             />
