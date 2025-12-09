@@ -16,7 +16,10 @@ import {
   CreateBuildingRequest,
   EmpowerBuildingRequest,
 } from "@repo/shared/requests";
-import { BuildingResponse } from "@repo/shared/responses";
+import {
+  BuildingInteractionResponse,
+  BuildingResponse,
+} from "@repo/shared/responses";
 import { max } from "class-validator";
 import { User } from "@/auth/decorators/jwt-user.decorator";
 import { JwtGuard } from "@/auth/guards/jwt.guard";
@@ -56,6 +59,20 @@ export class BuildingsController {
     return await this.buildingsService.getAllBuildings();
   }
 
+  @Get(":id/interactions")
+  @UseGuards(JwtGuard, RoleGuard)
+  @Role(["ADMIN"])
+  async getBuildingInteractions(
+    @Param("id") buildingId: string,
+  ): Promise<BuildingInteractionResponse[]> {
+    const building = await this.buildingsService.getBuildingById(buildingId);
+
+    if (!building) {
+      throw new NotFoundException("Building not found");
+    }
+    return await this.buildingsService.getBuildingInteractions(buildingId);
+  }
+
   @Delete(":id")
   @UseGuards(JwtGuard)
   async deleteBuilding(
@@ -73,8 +90,15 @@ export class BuildingsController {
   @UseGuards(JwtGuard)
   async updateBuilding(
     @Param("id") buildingId: string,
+    @User() user: JwtUser,
     @Body() body: EmpowerBuildingRequest,
   ) {
+    await this.buildingsService.createInteraction(
+      user.id,
+      buildingId,
+      "EMPOWER",
+      body.gnomeCount,
+    );
     return await this.buildingsService.empowerBuilding(
       buildingId,
       body.gnomeCount,
@@ -84,10 +108,17 @@ export class BuildingsController {
   @UseGuards(JwtGuard)
   async attackBuilding(
     @Param("id") buildingId: string,
+    @User() user: JwtUser,
     @Body() body: AttackBuildingRequest,
   ) {
     const maxDamage = 40;
     const damage = Math.min(body.clicks * 0.2, maxDamage);
+    await this.buildingsService.createInteraction(
+      user.id,
+      buildingId,
+      "ATTACK",
+      damage,
+    );
     return await this.buildingsService.attackBuilding(buildingId, damage);
   }
   @Cron(CronExpression.EVERY_HOUR)

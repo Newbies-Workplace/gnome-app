@@ -11,7 +11,7 @@ CREATE TYPE "UserRole" AS ENUM ('ADMIN', 'USER', 'MODERATOR');
 CREATE TYPE "Status" AS ENUM ('ACTIVE', 'PENDING');
 
 -- CreateEnum
-CREATE TYPE "Team" AS ENUM ('TEAM1', 'TEAM2', 'TEAM3');
+CREATE TYPE "Team" AS ENUM ('TEAM_YELLOW', 'TEAM_BLUE', 'TEAM_GREEN');
 
 -- CreateTable
 CREATE TABLE "User" (
@@ -121,6 +121,7 @@ CREATE TABLE "Building" (
 CREATE TABLE "BuildingInteraction" (
     "id" TEXT NOT NULL,
     "interactionType" "BuildingInteractionType" NOT NULL,
+    "buildingId" TEXT NOT NULL,
     "userId" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "amount" INTEGER NOT NULL,
@@ -203,6 +204,9 @@ ALTER TABLE "Building" ADD CONSTRAINT "Building_districtId_fkey" FOREIGN KEY ("d
 
 -- AddForeignKey
 ALTER TABLE "Building" ADD CONSTRAINT "Building_ownerId_fkey" FOREIGN KEY ("ownerId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "BuildingInteraction" ADD CONSTRAINT "BuildingInteraction_buildingId_fkey" FOREIGN KEY ("buildingId") REFERENCES "Building"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "BuildingInteraction" ADD CONSTRAINT "BuildingInteraction_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;

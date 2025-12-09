@@ -1,6 +1,6 @@
 import { useNavigate, useOutletContext } from "react-router-dom";
 import { toast } from "sonner";
-import { GnomeForm } from "@/components/ui/admin/gnome-form";
+import { GnomeForm } from "@/components/admin/gnome-form";
 import type { GnomeFormData } from "@/schemas/gnomeSchema";
 import { useDistrictStore } from "@/store/useDistrictStore";
 import { useGnomeStore } from "@/store/useGnomeStore";
@@ -16,7 +16,7 @@ export default function GnomeAddPage() {
   const addGnome = useGnomeStore((s) => s.addGnome);
   const districts = useDistrictStore((s) => s.districts);
 
-  const handleSubmit = async (data: GnomeFormData, preview: string | null) => {
+  const handleSubmit = async (data: GnomeFormData) => {
     const formData = new FormData();
 
     formData.append("name", data.name);

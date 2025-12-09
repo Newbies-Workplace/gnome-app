@@ -154,7 +154,7 @@ export class SearchByNameReuqest {
   name?: string;
 }
 
-export type Team = "TEAM1" | "TEAM2" | "TEAM3";
+export type Team = "TEAM_YELLOW" | "TEAM_BLUE" | "TEAM_GREEN";
 
 export class AssignTeam {
   @IsNotEmpty()
@@ -196,4 +196,23 @@ export class UpdateGnomeRequest {
   @IsOptional()
   @IsBoolean()
   exists?: boolean;
+}
+
+export type Action = "ATTACK" | "EMPOWER";
+
+export class BuildingInteractionRequest {
+  @IsNotEmpty()
+  action!: Action;
+
+  @IsNotEmpty()
+  @IsString()
+  buildingId!: string;
+
+  @IsNotEmpty()
+  @IsString()
+  userId!: string;
+
+  @IsNotEmpty()
+  @IsNumber()
+  amount!: number;
 }

@@ -1,11 +1,11 @@
 import { Link } from "react-router-dom";
 import UserPlaceHolder from "@/assets/images/placeholder-user.png";
-import { Item } from "@/components/ui/item";
+import { Item } from "@/components/ui/item.tsx";
 
 function UsersList() {
   return (
     <Link to="1">
-      <Item className="w-full h-20 rounded-4xl bg-primary-gray hover:bg-white/10 transition p-4">
+      <Item className="hover:bg-white/10" size={"sm"}>
         <div className="flex w-full h-full items-center text-left text-white font-Afacad">
           <img
             src={UserPlaceHolder}

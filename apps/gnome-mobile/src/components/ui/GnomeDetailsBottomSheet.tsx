@@ -12,12 +12,14 @@ import GnomeLocationIcon from "@/assets/icons/GnomeLocation.svg";
 import { useGnomeInteractionStore } from "@/store/useGnomeInteractionStore";
 
 interface GnomeDetailsBottomSheetProps {
-  selectedGnome: {
-    id: string;
-    name: string;
-    location: string;
-    pictureUrl: string;
-  } | null;
+  selectedGnome:
+    | {
+        id: string;
+        name: string;
+        location: string;
+        pictureUrl: string;
+      }
+    | undefined;
 
   formattedDistance?: string | null;
   interactions: { gnomeId: string }[];

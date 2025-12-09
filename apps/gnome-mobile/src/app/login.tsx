@@ -44,7 +44,7 @@ export default function SignInScreen() {
   };
 
   return (
-    <SafeAreaView className="flex-1 justify-end bg-background">
+    <View className="flex-1 justify-end bg-background">
       <Image
         source={require("@/assets/images/bgmax.png")}
         className="w-full h-full flex-1 object-cover"
@@ -53,10 +53,10 @@ export default function SignInScreen() {
         }}
       />
       <View className="bg-background p-10">
-        <Text className="text-tekst text-2xl font-bold mb-5 text-center">
+        {/* <Text className="text-tekst text-2xl font-bold mb-5 text-center">
           Zaloguj się!
-        </Text>
-        <TextInput
+        </Text> */}
+        {/* <TextInput
           className="text-tekst w-full p-2.5 mb-2.5 rounded-3xl placeholder:text-[tekst] border border-[primary-foreground]"
           placeholder="Email"
           secureTextEntry
@@ -65,24 +65,24 @@ export default function SignInScreen() {
           className="text-tekst w-full p-2.5 mb-2.5 rounded-3xl placeholder:text-[tekst] border border-[primary-foreground]"
           placeholder="Hasło"
           secureTextEntry
-        />
+        /> */}
 
-        <TouchableOpacity
+        {/* <TouchableOpacity
           onPress={() => console.log("Zalogowano po podaniu email oraz haslo")}
           className="bg-primary mb-2.5 p-2.5 rounded-3xl w-full flex items-center"
         >
           <Text className="text-tekst font-bold">Zaloguj</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
 
         <TouchableOpacity
           onPress={onSignInPress}
-          className="flex flex-row bg-white p-2.5 rounded-[30px] mb-2.5"
+          className="flex flex-row bg-primary p-2.5 rounded-[30px] mb-2.5 justify-center"
         >
-          <FontAwesome name="google" size={20} color="black" />
-          <Text className="ml-2.5 text-black">Zaloguj przez Google</Text>
+          <FontAwesome name="google" size={20} color="white" />
+          <Text className="ml-2.5 text-tekst">Zaloguj przez Google</Text>
         </TouchableOpacity>
 
-        <Text className="text-tekst mt-5 text-center">
+        {/* <Text className="text-tekst mt-5 text-center">
           Nie masz konta?
           <Text
             onPress={() => replace("/register")}
@@ -91,8 +91,16 @@ export default function SignInScreen() {
             {" "}
             Zarejestruj się tutaj!
           </Text>
-        </Text>
+        </Text> */}
+
+        {/* <Text className="text-tekst mt-5 text-center">
+          Aktualnie dostępne tylko logowanie z użyciem konta google.
+          <Text className="text-primary font-bold">
+            {" "}
+            Przepraszamy za ewentualne komplikacje.
+          </Text>
+        </Text> */}
       </View>
-    </SafeAreaView>
+    </View>
   );
 }

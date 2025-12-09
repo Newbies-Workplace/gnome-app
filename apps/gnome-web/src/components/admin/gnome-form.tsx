@@ -3,15 +3,15 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import MarkerIcon from "@/assets/icons/mark-icon.svg";
 import placeholderImage from "@/assets/images/placeholder.png";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import type { GnomeFormData } from "@/schemas/gnomeSchema";
-import { gnomeSchema } from "@/schemas/gnomeSchema";
+import { Button } from "@/components/ui/button.tsx";
+import { Input } from "@/components/ui/input.tsx";
+import type { GnomeFormData } from "@/schemas/gnomeSchema.ts";
+import { gnomeSchema } from "@/schemas/gnomeSchema.ts";
 
 type GnomeFormProps = {
   districts: { id: number; name: string }[];
   selectedPosition?: { lat: number; lng: number } | null;
-  onSubmit: (data: GnomeFormData, preview: string | null) => void;
+  onSubmit: (data: GnomeFormData) => void;
   onCancel: () => void;
 };
 
@@ -61,7 +61,7 @@ export function GnomeForm({
 
   return (
     <form
-      onSubmit={handleSubmit((data) => onSubmit(data, preview))}
+      onSubmit={handleSubmit((data) => onSubmit(data))}
       className="text-white p-6 flex flex-col gap-4 font-Afacad max-w-2xl mx-auto"
     >
       <div className="flex flex-row items-stretch gap-4">
@@ -127,11 +127,11 @@ export function GnomeForm({
           {selectedPosition ? (
             <div className="bg-[#282B28] p-2 rounded text-sm text-gray-300">
               <div className="flex flex-row items-center">
-                <img src={MarkerIcon} alt="icon" className="w-6 h-6" />
-                <div>Wybrany punkt na mapie:</div>
+                <img src={MarkerIcon} alt="icon" className="w-5 h-5" />
+                <div className="text-xs">Wybrany punkt na mapie:</div>
               </div>
-              <div>Latitude: {selectedPosition.lat}</div>
-              <div>Longitude: {selectedPosition.lng}</div>
+              <div className="text-xs">Latitude: {selectedPosition.lat}</div>
+              <div className="text-xs">Longitude: {selectedPosition.lng}</div>
             </div>
           ) : (
             <div className="bg-[#282B28] p-2 rounded text-sm text-gray-400">

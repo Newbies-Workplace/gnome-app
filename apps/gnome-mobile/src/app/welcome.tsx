@@ -1,10 +1,49 @@
+import { FontAwesome } from "@expo/vector-icons";
+import { GoogleSignin } from "@react-native-google-signin/google-signin";
+import { Checkbox } from "expo-checkbox";
 import { useRouter } from "expo-router";
-import { Image, View } from "react-native";
-import { Button } from "@/components/ui/button";
+import { useEffect, useState } from "react";
+import {
+  Alert,
+  Image,
+  Linking,
+  Pressable,
+  StyleSheet,
+  View,
+} from "react-native";
 import { Text } from "@/components/ui/text";
+import { useAuthStore } from "@/store/useAuthStore";
 
 export default function SignInScreen() {
+  const { login } = useAuthStore();
   const { replace } = useRouter();
+  const [isChecked, setChecked] = useState(false);
+
+  useEffect(() => {
+    GoogleSignin.configure({
+      webClientId: process.env.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID,
+    });
+  }, []);
+
+  const onSignInPress = async () => {
+    try {
+      await GoogleSignin.hasPlayServices();
+      const signInResponse = await GoogleSignin.signIn();
+      const idToken = signInResponse?.data?.idToken;
+      if (idToken) {
+        await login(idToken);
+        replace("/");
+      } else {
+        throw new Error("No ID token present!");
+      }
+    } catch (error) {
+      console.error(error);
+      Alert.alert(
+        "Błąd",
+        "Nie udało się zalogować przez Google. Spróbuj ponownie.",
+      );
+    }
+  };
 
   return (
     <View className="flex-1 justify-end">
@@ -16,26 +55,84 @@ export default function SignInScreen() {
         }}
       />
 
-      <View className="bg-background p-10 ">
-        <Text className="text-tekst text-[24px] font-bold mb-2 text-center text-base/10 font-Afacad">
+      <View className="bg-background p-10 justify-center">
+        <Text className="text-tekst text-xl font-bold mb-2 text-center font-Afacad">
           Znajdź swojego ulubionego krasnala!
         </Text>
-        <Text className="text-tekst text-[18px] mb-5 text-center font-Afacad">
+        <Text className="text-tekst text-lg mb-6 text-center font-Afacad">
           Dołącz do nas i odkryj swojego idealnego krasnala we Wrocławiu!
         </Text>
+
+        {/*
+        Stary system rejestracji.
+        
         <Button
           onPress={() => replace("/register")}
           className="items-center justify-center w-full mb-4 rounded-3xl bg-primary font-Afacad"
         >
           <Text className="text-tekst">Załóż konto</Text>
-        </Button>
-        <Button
+        </Button> */}
+        {/* <Button
           onPress={() => replace("/login")}
-          className="w-full rounded-3xl bg-secondary font-Afacad"
+          className="w-full rounded-3xl bg-primary font-Afacad"
         >
           <Text className="text-tekst">Zaloguj się</Text>
-        </Button>
+        </Button> */}
+
+        <Pressable
+          disabled={!isChecked}
+          onPress={isChecked ? onSignInPress : null}
+          className="flex flex-row p-2.5 rounded-[30px] mb-4 justify-center"
+          style={{
+            backgroundColor: isChecked ? "#d6484a" : "#d6484a88",
+          }}
+        >
+          <FontAwesome name="google" size={20} color="white" />
+          <Text className="ml-3 text-white">Zaloguj przez Google</Text>
+        </Pressable>
+
+        <View style={styles.section}>
+          <Checkbox
+            style={styles.checkbox}
+            value={isChecked}
+            onValueChange={setChecked}
+            color={isChecked ? "#d6484a" : undefined}
+          />
+          <Text style={styles.paragraph} className="text-tekst">
+            Akceptuje polityke prywatności
+          </Text>
+        </View>
+
+        <Text className="text-tekst mt-5 text-center justify-center">
+          Krasnal GO - odkrywaj Wrocław krok po kroku.
+        </Text>
+        <Pressable
+          onPress={() => Linking.openURL("http://localhost:5173/privacy")}
+        >
+          <Text className="text-primary font-bold text-center underline mt-1">
+            Polityka prywatności
+          </Text>
+        </Pressable>
       </View>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    marginHorizontal: 16,
+    marginVertical: 32,
+  },
+  section: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  paragraph: {
+    fontSize: 15,
+  },
+  checkbox: {
+    margin: 8,
+  },
+});

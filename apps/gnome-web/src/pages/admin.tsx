@@ -9,11 +9,13 @@ import GnomePinIcon from "@/assets/icons/gnome-pin-icon.svg";
 import MarkerIcon from "@/assets/icons/mark-icon.svg";
 import UsersIcon from "@/assets/icons/users-icon.svg";
 import backgroundImage from "@/assets/images/background.png";
-import { MapStyle } from "@/components/map-styles";
-import MapOptions from "@/components/ui/admin/map-options";
+import AdminToolbar from "@/components/admin/admin-toolbar";
+import MapOptions from "@/components/admin/map-options";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { gnomeClusterRenderer } from "@/lib/GnomeClusterRenderer.tsx";
-import { useAuthStore } from "@/store/useAuthStore";
+import { gnomeClusterRenderer } from "@/lib/gnome-cluster-renderer.tsx";
+import { MapStyle } from "@/lib/map-styles.ts";
+import { useBuildStore } from "@/store/useBuildStore.ts";
+import { useDistrictStore } from "@/store/useDistrictStore.ts";
 import { useGnomeStore } from "@/store/useGnomeStore";
 
 export default function AdminPage() {
@@ -33,13 +35,17 @@ export default function AdminPage() {
     console.error("Error while loading google map:", loadError);
   }
 
-  const { logout } = useAuthStore();
   const location = useLocation();
   const navigate = useNavigate();
   const { gnomes, fetchGnomes } = useGnomeStore();
+  const { fetchDistricts } = useDistrictStore();
+  const { fetchBuildings, fetchUsers } = useBuildStore();
 
   useEffect(() => {
     fetchGnomes();
+    fetchDistricts();
+    fetchUsers();
+    fetchBuildings();
   }, [fetchGnomes]);
 
   const onGnomeMarkerClick = (gnomeId: string) => {
@@ -65,14 +71,14 @@ export default function AdminPage() {
 
   const currentTab = (() => {
     if (location.pathname.startsWith("/admin/users")) return "users";
-    if (location.pathname.startsWith("/admin/builds")) return "builds";
+    if (location.pathname.startsWith("/admin/buildings")) return "builds";
     if (location.pathname.startsWith("/admin/events")) return "events";
     return "gnomes"; // default tab
   })();
 
   const [filters, setFilters] = useState({
     gnomesVisible: true,
-    buildingsVisible: false,
+    buildingsVisible: true,
   });
 
   useEffect(() => {
@@ -108,25 +114,60 @@ export default function AdminPage() {
 
   return (
     <div
-      className="h-screen w-screen bg-cover bg-center bg-no-repeat flex flex-col overflow-hidden"
+      className="h-screen w-screen p-2 gap-2 bg-cover bg-center bg-no-repeat flex flex-col min-w-[375px]"
       style={{ backgroundImage: `url(${backgroundImage})` }}
     >
-      {/* Header */}
-      <div className="w-full p-4 flex justify-between items-center bg-transparent">
-        <div className="flex gap-4">
-          <button className="bg-primary-gray text-white text-xl font-Afacad px-6 py-2 rounded-4xl hover:opacity-90 transition">
-            Główna
-          </button>
-          <button
-            onClick={logout}
-            className="bg-primary-color text-white text-xl font-Afacad px-6 py-2 rounded-4xl hover:opacity-90 transition"
-          >
-            Wyloguj
-          </button>
+      <div className="flex flex-col md:flex-row gap-2 items-center">
+        <div className="w-full md:flex-1 flex items-stretch">
+          <AdminToolbar />
+        </div>
+
+        <div className="w-full md:w-[420px] min-w-[300px] bg-primary-gray rounded-2xl h-16 flex items-center">
+          <Tabs value={currentTab} className="w-full">
+            <TabsList className="grid grid-cols-4 gap-2 p-2 w-full bg-primary-gray rounded-4xl h-16 items-center">
+              <TabsTrigger
+                value="gnomes"
+                className="rounded-xl flex items-center justify-center h-full"
+                asChild
+              >
+                <NavLink to="/admin">
+                  <img src={GnomeIcon} alt="gnome" />
+                </NavLink>
+              </TabsTrigger>
+              <TabsTrigger
+                value="buildings"
+                className="rounded-xl flex items-center justify-center h-full"
+                asChild
+              >
+                <NavLink to="/admin/buildings">
+                  <img src={BuildsIcon} alt="buildings" />
+                </NavLink>
+              </TabsTrigger>
+              <TabsTrigger
+                value="events"
+                className="rounded-xl flex items-center justify-center h-full"
+                asChild
+              >
+                <NavLink to="/admin/events">
+                  <img src={EventsIcon} alt="events" />
+                </NavLink>
+              </TabsTrigger>
+              <TabsTrigger
+                value="users"
+                className="rounded-xl flex items-center justify-center h-full"
+                asChild
+              >
+                <NavLink to="/admin/users">
+                  <img src={UsersIcon} alt="users" />
+                </NavLink>
+              </TabsTrigger>
+            </TabsList>
+          </Tabs>
         </div>
       </div>
-      <div className="flex flex-1 h-0 p-4 gap-4">
-        <div className="relative w-3/4 h-full">
+
+      <div className="flex flex-col md:flex-row gap-2 flex-1 overflow-hidden">
+        <div className="relative w-full md:flex-1 rounded-2xl overflow-hidden min-h-[300px]">
           {isLoaded && (
             <GoogleMap
               mapContainerStyle={{ width: "100%", height: "100%" }}
@@ -157,35 +198,9 @@ export default function AdminPage() {
             <MapOptions filters={filters} setFilters={setFilters} />
           </div>
         </div>
-        <div className="w-1/4 h-full bg-primary-gray flex flex-col">
-          <Tabs value={currentTab} className="bg-primary-gray p-2 m-2">
-            <TabsList className="grid grid-cols-4 gap-2 p-2 w-full bg-primary-gray">
-              <TabsTrigger value="gnomes" className="rounded-4xl">
-                <NavLink to="/admin">
-                  <img src={GnomeIcon} alt="gnome" />
-                </NavLink>
-              </TabsTrigger>
-              <TabsTrigger value="builds" className="rounded-4xl">
-                <NavLink to="/admin/builds">
-                  <img src={BuildsIcon} alt="builds" />
-                </NavLink>
-              </TabsTrigger>
-              <TabsTrigger value="events" className="rounded-4xl">
-                <NavLink to="/admin/events">
-                  <img src={EventsIcon} alt="events" />
-                </NavLink>
-              </TabsTrigger>
-              <TabsTrigger value="users" className="rounded-4xl">
-                <NavLink to="/admin/users">
-                  <img src={UsersIcon} alt="users" />
-                </NavLink>
-              </TabsTrigger>
-            </TabsList>
-          </Tabs>
-          {/* Podstrony */}
-          <div className="flex-1 p-4 overflow-y-auto">
-            <Outlet context={{ selectedPosition, onGnomeMarkerClick }} />
-          </div>
+
+        <div className="w-full md:w-[420px] min-w-[300px] bg-primary-gray flex flex-col p-2 rounded-2xl overflow-auto">
+          <Outlet context={{ selectedPosition, onGnomeMarkerClick }} />
         </div>
       </div>
     </div>

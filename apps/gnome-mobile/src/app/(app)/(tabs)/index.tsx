@@ -33,6 +33,7 @@ import { useAuthStore } from "@/store/useAuthStore";
 import { useFriendsStore } from "@/store/useFriendsStore";
 import { useGnomeInteractionStore } from "@/store/useGnomeInteractionStore";
 import { useGnomeStore } from "@/store/useGnomeStore";
+import InteractionBottomSheet from "../interactionsheet";
 
 const MIN_TRACKER_DISTANCE = 50;
 const MIN_REACHED_DISTANCE = 15;
@@ -149,14 +150,15 @@ const MapScreen = () => {
   });
   const [distance, setDistance] = useState<number>();
   const [closestGnomeId, setClosestGnomeId] = useState<string>();
-
-  const [selectedGnome, setSelectedGnome] = useState<GnomeResponse | null>(
-    null,
-  );
   const [isResourceSheetVisible, setIsResourceSheetVisible] = useState(false);
-
   const { addPendingInteraction, latestInteractions } =
     useGnomeInteractionStore();
+  const [isInteractionSheetVisible, setIsInteractionSheetVisible] =
+    useState(false);
+  const [selectedGnomeId, setSelectedGnomeId] = useState<string | null>(null);
+
+  const closestGnomeData = gnomes.find((g) => g.id === closestGnomeId);
+  const selectedGnome = gnomes.find((g) => g.id === selectedGnomeId);
 
   const defaultRegion = {
     latitude: 51.109967,
@@ -172,8 +174,9 @@ const MapScreen = () => {
           "Map screen unfocused, resetting selected gnome and closing sheets",
         );
 
-        setSelectedGnome(null);
         setIsResourceSheetVisible(false);
+        setIsInteractionSheetVisible(false);
+        setSelectedGnomeId(null);
       };
     }, []),
   );
@@ -334,7 +337,7 @@ const MapScreen = () => {
         {filteredGnomes.map((gnome) => (
           <Marker
             onPress={() => {
-              setSelectedGnome(gnome);
+              setSelectedGnomeId(gnome.id);
               gnome.location;
             }}
             key={gnome.id}
@@ -360,7 +363,7 @@ const MapScreen = () => {
           <DraggableGnome
             onUnlock={() => {
               addPendingInteraction(closestGnomeId);
-              navigate(`/camera?gnomeid=${closestGnomeId}`);
+              setIsInteractionSheetVisible(true);
             }}
           />
         )}
@@ -373,16 +376,25 @@ const MapScreen = () => {
         />
       )}
       <Portal name={"bottom-sheets"}>
-        {selectedGnome !== null && (
+        {selectedGnomeId !== null && (
           <GnomeDetailsBottomSheet
             selectedGnome={selectedGnome}
             formattedDistance={formattedDistance}
             interactions={interactions}
             onClick={() => {
-              setSelectedGnome(null);
-              router.push(`/gnomes/${selectedGnome?.id}`);
+              setSelectedGnomeId(null);
+              router.push(`/gnomes/${selectedGnomeId}`);
             }}
-            onClose={() => setSelectedGnome(null)}
+            onClose={() => setSelectedGnomeId(null)}
+          />
+        )}
+
+        {isInteractionSheetVisible && (
+          <InteractionBottomSheet
+            onClose={() => setIsInteractionSheetVisible(false)}
+            name={closestGnomeData?.name}
+            pictureUrl={closestGnomeData?.pictureUrl}
+            gnomeId={closestGnomeId!}
           />
         )}
 

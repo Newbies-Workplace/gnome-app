@@ -3,7 +3,7 @@
   "main": "expo-router/entry",
   "version": "1.0.0",
   "scripts": {
-    "proxy": "adb reverse tcp:3000 tcp:3000 && adb reverse tcp:9000 tcp:9000",
+    "proxy": "adb reverse tcp:3000 tcp:3000 && adb reverse tcp:9000 tcp:9000 && adb reverse tcp:5173 tcp:5173",
     "start": "expo start",
     "android": "expo run:android",
     "ios": "expo run:ios",
@@ -35,6 +35,7 @@
     "expo": "^54.0.0",
     "expo-blur": "~15.0.7",
     "expo-build-properties": "~1.0.9",
+    "expo-checkbox": "~5.0.8",
     "expo-constants": "~18.0.9",
     "expo-file-system": "~19.0.19",
     "expo-font": "~14.0.9",

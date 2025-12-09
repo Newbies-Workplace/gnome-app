@@ -1,19 +1,19 @@
 import { useEffect } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { RequireAuth } from "@/components/require-auth.tsx";
 import AdminPage from "@/pages/admin";
-import BuildDetail from "@/pages/builds/builds-detail-panel";
-import BuildsPanel from "@/pages/builds/builds-panel";
+import BuildDetail from "@/pages/buildings/building-details.tsx";
+import BuildingListPanel from "@/pages/buildings/building-list-panel.tsx";
 import EventsPanel from "@/pages/events/events-panel";
 import GnomeEvents from "@/pages/events/gnome-event";
-import GnomeDetails from "@/pages/gnomes/[gnome-id]";
-import GnomeEdit from "@/pages/gnomes/[gnome-id]-edit";
 import GnomeAdd from "@/pages/gnomes/gnome-add";
-import GnomesPanel from "@/pages/gnomes/gnomes-panel";
+import GnomeDetails from "@/pages/gnomes/gnome-details.tsx";
+import GnomeEdit from "@/pages/gnomes/gnome-edit.tsx";
+import GnomeListPanel from "@/pages/gnomes/gnome-list-panel.tsx";
 import HomePage from "@/pages/home";
 import LoginPage from "@/pages/login";
 import LoginCallback from "@/pages/login-callback";
 import Privacy from "@/pages/privacy";
-import { RequireAuth } from "@/pages/requireAuth";
 import UserDetail from "@/pages/users/users-detail-panel";
 import UsersPanel from "@/pages/users/users-panel";
 import { useAuthStore } from "./store/useAuthStore";
@@ -50,7 +50,7 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <GnomesPanel />,
+        element: <GnomeListPanel />,
       },
       {
         path: "gnomes/add",
@@ -65,11 +65,11 @@ const router = createBrowserRouter([
         element: <GnomeDetails />,
       },
       {
-        path: "builds",
-        element: <BuildsPanel />,
+        path: "buildings",
+        element: <BuildingListPanel />,
       },
       {
-        path: "builds/:id",
+        path: "buildings/:id",
         element: <BuildDetail />,
       },
       {
@@ -93,11 +93,12 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
-  const init = useAuthStore((s) => s.init);
+  const { init } = useAuthStore();
 
   useEffect(() => {
     void init();
   }, []);
+
   return <RouterProvider router={router} />;
 }
 

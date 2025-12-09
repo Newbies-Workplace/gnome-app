@@ -1,19 +1,35 @@
+import { useNavigate } from "react-router-dom";
 import ClockIcon from "@/assets/icons/clock-icon.svg";
+import GoBack from "@/assets/icons/goBack-icon.svg";
 import GreenTeam from "@/assets/icons/green-team.svg";
 import Line from "@/assets/icons/line.svg";
 import Bar from "@/assets/icons/placeholder-bar.svg";
 import GnomeAvatar from "@/assets/images/placeholder-user.png";
+import BuildsHistoryList from "@/components/admin/builds-history-list.tsx";
+import { Button } from "@/components/ui/button.tsx";
 import {
   Item,
   ItemContent,
   ItemDescription,
   ItemTitle,
-} from "@/components/ui/item";
+} from "@/components/ui/item.tsx";
 
-export default function BuildsDetail() {
+export default function BuildingDetailsPage() {
+  const navigate = useNavigate();
+
   return (
-    <div className="overflow-hidden flex flex-col gap-2">
-      <div className="flex p-4 gap-4">
+    <div className="h-full flex flex-col gap-2 mx-4">
+      <div className="flex flex-row gap-4 items-center">
+        <Button
+          className="bg-primary-gray rounded-4xl"
+          onClick={() => navigate("/admin/buildings")}
+        >
+          <img src={GoBack} alt="goback" />
+        </Button>
+
+        <div className="text-white text-Afacad text-xl">Lista budowli</div>
+      </div>
+      <div className="flex p-4 gap-4 shrink-0">
         <div className="w-1/4">
           <img className="w-full" src={GnomeAvatar} alt="Avatar" />
         </div>
@@ -38,7 +54,8 @@ export default function BuildsDetail() {
           </Item>
         </div>
       </div>
-      <Item className="flex flex-col gap-2">
+
+      <Item className="flex flex-col gap-2 shrink-0">
         <ItemContent className="justify-between w-full flex flex-row">
           <ItemDescription className="text-lg text-white font-Afacad">
             Pozostały czas:
@@ -50,6 +67,7 @@ export default function BuildsDetail() {
             </div>
           </ItemDescription>
         </ItemContent>
+
         <ItemContent className="w-full flex flex-col gap-4">
           <ItemDescription className="text-lg text-white font-Afacad">
             Wytrzymałość:
@@ -59,56 +77,20 @@ export default function BuildsDetail() {
           </ItemDescription>
         </ItemContent>
       </Item>
-      <div>
+
+      <div className="shrink-0">
         <img src={Line} alt="line" className="w-full" />
       </div>
-      <Item className="flex flex-col gap-4">
-        <ItemContent className="w-full flex flex-col">
-          <ItemDescription className="font-Afacad text-white text-lg">
+
+      <Item className="flex flex-col gap-4 flex-1 min-h-0">
+        <ItemContent className="w-full flex flex-col flex-1 min-h-0">
+          <ItemDescription className="font-Afacad text-white text-lg shrink-0">
             Historia:
           </ItemDescription>
 
-          {/* Lista powiadomień */}
-          <ItemContent className="flex flex-row gap-4 w-full hover:bg-white/10 rounded-4xl">
-            <Item className="flex flex-row justify-between gap-4 w-full">
-              <div>
-                <img className="w-full" src={GnomeAvatar} alt="Avatar" />
-              </div>
-              <ItemContent>
-                <ItemDescription className="text-2xl text-white font-Afacad">
-                  Autor3
-                </ItemDescription>
-                <div>
-                  <ItemDescription className="text-lg text-white font-Afacad ">
-                    Zaatakowano
-                  </ItemDescription>
-                </div>
-              </ItemContent>
-              <ItemContent>
-                <div className="text-lg text-white font-Afacad">23.09.2025</div>
-              </ItemContent>
-            </Item>
-          </ItemContent>
-          <ItemContent className="flex flex-row gap-4 w-full hover:bg-white/10 rounded-4xl">
-            <Item className="flex flex-row justify-between gap-4 w-full">
-              <div>
-                <img className="w-full" src={GnomeAvatar} alt="Avatar" />
-              </div>
-              <ItemContent>
-                <ItemDescription className="text-2xl text-white font-Afacad">
-                  Autor2
-                </ItemDescription>
-                <div>
-                  <ItemDescription className="text-lg text-white font-Afacad ">
-                    Zbudowano
-                  </ItemDescription>
-                </div>
-              </ItemContent>
-              <ItemContent>
-                <div className="text-lg text-white font-Afacad">22.09.2025</div>
-              </ItemContent>
-            </Item>
-          </ItemContent>
+          <div className="flex-1 overflow-y-auto flex flex-col gap-2 pr-2">
+            <BuildsHistoryList />
+          </div>
         </ItemContent>
       </Item>
     </div>

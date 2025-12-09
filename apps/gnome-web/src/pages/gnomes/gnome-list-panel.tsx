@@ -1,11 +1,11 @@
 import { useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import AddIcon from "@/assets/icons/add-icon.svg";
-import GnomesList from "@/components/ui/admin/gnomes-list";
+import GnomesList from "@/components/admin/gnomes-list";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
-function GnomesPanel() {
+function GnomeListPanel() {
   const [search, setSearch] = useState("");
   const navigate = useNavigate();
 
@@ -20,7 +20,7 @@ function GnomesPanel() {
         placeholder="Wyszukaj krasnala..."
         value={search}
         onChange={(e) => setSearch(e.target.value)}
-        className="text-white font-Afacad rounded-4xl bg-[#282B28] border-none outline-none"
+        className="text-white font-Afacad rounded-2xl bg-[#282B28] border-none outline-none"
       />
       <Button
         className="text-center text-white font-Afacad bg-primary-color border-none rounded-4xl"
@@ -29,9 +29,10 @@ function GnomesPanel() {
         <img src={AddIcon} alt="add" />
         Dodaj nowego krasnala
       </Button>
+
       <GnomesList />
     </div>
   );
 }
 
-export default GnomesPanel;
+export default GnomeListPanel;
