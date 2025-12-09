@@ -21,7 +21,7 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { buildingClusterRenderer } from "@/lib/building-cluster-renderer.tsx";
 import { gnomeClusterRenderer } from "@/lib/gnome-cluster-renderer.tsx";
 import { MapStyle } from "@/lib/map-styles.ts";
-import { type Coord, points } from "@/lib/wroclaw-coords";
+import { points } from "@/lib/wroclaw-coords";
 import { useBuildStore } from "@/store/useBuildStore.ts";
 import { useDistrictStore } from "@/store/useDistrictStore.ts";
 import { useGnomeStore } from "@/store/useGnomeStore";
@@ -223,18 +223,10 @@ export default function AdminPage() {
                   }}
                 />
               )}
-              <Polyline
-                path={points}
-                options={{
-                  strokeColor: "#FF0000",
-                  strokeOpacity: 1,
-                  strokeWeight: 3,
-                }}
-              />
               <Polygon
                 paths={points}
                 options={{
-                  strokeColor: "#010301ff",
+                  strokeColor: "#8a5416ff",
                   strokeOpacity: 1,
                   strokeWeight: 3,
                   fillOpacity: 0,
