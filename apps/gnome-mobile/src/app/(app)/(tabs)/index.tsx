@@ -1,4 +1,3 @@
-import { GnomeResponse } from "@repo/shared/responses";
 import { Portal } from "@rn-primitives/portal";
 import { LinearGradient } from "expo-linear-gradient";
 import * as Location from "expo-location";
@@ -264,7 +263,6 @@ const MapScreen = () => {
     }
 
     if (closestGnome) {
-      console.log(closestGnome.gnome.id);
       setDistance(Math.round(closestGnome.distance));
     }
   }, [userLocation, gnomes]);
@@ -376,11 +374,10 @@ const MapScreen = () => {
         />
       )}
       <Portal name={"bottom-sheets"}>
-        {selectedGnomeId !== null && (
+        {!!selectedGnome && (
           <GnomeDetailsBottomSheet
             selectedGnome={selectedGnome}
             formattedDistance={formattedDistance}
-            interactions={interactions}
             onClick={() => {
               setSelectedGnomeId(null);
               router.push(`/gnomes/${selectedGnomeId}`);
@@ -389,12 +386,12 @@ const MapScreen = () => {
           />
         )}
 
-        {isInteractionSheetVisible && (
+        {isInteractionSheetVisible && !!closestGnomeId && (
           <InteractionBottomSheet
             onClose={() => setIsInteractionSheetVisible(false)}
             name={closestGnomeData?.name}
             pictureUrl={closestGnomeData?.pictureUrl}
-            gnomeId={closestGnomeId!}
+            gnomeId={closestGnomeId}
           />
         )}
 

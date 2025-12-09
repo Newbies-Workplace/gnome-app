@@ -63,22 +63,6 @@ export default function SignInScreen() {
           Dołącz do nas i odkryj swojego idealnego krasnala we Wrocławiu!
         </Text>
 
-        {/*
-        Stary system rejestracji.
-        
-        <Button
-          onPress={() => replace("/register")}
-          className="items-center justify-center w-full mb-4 rounded-3xl bg-primary font-Afacad"
-        >
-          <Text className="text-tekst">Załóż konto</Text>
-        </Button> */}
-        {/* <Button
-          onPress={() => replace("/login")}
-          className="w-full rounded-3xl bg-primary font-Afacad"
-        >
-          <Text className="text-tekst">Zaloguj się</Text>
-        </Button> */}
-
         <Pressable
           disabled={!isChecked}
           onPress={isChecked ? onSignInPress : null}
