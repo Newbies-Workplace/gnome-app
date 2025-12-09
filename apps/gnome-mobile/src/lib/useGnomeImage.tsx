@@ -13,7 +13,6 @@ export const useGnomeImage = (gnomeId: string): ImageSourcePropType => {
   const imageFromStore = getImageForGnome(gnomeId);
   if (imageFromStore) {
     // todo nie działa :/
-    console.log("Using image from store for gnome:", imageFromStore.assetUri);
     return { uri: imageFromStore.assetUri };
   }
 

@@ -8,7 +8,7 @@ import { useGnomeImageStore } from "@/store/useGnomeImageStore";
 import { useGnomeStore } from "@/store/useGnomeStore";
 
 const Collection = () => {
-  const { gnomes, fetchGnomes, fetchMyInteractions, error } = useGnomeStore();
+  const { gnomes, error } = useGnomeStore();
   const { getImageForGnome } = useGnomeImageStore();
 
   const router = useRouter();
@@ -30,11 +30,6 @@ const Collection = () => {
       headerShown: true,
     });
   }, [navigation]);
-
-  useEffect(() => {
-    fetchGnomes();
-    fetchMyInteractions(); // Fetch interactions when component mounts
-  }, []);
 
   return (
     <SafeAreaView className={"flex-1 bg-primary-foreground"}>
