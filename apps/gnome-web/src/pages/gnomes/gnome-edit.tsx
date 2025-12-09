@@ -1,7 +1,7 @@
 import type { CreateGnomeRequest } from "@repo/shared/requests";
 import { useNavigate, useOutletContext, useParams } from "react-router-dom";
 import { toast } from "sonner";
-import { GnomeForm } from "@/components/ui/admin/gnome-form";
+import { GnomeForm } from "@/components/admin/gnome-form";
 import type { GnomeFormData } from "@/schemas/gnomeSchema";
 import { useDistrictStore } from "@/store/useDistrictStore";
 import { useGnomeStore } from "@/store/useGnomeStore";
@@ -10,7 +10,7 @@ type OutletContextType = {
   selectedPosition: { lat: number; lng: number } | null;
 };
 
-export default function GnomeIdEditPage() {
+export default function GnomeEditPage() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { gnomes, updateGnome } = useGnomeStore();
@@ -25,7 +25,7 @@ export default function GnomeIdEditPage() {
     return null;
   }
 
-  const handleSubmit = async (data: GnomeFormData, preview: string | null) => {
+  const handleSubmit = async (data: GnomeFormData) => {
     const updatedGnome: Partial<CreateGnomeRequest> = {
       name: data.name,
       description: data.description,
@@ -34,7 +34,6 @@ export default function GnomeIdEditPage() {
       latitude: data.latitude,
       longitude: data.longitude,
       creationDate: new Date(gnome.creationDate),
-      pictureUrl: preview ?? gnome.pictureUrl,
     };
 
     await updateGnome(gnome.id, updatedGnome);

@@ -8,8 +8,8 @@ import {
 export class GnomeClusterRenderer extends DefaultRenderer {
   render(
     { count, position }: Cluster,
-    stats: ClusterStats,
-    map: google.maps.Map,
+    _stats: ClusterStats,
+    _map: google.maps.Map,
   ): Marker {
     const svg = window.btoa(`
 <svg fill="#d6484a" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240">
@@ -32,4 +32,4 @@ export class GnomeClusterRenderer extends DefaultRenderer {
   }
 }
 
-export const gnomeClusterRenderer = new GnomeClusterRenderer("#ff0000");
+export const gnomeClusterRenderer = new GnomeClusterRenderer();

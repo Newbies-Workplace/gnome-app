@@ -1,7 +1,6 @@
-import { useEffect } from "react";
 import GnomeAvatar from "@/assets/images/placeholder-user.png";
-import { Item, ItemContent, ItemDescription } from "@/components/ui/item";
-import { useBuildStore } from "@/store/useBuildStore";
+import { Item, ItemContent, ItemDescription } from "@/components/ui/item.tsx";
+import { useBuildStore } from "@/store/useBuildStore.ts";
 
 const BuildsHistoryList = () => {
   const { getBuildingsWithOwnerName, loading, error } = useBuildStore();
@@ -17,7 +16,7 @@ const BuildsHistoryList = () => {
     <div className="flex flex-row gap-2">
       <ItemContent className="gap-4 w-full hover:bg-white/10 rounded-4xl">
         {buildings.map((build) => (
-          <Item key={build.id} className="justify-between gap-4 w-full">
+          <Item key={build.id} className="justify-between w-full" size={"sm"}>
             <div>
               <img className="w-full" src={GnomeAvatar} alt="Avatar" />
             </div>

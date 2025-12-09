@@ -95,16 +95,16 @@ model Friendship {
 }
 
 model Building {
-  id           String       @id @unique @default(cuid())
+  id           String                @id @unique @default(cuid())
   gnomeCount   Int
   health       Int
   latitude     Float
   longitude    Float
-  district     District?    @relation(fields: [districtId], references: [id])
+  district     District?             @relation(fields: [districtId], references: [id])
   districtId   Int?
-  type         BuildingType @default(MINE)
-  createdAt    DateTime     @default(now())
-  Owner        User         @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  type         BuildingType          @default(MINE)
+  createdAt    DateTime              @default(now())
+  Owner        User                  @relation(fields: [ownerId], references: [id], onDelete: Cascade)
   ownerId      String
   interactions BuildingInteraction[]
 }
@@ -154,7 +154,7 @@ enum Status {
 }
 
 enum Team {
-  TEAM1
-  TEAM2
-  TEAM3
+  TEAM_YELLOW
+  TEAM_BLUE
+  TEAM_GREEN
 }

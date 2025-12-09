@@ -154,7 +154,7 @@ export class SearchByNameReuqest {
   name?: string;
 }
 
-export type Team = "TEAM1" | "TEAM2" | "TEAM3";
+export type Team = "TEAM_YELLOW" | "TEAM_BLUE" | "TEAM_GREEN";
 
 export class AssignTeam {
   @IsNotEmpty()
