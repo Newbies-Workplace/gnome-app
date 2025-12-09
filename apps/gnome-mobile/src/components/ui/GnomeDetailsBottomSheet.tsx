@@ -65,7 +65,7 @@ export const GnomeDetailsBottomSheet: React.FC<
                 ? { uri: selectedGnome?.pictureUrl }
                 : placeholder
             }
-            className="rounded-lg"
+            className="w-28 h-32 rounded-xl"
           />
 
           {/* Teksty po prawej */}
