@@ -16,6 +16,7 @@ import {
   UseInterceptors,
 } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
+import { ApiBearerAuth, ApiBody } from "@nestjs/swagger";
 import {
   CreateGnomeRequest,
   CreateInteractionRequest,
@@ -39,6 +40,7 @@ import { GnomesService } from "./gnomes.service";
 
 const MIN_INTERACTION_INTERVAL = 5 * 60 * 1000;
 
+@ApiBearerAuth()
 @Controller("gnomes")
 export class GnomesController {
   constructor(
@@ -97,7 +99,21 @@ export class GnomesController {
   }
 
   // Tworzenie nowego gnoma
-
+  @ApiBody({
+    schema: {
+      example: {
+        name: "Ikuś",
+        latitude: "51.04828161310336",
+        longitude: "16.95514228088844",
+        location: "IKEA, Bielany Wrocławskie",
+        description:
+          "Ikuś, pojawił się nagle. Usłyszawszy, że we Wrocławiu potrzeba handlowca-stratega, spakował manatki i wyruszył w drogę. Przybył na przedmieścia Wrocławia w październiku 2016 roku i od razu zdobył sympatię wszystkich.",
+        creationDate: "2020-04-06T00:00:00.000Z",
+        funFact:
+          "Podobno zna wszystkie tajne skróty w IKEI i potrafi wyjść z niej w kilka minut – bez zgubienia się w labiryncie alejek.",
+      },
+    },
+  })
   @Post("")
   @UseGuards(JwtGuard, RoleGuard)
   @Role(["ADMIN"])
@@ -132,7 +148,14 @@ export class GnomesController {
   }
 
   // Tworzenie interakcji usera z gnomem
-
+  @ApiBody({
+    schema: {
+      example: {
+        interactionDate: "1970-01-01T00:00:00.000Z",
+        gnomeId: "07a9b1c2-4f5a-4f0a-8def-7890abcdef12",
+      },
+    },
+  })
   @Post("interaction")
   @UseGuards(JwtGuard)
   async createInteraction(
@@ -175,7 +198,21 @@ export class GnomesController {
   async deleteGnome(@Param("id") id: string) {
     await this.gnomeService.deleteGnome(id);
   }
-
+  @ApiBody({
+    schema: {
+      example: {
+        name: "Ikuś",
+        latitude: "51.04828161310336",
+        longitude: "16.95514228088844",
+        location: "IKEA, Bielany Wrocławskie",
+        description:
+          "Ikuś, pojawił się nagle. Usłyszawszy, że we Wrocławiu potrzeba handlowca-stratega, spakował manatki i wyruszył w drogę. Przybył na przedmieścia Wrocławia w październiku 2016 roku i od razu zdobył sympatię wszystkich.",
+        creationDate: "2020-04-06T00:00:00.000Z",
+        funFact:
+          "Podobno zna wszystkie tajne skróty w IKEI i potrafi wyjść z niej w kilka minut – bez zgubienia się w labiryncie alejek.",
+      },
+    },
+  })
   @Patch(":id")
   @UseGuards(JwtGuard, RoleGuard)
   @Role(["ADMIN"])
