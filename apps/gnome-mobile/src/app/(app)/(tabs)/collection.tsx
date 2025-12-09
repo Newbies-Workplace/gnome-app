@@ -11,10 +11,8 @@ const Collection = () => {
   const { gnomes, fetchGnomes, interactions, fetchMyInteractions, error } =
     useGnomeStore();
   const { getImageForGnome } = useGnomeImageStore();
-
   const router = useRouter();
   const navigation = useNavigation();
-
   //Header
   useEffect(() => {
     navigation.setOptions({
