@@ -6,12 +6,12 @@ import FoundIcon from "@/assets/icons/found-icon.svg";
 import GoBack from "@/assets/icons/goBack-icon.svg";
 import LocationIcon from "@/assets/icons/location-icon.svg";
 import PlaceHolder from "@/assets/images/placeholder.png";
-import { useToastNavigate } from "@/components/hooks/useToastNavigate";
 import { Button } from "@/components/ui/button";
+import { useToastNavigate } from "@/hooks/useToastNavigate";
 import { useDistrictStore } from "@/store/useDistrictStore";
 import { useGnomeStore } from "@/store/useGnomeStore";
 
-function GnomeDetail() {
+export default function GnomeDetailsPage() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { gnomes, removeGnome } = useGnomeStore();
@@ -59,35 +59,24 @@ function GnomeDetail() {
         />
 
         <div className="flex flex-col gap-1 sm:gap-2 w-full min-w-0">
-          <div className="text-xl sm:text-2xl font-bold text-center sm:text-left truncate">
+          <div className="text-xl sm:text-2xl font-bold text-center sm:text-left">
             {gnome.name}
           </div>
-          <div className="text-xs sm:text-sm text-gray-300 text-center sm:text-left truncate">
+          <div className="text-xs sm:text-sm text-gray-300 text-center sm:text-left">
             {districtName || "Brak przypisanej dzielnicy"}
           </div>
 
           <div className="flex flex-col gap-1 mt-2 text-xs sm:text-sm">
             <div className="flex gap-1 sm:gap-2 items-center flex-wrap">
-              <img
-                src={LocationIcon}
-                className="w-4 sm:w-5 h-4 sm:h-5 flex-shrink-0"
-              />
-              <span className="truncate">{gnome.location}</span>
+              <img src={LocationIcon} className="size-4 flex-shrink-0" />
+              <span>{gnome.location}</span>
             </div>
             <div className="flex gap-1 sm:gap-2 items-center flex-wrap">
-              <img
-                src={CreationIcon}
-                className="w-4 sm:w-5 h-4 sm:h-5 flex-shrink-0"
-              />
-              <span className="truncate">
-                {new Date(gnome.creationDate).toLocaleDateString()}
-              </span>
+              <img src={CreationIcon} className="size-4 flex-shrink-0" />
+              <span>{new Date(gnome.creationDate).toLocaleDateString()}</span>
             </div>
             <div className="flex gap-1 sm:gap-2 items-center flex-wrap">
-              <img
-                src={FoundIcon}
-                className="w-4 sm:w-5 h-4 sm:h-5 flex-shrink-0"
-              />
+              <img src={FoundIcon} className="size-4 flex-shrink-0" />
               <span>0 osób</span>
             </div>
           </div>
@@ -99,11 +88,8 @@ function GnomeDetail() {
           className="text-white bg-primary-color py-2 rounded-2xl w-full text-xs sm:text-sm"
         >
           <div className="flex gap-1 sm:gap-2 items-center justify-center flex-wrap">
-            <img
-              src={EditIcon}
-              className="w-4 sm:w-6 h-4 sm:h-6 flex-shrink-0"
-            />
-            <span className="truncate">Edytuj gnoma</span>
+            <img src={EditIcon} className="size-4 flex-shrink-0" />
+            <span>Edytuj</span>
           </div>
         </Button>
 
@@ -112,11 +98,8 @@ function GnomeDetail() {
           className="text-white bg-primary-color py-2 rounded-2xl w-full text-xs sm:text-sm"
         >
           <div className="flex gap-1 sm:gap-2 items-center justify-center flex-wrap">
-            <img
-              src={DeleteIcon}
-              className="w-4 sm:w-6 h-4 sm:h-6 flex-shrink-0"
-            />
-            <span className="truncate">Usuń gnoma</span>
+            <img src={DeleteIcon} className="size-4 flex-shrink-0" />
+            <span>Usuń</span>
           </div>
         </Button>
       </div>
@@ -131,5 +114,3 @@ function GnomeDetail() {
     </div>
   );
 }
-
-export default GnomeDetail;

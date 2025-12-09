@@ -1,5 +1,6 @@
+import React from "react";
 import MapOptionIcon from "@/assets/icons/map-option-icon.svg";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button.tsx";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -7,7 +8,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from "@/components/ui/dropdown-menu.tsx";
 
 type MapOptionsProps = {
   filters: {
@@ -26,12 +27,14 @@ export default function MapOptions({ filters, setFilters }: MapOptionsProps) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button className="rounded-4xl">
-          <div className="flex flex-row gap-4 items-center">
-            <img src={MapOptionIcon} alt="map" className="w-6 h-6" /> Opcje
+        <Button className="rounded-2xl">
+          <div className="flex flex-row gap-2 items-center">
+            Opcje
+            <img src={MapOptionIcon} alt="map" className="w-6 h-6" />
           </div>
         </Button>
       </DropdownMenuTrigger>
+
       <DropdownMenuContent className="w-56">
         <DropdownMenuLabel>Widoczność na mapie</DropdownMenuLabel>
         <DropdownMenuSeparator />

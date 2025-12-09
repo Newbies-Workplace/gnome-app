@@ -5,23 +5,24 @@ import GreenTeam from "@/assets/icons/green-team.svg";
 import Line from "@/assets/icons/line.svg";
 import Bar from "@/assets/icons/placeholder-bar.svg";
 import GnomeAvatar from "@/assets/images/placeholder-user.png";
-import { Button } from "@/components/ui/button";
+import BuildsHistoryList from "@/components/admin/builds-history-list.tsx";
+import { Button } from "@/components/ui/button.tsx";
 import {
   Item,
   ItemContent,
   ItemDescription,
   ItemTitle,
-} from "@/components/ui/item";
-import BuildsHistoryList from "./builds-history-list";
+} from "@/components/ui/item.tsx";
 
-export default function BuildsDetail() {
+export default function BuildingDetailsPage() {
   const navigate = useNavigate();
+
   return (
     <div className="h-full flex flex-col gap-2 mx-4">
       <div className="flex flex-row gap-4 items-center">
         <Button
           className="bg-primary-gray rounded-4xl"
-          onClick={() => navigate("/admin/builds")}
+          onClick={() => navigate("/admin/buildings")}
         >
           <img src={GoBack} alt="goback" />
         </Button>

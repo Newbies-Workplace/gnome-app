@@ -1,24 +1,12 @@
-import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import ClockIcon from "@/assets/icons/clock-icon.svg";
 import BuildPlaceHolder from "@/assets/images/placeholder.png";
-import { TimeCount } from "@/components/ui/admin/time-count";
-import { Item } from "@/components/ui/item";
-import { useBuildStore } from "@/store/useBuildStore";
+import { Item } from "@/components/ui/item.tsx";
+import { convertHealthToRemainingTime } from "@/lib/convert-health-to-remaining-time.ts";
+import { useBuildStore } from "@/store/useBuildStore.ts";
 
 const BuildsList = () => {
-  const {
-    fetchBuildings,
-    fetchUsers,
-    getBuildingsWithOwnerName,
-    loading,
-    error,
-  } = useBuildStore();
-
-  useEffect(() => {
-    fetchUsers();
-    fetchBuildings();
-  }, [fetchUsers, fetchBuildings]);
+  const { getBuildingsWithOwnerName, loading, error } = useBuildStore();
 
   const buildings = getBuildingsWithOwnerName();
 
@@ -28,10 +16,10 @@ const BuildsList = () => {
     return <p>Brak budowli do wyświetlenia</p>;
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-4 overflow-y-auto">
       {buildings.map((build) => (
-        <Link key={build.id} to={`/admin/builds/${build.id}`}>
-          <Item className="w-full h-20 rounded-4xl bg-primary-gray hover:bg-white/10 transition p-4">
+        <Link key={build.id} to={`/admin/buildings/${build.id}`}>
+          <Item className="hover:bg-white/10" size={"sm"}>
             <div className="flex w-full h-full items-center text-left text-white font-Afacad">
               <img
                 src={BuildPlaceHolder}
@@ -46,7 +34,7 @@ const BuildsList = () => {
                 <div className="flex flex-row justify-end items-center">
                   <img src={ClockIcon} alt="clock" className="w-4 h-4 mr-1" />
                   <div className="text-gray-300 text-sm">
-                    {TimeCount(build.health)}
+                    {convertHealthToRemainingTime(build.health)}
                   </div>
                 </div>
 

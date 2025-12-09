@@ -1,4 +1,4 @@
-import UsersList from "@/components/ui/admin/users-list";
+import UsersList from "@/components/admin/users-list";
 import { Input } from "@/components/ui/input";
 
 function UsersPanel() {

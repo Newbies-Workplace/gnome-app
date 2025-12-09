@@ -16,7 +16,7 @@ export default function Privacy() {
       className="h-screen w-screen bg-cover bg-center bg-no-repeat flex flex-col overflow-y-auto"
       style={{ backgroundImage: `url(${backgroundImage})` }}
     >
-      <div className="w-full p-5 bg-transparent sticky top-0 left-0">
+      <div className="w-full p-5 bg-transparent top-0 left-0">
         <div className="flex items-center justify-between">
           <h1 className="text-white text-5xl font-Afacad">
             Polityka prywatności

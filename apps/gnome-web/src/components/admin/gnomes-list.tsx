@@ -1,23 +1,17 @@
-import { useEffect } from "react";
 import { Link, useOutletContext } from "react-router-dom";
 import PlaceHolder from "@/assets/images/placeholder.png";
-import { Item } from "@/components/ui/item";
-import { useDistrictStore } from "@/store/useDistrictStore";
-import { useGnomeStore } from "@/store/useGnomeStore";
+import { Item } from "@/components/ui/item.tsx";
+import { useDistrictStore } from "@/store/useDistrictStore.ts";
+import { useGnomeStore } from "@/store/useGnomeStore.ts";
 
 type OutletContextType = {
   onGnomeMarkerClick: (gnomeId: string) => void;
 };
 
 const GnomesList = () => {
-  const { gnomes, fetchGnomes, loading, error } = useGnomeStore();
-  const { districts, fetchDistricts } = useDistrictStore();
+  const { gnomes, loading, error } = useGnomeStore();
+  const { districts } = useDistrictStore();
   const { onGnomeMarkerClick } = useOutletContext<OutletContextType>();
-
-  useEffect(() => {
-    fetchGnomes();
-    fetchDistricts();
-  }, [fetchGnomes, fetchDistricts]);
 
   if (loading) return <p>Ładowanie...</p>;
   if (error) return <p className="text-red-500">{error}</p>;
@@ -25,7 +19,7 @@ const GnomesList = () => {
     return <p>Brak krasnali do wyświetlenia</p>;
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col overflow-y-auto">
       {gnomes.map((gnome) => {
         const district = districts.find((d) => d.id === gnome.districtId);
 
@@ -35,7 +29,7 @@ const GnomesList = () => {
             to={`/admin/gnomes/${gnome.id}`}
             onClick={() => onGnomeMarkerClick(gnome.id)}
           >
-            <Item className="rounded-4xl hover:bg-white/10 cursor-pointer">
+            <Item className="hover:bg-white/10" size={"sm"}>
               <div className="flex items-center">
                 <img
                   src={gnome.pictureUrl || PlaceHolder}
