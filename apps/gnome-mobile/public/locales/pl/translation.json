@@ -1,0 +1,17 @@
+{
+  "settings": {
+    "deleteAccount": "Usuń konto",
+    "language": "Język",
+    "notifications": "Powiadomienia",
+    "theme": "Motyw",
+    "title": "Ustawienia"
+  },
+  "welcome": {
+    "signInWithGoogle": "Zaloguj się przez Google",
+    "appDescription": "Krasnal GO - odkrywaj Wrocław krok po kroku.",
+    "acceptPrivacy": "Akceptuję politykę prywatności",
+    "privacyPolicy": "Polityka prywatności",
+    "subtitle": "Dołącz do nas i odkryj swojego idealnego krasnala we Wrocławiu!",
+    "title": "Znajdź swojego ulubionego krasnala!"
+  }
+}

@@ -3,6 +3,7 @@ import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import { Checkbox } from "expo-checkbox";
 import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
   Alert,
   Image,
@@ -18,6 +19,8 @@ export default function SignInScreen() {
   const { login } = useAuthStore();
   const { replace } = useRouter();
   const [isChecked, setChecked] = useState(false);
+
+  const { t } = useTranslation();
 
   useEffect(() => {
     GoogleSignin.configure({
@@ -57,10 +60,10 @@ export default function SignInScreen() {
 
       <View className="bg-background p-10 justify-center">
         <Text className="text-tekst text-xl font-bold mb-2 text-center font-Afacad">
-          Znajdź swojego ulubionego krasnala!
+          {t("welcome.title")}
         </Text>
         <Text className="text-tekst text-lg mb-6 text-center font-Afacad">
-          Dołącz do nas i odkryj swojego idealnego krasnala we Wrocławiu!
+          {t("welcome.subtitle")}
         </Text>
 
         <Pressable
@@ -72,7 +75,9 @@ export default function SignInScreen() {
           }}
         >
           <FontAwesome name="google" size={20} color="white" />
-          <Text className="ml-3 text-white">Zaloguj przez Google</Text>
+          <Text className="ml-3 text-white">
+            {t("welcome.signInWithGoogle")}
+          </Text>
         </Pressable>
 
         <View style={styles.section}>
@@ -83,18 +88,18 @@ export default function SignInScreen() {
             color={isChecked ? "#d6484a" : undefined}
           />
           <Text style={styles.paragraph} className="text-tekst">
-            Akceptuje polityke prywatności
+            {t("welcome.acceptPrivacy")}
           </Text>
         </View>
 
         <Text className="text-tekst mt-5 text-center justify-center">
-          Krasnal GO - odkrywaj Wrocław krok po kroku.
+          {t("welcome.appDescription")}
         </Text>
         <Pressable
           onPress={() => Linking.openURL("http://localhost:5173/privacy")}
         >
           <Text className="text-primary font-bold text-center underline mt-1">
-            Polityka prywatności
+            {t("welcome.privacyPolicy")}
           </Text>
         </Pressable>
       </View>

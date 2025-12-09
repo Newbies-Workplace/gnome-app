@@ -1,0 +1,15 @@
+{
+  "settings": {
+    "deleteAccount": null,
+    "language": null,
+    "notifications": null,
+    "theme": null,
+    "title": null
+  },
+  "welcome": {
+    "acceptPrivacy": null,
+    "privacyPolicy": null,
+    "subtitle": null,
+    "title": null
+  }
+}
