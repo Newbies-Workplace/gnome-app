@@ -58,7 +58,7 @@ export const GnomeDetailsBottomSheet: React.FC<
         <View className="flex-row items-start space-x-4">
           <Image
             source={gnomeImage}
-            className="rounded-lg w-24 h-32 object-cover"
+            className="w-28 h-32 rounded-xl"
           />
 
           {/* Teksty po prawej */}
