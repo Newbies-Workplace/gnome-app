@@ -2,7 +2,6 @@ import BottomSheet, {
   BottomSheetTextInput,
   BottomSheetView,
 } from "@gorhom/bottom-sheet";
-import { colorScheme } from "nativewind";
 import { useState } from "react";
 import { Keyboard, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
