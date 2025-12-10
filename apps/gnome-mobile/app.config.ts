@@ -7,7 +7,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   owner: "rstnewbies",
   version: "1.0.0",
   orientation: "portrait",
-  icon: "./src/assets/images/applogo.png",
+  icon: "./src/assets/images/AppIcon.png",
   scheme: "gnome-mobile",
   userInterfaceStyle: "automatic",
   newArchEnabled: true,
@@ -17,7 +17,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   },
   android: {
     adaptiveIcon: {
-      foregroundImage: "./src/assets/images/applogo.png",
+      foregroundImage: "./src/assets/images/AppIcon.png",
       backgroundColor: "#ffffff",
     },
     package: "pl.newbies.gnomes",
@@ -53,8 +53,8 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
       {
         image: "./src/assets/images/splash-icon.png",
         imageWidth: 200,
-        resizeMode: "contain",
-        backgroundColor: "#ffffff",
+        resizeMode: "cover",
+        backgroundColor: "#1E201E",
       },
     ],
     "expo-font",

@@ -9,6 +9,7 @@ import {
   Post,
   UseGuards,
 } from "@nestjs/common";
+import { ApiBearerAuth, ApiBody } from "@nestjs/swagger";
 import { Friendship } from "@prisma/client";
 import { AddFriendRequest, DeleteFriend } from "@repo/shared/requests";
 import {
@@ -23,6 +24,7 @@ import { JwtUser } from "@/auth/types/jwt-user";
 import { PrismaService } from "@/db/prisma.service";
 import { FriendsService } from "./friends.service";
 
+@ApiBearerAuth()
 @Controller("friends")
 export class FriendsController {
   constructor(
@@ -46,6 +48,13 @@ export class FriendsController {
     return this.friendsService.getFriendData(id, user.id);
   }
 
+  @ApiBody({
+    schema: {
+      example: {
+        inviteCode: "7121971063737059",
+      },
+    },
+  })
   @Post("@me")
   @UseGuards(JwtGuard)
   async addFriend(@User() user: JwtUser, @Body() body: AddFriendRequest) {
@@ -71,6 +80,13 @@ export class FriendsController {
 
     return await this.friendsService.addFriend(user.id, reciever.id);
   }
+  @ApiBody({
+    schema: {
+      example: {
+        friendId: "52f343cc-5d93-4293-bff4-0f1b093650d1",
+      },
+    },
+  })
 
   @Delete("@me")
   @UseGuards(JwtGuard)

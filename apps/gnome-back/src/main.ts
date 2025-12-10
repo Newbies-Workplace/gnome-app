@@ -1,6 +1,7 @@
 import { ValidationPipe } from "@nestjs/common";
 import { NestFactory } from "@nestjs/core";
 import { AppModule } from "@/app.module";
+import { swaggerSetup } from "./swagger/swagger";
 
 const morgan = require("morgan");
 
@@ -19,7 +20,7 @@ async function bootstrap() {
     allowedHeaders: ["Authorization", "Content-Type"],
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
   });
-
+  swaggerSetup(app);
   await app.listen(process.env.PORT ?? 3000);
 }
 

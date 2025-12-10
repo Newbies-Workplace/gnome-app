@@ -14,6 +14,7 @@ import {
   UseInterceptors,
 } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
+import { ApiBearerAuth, ApiBody } from "@nestjs/swagger";
 import { User as PrismaUser, UserResource } from "@prisma/client";
 import {
   AssignTeam,
@@ -30,6 +31,7 @@ import { Role } from "@/role/role.decorator";
 import { RoleGuard } from "@/roleguard/role.guard";
 import { UsersService } from "@/users/users.service";
 
+@ApiBearerAuth()
 @Controller("users")
 export class UsersController {
   constructor(
@@ -53,6 +55,13 @@ export class UsersController {
     return this.usersService.findUserById(user.id);
   }
 
+  @ApiBody({
+    schema: {
+      example: {
+        name: "name",
+      },
+    },
+  })
   @Patch("@me") // zaaktualizuj profil
   @UseInterceptors(FileInterceptor("file"))
   @UseGuards(JwtGuard)
@@ -113,6 +122,13 @@ export class UsersController {
     return this.usersService.deleteAccount(user.id);
   }
 
+  @ApiBody({
+    schema: {
+      example: {
+        team: "TEAM_BLUE",
+      },
+    },
+  })
   @Patch("@me/team")
   @UseGuards(JwtGuard)
   async assignTeam(@User() user: JwtUser, @Body() body: AssignTeam) {
