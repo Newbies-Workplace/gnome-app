@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { Toaster } from "sonner";
 import { RequireAuth } from "@/components/require-auth.tsx";
 import AdminPage from "@/pages/admin";
 import BuildDetail from "@/pages/buildings/building-details.tsx";
@@ -97,9 +98,14 @@ function App() {
 
   useEffect(() => {
     void init();
-  }, []);
+  }, [init]);
 
-  return <RouterProvider router={router} />;
+  return (
+    <>
+      <RouterProvider router={router} />
+      <Toaster richColors theme="dark" duration={1000} position="top-right" />
+    </>
+  );
 }
 
 export default App;

@@ -47,6 +47,7 @@ export const useGnomeStore = create<GnomeState>((set) => ({
       set((state) => ({
         gnomes: [...state.gnomes, newGnome],
         loading: false,
+        error: null,
       }));
 
       return newGnome;
