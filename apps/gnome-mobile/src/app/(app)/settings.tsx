@@ -13,8 +13,8 @@ import LanguageIcon from "@/assets/icons/language.svg";
 import ModeIcon from "@/assets/icons/mode.svg";
 import NotificationsIcon from "@/assets/icons/notifications.svg";
 import AccoutDeleteIcon from "@/assets/icons/security.svg";
-import { LanguageSelector } from "@/components/settings-components/LanguageSelector";
 import DeleteAccountBottomSheet from "@/components/settings-components/AccountDeleteBottomSheet";
+import { LanguageSelector } from "@/components/settings-components/LanguageSelector";
 import ThemeSelector from "@/components/settings-components/ThemeSelector";
 import { SettingsOption } from "@/components/ui/SettingsOption";
 import { Text } from "@/components/ui/text";
@@ -120,8 +120,7 @@ function SettingsScreen() {
             onDismiss={() => {
               languageBottomSheetRef.current?.close();
             }}
-        />
-
+          />
         </BottomSheet>
         <DeleteAccountBottomSheet
           onDelete={() => {
