@@ -1,6 +1,6 @@
 import { useNavigate, useOutletContext } from "react-router-dom";
-import { toast } from "sonner";
 import { GnomeForm } from "@/components/admin/gnome-form";
+import { useToastNavigate } from "@/hooks/useToastNavigate";
 import type { GnomeFormData } from "@/schemas/gnomeSchema";
 import { useDistrictStore } from "@/store/useDistrictStore";
 import { useGnomeStore } from "@/store/useGnomeStore";
@@ -12,6 +12,7 @@ type OutletContextType = {
 export default function GnomeAddPage() {
   const { selectedPosition } = useOutletContext<OutletContextType>();
   const navigate = useNavigate();
+  const toastNavigate = useToastNavigate();
 
   const addGnome = useGnomeStore((s) => s.addGnome);
   const districts = useDistrictStore((s) => s.districts);
@@ -32,10 +33,16 @@ export default function GnomeAddPage() {
       formData.append("file", data.pictureURL[0]);
     }
 
-    const created = await addGnome(formData);
-
-    toast.success(`Dodano nowego krasnala "${created.name}"`);
-    navigate("/admin");
+    try {
+      const created = await addGnome(formData);
+      toastNavigate(
+        "/admin",
+        `Dodano nowego krasnala "${created.name}"`,
+        "success",
+      );
+    } catch (err) {
+      toastNavigate("/admin", "Nie udało się dodać krasnala", "error");
+    }
   };
 
   return (
