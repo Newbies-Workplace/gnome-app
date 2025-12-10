@@ -21,18 +21,19 @@ export const useAuthStore = create<AuthState>()(
       accessToken: null,
 
       init: async () => {
-        set({ isLoading: true });
         const token = get().accessToken;
-        if (token) {
-          axiosInstance.defaults.headers.Authorization = `Bearer ${token}`;
-          try {
-            const user = await UserService.getMyUser();
-            set({ user, isLoading: false });
-          } catch {
-            set({ user: null, accessToken: null, isLoading: false });
-          }
-        } else {
+        if (!token) {
           set({ isLoading: false });
+          return;
+        }
+
+        set({ isLoading: true });
+        axiosInstance.defaults.headers.Authorization = `Bearer ${token}`;
+        try {
+          const user = await UserService.getMyUser();
+          set({ user, isLoading: false });
+        } catch {
+          set({ user: null, accessToken: null, isLoading: false });
         }
       },
 
@@ -55,6 +56,7 @@ export const useAuthStore = create<AuthState>()(
     {
       name: "auth-storage",
       storage: createJSONStorage(() => localStorage),
+      onRehydrateStorage: () => (state) => state?.init(),
     },
   ),
 );
