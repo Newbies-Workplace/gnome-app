@@ -137,7 +137,6 @@ const HeaderControls: React.FC<HeaderControlsProps> = ({
 
 const MapScreen = () => {
   const { user } = useAuthStore();
-  const { navigate } = useRouter();
   const { gnomes, fetchGnomes, interactions, fetchMyInteractions } =
     useGnomeStore();
   const { fetchUserFriends } = useFriendsStore();

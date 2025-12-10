@@ -5,7 +5,7 @@ import BottomSheet, {
   BottomSheetModal,
   BottomSheetModalProvider,
 } from "@gorhom/bottom-sheet";
-import { Portal, PortalHost } from "@rn-primitives/portal";
+import { PortalHost } from "@rn-primitives/portal";
 import { StatusBar } from "expo-status-bar";
 import { cssInterop } from "nativewind";
 import React, { useEffect, useState } from "react";
