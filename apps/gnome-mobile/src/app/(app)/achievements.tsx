@@ -1,16 +1,16 @@
 import { useNavigation } from "@react-navigation/native";
 import { useRouter } from "expo-router";
 import React, { useEffect } from "react";
-import { Text, TouchableOpacity, View } from "react-native";
+import { FlatList, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import ArrowLeft from "@/assets/icons/arrow-left.svg";
+import { Achievement } from "@/components/Achievements";
 import { useAchievementsStore } from "@/store/useAchievementsStore";
 
 export default function AchivementScreen() {
   const router = useRouter();
   const navigation = useNavigation();
-  const { achivements, userAchivements, fetchUserAchivements } =
-    useAchievementsStore();
+  const { achivements, userAchivements } = useAchievementsStore();
 
   useEffect(() => {
     navigation.setOptions({
@@ -33,14 +33,16 @@ export default function AchivementScreen() {
     });
   }, [navigation, router]);
 
-  useEffect(() => {
-    fetchUserAchivements();
-  }, []);
-
   return (
     <SafeAreaView>
       <View>
-        <Text>jeszcze raz</Text>
+        <FlatList
+          data={achivements}
+          columnWrapperStyle={{ justifyContent: "flex-start" }}
+          numColumns={3}
+          renderItem={({ item }) => <Achievement title={item.name} />}
+          keyExtractor={(item) => item.id}
+        />
       </View>
     </SafeAreaView>
   );

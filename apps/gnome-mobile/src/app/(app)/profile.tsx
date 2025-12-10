@@ -11,7 +11,7 @@ import LogoutIcon from "@/assets/icons/log-out.svg";
 import QuestsIcon from "@/assets/icons/quests.svg";
 import SettingsIcon from "@/assets/icons/settings.svg";
 import ShareIcon from "@/assets/icons/share-right.svg";
-import { Achievement } from "@/components/Achivement";
+import { Achievement } from "@/components/Achievements";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { GnomeCard } from "@/components/ui/GnomeCard";
@@ -19,12 +19,16 @@ import {
   ProfileButton,
   ProfileButtonLogout,
 } from "@/components/ui/ProfileButton";
+import { useAchievementsStore } from "@/store/useAchievementsStore";
 import { useAuthStore } from "@/store/useAuthStore";
 
 export default function ProfileScreen() {
   const { logout, user } = useAuthStore();
   const navigation = useNavigation();
   const router = useRouter();
+  const { userAchivements } = useAchievementsStore();
+
+  const latestEarnedAchievements = userAchivements.slice(0, 3);
 
   const handleLogout = () => {
     Alert.alert("Wylogowanie", "Czy na pewno chcesz się wylogować?", [
@@ -113,11 +117,13 @@ export default function ProfileScreen() {
             image={<AchievementsIcon className="text-tekst" />}
             onClick={() => router.push("/achievements")}
           />
-          <View className="w-full flex-row justify-between px-9">
-            <Achievement title="Zebrane 10 krasnali" />
-            <Achievement title="Zebrano 67 krasnali" />
-            <Achievement title="Odblokowano wszystkie krasnale" />
-          </View>
+          {latestEarnedAchievements.length === 3 && (
+            <View className="w-full flex-row justify-between">
+              {latestEarnedAchievements.map(({ achievement }) => (
+                <Achievement key={achievement.id} title={achievement.name} />
+              ))}
+            </View>
+          )}
         </View>
         <ProfileButton
           text="Zadania"

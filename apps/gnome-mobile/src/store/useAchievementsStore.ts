@@ -1,9 +1,12 @@
-import { UserAchievementResponse } from "@repo/shared/responses";
+import {
+  AchievementResponse,
+  UserAchievementResponse,
+} from "@repo/shared/responses";
 import { create } from "zustand";
 import { AchievementsService } from "@/lib/api/Achievements.service";
 
 interface AchievementsStore {
-  achivements: [];
+  achivements: AchievementResponse[];
   userAchivements: UserAchievementResponse[];
 
   fetchAchivements: () => Promise<void>;
@@ -15,11 +18,13 @@ export const useAchievementsStore = create<AchievementsStore>((set) => ({
   userAchivements: [],
 
   fetchAchivements: async () => {
-    return;
+    const achivements = await AchievementsService.getAllAchievements();
+
+    set({ achivements });
   },
 
   fetchUserAchivements: async () => {
-    const userAchievements = await AchievementsService.getUserAchivements();
+    const userAchievements = await AchievementsService.getUserAchievements();
 
     set({ userAchivements: userAchievements });
   },
