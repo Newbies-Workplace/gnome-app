@@ -1,9 +1,8 @@
 import BottomSheet, {
-  BottomSheetBackdrop,
-  BottomSheetBackdropProps,
   BottomSheetTextInput,
   BottomSheetView,
 } from "@gorhom/bottom-sheet";
+import { colorScheme } from "nativewind";
 import { useState } from "react";
 import { Keyboard, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -45,9 +44,10 @@ export const DeleteAccountBottomSheet: React.FC<
 
           <BottomSheetTextInput
             placeholder={`Wpisz "zgadzam się"`}
+            placeholderTextColor="gray"
             onChangeText={setConfirmation}
             value={confirmation}
-            className="border border-muted rounded-2xl px-3 py-2 text-tekst mb-5 w-full"
+            className="border border-muted rounded-2xl px-3 py-2 text-tekst mb-5 w-full border-tekst"
           />
 
           <View className="flex-row gap-4 w-full">

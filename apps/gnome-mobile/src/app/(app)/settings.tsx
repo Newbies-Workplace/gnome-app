@@ -5,7 +5,7 @@ import { useRouter } from "expo-router";
 import { setStatusBarStyle } from "expo-status-bar";
 import { colorScheme } from "nativewind";
 import { useEffect, useRef } from "react";
-import { Alert, Linking, TouchableOpacity, View } from "react-native";
+import { Linking, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import ArrowLeft from "@/assets/icons/arrow-left.svg";
 import LanguageIcon from "@/assets/icons/language.svg";
@@ -27,23 +27,6 @@ function SettingsScreen() {
   const languageBottomSheetRef = useRef<BottomSheet>(null);
   const { setColorScheme } = useColorScheme();
   const { deleteAccount } = useAuthStore();
-
-  const handleAccountDelete = () => {
-    Alert.alert(
-      "Usuwanie konta",
-      "Czy jesteś pewien tego ,że chcesz usunąć swoje konto?\n \nProces ten możebyć nie odwracalny i utracisz progres swojego konta!",
-      [
-        { text: "Anuluj", style: "cancel" },
-        {
-          text: "Usuń",
-          onPress: () => {
-            deleteAccount();
-            router.replace("/welcome");
-          },
-        },
-      ],
-    );
-  };
 
   useEffect(() => {
     navigation.setOptions({
@@ -143,6 +126,7 @@ function SettingsScreen() {
           onClick={() => {
             languageBottomSheetRef.current?.close();
             themeBottomSheetRef.current?.expand();
+            deleteAccountBottomSheetRef.current?.close();
           }}
           customClass="mb-8"
         />
@@ -158,6 +142,7 @@ function SettingsScreen() {
           onClick={() => {
             themeBottomSheetRef.current?.close();
             languageBottomSheetRef.current?.expand();
+            deleteAccountBottomSheetRef.current?.close();
           }}
           extraText="Polski"
           customClass="mb-8"
@@ -167,6 +152,8 @@ function SettingsScreen() {
           image={AccoutDeleteIcon}
           onClick={() => {
             deleteAccountBottomSheetRef.current?.expand();
+            themeBottomSheetRef.current?.close();
+            languageBottomSheetRef.current?.close();
           }}
           customClass="mb-8 text-primary"
         />
