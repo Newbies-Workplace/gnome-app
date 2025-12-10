@@ -1,6 +1,5 @@
-import { PortalHost } from "@rn-primitives/portal";
 import * as Network from "expo-network";
-import { Redirect, Slot } from "expo-router";
+import { Redirect } from "expo-router";
 import { useEffect } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import HomeTabs from "@/app/(app)/navigator/HomeTabs";
