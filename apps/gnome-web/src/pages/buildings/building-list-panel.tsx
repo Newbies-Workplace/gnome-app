@@ -1,4 +1,4 @@
-import BuildsList from "@/components/admin/builds-list";
+import BuildingsList from "@/components/admin/buildings-list";
 import { Input } from "@/components/ui/input";
 
 function BuildingListPanel() {
@@ -13,7 +13,7 @@ function BuildingListPanel() {
         placeholder="Wyszukaj budowlę..."
         className="text-white font-Afacad rounded-2xl bg-[#282B28] border-none outline-none"
       />
-      <BuildsList />
+      <BuildingsList />
     </div>
   );
 }
