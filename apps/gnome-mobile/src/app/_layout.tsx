@@ -13,6 +13,7 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import Svg, { Circle, Rect, Text as SvgText } from "react-native-svg";
 import { useAuthStore } from "@/store/useAuthStore";
 import CustomSplash from "./splashscreen";
+import "@/i18n";
 
 SplashScreen.setOptions({
   duration: 800,
@@ -34,6 +35,7 @@ export default function RootLayout() {
         setisReady(true);
       }
     }
+
     initializeApp();
   }, []);
 

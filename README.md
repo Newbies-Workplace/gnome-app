@@ -64,9 +64,3 @@ You can start the mobile app by running the following commands:
   yarn workspace gnome-mobile prebuild
   yarn workspace gnome-mobile android
 ```
-
-Or you can start the app in web mode by running the following command:
-
-```bash
-  yarn workspace gnome-mobile web
-```
