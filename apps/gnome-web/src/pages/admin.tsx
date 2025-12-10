@@ -97,6 +97,7 @@ export default function AdminPage() {
     ) {
       mapRef.panTo(defaultCenter);
       mapRef.setZoom(defaultZoom);
+      setSelectedPosition(null);
     }
   }, [location.pathname, mapRef]);
 
@@ -220,10 +221,12 @@ export default function AdminPage() {
               options={mapOptions}
               onLoad={onMapLoad}
               onClick={(e) => {
-                const lat = e.latLng?.lat();
-                const lng = e.latLng?.lng();
-                if (lat && lng && currentTab === "gnomes") {
-                  setSelectedPosition({ lat, lng });
+                if (location.pathname === "/admin/gnomes/add") {
+                  const lat = e.latLng?.lat();
+                  const lng = e.latLng?.lng();
+                  if (typeof lat === "number" && typeof lng === "number") {
+                    setSelectedPosition({ lat, lng });
+                  }
                 }
               }}
             >
@@ -243,6 +246,7 @@ export default function AdminPage() {
                   strokeOpacity: 1,
                   strokeWeight: 3,
                   fillOpacity: 0,
+                  clickable: false,
                 }}
               />
             </GoogleMap>
