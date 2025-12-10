@@ -56,7 +56,16 @@ export const useAuthStore = create<AuthState>()(
     {
       name: "auth-storage",
       storage: createJSONStorage(() => localStorage),
-      onRehydrateStorage: () => (state) => state?.init(),
+      onRehydrateStorage: () => (state) => {
+        if (!state) return;
+        const token = state.accessToken;
+
+        if (token) {
+          axiosInstance.defaults.headers.Authorization = `Bearer ${token}`;
+        }
+
+        state.init();
+      },
     },
   ),
 );
