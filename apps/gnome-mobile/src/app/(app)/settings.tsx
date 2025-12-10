@@ -56,7 +56,7 @@ function SettingsScreen() {
     <SafeAreaView className="flex-1 bg-primary-foreground">
       <View className="w-full px-4 mt-4">
         <SettingsOption
-          text={t("settings.theme")}
+          text={t("settings.theme.title")}
           image={ModeIcon}
           onClick={() => {
             languageBottomSheetRef.current?.close();
@@ -83,7 +83,7 @@ function SettingsScreen() {
           customClass="mb-4"
         />
         <SettingsOption
-          text={t("settings.deleteAccount")}
+          text={t("settings.deleteAccount.title")}
           image={AccoutDeleteIcon}
           onClick={() => {
             deleteAccountBottomSheetRef.current?.expand();

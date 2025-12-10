@@ -3,6 +3,7 @@ import Clipboard from "@react-native-clipboard/clipboard";
 import { useNavigation } from "@react-navigation/native";
 import { useRouter } from "expo-router";
 import React, { useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Image, TouchableOpacity, View } from "react-native";
 import { QrCodeSvg } from "react-native-qr-svg";
 import { useCameraDevice } from "react-native-vision-camera";
@@ -23,6 +24,7 @@ import { useAuthStore } from "@/store/useAuthStore";
 import { useFriendsStore } from "@/store/useFriendsStore";
 
 export default function AddFriendScreen() {
+  const { t } = useTranslation();
   const { user, regenerateInviteCode } = useAuthStore();
   const navigation = useNavigation();
   const router = useRouter();
@@ -42,7 +44,7 @@ export default function AddFriendScreen() {
       ),
       headerTitle: () => (
         <Text className="text-tekst font-bold text-2xl text-center tracking-wide">
-          Nawiąż znajomość
+          {t("addFriend.title")}
         </Text>
       ),
       headerTitleAlign: "center",
@@ -52,7 +54,7 @@ export default function AddFriendScreen() {
       headerShadowVisible: false,
       headerShown: true,
     });
-  }, [navigation, router]);
+  }, [navigation, router, t]);
 
   if (!user) {
     return <LoadingScreen />;
@@ -101,10 +103,7 @@ export default function AddFriendScreen() {
           }}
           className="size-16 rounded-lg"
         />
-        <View>
-          <Text className="text-tekst text-lg font-semibold">{user.name}</Text>
-          <Text className="text-tekst/50 text-md">Początkowy zbieracz</Text>
-        </View>
+        <Text className="text-tekst text-lg font-semibold">{user.name}</Text>
       </View>
       <Divider title="twój kod znajomego" />
       <View className="bg-white p-5 rounded-xl">
@@ -193,8 +192,8 @@ export default function AddFriendScreen() {
         onDismiss={regenerateInviteCodeSheetRef.current?.close}
       >
         <ConfirmDialog
-          title="czy na pewno chcesz zresetować kod zaproszenia?"
-          description="stary kod przestanie być aktualny."
+          title="Czy na pewno chcesz zresetować kod zaproszenia?"
+          description="Stary kod przestanie być aktywny"
           onDecline={() => regenerateInviteCodeSheetRef.current?.close()}
           onConfirm={async () => {
             await regenerateInviteCode();

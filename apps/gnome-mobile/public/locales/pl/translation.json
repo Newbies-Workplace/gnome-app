@@ -1,10 +1,66 @@
 {
+  "common": {
+    "appName": "Krasnal GO",
+    "loading": "Ładowanie...",
+    "confirm": "Potwierdź",
+    "cancel": "Anuluj",
+    "delete": "Usuń",
+    "genericError": "Coś poszło nie tak. Spróbuj ponownie później."
+  },
+  "tabs": {
+    "home": "Główna",
+    "collection": "Kolekcja",
+    "friends": "Znajomi"
+  },
+  "home": {
+    "closestGnomeMeters": " Najbliższy krasnal znajduje się {{distance}} m od Ciebie."
+  },
+  "collection": {
+    "yourCollection": "Twoja kolekcja"
+  },
+  "friends": {
+    "scanner": {
+      "rationale": "Aby zeskanować kod QR znajomego, aplikacja potrzebuje dostępu do aparatu.",
+      "allow": "Zezwól na dostęp do aparatu"
+    }
+  },
+  "addFriend": {
+    "title": "Nawiąż znajomość"
+  },
+  "profile": {
+    "logout": {
+      "title": "Wyloguj się",
+      "confirmationTitle": "Czy na pewno chcesz się wylogować?"
+    }
+  },
+  "resources": {
+    "title": "Surowce",
+    "description": "Podstawowe zasoby takie jak:",
+    "description2": "zbierzesz podczas zdobywania krasnali",
+    "description3": "możesz je wydać na budowle oraz ulepszenia!",
+    "berries": "Jagody",
+    "stones": "Kamienie",
+    "sticks": "Drewno"
+  },
   "settings": {
-    "deleteAccount": "Usuń konto",
+    "deleteAccount": {
+      "title": "Usuń konto",
+      "confirmationTitle": "Czy na pewno chcesz usunąć konto?",
+      "description": "Cały Twój postęp zostanie bezpowrotnie usunięty!",
+      "typeConfirmation": "Wpisz '$t(settings.deleteAccount.confirmationPhrase)'",
+      "confirmationPhrase": "zgadzam się"
+    },
     "language": "Język",
     "notifications": "Powiadomienia",
-    "theme": "Motyw",
+    "theme": {
+      "title": "Motyw",
+      "dark": "Ciemny",
+      "light": "Jasny"
+    },
     "title": "Ustawienia"
+  },
+  "gnomeDetails": {
+    "users": "użytkowników"
   },
   "welcome": {
     "signInWithGoogle": "Zaloguj się przez Google",
@@ -12,6 +68,10 @@
     "acceptPrivacy": "Akceptuję politykę prywatności",
     "privacyPolicy": "Polityka prywatności",
     "subtitle": "Dołącz do nas i odkryj swojego idealnego krasnala we Wrocławiu!",
-    "title": "Znajdź swojego ulubionego krasnala!"
+    "title": "Znajdź swojego ulubionego krasnala!",
+    "sheet": {
+      "title": "WITAJ W PRZYGODZIE Z WROCŁAWSKIMI KRASNALAMI!",
+      "description": "Twoim zadaniem jest porwanie czapek z głów wszystkich krasnali! Po zbliżeniu się na mapię do krasnala pojawi się opcja z przeciągnięciem na pasku jego czapki. Uzbieraj jak największą kolekcję gnomów ze swoimi unikatowymi zdjęciami. Wyrusz na poszukiwania!"
+    }
   }
 }

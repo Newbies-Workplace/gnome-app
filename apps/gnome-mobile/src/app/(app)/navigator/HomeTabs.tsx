@@ -6,6 +6,7 @@ import {
   TabTriggerSlotProps,
 } from "expo-router/ui";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { Pressable, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import type { SvgProps } from "react-native-svg";
@@ -16,6 +17,8 @@ import { Text } from "@/components/ui/text";
 import { cn } from "@/lib/utils";
 
 const HomeTabs = () => {
+  const { t } = useTranslation();
+
   return (
     <Tabs>
       <TabSlot />
@@ -28,24 +31,24 @@ const HomeTabs = () => {
             "flex-row justify-between bg-background m-2 mx-4 p-2 rounded-3xl"
           }
         >
-          <TabTrigger name={"Główna"} href={"/"} asChild>
-            <TabButton Icon={NavHomeIcon}>Główna</TabButton>
+          <TabTrigger name={"home"} href={"/"} asChild>
+            <TabButton Icon={NavHomeIcon}>{t("tabs.home")}</TabButton>
           </TabTrigger>
 
-          <TabTrigger name={"Kolekcja"} href={"/collection"} asChild>
-            <TabButton Icon={GnomeIcon}>Kolekcja</TabButton>
+          <TabTrigger name={"collection"} href={"/collection"} asChild>
+            <TabButton Icon={GnomeIcon}>{t("tabs.collection")}</TabButton>
           </TabTrigger>
 
-          <TabTrigger name={"Znajomi"} href={"/friends"} asChild>
-            <TabButton Icon={NavFriendsIcon}>Znajomi</TabButton>
+          <TabTrigger name={"friends"} href={"/friends"} asChild>
+            <TabButton Icon={NavFriendsIcon}>{t("tabs.friends")}</TabButton>
           </TabTrigger>
         </View>
       </SafeAreaView>
 
       <TabList style={{ display: "none" }}>
-        <TabTrigger name={"Główna"} href={"/"} />
-        <TabTrigger name={"Kolekcja"} href={"/collection"} />
-        <TabTrigger name={"Znajomi"} href={"/friends"} />
+        <TabTrigger name={"home"} href={"/"} />
+        <TabTrigger name={"collection"} href={"/collection"} />
+        <TabTrigger name={"friends"} href={"/friends"} />
       </TabList>
     </Tabs>
   );

@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { Image, Text, useWindowDimensions, View } from "react-native";
 
 type DistanceTrackerProps = {
@@ -6,6 +7,8 @@ type DistanceTrackerProps = {
 };
 
 const DistanceTracker: React.FC<DistanceTrackerProps> = ({ distance }) => {
+  const { t } = useTranslation();
+
   const { width } = useWindowDimensions();
   const viewWidth = width * 0.6;
 
@@ -19,18 +22,13 @@ const DistanceTracker: React.FC<DistanceTrackerProps> = ({ distance }) => {
         }}
       >
         <Text className="text-lg text-tekst font-bold">
-          Najbliższy krasnal znajduje{" "}
-        </Text>
-        <Text className="text-lg text-tekst font-bold">
-          się{" "}
-          <Text className="text-lg text-primary font-bold">{distance}m</Text> od
-          ciebie
+          {t("gnomeDistanceTracker.closestGnomeMeters", { distance })}
         </Text>
       </View>
       <View className="absolute left-6 bottom-[-35px]">
         <Image
           source={require("@/assets/images/krasnal.png")}
-          className="w-24 h-24" // 100x100 image
+          className="w-24 h-24"
         />
       </View>
     </View>

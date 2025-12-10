@@ -1,5 +1,6 @@
 import { useNavigation, useRouter } from "expo-router";
 import { useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { FlatList, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import LoadingScreen from "@/components/LoadingScreen";
@@ -8,6 +9,7 @@ import { useGnomeImageStore } from "@/store/useGnomeImageStore";
 import { useGnomeStore } from "@/store/useGnomeStore";
 
 const Collection = () => {
+  const { t } = useTranslation();
   const { gnomes, error } = useGnomeStore();
   const { getImageForGnome } = useGnomeImageStore();
   const router = useRouter();
@@ -17,7 +19,9 @@ const Collection = () => {
     navigation.setOptions({
       headerTitle: () => (
         <View className="flex justify-center">
-          <Text className="text-tekst text-2xl font-bold">Twoja kolekcja</Text>
+          <Text className="text-tekst text-2xl font-bold">
+            {t("collection.yourCollection")}
+          </Text>
         </View>
       ),
       headerTitleAlign: "center",
@@ -27,7 +31,7 @@ const Collection = () => {
       headerShadowVisible: false,
       headerShown: true,
     });
-  }, [navigation]);
+  }, [navigation, t]);
 
   return (
     <SafeAreaView className={"flex-1 bg-primary-foreground"}>
@@ -55,7 +59,7 @@ const Collection = () => {
         }}
         ListEmptyComponent={() =>
           error ? (
-            <Text className="text-tekst">Błąd: {error}</Text>
+            <Text className="text-tekst">{t("common.genericError")}</Text>
           ) : (
             <LoadingScreen />
           )

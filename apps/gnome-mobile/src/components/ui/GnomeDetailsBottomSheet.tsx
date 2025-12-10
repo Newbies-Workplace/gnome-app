@@ -4,6 +4,7 @@ import BottomSheet, {
   BottomSheetView,
 } from "@gorhom/bottom-sheet";
 import React, { useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { Image, Text, TouchableOpacity, View } from "react-native";
 import GnomeDetailsFullScreenIcon from "@/assets/icons/FullscreenButton.svg";
 import GnomeCaughtCountIcon from "@/assets/icons/GnomeCaughtCount.svg";
@@ -27,6 +28,7 @@ interface GnomeDetailsBottomSheetProps {
 export const GnomeDetailsBottomSheet: React.FC<
   GnomeDetailsBottomSheetProps
 > = ({ selectedGnome, formattedDistance, onClose, onClick }) => {
+  const { t } = useTranslation();
   const { interactionCount, fetchInteractionCount } =
     useGnomeInteractionStore();
   const gnomeImage = useGnomeImage(selectedGnome?.id);
@@ -58,7 +60,6 @@ export const GnomeDetailsBottomSheet: React.FC<
         <View className="flex-row items-start space-x-4">
           <Image source={gnomeImage} className="w-28 h-32 rounded-xl" />
 
-          {/* Teksty po prawej */}
           <View className="flex-1 space-y-2 ml-3">
             <View className="flex-row justify-between items-start">
               <Text className="text-2xl font-semibold text-tekst">
@@ -78,12 +79,14 @@ export const GnomeDetailsBottomSheet: React.FC<
                 </Text>
               </View>
 
-              <View className="flex-row items-center">
-                <GnomeHowFarAwayIcon className="text-tekst" />
-                <Text className="ml-2 text-base text-tekst">
-                  {formattedDistance ?? "Brak danych"}
-                </Text>
-              </View>
+              {!!formattedDistance && (
+                <View className="flex-row items-center">
+                  <GnomeHowFarAwayIcon className="text-tekst" />
+                  <Text className="ml-2 text-base text-tekst">
+                    {formattedDistance}
+                  </Text>
+                </View>
+              )}
 
               <View className="flex-row items-center">
                 <GnomeCaughtCountIcon className="text-tekst" />
@@ -91,7 +94,7 @@ export const GnomeDetailsBottomSheet: React.FC<
                   {selectedGnome
                     ? (interactionCount[selectedGnome.id] ?? 0)
                     : 0}{" "}
-                  osób
+                  {t("gnomeDetails.users")}
                 </Text>
               </View>
             </View>

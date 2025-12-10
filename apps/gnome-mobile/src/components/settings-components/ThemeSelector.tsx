@@ -1,5 +1,6 @@
 import { BottomSheetView } from "@gorhom/bottom-sheet";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { Text, TouchableOpacity } from "react-native";
 
 interface ThemeSelectorProps {
@@ -15,41 +16,36 @@ const ThemeSelector: React.FC<ThemeSelectorProps> = ({
   themeBottomSheetRef,
   setStatusBarStyle,
 }) => {
+  const { t } = useTranslation();
   const closeSheet = () => {
     themeBottomSheetRef.current?.close();
   };
 
+  const options = {
+    dark: t("settings.theme.dark"),
+    light: t("settings.theme.light"),
+  };
+
   return (
     <BottomSheetView className="w-full px-6 py-6">
-      {/* DARK */}
-      <TouchableOpacity
-        className="py-4 border-b border-tekst flex-row justify-between items-center"
-        onPress={() => {
-          setColorScheme?.("dark");
-          closeSheet();
-          setStatusBarStyle("light");
-        }}
-      >
-        <Text className="text-tekst text-xl font-bold">Ciemny</Text>
-        {colorScheme.get?.() === "dark" && (
-          <Text className="text-tekst text-xl">✓</Text>
-        )}
-      </TouchableOpacity>
+      {Object.keys(options).map((key) => (
+        <TouchableOpacity
+          className="py-4 border-b border-tekst flex-row justify-between items-center"
+          onPress={() => {
+            setColorScheme?.(key as keyof typeof options);
+            closeSheet();
+            setStatusBarStyle(key === "dark" ? "light" : "dark");
+          }}
+        >
+          <Text className="text-tekst text-xl font-bold">
+            {options[key as keyof typeof options]}
+          </Text>
 
-      {/* LIGHT */}
-      <TouchableOpacity
-        className="py-4 flex-row justify-between items-center"
-        onPress={() => {
-          setColorScheme?.("light");
-          closeSheet();
-          setStatusBarStyle("dark");
-        }}
-      >
-        <Text className="text-tekst text-xl font-bold">Jasny</Text>
-        {colorScheme.get?.() === "light" && (
-          <Text className="text-tekst text-xl">✓</Text>
-        )}
-      </TouchableOpacity>
+          {colorScheme.get?.() === key && (
+            <Text className="text-tekst text-xl">✓</Text>
+          )}
+        </TouchableOpacity>
+      ))}
     </BottomSheetView>
   );
 };
