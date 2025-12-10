@@ -17,7 +17,7 @@ import { useUserStore } from "@/store/useUserStore";
 
 export default function BuildingDetailsPage() {
   const navigate = useNavigate();
-  const { users, loading, error, fetchUsers } = useUserStore();
+  const { users, fetchUsers } = useUserStore();
 
   useEffect(() => {
     fetchUsers();
