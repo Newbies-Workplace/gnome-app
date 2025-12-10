@@ -12,7 +12,6 @@ import QuestsIcon from "@/assets/icons/quests.svg";
 import SettingsIcon from "@/assets/icons/settings.svg";
 import ShareIcon from "@/assets/icons/share-right.svg";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
 import { GnomeCard } from "@/components/ui/GnomeCard";
 import {
   ProfileButton,

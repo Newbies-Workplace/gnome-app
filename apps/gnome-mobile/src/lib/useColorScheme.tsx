@@ -1,4 +1,4 @@
-import { useColorScheme as useNativewindColorScheme, vars } from "nativewind";
+import { useColorScheme as useNativewindColorScheme } from "nativewind";
 
 export function useColorScheme() {
   const { colorScheme, setColorScheme, toggleColorScheme } =
