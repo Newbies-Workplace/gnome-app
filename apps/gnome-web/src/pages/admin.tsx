@@ -91,7 +91,10 @@ export default function AdminPage() {
 
   useEffect(() => {
     if (!mapRef) return;
-    if (location.pathname === "/admin") {
+    if (
+      location.pathname === "/admin" ||
+      location.pathname === "/admin/buildings"
+    ) {
       mapRef.panTo(defaultCenter);
       mapRef.setZoom(defaultZoom);
     }
