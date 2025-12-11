@@ -11,7 +11,7 @@ import LogoutIcon from "@/assets/icons/log-out.svg";
 import QuestsIcon from "@/assets/icons/quests.svg";
 import SettingsIcon from "@/assets/icons/settings.svg";
 import ShareIcon from "@/assets/icons/share-right.svg";
-import { Achievement } from "@/components/Achievements";
+import { Achievement } from "@/components/Achievement";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { GnomeCard } from "@/components/ui/GnomeCard";
