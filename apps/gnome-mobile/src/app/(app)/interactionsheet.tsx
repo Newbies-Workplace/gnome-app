@@ -11,7 +11,7 @@ import CameraIcon from "@/assets/icons/camera.svg";
 import StoneIcon from "@/assets/icons/stone-icon.svg";
 import WoodIcon from "@/assets/icons/wood-icon.svg";
 
-const placeholder = require("@/assets/images/placeholder.png");
+const placeholder = require("@/assets/images/gnomeplaceholder.svg");
 
 interface InteractionSheetProps {
   onClose: () => void;
