@@ -2,7 +2,7 @@ import { ImageSourcePropType } from "react-native";
 import { useGnomeImageStore } from "@/store/useGnomeImageStore";
 import { useGnomeStore } from "@/store/useGnomeStore";
 
-const placeholder = require("@/assets/images/placeholder.png");
+const placeholder = require("@/assets/images/gnomeplaceholder.svg");
 
 export const useGnomeImage = (gnomeId: string): ImageSourcePropType => {
   const gnome = useGnomeStore((state) =>
