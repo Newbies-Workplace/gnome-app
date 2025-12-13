@@ -8,7 +8,6 @@ import BackIcon from "@/assets/icons/arrow-left.svg";
 import FriendsIcon from "@/assets/icons/friends.svg";
 import LastSeenIcon from "@/assets/icons/last-seen.svg";
 import LogoutIcon from "@/assets/icons/log-out.svg";
-import QuestsIcon from "@/assets/icons/quests.svg";
 import SettingsIcon from "@/assets/icons/settings.svg";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { GnomeCard } from "@/components/ui/GnomeCard";
@@ -71,7 +70,7 @@ export default function ProfileScreen() {
         <Avatar alt="Your avatar" className="w-20 h-20">
           <AvatarImage source={{ uri: user.pictureUrl }} />
           <AvatarFallback>
-            <Text className="text-lg">You</Text>
+            <Text className="text-lg">{t("common.you")}</Text>
           </AvatarFallback>
         </Avatar>
         <View>
@@ -81,19 +80,19 @@ export default function ProfileScreen() {
 
       <View className="w-full mt-4">
         <ProfileButton
-          text="Znajomi"
+          text={t("friends.title")}
           image={<FriendsIcon className="text-tekst" />}
           onClick={() => router.navigate("/friends")}
         />
         <ProfileButton
-          text="Osiągnięcia"
+          text={t("achievements.title")}
           image={<AchievementsIcon className="text-tekst" />}
           onClick={() => router.push("/achievements")}
         />
 
         <View className="mb-4">
           <ProfileButton
-            text="Ostatnio odkryte"
+            text={t("profile.lastGnomes")}
             image={<LastSeenIcon className="text-tekst" />}
             onClick={() => router.replace("/(app)/(tabs)/collection")}
           />

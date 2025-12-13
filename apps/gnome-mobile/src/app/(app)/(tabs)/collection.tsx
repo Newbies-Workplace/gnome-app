@@ -14,7 +14,7 @@ const Collection = () => {
   const { getImageForGnome } = useGnomeImageStore();
   const router = useRouter();
   const navigation = useNavigation();
-  //Header
+
   useEffect(() => {
     navigation.setOptions({
       headerTitle: () => (

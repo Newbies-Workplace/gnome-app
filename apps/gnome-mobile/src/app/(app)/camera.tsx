@@ -2,6 +2,7 @@ import * as MediaLibrary from "expo-media-library";
 import * as Network from "expo-network";
 import { useLocalSearchParams, useNavigation, useRouter } from "expo-router";
 import { useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
   Image,
   StyleSheet,
@@ -22,6 +23,7 @@ import { useGnomeInteractionStore } from "@/store/useGnomeInteractionStore";
 import { useGnomeStore } from "@/store/useGnomeStore";
 
 const CameraScreen = () => {
+  const { t } = useTranslation();
   const { addInteraction } = useGnomeStore();
   const { setImageForGnome } = useGnomeImageStore();
   const { addPendingInteraction } = useGnomeInteractionStore();
@@ -48,7 +50,9 @@ const CameraScreen = () => {
       headerTitle: () => (
         <View className="text-center">
           <Text className="text-tekst text-lg font-bold text-center tracking-wide">
-            Znalazłeś krasnala?{"\n"}Zrób mu zdjęcie!
+            {t("addGnome.camera.title")}
+            {"\n"}
+            {t("addGnome.camera.subtitle")}
           </Text>
         </View>
       ),
@@ -61,7 +65,7 @@ const CameraScreen = () => {
           }}
         >
           <Text className="text-tekst text-lg font-bold text-center tracking-wide">
-            Pomiń
+            {t("common.skip")}
           </Text>
         </TouchableOpacity>
       ),
@@ -130,19 +134,12 @@ const CameraScreen = () => {
         }
       }
       await addInteraction(gnomeid).catch(async () => {
-        // Zapisywanie interakcji gnoma w trybie offline
         const net = await Network.getNetworkStateAsync();
+
         if (!net.isConnected || net.isInternetReachable === false) {
           await addPendingInteraction(gnomeid);
-          ToastAndroid.show(
-            "Zapisano interakcję w trybie offline",
-            ToastAndroid.SHORT,
-          );
         } else {
-          ToastAndroid.show(
-            "Nie udało się zapisać interakcji. Spróbuj później.",
-            ToastAndroid.SHORT,
-          );
+          ToastAndroid.show(t("common.genericError"), ToastAndroid.SHORT);
         }
       });
       router.push("/collection");
@@ -178,7 +175,9 @@ const CameraScreen = () => {
           />
         ) : (
           <View className="flex-1 justify-center items-center">
-            <Text className="text-tekst text-lg">No camera available</Text>
+            <Text className="text-tekst text-lg">
+              {t("addGnome.camera.noCameraAvailable")}
+            </Text>
           </View>
         )}
       </View>

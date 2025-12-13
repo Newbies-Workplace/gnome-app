@@ -2,7 +2,7 @@ import React from "react";
 import { Text, View } from "react-native";
 import { Button } from "./button";
 
-interface NoFriendsAlertProps {
+interface EmptyStateProps {
   image: any;
   title: string;
   alert: string;
@@ -11,7 +11,7 @@ interface NoFriendsAlertProps {
   onClick: () => void;
 }
 
-export const NoFriendsAlert: React.FC<NoFriendsAlertProps> = ({
+export const EmptyState: React.FC<EmptyStateProps> = ({
   image,
   title,
   alert,

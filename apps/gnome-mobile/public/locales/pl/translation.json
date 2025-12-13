@@ -1,11 +1,13 @@
 {
   "common": {
     "appName": "Krasnal GO",
+    "you": "Ty",
     "loading": "Ładowanie...",
     "confirm": "Potwierdź",
     "cancel": "Anuluj",
     "delete": "Usuń",
-    "genericError": "Coś poszło nie tak. Spróbuj ponownie później."
+    "genericError": "Coś poszło nie tak. Spróbuj ponownie później.",
+    "skip": "Pomiń"
   },
   "tabs": {
     "home": "Główna",
@@ -13,25 +15,60 @@
     "friends": "Znajomi"
   },
   "home": {
-    "closestGnomeMeters": " Najbliższy krasnal znajduje się {{distance}} m od Ciebie."
+    "closestGnomeMeters": " Najbliższy krasnal znajduje się {{distance}} m od Ciebie.",
+    "missingLocationAlert": {
+      "title": "Krasnal kartograf zgubił Cię na mapie!",
+      "description": "Pomóż biednemu krasnalowi! Włącz lokalizację, zanim zacznie pytać smoki o drogę!",
+      "enableLocation": "Włącz lokalizację"
+    }
   },
   "collection": {
     "yourCollection": "Twoja kolekcja"
   },
   "friends": {
+    "title": "Znajomi",
+    "listEmpty": {
+      "title": "Hej Poszukiwaczu!",
+      "subtitle": "Twoja lista znajomych jest całkiem pusta, nawet żaden z wrocławskhich krasnali tutaj nie zawitał.",
+      "description": "W końcu nawet krasnale wiedzą, że w drużynie raźniej!",
+      "addFriendButton": "Dodaj znajomego"
+    },
     "scanner": {
       "rationale": "Aby zeskanować kod QR znajomego, aplikacja potrzebuje dostępu do aparatu.",
       "allow": "Zezwól na dostęp do aparatu"
     }
   },
+  "addGnome": {
+    "camera": {
+      "title": "Znalazłeś krasnala?",
+      "subtitle": "Zrób mu zdjęcie!",
+      "noCameraAvailable": "Brak dostępu do aparatu"
+    },
+    "sheet": {
+      "title": "Nowy krasnal dołączył do twojej kolekcji",
+      "seeDetails": "Zobacz szczegóły",
+      "takePhoto": "Zrób zdjęcie"
+    }
+  },
+  "achievements": {
+    "title": "Osiągnięcia"
+  },
   "addFriend": {
-    "title": "Nawiąż znajomość"
+    "title": "Nawiąż znajomość",
+    "yourFriendCode": "Twój kod znajomego",
+    "addFriend": "dodaj znajomego",
+    "resetInvitation": {
+      "title": "Czy na pewno chcesz zresetować kod zaproszenia?",
+      "description": "Stary kod przestanie być aktywny",
+      "reset": "Zresetuj"
+    }
   },
   "profile": {
     "logout": {
       "title": "Wyloguj się",
       "confirmationTitle": "Czy na pewno chcesz się wylogować?"
-    }
+    },
+    "lastGnomes": "Ostatnio odkryte"
   },
   "resources": {
     "title": "Surowce",
@@ -51,6 +88,7 @@
       "confirmationPhrase": "zgadzam się"
     },
     "language": "Język",
+    "languageTitle": "Polski",
     "notifications": "Powiadomienia",
     "theme": {
       "title": "Motyw",
@@ -60,7 +98,10 @@
     "title": "Ustawienia"
   },
   "gnomeDetails": {
-    "users": "użytkowników"
+    "users": "użytkowników",
+    "creationDate": "Data stworzenia:",
+    "foundDate": "Data znalezienia:",
+    "funFact": "Ciekawostka:"
   },
   "welcome": {
     "signInWithGoogle": "Zaloguj się przez Google",

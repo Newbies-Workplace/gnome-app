@@ -105,7 +105,7 @@ export default function AddFriendScreen() {
         />
         <Text className="text-tekst text-lg font-semibold">{user.name}</Text>
       </View>
-      <Divider title="twój kod znajomego" />
+      <Divider title={t("addFriend.yourFriendCode")} />
       <View className="bg-white p-5 rounded-xl">
         <QrCodeSvg
           value={user.inviteCode}
@@ -137,7 +137,7 @@ export default function AddFriendScreen() {
           </Button>
         )}
       </View>
-      <Divider title="dodaj znajomego" />
+      <Divider title={t("addFriend.addFriend")} />
       <View className="flex-row w-full items-center gap-2 border-primary border rounded-2xl p-2">
         <Input
           className="flex-1 text-tekst/50 bg-background font-bold text-center border-background"
@@ -192,8 +192,8 @@ export default function AddFriendScreen() {
         onDismiss={regenerateInviteCodeSheetRef.current?.close}
       >
         <ConfirmDialog
-          title="Czy na pewno chcesz zresetować kod zaproszenia?"
-          description="Stary kod przestanie być aktywny"
+          title={t("addFriend.resetInvitation.title")}
+          description={t("addFriend.resetInvitation.description")}
           onDecline={() => regenerateInviteCodeSheetRef.current?.close()}
           onConfirm={async () => {
             await regenerateInviteCode();
@@ -201,7 +201,9 @@ export default function AddFriendScreen() {
           }}
           confirmContent={
             <>
-              <Text className="text-tekst">Resetuj</Text>
+              <Text className="text-tekst">
+                {t("addFriend.resetInvitation.reset")}
+              </Text>
               <RefreshIcon width={16} height={16} className="text-tekst" />
             </>
           }
