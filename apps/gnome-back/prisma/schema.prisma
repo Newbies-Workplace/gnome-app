@@ -36,7 +36,7 @@ model UserResource {
 
 model Gnome {
   id           String             @id @unique @default(uuid())
-  name         String
+  name         String             @unique
   funFact      String
   latitude     Float
   longitude    Float
