@@ -44,7 +44,7 @@ const ResourcesBottomSheet: React.FC<ResourcesBottomSheetProps> = ({
           <Text className="text-tekst font-bold text-lg">
             {t("resources.description")}
           </Text>
-          <View className="flex flex-row gap-5 px-2">
+          <View className="flex flex-col gap-5 px-2">
             <View className="flex-row items-center gap-1">
               <BerryIcon width={20} height={20} />
               <Text className="text-violet-700 text-lg font-bold">

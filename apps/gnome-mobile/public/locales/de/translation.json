@@ -50,18 +50,15 @@
     },
     "title": null
   },
-  "gnomeDetail": {
+  "gnomeDetails": {
     "creationDate": null,
     "foundDate": null,
-    "funFact": null
-  },
-  "gnomeDetails": {
+    "funFact": null,
+    "notFoundYet": null,
     "users": null
   },
-  "gnomeDistanceTracker": {
-    "closestGnomeMeters": null
-  },
   "home": {
+    "closestGnomeMeters": null,
     "missingLocationAlert": {
       "description": null,
       "enableLocation": null,
@@ -85,21 +82,23 @@
     "title": null
   },
   "settings": {
-    "deleteAccount": null,
+    "deleteAccount": {
+      "confirmationPhrase": null,
+      "confirmationTitle": null,
+      "description": null,
+      "title": null,
+      "typeConfirmation": null
+    },
     "language": null,
-    "languageTitle": null,
+    "languageTitle": "Deutsch",
     "notifications": null,
-    "theme": null,
+    "theme": {
+      "dark": null,
+      "light": null,
+      "title": null
+    },
     "title": null
   },
-  "settings.deleteAccount.confirmationPhrase": null,
-  "settings.deleteAccount.confirmationTitle": null,
-  "settings.deleteAccount.description": null,
-  "settings.deleteAccount.title": null,
-  "settings.deleteAccount.typeConfirmation": null,
-  "settings.theme.dark": null,
-  "settings.theme.light": null,
-  "settings.theme.title": null,
   "tabs": {
     "collection": null,
     "friends": null,

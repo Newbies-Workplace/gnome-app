@@ -35,7 +35,7 @@ export const DeleteAccountBottomSheet: React.FC<
       backgroundClassName={"bg-background"}
       handleIndicatorClassName={"bg-tekst w-24 mt-2 rounded-lg"}
     >
-      <BottomSheetView className="px-5 py-4">
+      <BottomSheetView className="px-5 pb-4">
         <SafeAreaView className="flex-1 justify-center items-center">
           <Text className="text-2xl font-bold text-tekst mb-2 text-center">
             {t("settings.deleteAccount.confirmationTitle")}

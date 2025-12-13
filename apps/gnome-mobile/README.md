@@ -11,8 +11,8 @@
 yarn i18n:lint
 ```
 
-## Extracting new strings
+## Synchronizing new strings
 
 ``` bash
-yarn i18n:extract
+yarn i18n:sync
 ```

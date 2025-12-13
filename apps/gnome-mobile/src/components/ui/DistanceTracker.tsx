@@ -22,7 +22,7 @@ const DistanceTracker: React.FC<DistanceTrackerProps> = ({ distance }) => {
         }}
       >
         <Text className="text-lg text-tekst font-bold">
-          {t("gnomeDistanceTracker.closestGnomeMeters", { distance })}
+          {t("home.closestGnomeMeters", { distance })}
         </Text>
       </View>
       <View className="absolute left-6 bottom-[-35px]">

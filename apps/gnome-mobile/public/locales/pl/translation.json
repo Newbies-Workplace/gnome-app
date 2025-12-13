@@ -50,19 +50,12 @@
     },
     "title": "Znajomi"
   },
-  "gnomeDetail": {
-    "creationDate": "gnomeDetail.creationDate",
-    "foundDate": "gnomeDetail.foundDate",
-    "funFact": "gnomeDetail.funFact"
-  },
   "gnomeDetails": {
     "creationDate": "Data stworzenia:",
     "foundDate": "Data znalezienia:",
     "funFact": "Ciekawostka:",
+    "notFoundYet": "Krasnal jeszcze nie znaleziony",
     "users": "użytkowników"
-  },
-  "gnomeDistanceTracker": {
-    "closestGnomeMeters": "gnomeDistanceTracker.closestGnomeMeters"
   },
   "home": {
     "closestGnomeMeters": " Najbliższy krasnal znajduje się {{distance}} m od Ciebie.",

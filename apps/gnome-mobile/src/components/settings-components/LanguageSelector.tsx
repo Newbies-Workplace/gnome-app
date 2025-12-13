@@ -28,7 +28,7 @@ export const LanguageSelector: React.FC<LanguageSelectorProps> = ({
               });
             }}
           >
-            {t("settings.languageTitle", { language: lang })}
+            {t("settings.languageTitle", { lng: lang })}
           </Text>
         </View>
       ))}

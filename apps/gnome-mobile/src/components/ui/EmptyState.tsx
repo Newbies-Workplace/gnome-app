@@ -20,7 +20,7 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
   onClick,
 }) => {
   return (
-    <View className="flex-1 items-center justify-center">
+    <View className="flex-1 items-center justify-center p-4">
       {image}
       <Text className="text-2xl font-bold text-center text-primary mb-4 mt-4">
         {title}

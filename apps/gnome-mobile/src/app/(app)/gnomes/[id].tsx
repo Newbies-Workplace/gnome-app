@@ -97,17 +97,17 @@ const GnomeDetail = () => {
         <View className="flex-row items-center mb-2.5">
           <FoundIcon width={20} height={20} className="text-tekst" />
           <Text className="text-tekst ml-2.5">
-            {t("gnomeDetail.foundDate")}
+            {t("gnomeDetails.foundDate")}{" "}
             {interaction
               ? dayjs(interaction.interactionDate).format("DD.MM.YYYY")
-              : "Krasnal jeszcze nie znaleziony"}
+              : t("gnomeDetails.notFoundYet")}
           </Text>
         </View>
 
         <View className="flex-row items-center mb-2.5">
           <DateIcon width={20} height={20} className="text-tekst" />
           <Text className="text-tekst ml-2.5">
-            {t("gnomeDetail.creationDate")}{" "}
+            {t("gnomeDetails.creationDate")}{" "}
             {dayjs(gnome.creationDate).format("DD.MM-YYYY")}
           </Text>
         </View>
@@ -116,7 +116,7 @@ const GnomeDetail = () => {
         <Text className="text-tekst mb-2.5">{gnome.description}</Text>
 
         <Text className="text-tekst font-bold text-xl font-afacad my-2">
-          {t("gnomeDetail.funFact")}
+          {t("gnomeDetails.funFact")}
         </Text>
         <Text className="text-tekst font-afacad my-2">{gnome.funFact}</Text>
 
