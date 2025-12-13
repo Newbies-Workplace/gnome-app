@@ -1,118 +1,126 @@
 {
-  "common": {
-    "appName": "Krasnal GO",
-    "you": "Ty",
-    "loading": "Ładowanie...",
-    "confirm": "Potwierdź",
-    "cancel": "Anuluj",
-    "delete": "Usuń",
-    "genericError": "Coś poszło nie tak. Spróbuj ponownie później.",
-    "skip": "Pomiń"
+  "achievements": {
+    "title": "Osiągnięcia"
   },
-  "tabs": {
-    "home": "Główna",
-    "collection": "Kolekcja",
-    "friends": "Znajomi"
+  "addFriend": {
+    "addFriend": "dodaj znajomego",
+    "resetInvitation": {
+      "description": "Stary kod przestanie być aktywny",
+      "reset": "Zresetuj",
+      "title": "Czy na pewno chcesz zresetować kod zaproszenia?"
+    },
+    "title": "Nawiąż znajomość",
+    "yourFriendCode": "Twój kod znajomego"
   },
-  "home": {
-    "closestGnomeMeters": " Najbliższy krasnal znajduje się {{distance}} m od Ciebie.",
-    "missingLocationAlert": {
-      "title": "Krasnal kartograf zgubił Cię na mapie!",
-      "description": "Pomóż biednemu krasnalowi! Włącz lokalizację, zanim zacznie pytać smoki o drogę!",
-      "enableLocation": "Włącz lokalizację"
+  "addGnome": {
+    "camera": {
+      "noCameraAvailable": "Brak dostępu do aparatu",
+      "subtitle": "Zrób mu zdjęcie!",
+      "title": "Znalazłeś krasnala?"
+    },
+    "sheet": {
+      "seeDetails": "Zobacz szczegóły",
+      "takePhoto": "Zrób zdjęcie",
+      "title": "Nowy krasnal dołączył do twojej kolekcji"
     }
   },
   "collection": {
     "yourCollection": "Twoja kolekcja"
   },
+  "common": {
+    "appName": "Krasnal GO",
+    "cancel": "Anuluj",
+    "confirm": "Potwierdź",
+    "delete": "Usuń",
+    "genericError": "Coś poszło nie tak. Spróbuj ponownie później.",
+    "loading": "Ładowanie...",
+    "skip": "Pomiń",
+    "you": "Ty"
+  },
   "friends": {
-    "title": "Znajomi",
     "listEmpty": {
-      "title": "Hej Poszukiwaczu!",
-      "subtitle": "Twoja lista znajomych jest całkiem pusta, nawet żaden z wrocławskhich krasnali tutaj nie zawitał.",
+      "addFriendButton": "Dodaj znajomego",
       "description": "W końcu nawet krasnale wiedzą, że w drużynie raźniej!",
-      "addFriendButton": "Dodaj znajomego"
+      "subtitle": "Twoja lista znajomych jest całkiem pusta, nawet żaden z wrocławskhich krasnali tutaj nie zawitał.",
+      "title": "Hej Poszukiwaczu!"
     },
     "scanner": {
-      "rationale": "Aby zeskanować kod QR znajomego, aplikacja potrzebuje dostępu do aparatu.",
-      "allow": "Zezwól na dostęp do aparatu"
-    }
-  },
-  "addGnome": {
-    "camera": {
-      "title": "Znalazłeś krasnala?",
-      "subtitle": "Zrób mu zdjęcie!",
-      "noCameraAvailable": "Brak dostępu do aparatu"
+      "allow": "Zezwól na dostęp do aparatu",
+      "rationale": "Aby zeskanować kod QR znajomego, aplikacja potrzebuje dostępu do aparatu."
     },
-    "sheet": {
-      "title": "Nowy krasnal dołączył do twojej kolekcji",
-      "seeDetails": "Zobacz szczegóły",
-      "takePhoto": "Zrób zdjęcie"
-    }
+    "title": "Znajomi"
   },
-  "achievements": {
-    "title": "Osiągnięcia"
+  "gnomeDetail": {
+    "creationDate": "gnomeDetail.creationDate",
+    "foundDate": "gnomeDetail.foundDate",
+    "funFact": "gnomeDetail.funFact"
   },
-  "addFriend": {
-    "title": "Nawiąż znajomość",
-    "yourFriendCode": "Twój kod znajomego",
-    "addFriend": "dodaj znajomego",
-    "resetInvitation": {
-      "title": "Czy na pewno chcesz zresetować kod zaproszenia?",
-      "description": "Stary kod przestanie być aktywny",
-      "reset": "Zresetuj"
+  "gnomeDetails": {
+    "creationDate": "Data stworzenia:",
+    "foundDate": "Data znalezienia:",
+    "funFact": "Ciekawostka:",
+    "users": "użytkowników"
+  },
+  "gnomeDistanceTracker": {
+    "closestGnomeMeters": "gnomeDistanceTracker.closestGnomeMeters"
+  },
+  "home": {
+    "closestGnomeMeters": " Najbliższy krasnal znajduje się {{distance}} m od Ciebie.",
+    "missingLocationAlert": {
+      "description": "Pomóż biednemu krasnalowi! Włącz lokalizację, zanim zacznie pytać smoki o drogę!",
+      "enableLocation": "Włącz lokalizację",
+      "title": "Krasnal kartograf zgubił Cię na mapie!"
     }
   },
   "profile": {
+    "lastGnomes": "Ostatnio odkryte",
     "logout": {
-      "title": "Wyloguj się",
-      "confirmationTitle": "Czy na pewno chcesz się wylogować?"
-    },
-    "lastGnomes": "Ostatnio odkryte"
+      "confirmationTitle": "Czy na pewno chcesz się wylogować?",
+      "title": "Wyloguj się"
+    }
   },
   "resources": {
-    "title": "Surowce",
+    "berries": "Jagody",
     "description": "Podstawowe zasoby takie jak:",
     "description2": "zbierzesz podczas zdobywania krasnali",
     "description3": "możesz je wydać na budowle oraz ulepszenia!",
-    "berries": "Jagody",
+    "sticks": "Drewno",
     "stones": "Kamienie",
-    "sticks": "Drewno"
+    "title": "Surowce"
   },
   "settings": {
     "deleteAccount": {
-      "title": "Usuń konto",
+      "confirmationPhrase": "zgadzam się",
       "confirmationTitle": "Czy na pewno chcesz usunąć konto?",
       "description": "Cały Twój postęp zostanie bezpowrotnie usunięty!",
-      "typeConfirmation": "Wpisz '$t(settings.deleteAccount.confirmationPhrase)'",
-      "confirmationPhrase": "zgadzam się"
+      "title": "Usuń konto",
+      "typeConfirmation": "Wpisz '$t(settings.deleteAccount.confirmationPhrase)'"
     },
     "language": "Język",
     "languageTitle": "Polski",
     "notifications": "Powiadomienia",
     "theme": {
-      "title": "Motyw",
       "dark": "Ciemny",
-      "light": "Jasny"
+      "light": "Jasny",
+      "title": "Motyw"
     },
     "title": "Ustawienia"
   },
-  "gnomeDetails": {
-    "users": "użytkowników",
-    "creationDate": "Data stworzenia:",
-    "foundDate": "Data znalezienia:",
-    "funFact": "Ciekawostka:"
+  "tabs": {
+    "collection": "Kolekcja",
+    "friends": "Znajomi",
+    "home": "Główna"
   },
   "welcome": {
-    "signInWithGoogle": "Zaloguj się przez Google",
-    "appDescription": "Krasnal GO - odkrywaj Wrocław krok po kroku.",
     "acceptPrivacy": "Akceptuję politykę prywatności",
+    "appDescription": "Krasnal GO - odkrywaj Wrocław krok po kroku.",
     "privacyPolicy": "Polityka prywatności",
-    "subtitle": "Dołącz do nas i odkryj swojego idealnego krasnala we Wrocławiu!",
-    "title": "Znajdź swojego ulubionego krasnala!",
     "sheet": {
-      "title": "WITAJ W PRZYGODZIE Z WROCŁAWSKIMI KRASNALAMI!",
-      "description": "Twoim zadaniem jest porwanie czapek z głów wszystkich krasnali! Po zbliżeniu się na mapię do krasnala pojawi się opcja z przeciągnięciem na pasku jego czapki. Uzbieraj jak największą kolekcję gnomów ze swoimi unikatowymi zdjęciami. Wyrusz na poszukiwania!"
-    }
+      "description": "Twoim zadaniem jest porwanie czapek z głów wszystkich krasnali! Po zbliżeniu się na mapię do krasnala pojawi się opcja z przeciągnięciem na pasku jego czapki. Uzbieraj jak największą kolekcję gnomów ze swoimi unikatowymi zdjęciami. Wyrusz na poszukiwania!",
+      "title": "WITAJ W PRZYGODZIE Z WROCŁAWSKIMI KRASNALAMI!"
+    },
+    "signInWithGoogle": "Zaloguj się przez Google",
+    "subtitle": "Dołącz do nas i odkryj swojego idealnego krasnala we Wrocławiu!",
+    "title": "Znajdź swojego ulubionego krasnala!"
   }
 }

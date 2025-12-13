@@ -1,14 +1,119 @@
 {
+  "achievements": {
+    "title": null
+  },
+  "addFriend": {
+    "addFriend": null,
+    "resetInvitation": {
+      "description": null,
+      "reset": null,
+      "title": null
+    },
+    "title": null,
+    "yourFriendCode": null
+  },
+  "addGnome": {
+    "camera": {
+      "noCameraAvailable": null,
+      "subtitle": null,
+      "title": null
+    },
+    "sheet": {
+      "seeDetails": null,
+      "takePhoto": null,
+      "title": null
+    }
+  },
+  "collection": {
+    "yourCollection": null
+  },
+  "common": {
+    "appName": null,
+    "cancel": null,
+    "confirm": null,
+    "delete": null,
+    "genericError": null,
+    "loading": null,
+    "skip": null,
+    "you": null
+  },
+  "friends": {
+    "listEmpty": {
+      "addFriendButton": null,
+      "description": null,
+      "subtitle": null,
+      "title": null
+    },
+    "scanner": {
+      "allow": null,
+      "rationale": null
+    },
+    "title": null
+  },
+  "gnomeDetail": {
+    "creationDate": null,
+    "foundDate": null,
+    "funFact": null
+  },
+  "gnomeDetails": {
+    "users": null
+  },
+  "gnomeDistanceTracker": {
+    "closestGnomeMeters": null
+  },
+  "home": {
+    "missingLocationAlert": {
+      "description": null,
+      "enableLocation": null,
+      "title": null
+    }
+  },
+  "profile": {
+    "lastGnomes": null,
+    "logout": {
+      "confirmationTitle": null,
+      "title": null
+    }
+  },
+  "resources": {
+    "berries": null,
+    "description": null,
+    "description2": null,
+    "description3": null,
+    "sticks": null,
+    "stones": null,
+    "title": null
+  },
   "settings": {
     "deleteAccount": null,
     "language": null,
+    "languageTitle": null,
     "notifications": null,
     "theme": null,
     "title": null
   },
+  "settings.deleteAccount.confirmationPhrase": null,
+  "settings.deleteAccount.confirmationTitle": null,
+  "settings.deleteAccount.description": null,
+  "settings.deleteAccount.title": null,
+  "settings.deleteAccount.typeConfirmation": null,
+  "settings.theme.dark": null,
+  "settings.theme.light": null,
+  "settings.theme.title": null,
+  "tabs": {
+    "collection": null,
+    "friends": null,
+    "home": null
+  },
   "welcome": {
     "acceptPrivacy": null,
+    "appDescription": null,
     "privacyPolicy": null,
+    "sheet": {
+      "description": null,
+      "title": null
+    },
+    "signInWithGoogle": null,
     "subtitle": null,
     "title": null
   }
