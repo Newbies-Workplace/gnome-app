@@ -1,5 +1,5 @@
 import { Injectable, NestMiddleware } from "@nestjs/common";
-import { MetricsService } from "./metrics";
+import { MetricsService } from "@/prometheus/metrics";
 
 @Injectable()
 export class MetricsMiddleware implements NestMiddleware {

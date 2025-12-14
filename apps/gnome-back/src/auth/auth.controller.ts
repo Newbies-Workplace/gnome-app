@@ -4,11 +4,11 @@ import { ApiBearerAuth } from "@nestjs/swagger";
 import { GoogleUserResponse, UserResponse } from "@repo/shared/responses";
 import { Response } from "express";
 import { AuthService } from "@/auth/auth.service";
-import { GoogleAuthRequest } from "@/auth/dto/google-auth.request.dto";
+import { User } from "@/auth/decorators/jwt-user.decorator";
+import { GoogleAuthRequest } from "@/auth/dto/google-auth.request";
+import { GoogleGuard } from "@/auth/guards/google.guard";
 import { JwtUser } from "@/auth/types/jwt-user";
 import { UsersService } from "@/users/users.service";
-import { User } from "./decorators/jwt-user.decorator";
-import { GoogleGuard } from "./guards/google.guard";
 
 @ApiBearerAuth()
 @Controller("auth")

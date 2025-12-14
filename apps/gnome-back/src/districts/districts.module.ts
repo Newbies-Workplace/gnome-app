@@ -1,6 +1,6 @@
 import { Module } from "@nestjs/common";
-import { DistrictsController } from "./districts.controller";
-import { DistrictsService } from "./districts.service";
+import { DistrictsController } from "@/districts/districts.controller";
+import { DistrictsService } from "@/districts/districts.service";
 
 @Module({
   controllers: [DistrictsController],

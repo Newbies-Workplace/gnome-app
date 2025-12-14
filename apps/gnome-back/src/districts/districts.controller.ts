@@ -2,7 +2,7 @@ import { Controller, Get, Param, UseGuards } from "@nestjs/common";
 import { ApiBearerAuth } from "@nestjs/swagger";
 import { DistrictsResponse } from "@repo/shared/responses";
 import { JwtGuard } from "@/auth/guards/jwt.guard";
-import { DistrictsService } from "./districts.service";
+import { DistrictsService } from "@/districts/districts.service";
 
 @ApiBearerAuth()
 @Controller("districts")

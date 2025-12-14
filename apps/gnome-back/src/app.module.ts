@@ -2,17 +2,17 @@ import { Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
 import { APP_GUARD } from "@nestjs/core";
 import { ThrottlerGuard, ThrottlerModule } from "@nestjs/throttler";
+import { AchievementsModule } from "@/achievements/achievements.module";
 import { AuthModule } from "@/auth/auth.module";
+import { BuildingsModule } from "@/buildings/buildings.module";
 import { PrismaModule } from "@/db/prisma.module";
+import { DistrictsModule } from "@/districts/districts.module";
+import { FriendsModule } from "@/friends/friends.module";
 import { GnomesModule } from "@/gnomes/gnomes.module";
+import { MinioModule } from "@/minio/minio.module";
+import { MetricsModule } from "@/prometheus/metrics.module";
+import { ReportsModule } from "@/reports/reports.module";
 import { UsersModule } from "@/users/users.module";
-import { AchievementsModule } from "./achievements/achievements.module";
-import { BuildingsModule } from "./buildings/buildings.module";
-import { DistrictsModule } from "./districts/districts.module";
-import { FriendsModule } from "./friends/friends.module";
-import { MinioModule } from "./minio/minio.module";
-import { MetricsModule } from "./prometheus/metrics.module";
-import { ReportsModule } from "./reports/reports.module";
 
 @Module({
   imports: [

@@ -25,7 +25,7 @@ import { Role } from "@/auth/decorators/role.decorator";
 import { JwtGuard } from "@/auth/guards/jwt.guard";
 import { RoleGuard } from "@/auth/guards/role.guard";
 import { JwtUser } from "@/auth/types/jwt-user";
-import { BuildingsService } from "./buildings.service";
+import { BuildingsService } from "@/buildings/buildings.service";
 
 @ApiBearerAuth()
 @Controller("buildings")

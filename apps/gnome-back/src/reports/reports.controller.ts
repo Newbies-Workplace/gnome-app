@@ -20,7 +20,7 @@ import { Role } from "@/auth/decorators/role.decorator";
 import { JwtGuard } from "@/auth/guards/jwt.guard";
 import { RoleGuard } from "@/auth/guards/role.guard";
 import { MinioService } from "@/minio/minio.service";
-import { ReportsService } from "./reports.service";
+import { ReportsService } from "@/reports/reports.service";
 
 @ApiBearerAuth()
 @Controller("reports")

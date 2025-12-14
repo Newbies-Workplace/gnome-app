@@ -15,7 +15,7 @@ import { User } from "@/auth/decorators/jwt-user.decorator";
 import { JwtGuard } from "@/auth/guards/jwt.guard";
 import { JwtUser } from "@/auth/types/jwt-user";
 import { PrismaService } from "@/db/prisma.service";
-import { FriendsService } from "./friends.service";
+import { FriendsService } from "@/friends/friends.service";
 
 @ApiBearerAuth()
 @Controller("friends")

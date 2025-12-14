@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { DistrictsResponse } from "@repo/shared/responses";
 import { booleanPointInPolygon, point, polygon } from "@turf/turf";
-import { PrismaService } from "../db/prisma.service";
+import { PrismaService } from "@/db/prisma.service";
 
 @Injectable()
 export class DistrictsService {

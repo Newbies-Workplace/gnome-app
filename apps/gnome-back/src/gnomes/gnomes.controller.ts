@@ -35,8 +35,8 @@ import { Role } from "@/auth/decorators/role.decorator";
 import { JwtGuard } from "@/auth/guards/jwt.guard";
 import { RoleGuard } from "@/auth/guards/role.guard";
 import { JwtUser } from "@/auth/types/jwt-user";
+import { GnomesService } from "@/gnomes/gnomes.service";
 import { MinioService } from "@/minio/minio.service";
-import { GnomesService } from "./gnomes.service";
 
 const MIN_INTERACTION_INTERVAL = 5 * 60 * 1000;
 
