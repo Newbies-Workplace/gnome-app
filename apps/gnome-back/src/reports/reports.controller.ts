@@ -16,10 +16,10 @@ import { FileInterceptor } from "@nestjs/platform-express";
 import { ApiBearerAuth, ApiBody } from "@nestjs/swagger";
 import { CreateReportRequest } from "@repo/shared/requests";
 import { ReportResponse } from "@repo/shared/responses";
+import { Role } from "@/auth/decorators/role.decorator";
 import { JwtGuard } from "@/auth/guards/jwt.guard";
+import { RoleGuard } from "@/auth/guards/role.guard";
 import { MinioService } from "@/minio/minio.service";
-import { Role } from "@/role/role.decorator";
-import { RoleGuard } from "@/roleguard/role.guard";
 import { ReportsService } from "./reports.service";
 
 @ApiBearerAuth()

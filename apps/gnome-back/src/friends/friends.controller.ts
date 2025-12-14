@@ -4,20 +4,13 @@ import {
   Controller,
   Delete,
   Get,
-  NotFoundException,
   Param,
   Post,
   UseGuards,
 } from "@nestjs/common";
 import { ApiBearerAuth, ApiBody } from "@nestjs/swagger";
-import { Friendship } from "@prisma/client";
 import { AddFriendRequest, DeleteFriend } from "@repo/shared/requests";
-import {
-  FriendResponse,
-  FriendSearchResponse,
-  UserFriendResponse,
-  UserResponse,
-} from "@repo/shared/responses";
+import { FriendResponse, UserFriendResponse } from "@repo/shared/responses";
 import { User } from "@/auth/decorators/jwt-user.decorator";
 import { JwtGuard } from "@/auth/guards/jwt.guard";
 import { JwtUser } from "@/auth/types/jwt-user";

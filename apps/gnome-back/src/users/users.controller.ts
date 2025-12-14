@@ -24,11 +24,11 @@ import {
 } from "@repo/shared/requests";
 import { UserPatchResponse } from "@repo/shared/responses";
 import { User } from "@/auth/decorators/jwt-user.decorator";
+import { Role } from "@/auth/decorators/role.decorator";
 import { JwtGuard } from "@/auth/guards/jwt.guard";
+import { RoleGuard } from "@/auth/guards/role.guard";
 import { JwtUser } from "@/auth/types/jwt-user";
 import { MinioService } from "@/minio/minio.service";
-import { Role } from "@/role/role.decorator";
-import { RoleGuard } from "@/roleguard/role.guard";
 import { UsersService } from "@/users/users.service";
 
 @ApiBearerAuth()

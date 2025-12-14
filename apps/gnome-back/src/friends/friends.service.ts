@@ -1,12 +1,6 @@
-import {
-  BadRequestException,
-  Injectable,
-  NotFoundException,
-} from "@nestjs/common";
-import { Friendship, User } from "@prisma/client";
+import { Injectable } from "@nestjs/common";
 import {
   FriendResponse,
-  FriendSearchResponse,
   FriendShipResponse,
   UserFriendResponse,
 } from "@repo/shared/responses";
@@ -97,7 +91,7 @@ export class FriendsService {
 
   async deleteFriend(senderId: string, receiverId: string) {
     return this.prismaService.$transaction(async (prisma) => {
-      const findFriendship = await this.findFriendship(senderId, receiverId);
+      const _findFriendship = await this.findFriendship(senderId, receiverId);
 
       const deleteFriendship = await prisma.friendship.deleteMany({
         where: {

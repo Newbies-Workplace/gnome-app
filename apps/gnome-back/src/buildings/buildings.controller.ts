@@ -11,7 +11,6 @@ import {
 } from "@nestjs/common";
 import { Cron, CronExpression } from "@nestjs/schedule";
 import { ApiBearerAuth, ApiBody } from "@nestjs/swagger";
-import { UserRole } from "@prisma/client";
 import {
   AttackBuildingRequest,
   CreateBuildingRequest,
@@ -21,13 +20,11 @@ import {
   BuildingInteractionResponse,
   BuildingResponse,
 } from "@repo/shared/responses";
-import { max } from "class-validator";
 import { User } from "@/auth/decorators/jwt-user.decorator";
+import { Role } from "@/auth/decorators/role.decorator";
 import { JwtGuard } from "@/auth/guards/jwt.guard";
+import { RoleGuard } from "@/auth/guards/role.guard";
 import { JwtUser } from "@/auth/types/jwt-user";
-import { PrismaService } from "@/db/prisma.service";
-import { Role } from "@/role/role.decorator";
-import { RoleGuard } from "@/roleguard/role.guard";
 import { BuildingsService } from "./buildings.service";
 
 @ApiBearerAuth()

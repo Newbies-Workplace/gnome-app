@@ -136,7 +136,7 @@ export class GnomesService {
     const { resource1, resource2, amount1, amount2 } =
       await this.getRandomResources();
 
-    const updatedResources = await this.prismaService.userResource.update({
+    const _updatedResources = await this.prismaService.userResource.update({
       where: {
         userId: userId,
       },

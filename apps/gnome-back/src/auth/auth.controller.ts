@@ -1,7 +1,6 @@
 import { Body, Controller, Get, Post, Res, UseGuards } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
-import { ApiBearerAuth, ApiBody } from "@nestjs/swagger";
-import { UserRole } from "@prisma/client";
+import { ApiBearerAuth } from "@nestjs/swagger";
 import { GoogleUserResponse, UserResponse } from "@repo/shared/responses";
 import { Response } from "express";
 import { AuthService } from "@/auth/auth.service";
@@ -10,6 +9,7 @@ import { JwtUser } from "@/auth/types/jwt-user";
 import { UsersService } from "@/users/users.service";
 import { User } from "./decorators/jwt-user.decorator";
 import { GoogleGuard } from "./guards/google.guard";
+
 @ApiBearerAuth()
 @Controller("auth")
 export class AuthController {

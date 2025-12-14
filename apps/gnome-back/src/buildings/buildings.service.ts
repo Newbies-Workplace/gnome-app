@@ -2,7 +2,6 @@ import {
   ForbiddenException,
   Injectable,
   NotFoundException,
-  Param,
   UnauthorizedException,
 } from "@nestjs/common";
 import { Building, UserRole } from "@prisma/client";
@@ -46,7 +45,7 @@ export class BuildingsService {
       resources.sticks > sticks &&
       resources.stones > stones
     ) {
-      const removeResources = await this.prismaService.userResource.update({
+      const _removeResources = await this.prismaService.userResource.update({
         where: {
           userId: user.id,
         },
@@ -202,7 +201,7 @@ export class BuildingsService {
     action: Action,
     amount: number,
   ) {
-    const interaction = await this.prismaService.buildingInteraction.create({
+    const _interaction = await this.prismaService.buildingInteraction.create({
       data: {
         interactionType: action,
         buildingId,

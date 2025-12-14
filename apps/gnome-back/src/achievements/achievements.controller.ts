@@ -10,16 +10,12 @@ import {
 } from "@nestjs/common";
 import { ApiBearerAuth, ApiBody } from "@nestjs/swagger";
 import { CreateUserAchievementRequest } from "@repo/shared/requests";
-import {
-  AchievementDataResponse,
-  UserAchievementResponse,
-} from "@repo/shared/responses";
-import { NotFoundError } from "rxjs";
+import { UserAchievementResponse } from "@repo/shared/responses";
 import { User } from "@/auth/decorators/jwt-user.decorator";
+import { Role } from "@/auth/decorators/role.decorator";
 import { JwtGuard } from "@/auth/guards/jwt.guard";
 import { JwtUser } from "@/auth/types/jwt-user";
 import { FriendsService } from "@/friends/friends.service";
-import { Role } from "@/role/role.decorator";
 import { AchievementsService } from "./achievements.service";
 
 @ApiBearerAuth()

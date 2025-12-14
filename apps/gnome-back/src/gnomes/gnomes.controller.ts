@@ -29,14 +29,13 @@ import {
   InteractionResponse,
 } from "@repo/shared/responses";
 import { Express } from "express";
-import multer from "multer";
 import { AchievementsService } from "@/achievements/achievements.service";
 import { User } from "@/auth/decorators/jwt-user.decorator";
+import { Role } from "@/auth/decorators/role.decorator";
 import { JwtGuard } from "@/auth/guards/jwt.guard";
+import { RoleGuard } from "@/auth/guards/role.guard";
 import { JwtUser } from "@/auth/types/jwt-user";
 import { MinioService } from "@/minio/minio.service";
-import { Role } from "@/role/role.decorator";
-import { RoleGuard } from "@/roleguard/role.guard";
 import { GnomesService } from "./gnomes.service";
 
 const MIN_INTERACTION_INTERVAL = 5 * 60 * 1000;
@@ -169,8 +168,7 @@ export class GnomesController {
     );
     if (lastUserInteraction) {
       if (
-        new Date().getTime() -
-          new Date(lastUserInteraction.interactionDate).getTime() <
+        Date.now() - new Date(lastUserInteraction.interactionDate).getTime() <
         MIN_INTERACTION_INTERVAL
       ) {
         throw new ConflictException(

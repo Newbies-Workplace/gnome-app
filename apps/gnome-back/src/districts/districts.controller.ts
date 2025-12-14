@@ -1,16 +1,7 @@
-import {
-  Body,
-  Controller,
-  Get,
-  Param,
-  Post,
-  Query,
-  UseGuards,
-} from "@nestjs/common";
+import { Controller, Get, Param, UseGuards } from "@nestjs/common";
 import { ApiBearerAuth } from "@nestjs/swagger";
 import { DistrictsResponse } from "@repo/shared/responses";
 import { JwtGuard } from "@/auth/guards/jwt.guard";
-import { Role } from "@/role/role.decorator";
 import { DistrictsService } from "./districts.service";
 
 @ApiBearerAuth()

@@ -1,6 +1,6 @@
 import { ConflictException, Injectable } from "@nestjs/common";
 import { Team as PrismaTeam, User, UserResource } from "@prisma/client";
-import { AssignTeam, Team } from "@repo/shared/requests";
+import { Team } from "@repo/shared/requests";
 import { customAlphabet } from "nanoid";
 import { GoogleUser } from "@/auth/types/google-user";
 import { PrismaService } from "@/db/prisma.service";
@@ -82,7 +82,7 @@ export class UsersService {
         inviteCode: await this.generateInviteCode(),
       },
     });
-    const resource = await this.prismaService.userResource.create({
+    const _resource = await this.prismaService.userResource.create({
       data: {
         userId: user.id,
       },
