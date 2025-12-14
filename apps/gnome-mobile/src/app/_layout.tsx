@@ -44,6 +44,7 @@ export default function RootLayout() {
       SplashScreen.hideAsync();
     }
   }, [isReady]);
+
   if (!isReady) {
     return <CustomSplash />;
   }

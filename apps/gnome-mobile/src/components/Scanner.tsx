@@ -1,5 +1,6 @@
 import { BottomSheetView } from "@gorhom/bottom-sheet";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { Linking, Text, View } from "react-native";
 import {
   Camera,
@@ -17,6 +18,7 @@ export const Scanner = ({
   onRequestPermission: () => void;
   device: CameraDevice | undefined;
 }) => {
+  const { t } = useTranslation();
   const permissionStatus = Camera.getCameraPermissionStatus();
   const [hasCodeScanned, setHasCodeScanned] = React.useState(false);
   const codeScanner = useCodeScanner({
@@ -46,11 +48,9 @@ export const Scanner = ({
       {!device ||
         (permissionStatus !== "granted" && (
           <View className="gap-10 p-10">
-            <Text className="text-tekst">
-              Kamera jest potrzebna do zeskanowania kodu QR znajomego.
-            </Text>
+            <Text className="text-tekst">{t("friends.scanner.rationale")}</Text>
             <Button onPress={requestCameraPermission}>
-              <Text>Zezwól na dostęp</Text>
+              <Text>{t("friends.scanner.allow")}</Text>
             </Button>
           </View>
         ))}

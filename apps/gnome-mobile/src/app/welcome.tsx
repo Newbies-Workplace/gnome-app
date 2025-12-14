@@ -16,11 +16,10 @@ import { Text } from "@/components/ui/text";
 import { useAuthStore } from "@/store/useAuthStore";
 
 export default function SignInScreen() {
+  const { t } = useTranslation();
   const { login } = useAuthStore();
   const { replace } = useRouter();
   const [isChecked, setChecked] = useState(false);
-
-  const { t } = useTranslation();
 
   useEffect(() => {
     GoogleSignin.configure({
@@ -41,10 +40,7 @@ export default function SignInScreen() {
       }
     } catch (error) {
       console.error(error);
-      Alert.alert(
-        "Błąd",
-        "Nie udało się zalogować przez Google. Spróbuj ponownie.",
-      );
+      Alert.alert(t("common.genericError"));
     }
   };
 

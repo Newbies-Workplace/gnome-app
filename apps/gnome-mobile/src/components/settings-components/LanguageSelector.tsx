@@ -9,32 +9,26 @@ interface LanguageSelectorProps {
   onDismiss: () => void;
 }
 
+const languages = ["pl", "en", "de", "ua", "kr"];
+
 export const LanguageSelector: React.FC<LanguageSelectorProps> = ({
   onDismiss,
 }) => {
   const { t } = useTranslation();
 
-  const options = [
-    { code: "pl", label: "Polski" },
-    { code: "en", label: "English" },
-    { code: "de", label: "Deutsch" },
-    { code: "ua", label: "Українська" },
-    { code: "kr", label: "한국어" },
-  ];
-
   return (
     <BottomSheetView className="w-full px-6 py-6">
-      {options.map((option) => (
-        <View className="py-4 border-b border-tekst" key={option.code}>
+      {languages.map((lang) => (
+        <View className="py-4 border-b border-tekst" key={lang}>
           <Text
             className="text-tekst text-xl font-bold"
             onPress={() => {
-              changeLanguage(option.code).then(() => {
+              changeLanguage(lang).then(() => {
                 onDismiss();
               });
             }}
           >
-            {option.label}
+            {t("settings.languageTitle", { lng: lang })}
           </Text>
         </View>
       ))}
