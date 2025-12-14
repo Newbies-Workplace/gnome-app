@@ -9,28 +9,23 @@ interface UserState {
 
   fetchUsers: () => Promise<void>;
 }
+
 export const useUserStore = create<UserState>((set) => ({
   users: [],
   loading: false,
   error: null,
 
   fetchUsers: async () => {
-    set({ loading: true, error: null });
-
     try {
       const data = await UserService.getMyUser();
-
-      set({
-        users: Array.isArray(data) ? data : [data],
-        loading: false,
-      });
+      set({ users: Array.isArray(data) ? data : [data] });
     } catch (error: any) {
       const message =
         error?.response?.status === 401
           ? "Brak autoryzacji - zaloguj się"
           : "Nie udało się pobrać użytkowników";
 
-      set({ error: message, loading: false });
+      set({ error: message });
     }
   },
 }));

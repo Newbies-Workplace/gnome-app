@@ -1,14 +1,18 @@
-import { Link } from "react-router-dom";
+import { Link, useOutletContext } from "react-router-dom";
 import ClockIcon from "@/assets/icons/clock-icon.svg";
 import BuildPlaceHolder from "@/assets/images/placeholder.png";
 import { Item } from "@/components/ui/item.tsx";
 import { convertHealthToRemainingTime } from "@/lib/convert-health-to-remaining-time.ts";
-import { useBuildStore } from "@/store/useBuildStore.ts";
+import { useBuildStore } from "@/store/useBuildStore";
+
+type OutletContextType = {
+  onBuildingMarkerClick: (buildingID: string) => void;
+};
 
 const BuildingsList = () => {
   const { getBuildingsWithOwnerName, loading, error } = useBuildStore();
-
   const buildings = getBuildingsWithOwnerName();
+  const { onBuildingMarkerClick } = useOutletContext<OutletContextType>();
 
   if (loading) return <p>Ładowanie...</p>;
   if (error) return <p className="text-red-500">{error}</p>;
@@ -18,7 +22,11 @@ const BuildingsList = () => {
   return (
     <div className="flex flex-col gap-4 overflow-y-auto">
       {buildings.map((build) => (
-        <Link key={build.id} to={`/admin/buildings/${build.id}`}>
+        <Link
+          key={build.id}
+          to={`/admin/buildings/${build.id}`}
+          onClick={() => onBuildingMarkerClick(build.id)}
+        >
           <Item className="hover:bg-white/10" size={"sm"}>
             <div className="flex w-full h-full items-center text-left text-white font-Afacad">
               <img

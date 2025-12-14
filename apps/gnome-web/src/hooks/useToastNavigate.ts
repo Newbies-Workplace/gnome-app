@@ -19,7 +19,8 @@ export function useToastNavigate() {
       default:
         toast(message);
     }
-    navigate(path);
+
+    navigate(path, { replace: true });
   };
 
   return toastNavigate;

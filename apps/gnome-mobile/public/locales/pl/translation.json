@@ -1,0 +1,120 @@
+{
+  "achievements": {
+    "title": "Osiągnięcia",
+    "notEarnedYet": "Jeszcze nie zdobyto"
+  },
+  "addFriend": {
+    "addFriend": "dodaj znajomego",
+    "resetInvitation": {
+      "description": "Stary kod przestanie być aktywny",
+      "reset": "Zresetuj",
+      "title": "Czy na pewno chcesz zresetować kod zaproszenia?"
+    },
+    "title": "Nawiąż znajomość",
+    "yourFriendCode": "Twój kod znajomego"
+  },
+  "addGnome": {
+    "camera": {
+      "noCameraAvailable": "Brak dostępu do aparatu",
+      "subtitle": "Zrób mu zdjęcie!",
+      "title": "Znalazłeś krasnala?"
+    },
+    "sheet": {
+      "seeDetails": "Zobacz szczegóły",
+      "takePhoto": "Zrób zdjęcie",
+      "title": "Nowy krasnal dołączył do twojej kolekcji"
+    }
+  },
+  "collection": {
+    "yourCollection": "Twoja kolekcja"
+  },
+  "common": {
+    "appName": "Krasnal GO",
+    "cancel": "Anuluj",
+    "confirm": "Potwierdź",
+    "delete": "Usuń",
+    "genericError": "Coś poszło nie tak. Spróbuj ponownie później.",
+    "loading": "Ładowanie...",
+    "skip": "Pomiń",
+    "you": "Ty"
+  },
+  "friends": {
+    "listEmpty": {
+      "addFriendButton": "Dodaj znajomego",
+      "description": "W końcu nawet krasnale wiedzą, że w drużynie raźniej!",
+      "subtitle": "Twoja lista znajomych jest całkiem pusta, nawet żaden z wrocławskich krasnali tutaj nie zawitał.",
+      "title": "Hej Poszukiwaczu!"
+    },
+    "scanner": {
+      "allow": "Zezwól na dostęp do aparatu",
+      "rationale": "Aby zeskanować kod QR znajomego, aplikacja potrzebuje dostępu do aparatu."
+    },
+    "title": "Znajomi"
+  },
+  "gnomeDetails": {
+    "creationDate": "Data stworzenia:",
+    "foundDate": "Data znalezienia:",
+    "funFact": "Ciekawostka:",
+    "notFoundYet": "Krasnal jeszcze nie znaleziony",
+    "users": "użytkowników"
+  },
+  "home": {
+    "closestGnomeMeters": " Najbliższy krasnal znajduje się {{distance}} m od Ciebie.",
+    "missingLocationAlert": {
+      "description": "Pomóż biednemu krasnalowi! Włącz lokalizację, zanim zacznie pytać smoki o drogę!",
+      "enableLocation": "Włącz lokalizację",
+      "title": "Krasnal kartograf zgubił Cię na mapie!"
+    }
+  },
+  "profile": {
+    "lastGnomes": "Ostatnio odkryte",
+    "logout": {
+      "confirmationTitle": "Czy na pewno chcesz się wylogować?",
+      "title": "Wyloguj się"
+    }
+  },
+  "resources": {
+    "berries": "Jagody",
+    "description": "Podstawowe zasoby takie jak:",
+    "description2": "zbierzesz podczas zdobywania krasnali",
+    "description3": "możesz je wydać na budowle oraz ulepszenia!",
+    "sticks": "Drewno",
+    "stones": "Kamienie",
+    "title": "Surowce"
+  },
+  "settings": {
+    "deleteAccount": {
+      "confirmationPhrase": "zgadzam się",
+      "confirmationTitle": "Czy na pewno chcesz usunąć konto?",
+      "description": "Cały Twój postęp zostanie bezpowrotnie usunięty!",
+      "title": "Usuń konto",
+      "typeConfirmation": "Wpisz '$t(settings.deleteAccount.confirmationPhrase)'"
+    },
+    "language": "Język",
+    "languageTitle": "Polski",
+    "notifications": "Powiadomienia",
+    "theme": {
+      "dark": "Ciemny",
+      "light": "Jasny",
+      "title": "Motyw"
+    },
+    "title": "Ustawienia"
+  },
+  "tabs": {
+    "collection": "Kolekcja",
+    "friends": "Znajomi",
+    "home": "Główna"
+  },
+  "welcome": {
+    "acceptPrivacy": "Akceptuję politykę prywatności",
+    "appDescription": "Krasnal GO - odkrywaj Wrocław krok po kroku.",
+    "privacyPolicy": "Polityka prywatności",
+    "sheet": {
+      "description": "Twoim zadaniem jest porwanie czapek z głów wszystkich krasnali! Po zbliżeniu się na mapię do krasnala pojawi się opcja z przeciągnięciem na pasku jego czapki. Uzbieraj jak największą kolekcję gnomów ze swoimi unikatowymi zdjęciami. Wyrusz na poszukiwania!",
+      "title": "WITAJ W PRZYGODZIE Z WROCŁAWSKIMI KRASNALAMI!"
+    },
+    "signInWithGoogle": "Zaloguj się przez Google",
+    "subtitle": "Dołącz do nas i odkryj swojego idealnego krasnala we Wrocławiu!",
+    "title": "Znajdź swojego ulubionego krasnala!"
+  }
+}

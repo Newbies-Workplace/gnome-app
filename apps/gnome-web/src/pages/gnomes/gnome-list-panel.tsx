@@ -1,5 +1,6 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 import AddIcon from "@/assets/icons/add-icon.svg";
 import GnomesList from "@/components/admin/gnomes-list";
 import { Button } from "@/components/ui/button";
@@ -8,12 +9,26 @@ import { Input } from "@/components/ui/input";
 function GnomeListPanel() {
   const [search, setSearch] = useState("");
   const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    if (location.state?.success !== undefined) {
+      if (location.state.success) {
+        toast.success(location.state.message);
+      } else {
+        toast.error(location.state.message);
+      }
+
+      navigate(location.pathname, { replace: true, state: {} });
+    }
+  }, [location.state, location.pathname, navigate]);
 
   return (
     <div className="overflow-y-auto flex flex-col h-full gap-2">
       <div className="text-center text-white text-3xl font-bold font-Afacad">
         Panel Krasnali
       </div>
+
       <Input
         id="search-gnome"
         type="text"
@@ -22,6 +37,7 @@ function GnomeListPanel() {
         onChange={(e) => setSearch(e.target.value)}
         className="text-white font-Afacad rounded-2xl bg-[#282B28] border-none outline-none"
       />
+
       <Button
         className="text-center text-white font-Afacad bg-primary-color border-none rounded-4xl"
         onClick={() => navigate("/admin/gnomes/add")}

@@ -3,6 +3,7 @@ import Clipboard from "@react-native-clipboard/clipboard";
 import { useNavigation } from "@react-navigation/native";
 import { useRouter } from "expo-router";
 import React, { useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Image, TouchableOpacity, View } from "react-native";
 import { QrCodeSvg } from "react-native-qr-svg";
 import { useCameraDevice } from "react-native-vision-camera";
@@ -19,11 +20,11 @@ import { Scanner } from "@/components/Scanner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Text } from "@/components/ui/text";
-import { cn } from "@/lib/utils";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useFriendsStore } from "@/store/useFriendsStore";
 
 export default function AddFriendScreen() {
+  const { t } = useTranslation();
   const { user, regenerateInviteCode } = useAuthStore();
   const navigation = useNavigation();
   const router = useRouter();
@@ -43,7 +44,7 @@ export default function AddFriendScreen() {
       ),
       headerTitle: () => (
         <Text className="text-tekst font-bold text-2xl text-center tracking-wide">
-          Nawiąż znajomość
+          {t("addFriend.title")}
         </Text>
       ),
       headerTitleAlign: "center",
@@ -53,7 +54,7 @@ export default function AddFriendScreen() {
       headerShadowVisible: false,
       headerShown: true,
     });
-  }, [navigation, router]);
+  }, [navigation, router, t]);
 
   if (!user) {
     return <LoadingScreen />;
@@ -102,12 +103,9 @@ export default function AddFriendScreen() {
           }}
           className="size-16 rounded-lg"
         />
-        <View>
-          <Text className="text-tekst text-lg font-semibold">{user.name}</Text>
-          <Text className="text-tekst/50 text-md">Początkowy zbieracz</Text>
-        </View>
+        <Text className="text-tekst text-lg font-semibold">{user.name}</Text>
       </View>
-      <Divider title="twój kod znajomego" />
+      <Divider title={t("addFriend.yourFriendCode")} />
       <View className="bg-white p-5 rounded-xl">
         <QrCodeSvg
           value={user.inviteCode}
@@ -139,7 +137,7 @@ export default function AddFriendScreen() {
           </Button>
         )}
       </View>
-      <Divider title="dodaj znajomego" />
+      <Divider title={t("addFriend.addFriend")} />
       <View className="flex-row w-full items-center gap-2 border-primary border rounded-2xl p-2">
         <Input
           className="flex-1 text-tekst/50 bg-background font-bold text-center border-background"
@@ -194,8 +192,8 @@ export default function AddFriendScreen() {
         onDismiss={regenerateInviteCodeSheetRef.current?.close}
       >
         <ConfirmDialog
-          title="czy na pewno chcesz zresetować kod zaproszenia?"
-          description="stary kod przestanie być aktualny."
+          title={t("addFriend.resetInvitation.title")}
+          description={t("addFriend.resetInvitation.description")}
           onDecline={() => regenerateInviteCodeSheetRef.current?.close()}
           onConfirm={async () => {
             await regenerateInviteCode();
@@ -203,7 +201,9 @@ export default function AddFriendScreen() {
           }}
           confirmContent={
             <>
-              <Text className="text-tekst">Resetuj</Text>
+              <Text className="text-tekst">
+                {t("addFriend.resetInvitation.reset")}
+              </Text>
               <RefreshIcon width={16} height={16} className="text-tekst" />
             </>
           }

@@ -13,18 +13,19 @@ type GnomesListProps = {
 };
 
 const GnomesList = ({ search = "" }: GnomesListProps) => {
-  const { gnomes, loading, error } = useGnomeStore();
+  const { gnomes, loading } = useGnomeStore();
   const { districts } = useDistrictStore();
   const { onGnomeMarkerClick } = useOutletContext<OutletContextType>();
 
   if (loading) return <p>Ładowanie...</p>;
-  if (error) return <p className="text-red-500">{error}</p>;
-  if (!gnomes || gnomes.length === 0)
+
+  if (!gnomes || gnomes.length === 0) {
     return (
       <div className="text-white text-lg text-center">
         Brak krasnali do wyświetlenia
       </div>
     );
+  }
 
   const filtered = gnomes.filter((gnome) =>
     gnome.name.toLowerCase().includes(search.toLowerCase()),

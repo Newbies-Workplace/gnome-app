@@ -5,7 +5,7 @@ import BottomSheet, {
   BottomSheetModal,
   BottomSheetModalProvider,
 } from "@gorhom/bottom-sheet";
-import { Portal, PortalHost } from "@rn-primitives/portal";
+import { PortalHost } from "@rn-primitives/portal";
 import { StatusBar } from "expo-status-bar";
 import { cssInterop } from "nativewind";
 import React, { useEffect, useState } from "react";
@@ -13,6 +13,7 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import Svg, { Circle, Rect, Text as SvgText } from "react-native-svg";
 import { useAuthStore } from "@/store/useAuthStore";
 import CustomSplash from "./splashscreen";
+import "@/i18n";
 
 SplashScreen.setOptions({
   duration: 800,
@@ -34,6 +35,7 @@ export default function RootLayout() {
         setisReady(true);
       }
     }
+
     initializeApp();
   }, []);
 
@@ -42,6 +44,7 @@ export default function RootLayout() {
       SplashScreen.hideAsync();
     }
   }, [isReady]);
+
   if (!isReady) {
     return <CustomSplash />;
   }

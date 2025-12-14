@@ -1,5 +1,10 @@
 import { MarkerClusterer } from "@googlemaps/markerclusterer";
-import { GoogleMap, Marker, useJsApiLoader } from "@react-google-maps/api";
+import {
+  GoogleMap,
+  Marker,
+  Polygon,
+  useJsApiLoader,
+} from "@react-google-maps/api";
 import { useCallback, useEffect, useState } from "react";
 import { NavLink, Outlet, useLocation, useNavigate } from "react-router-dom";
 import BuildingsIcon from "@/assets/icons/buildings-icon.svg";
@@ -15,9 +20,13 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { buildingClusterRenderer } from "@/lib/building-cluster-renderer.tsx";
 import { gnomeClusterRenderer } from "@/lib/gnome-cluster-renderer.tsx";
 import { MapStyle } from "@/lib/map-styles.ts";
+import { points } from "@/lib/wroclaw-coords";
 import { useBuildStore } from "@/store/useBuildStore.ts";
 import { useDistrictStore } from "@/store/useDistrictStore.ts";
 import { useGnomeStore } from "@/store/useGnomeStore";
+
+const defaultCenter = { lat: 51.105, lng: 17.038 };
+const defaultZoom = 12;
 
 export default function AdminPage() {
   const { isLoaded, loadError } = useJsApiLoader({
@@ -79,6 +88,18 @@ export default function AdminPage() {
   const onMapLoad = useCallback((map: google.maps.Map) => {
     setMapRef(map);
   }, []);
+
+  useEffect(() => {
+    if (!mapRef) return;
+    if (
+      location.pathname === "/admin" ||
+      location.pathname === "/admin/buildings"
+    ) {
+      mapRef.panTo(defaultCenter);
+      mapRef.setZoom(defaultZoom);
+      setSelectedPosition(null);
+    }
+  }, [location.pathname, mapRef]);
 
   const mapOptions = {
     fullscreenControl: false,
@@ -195,15 +216,17 @@ export default function AdminPage() {
           {isLoaded && (
             <GoogleMap
               mapContainerStyle={{ width: "100%", height: "100%" }}
-              center={{ lat: 51.105, lng: 17.038 }}
-              zoom={12}
+              center={defaultCenter}
+              zoom={defaultZoom}
               options={mapOptions}
               onLoad={onMapLoad}
               onClick={(e) => {
-                const lat = e.latLng?.lat();
-                const lng = e.latLng?.lng();
-                if (lat && lng && currentTab === "gnomes") {
-                  setSelectedPosition({ lat, lng });
+                if (location.pathname === "/admin/gnomes/add") {
+                  const lat = e.latLng?.lat();
+                  const lng = e.latLng?.lng();
+                  if (typeof lat === "number" && typeof lng === "number") {
+                    setSelectedPosition({ lat, lng });
+                  }
                 }
               }}
             >
@@ -216,6 +239,16 @@ export default function AdminPage() {
                   }}
                 />
               )}
+              <Polygon
+                paths={points}
+                options={{
+                  strokeColor: "#8a5416ff",
+                  strokeOpacity: 1,
+                  strokeWeight: 3,
+                  fillOpacity: 0,
+                  clickable: false,
+                }}
+              />
             </GoogleMap>
           )}
           <div className="absolute bottom-4 left-4 z-10">

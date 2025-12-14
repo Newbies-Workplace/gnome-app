@@ -1,20 +1,12 @@
-import BottomSheet, {
-  BottomSheetModal,
-  BottomSheetView,
-} from "@gorhom/bottom-sheet";
+import { BottomSheetModal, BottomSheetView } from "@gorhom/bottom-sheet";
 import { useNavigation } from "@react-navigation/native";
 import dayjs from "dayjs";
 import { useRouter } from "expo-router";
 import React, { useEffect, useRef, useState } from "react";
-import {
-  FlatList,
-  Pressable,
-  Text,
-  Touchable,
-  TouchableOpacity,
-  View,
-} from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { useTranslation } from "react-i18next";
+import { FlatList, Text, TouchableOpacity, View } from "react-native";
+import AchievementLocked from "@/assets/icons/achievementLocked.svg";
+import AchievementUnlocked from "@/assets/icons/achievementUnlocked.svg";
 import ArrowLeft from "@/assets/icons/arrow-left.svg";
 import { Achievement } from "@/components/Achievement";
 import { useAchievementsStore } from "@/store/useAchievementsStore";
@@ -33,6 +25,7 @@ export default function AchivementScreen() {
   const achievementRef = useRef<BottomSheetModal>(null);
   const [selectedAchivement, setSelectedAchivement] =
     useState<AchievementType | null>(null);
+  const { t } = useTranslation();
 
   useEffect(() => {
     navigation.setOptions({
@@ -43,7 +36,7 @@ export default function AchivementScreen() {
       ),
       headerTitle: () => (
         <Text className="text-tekst font-bold text-2xl text-center tracking-wide">
-          Odznaki
+          {t("achievements.title")}
         </Text>
       ),
       headerTitleAlign: "center",
@@ -55,9 +48,14 @@ export default function AchivementScreen() {
     });
   }, [navigation, router]);
 
+  const handleAchievementChange = (achievement: AchievementType) => {
+    achievementRef.current?.present();
+    setSelectedAchivement(achievement);
+  };
+
   return (
     <>
-      <SafeAreaView>
+      <View className="bg-primary-foreground h-full p-4">
         <FlatList
           data={achivements}
           columnWrapperStyle={{ justifyContent: "flex-start" }}
@@ -70,13 +68,12 @@ export default function AchivementScreen() {
             if (isEarned) {
               return (
                 <Achievement
-                  onPress={() => {
-                    setSelectedAchivement({
+                  onPress={() =>
+                    handleAchievementChange({
                       ...item,
                       earnedAt: isEarned.earnedAt,
-                    });
-                    achievementRef.current?.present();
-                  }}
+                    })
+                  }
                   title={isEarned.achievement.name}
                 />
               );
@@ -84,36 +81,50 @@ export default function AchivementScreen() {
 
             return (
               <Achievement
-                onPress={() => setSelectedAchivement(item)}
+                onPress={() => handleAchievementChange(item)}
                 title={item.name}
               />
             );
           }}
           keyExtractor={(item) => item.id}
         />
-      </SafeAreaView>
-      <BottomSheet
+      </View>
+      <BottomSheetModal
         handleIndicatorClassName={"bg-tekst w-24 mt-2 rounded-lg"}
         backgroundClassName={"bg-background"}
         ref={achievementRef}
         enableDismissOnClose
         onDismiss={achievementRef.current?.close}
       >
-        <BottomSheetView className="pr-10">
+        <BottomSheetView className="p-4">
           <View className="flex-row">
             <Achievement />
-            <View>
-              <Text>{selectedAchivement?.name}</Text>
-              <Text>{selectedAchivement?.description}</Text>
-              {selectedAchivement?.earnedAt && (
-                <Text>
-                  {dayjs(selectedAchivement.earnedAt).format("DD.MM.YYYY")}
-                </Text>
-              )}
+            <View className="w-2/3 gap-2">
+              <Text className="text-tekst">{selectedAchivement?.name}</Text>
+              <Text className="text-xs text-tekst/50">
+                {selectedAchivement?.description}
+              </Text>
+              <View className="flex-row gap-2 items-center text-xs">
+                {selectedAchivement?.earnedAt ? (
+                  <>
+                    <AchievementUnlocked className="size-5" />
+                    <Text className="pt-0.5 text-xs">
+                      {dayjs(selectedAchivement.earnedAt).format("DD.MM.YYYY")}
+                    </Text>
+                  </>
+                ) : (
+                  <>
+                    <AchievementLocked className="size-5 " />
+                    <Text className="pt-0.5 text-xs">
+                      {t("achievements.notEarnedYet")}
+                    </Text>
+                  </>
+                )}
+              </View>
             </View>
           </View>
         </BottomSheetView>
-      </BottomSheet>
+      </BottomSheetModal>
     </>
   );
 }

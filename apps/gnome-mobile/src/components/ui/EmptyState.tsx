@@ -1,8 +1,8 @@
 import React from "react";
-import { Image, Text, View } from "react-native";
+import { Text, View } from "react-native";
 import { Button } from "./button";
 
-interface NoFriendsAlertProps {
+interface EmptyStateProps {
   image: any;
   title: string;
   alert: string;
@@ -11,7 +11,7 @@ interface NoFriendsAlertProps {
   onClick: () => void;
 }
 
-export const NoFriendsAlert: React.FC<NoFriendsAlertProps> = ({
+export const EmptyState: React.FC<EmptyStateProps> = ({
   image,
   title,
   alert,
@@ -20,7 +20,7 @@ export const NoFriendsAlert: React.FC<NoFriendsAlertProps> = ({
   onClick,
 }) => {
   return (
-    <View className="flex-1 items-center justify-center">
+    <View className="flex-1 items-center justify-center p-4">
       {image}
       <Text className="text-2xl font-bold text-center text-primary mb-4 mt-4">
         {title}

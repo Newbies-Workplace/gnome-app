@@ -27,12 +27,8 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
       },
     },
   },
-  web: {
-    bundler: "metro",
-    output: "static",
-    favicon: "./src/assets/images/favicon.png",
-  },
   plugins: [
+    "expo-localization",
     [
       "expo-location",
       {

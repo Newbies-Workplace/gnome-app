@@ -8,6 +8,7 @@ import {
   Post,
   UseGuards,
 } from "@nestjs/common";
+import { ApiBearerAuth, ApiBody } from "@nestjs/swagger";
 import { CreateUserAchievementRequest } from "@repo/shared/requests";
 import {
   AchievementDataResponse,
@@ -23,6 +24,7 @@ import { FriendsService } from "@/friends/friends.service";
 import { Role } from "@/role/role.decorator";
 import { AchievementsService } from "./achievements.service";
 
+@ApiBearerAuth()
 @Controller("achievements")
 export class AchievementsController {
   constructor(

@@ -10,6 +10,7 @@ import {
   UseGuards,
 } from "@nestjs/common";
 import { Cron, CronExpression } from "@nestjs/schedule";
+import { ApiBearerAuth, ApiBody } from "@nestjs/swagger";
 import { UserRole } from "@prisma/client";
 import {
   AttackBuildingRequest,
@@ -28,9 +29,22 @@ import { PrismaService } from "@/db/prisma.service";
 import { Role } from "@/role/role.decorator";
 import { RoleGuard } from "@/roleguard/role.guard";
 import { BuildingsService } from "./buildings.service";
+
+@ApiBearerAuth()
 @Controller("buildings")
 export class BuildingsController {
   constructor(private readonly buildingsService: BuildingsService) {}
+  @ApiBody({
+    schema: {
+      example: {
+        gnomeCount: "40",
+        latitude: "51.05876634559732",
+        longitude: "17.05951335787934",
+        districtId: "3",
+        type: "WATCHTOWER",
+      },
+    },
+  })
   @Post("")
   @UseGuards(JwtGuard)
   async createBuilding(
@@ -85,7 +99,13 @@ export class BuildingsController {
       user.role,
     );
   }
-
+  @ApiBody({
+    schema: {
+      example: {
+        gnomeCount: "40",
+      },
+    },
+  })
   @Patch(":id/empower")
   @UseGuards(JwtGuard)
   async updateBuilding(
@@ -104,6 +124,13 @@ export class BuildingsController {
       body.gnomeCount,
     );
   }
+  @ApiBody({
+    schema: {
+      example: {
+        clicks: "40",
+      },
+    },
+  })
   @Patch(":id/attack")
   @UseGuards(JwtGuard)
   async attackBuilding(

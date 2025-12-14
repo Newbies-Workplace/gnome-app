@@ -4,6 +4,7 @@ import * as Location from "expo-location";
 import { router, useFocusEffect, useRouter } from "expo-router";
 import { getDistance } from "geolib";
 import React, { useCallback, useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
   Alert,
   Linking,
@@ -15,7 +16,6 @@ import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
 import { SafeAreaView } from "react-native-safe-area-context";
 import FriendIcon from "@/assets/icons/add-friend.svg";
 import LocationOffIcon from "@/assets/icons/location-off.svg";
-import TeamIcon from "@/assets/icons/team.svg";
 import GnomePin from "@/assets/images/GnomePin.svg";
 import GnomePinCatch from "@/assets/images/GnomePinCatch.svg";
 import { MapStyle } from "@/components/map-styles";
@@ -51,6 +51,7 @@ const HeaderControls: React.FC<HeaderControlsProps> = ({
   setErrorMsg,
   openResourcesInfo,
 }) => {
+  const { t } = useTranslation();
   const router = useRouter();
   const requestLocationPermission = async () => {
     try {
@@ -59,15 +60,15 @@ const HeaderControls: React.FC<HeaderControlsProps> = ({
         setErrorMsg(null);
       } else if (status === "denied") {
         Alert.alert(
-          "Krasnal kartograf zgubił Cię na mapie!",
-          "Pomóż biednemu krasnalowi! Włącz lokalizację, zanim zacznie pytać smoki o drogę! ",
+          t("home.missingLocationAlert.title"),
+          t("home.missingLocationAlert.description"),
           [
             {
-              text: "Nie chce :(",
+              text: t("common.cancel"),
               style: "cancel",
             },
             {
-              text: "Już włączam!",
+              text: t("home.missingLocationAlert.enableLocation"),
               onPress: () => {
                 Linking.openSettings();
               },
@@ -88,7 +89,7 @@ const HeaderControls: React.FC<HeaderControlsProps> = ({
             <Avatar alt="Your avatar" className="w-10 h-10">
               <AvatarImage source={{ uri: user.pictureUrl }} />
               <AvatarFallback>
-                <Text className="text-md">You</Text>
+                <Text className="text-md">{t("common.you")}</Text>
               </AvatarFallback>
             </Avatar>
           </TouchableOpacity>
@@ -119,17 +120,6 @@ const HeaderControls: React.FC<HeaderControlsProps> = ({
               className={"text-tekst"}
             />
           </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => router.push("/teams")}
-            className="w-10 h-10 bg-background rounded-full flex justify-center items-center"
-          >
-            <TeamIcon
-              width={20}
-              height={20}
-              fill="#000"
-              className={"text-tekst"}
-            />
-          </TouchableOpacity>
         </View>
       </View>
     </View>
@@ -138,7 +128,6 @@ const HeaderControls: React.FC<HeaderControlsProps> = ({
 
 const MapScreen = () => {
   const { user } = useAuthStore();
-  const { navigate } = useRouter();
   const { gnomes, fetchGnomes, interactions, fetchMyInteractions } =
     useGnomeStore();
   const { fetchUserFriends } = useFriendsStore();

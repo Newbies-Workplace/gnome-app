@@ -18,7 +18,7 @@ export const Achievement = ({
       <View className="bg-[#2A2D2A] rounded-full items-center justify-center p-6">
         <CheckmarkIcon className="h-10 w-10" />
       </View>
-      <Text className="w-full text-center">{title}</Text>
+      <Text className="w-full text-center text-tekst">{title}</Text>
     </Pressable>
   );
 };

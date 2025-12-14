@@ -1,14 +1,16 @@
 import { useRouter } from "expo-router";
+import { useTranslation } from "react-i18next";
 import { FlatList, Image, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import AddUser from "@/assets/icons/add-user.svg";
 import GnomeIcon from "@/assets/icons/gnome-icon.svg";
 import SadGnome from "@/assets/images/SadGnome.svg";
-import { NoFriendsAlert } from "@/components/ui/EmptyState";
+import { EmptyState } from "@/components/ui/EmptyState";
 import { Text } from "@/components/ui/text";
 import { useFriendsStore } from "@/store/useFriendsStore";
 
 export default function Friends() {
+  const { t } = useTranslation();
   const router = useRouter();
   const { friends } = useFriendsStore();
   const placeholder = { uri: "https://i.pravatar.cc/150?img=1" };
@@ -37,20 +39,19 @@ export default function Friends() {
     </View>
   );
 
-  const EmptyState = () => (
+  const renderEmptyState = () => (
     <View className="flex-1 items-center justify-center">
-      <NoFriendsAlert
+      <EmptyState
         image={<SadGnome className="mb-4" />}
-        title="Hej Poszukiwaczu!"
-        alert={
-          "Twoja lista znajomych jest całkiem pusta,\n nawet żaden z wrocławskhich krasnali tutaj\n nie zawitał."
-        }
-        description={"W końcu nawet krasnale wiedzą, że w\n drużynie raźniej!"}
-        ButtonTitle="Dodaj znajomego"
+        title={t("friends.listEmpty.title")}
+        alert={t("friends.listEmpty.subtitle")}
+        description={t("friends.listEmpty.description")}
+        ButtonTitle={t("friends.listEmpty.addFriendButton")}
         onClick={() => router.push("/addfriend")}
       />
     </View>
   );
+
   return (
     <SafeAreaView className="flex-1 bg-primary-foreground">
       <FlatList
@@ -71,7 +72,7 @@ export default function Friends() {
             score={item.interactions.toString()}
           />
         )}
-        ListEmptyComponent={EmptyState}
+        ListEmptyComponent={renderEmptyState}
         contentContainerStyle={
           friends.length === 0
             ? { flexGrow: 1, justifyContent: "center" }

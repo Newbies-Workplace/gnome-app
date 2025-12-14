@@ -1,16 +1,20 @@
-import BottomSheet, { BottomSheetView } from "@gorhom/bottom-sheet";
+import BottomSheet from "@gorhom/bottom-sheet";
 import { useNavigation } from "@react-navigation/native";
+import { Portal } from "@rn-primitives/portal";
 import { useRouter } from "expo-router";
 import { setStatusBarStyle } from "expo-status-bar";
 import { colorScheme } from "nativewind";
 import { useEffect, useRef } from "react";
-import { Alert, Linking, TouchableOpacity, View } from "react-native";
+import { useTranslation } from "react-i18next";
+import { Linking, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import ArrowLeft from "@/assets/icons/arrow-left.svg";
 import LanguageIcon from "@/assets/icons/language.svg";
 import ModeIcon from "@/assets/icons/mode.svg";
 import NotificationsIcon from "@/assets/icons/notifications.svg";
 import AccoutDeleteIcon from "@/assets/icons/security.svg";
+import DeleteAccountBottomSheet from "@/components/settings-components/AccountDeleteBottomSheet";
+import { LanguageSelector } from "@/components/settings-components/LanguageSelector";
 import ThemeSelector from "@/components/settings-components/ThemeSelector";
 import { SettingsOption } from "@/components/ui/SettingsOption";
 import { Text } from "@/components/ui/text";
@@ -20,27 +24,12 @@ import { useAuthStore } from "@/store/useAuthStore";
 function SettingsScreen() {
   const navigation = useNavigation();
   const router = useRouter();
+  const { t, i18n } = useTranslation();
+  const deleteAccountBottomSheetRef = useRef<BottomSheet>(null);
   const themeBottomSheetRef = useRef<BottomSheet>(null);
   const languageBottomSheetRef = useRef<BottomSheet>(null);
   const { setColorScheme } = useColorScheme();
   const { deleteAccount } = useAuthStore();
-
-  const handleAccountDelete = () => {
-    Alert.alert(
-      "Usuwanie konta",
-      "Czy jesteś pewien tego ,że chcesz usunąć swoje konto?\n \nProces ten możebyć nie odwracalny i utracisz progres swojego konta!",
-      [
-        { text: "Anuluj", style: "cancel" },
-        {
-          text: "Usuń",
-          onPress: () => {
-            deleteAccount();
-            router.replace("/welcome");
-          },
-        },
-      ],
-    );
-  };
 
   useEffect(() => {
     navigation.setOptions({
@@ -51,7 +40,7 @@ function SettingsScreen() {
       ),
       headerTitle: () => (
         <Text className="text-tekst text-2xl font-bold text-center tracking-wide">
-          USTAWIENIA
+          {t("settings.title")}
         </Text>
       ),
       headerTitleAlign: "center",
@@ -61,102 +50,86 @@ function SettingsScreen() {
       ),
       headerShown: true,
     });
-  }, [navigation, router]);
+  }, [navigation, router, t]);
 
   return (
     <SafeAreaView className="flex-1 bg-primary-foreground">
-      <BottomSheet
-        ref={themeBottomSheetRef}
-        index={-1}
-        enablePanDownToClose
-        backgroundClassName={"bg-background"}
-        handleIndicatorClassName={"bg-tekst w-24 mt-2 rounded-lg"}
-      >
-        <ThemeSelector
-          colorScheme={colorScheme}
-          setColorScheme={setColorScheme}
-          themeBottomSheetRef={themeBottomSheetRef}
-          setStatusBarStyle={setStatusBarStyle}
-        />
-      </BottomSheet>
-      <BottomSheet
-        ref={languageBottomSheetRef}
-        index={-1}
-        enablePanDownToClose
-        backgroundClassName={"bg-background"}
-        handleIndicatorClassName={"bg-tekst w-24 mt-2 rounded-lg"}
-      >
-        <BottomSheetView className="w-full px-6 py-6">
-          <View className="py-4 border-b border-tekst">
-            <Text
-              className="text-tekst text-xl font-bold"
-              onPress={() => {
-                // TODO: set language to Polish
-                languageBottomSheetRef.current?.close();
-              }}
-            >
-              Polski
-            </Text>
-          </View>
-
-          <View className="py-4 border-b border-tekst">
-            <Text
-              className="text-tekst text-xl font-bold"
-              onPress={() => {
-                // TODO: set language to English
-                languageBottomSheetRef.current?.close();
-              }}
-            >
-              English
-            </Text>
-          </View>
-
-          <View className="py-4">
-            <Text
-              className="text-tekst text-xl font-bold"
-              onPress={() => {
-                // TODO: set language to Deutsch
-                languageBottomSheetRef.current?.close();
-              }}
-            >
-              Deutsch
-            </Text>
-          </View>
-        </BottomSheetView>
-      </BottomSheet>
       <View className="w-full px-4 mt-4">
         <SettingsOption
-          text="Motyw"
+          text={t("settings.theme.title")}
           image={ModeIcon}
           onClick={() => {
             languageBottomSheetRef.current?.close();
             themeBottomSheetRef.current?.expand();
+            deleteAccountBottomSheetRef.current?.close();
           }}
-          customClass="mb-8"
+          customClass="mb-4"
         />
         <SettingsOption
-          text="Powiadomienia"
+          text={t("settings.notifications")}
           image={NotificationsIcon}
           onClick={() => Linking.openSettings()}
-          customClass="mb-8"
+          customClass="mb-4"
         />
         <SettingsOption
-          text="Język"
+          text={t("settings.language")}
           image={LanguageIcon}
           onClick={() => {
             themeBottomSheetRef.current?.close();
             languageBottomSheetRef.current?.expand();
+            deleteAccountBottomSheetRef.current?.close();
           }}
-          extraText="Polski"
-          customClass="mb-8"
+          extraText={i18n.language}
+          customClass="mb-4"
         />
         <SettingsOption
-          text="Usuń konto"
+          text={t("settings.deleteAccount.title")}
           image={AccoutDeleteIcon}
-          onClick={handleAccountDelete}
+          onClick={() => {
+            deleteAccountBottomSheetRef.current?.expand();
+            themeBottomSheetRef.current?.close();
+            languageBottomSheetRef.current?.close();
+          }}
           customClass="mb-8 text-primary"
         />
       </View>
+
+      <Portal name={"bottom-sheets"}>
+        <BottomSheet
+          ref={themeBottomSheetRef}
+          index={-1}
+          enablePanDownToClose
+          backgroundClassName={"bg-background"}
+          handleIndicatorClassName={"bg-tekst w-24 mt-2 rounded-lg"}
+        >
+          <ThemeSelector
+            colorScheme={colorScheme}
+            setColorScheme={setColorScheme}
+            themeBottomSheetRef={themeBottomSheetRef}
+            setStatusBarStyle={setStatusBarStyle}
+          />
+        </BottomSheet>
+        <BottomSheet
+          ref={languageBottomSheetRef}
+          index={-1}
+          enablePanDownToClose
+          backgroundClassName={"bg-background"}
+          handleIndicatorClassName={"bg-tekst w-24 mt-2 rounded-lg"}
+        >
+          <LanguageSelector
+            onDismiss={() => {
+              languageBottomSheetRef.current?.close();
+            }}
+          />
+        </BottomSheet>
+        <DeleteAccountBottomSheet
+          onDelete={() => {
+            deleteAccount();
+            router.replace("/welcome");
+          }}
+          deleteAccountBottomSheetRef={deleteAccountBottomSheetRef}
+        />
+      </Portal>
     </SafeAreaView>
   );
 }
