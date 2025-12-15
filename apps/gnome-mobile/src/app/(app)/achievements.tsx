@@ -59,6 +59,7 @@ export default function AchivementScreen() {
         <FlatList
           data={achivements}
           columnWrapperStyle={{ justifyContent: "flex-start" }}
+          contentContainerStyle={{ gap: 16 }}
           numColumns={3}
           renderItem={({ item }) => {
             const isEarned = userAchivements.find(
@@ -100,22 +101,24 @@ export default function AchivementScreen() {
           <View className="flex-row">
             <Achievement />
             <View className="w-2/3 gap-2">
-              <Text className="text-tekst">{selectedAchivement?.name}</Text>
+              <Text className="text-xs text-tekst">
+                {selectedAchivement?.name}
+              </Text>
               <Text className="text-xs text-tekst/50">
                 {selectedAchivement?.description}
               </Text>
-              <View className="flex-row gap-2 items-center text-xs">
+              <View className="flex-row gap-2 items-center">
                 {selectedAchivement?.earnedAt ? (
                   <>
-                    <AchievementUnlocked className="size-5" />
-                    <Text className="pt-0.5 text-xs">
+                    <AchievementUnlocked className="size-5 text-tekst" />
+                    <Text className="pt-0.5 text-xs  text-tekst">
                       {dayjs(selectedAchivement.earnedAt).format("DD.MM.YYYY")}
                     </Text>
                   </>
                 ) : (
                   <>
-                    <AchievementLocked className="size-5 " />
-                    <Text className="pt-0.5 text-xs">
+                    <AchievementLocked className="size-5 text-tekst" />
+                    <Text className="pt-0.5 text-xs  text-tekst">
                       {t("achievements.notEarnedYet")}
                     </Text>
                   </>
