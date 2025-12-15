@@ -15,9 +15,12 @@ import {
   UserAchievementGiveResponse,
   UserAchievementResponse,
 } from "@repo/shared/responses";
+import {
+  toAchievementResponse,
+  toUserAchievementResponse,
+} from "@/achievements/achievements.converter";
 import { AchievementsService } from "@/achievements/achievements.service";
 import { User } from "@/auth/decorators/jwt-user.decorator";
-import { Role } from "@/auth/decorators/role.decorator";
 import { JwtGuard } from "@/auth/guards/jwt.guard";
 import { JwtUser } from "@/auth/types/jwt-user";
 import { FriendsService } from "@/friends/friends.service";
@@ -39,14 +42,14 @@ export class AchievementsController {
       user.id,
     );
 
-    return achievements;
+    return achievements.map(toUserAchievementResponse);
   }
 
   @Get("")
   async getAllAchievements(): Promise<AchievementResponse[]> {
-    const achievements = await this.achievementsService.getAllAchievements();
+    const allAchievements = await this.achievementsService.getAllAchievements();
 
-    return achievements;
+    return allAchievements.map(toAchievementResponse);
   }
 
   @Get("friend/:id")
@@ -66,28 +69,6 @@ export class AchievementsController {
     const achievements =
       await this.achievementsService.getUserAchievements(friendId);
 
-    return achievements;
-  }
-
-  @Post("")
-  @UseGuards(JwtGuard)
-  @Role(["ADMIN"])
-  async giveAchievement(
-    @User() user: JwtUser,
-    @Body() body: CreateUserAchievementRequest,
-  ): Promise<UserAchievementGiveResponse> {
-    const achievement = await this.achievementsService.getAchievement(
-      body.achievementId,
-    );
-
-    if (!achievement) {
-      throw new NotFoundException("Achievement not found");
-    }
-    const give = await this.achievementsService.giveAchievement(
-      user.id,
-      body.achievementId,
-    );
-
-    return give;
+    return achievements.map(toUserAchievementResponse);
   }
 }
