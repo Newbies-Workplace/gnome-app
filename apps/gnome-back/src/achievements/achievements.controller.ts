@@ -8,9 +8,13 @@ import {
   Post,
   UseGuards,
 } from "@nestjs/common";
-import { ApiBearerAuth, ApiBody } from "@nestjs/swagger";
+import { ApiBearerAuth } from "@nestjs/swagger";
 import { CreateUserAchievementRequest } from "@repo/shared/requests";
-import { UserAchievementResponse } from "@repo/shared/responses";
+import {
+  AchievementResponse,
+  UserAchievementGiveResponse,
+  UserAchievementResponse,
+} from "@repo/shared/responses";
 import { User } from "@/auth/decorators/jwt-user.decorator";
 import { Role } from "@/auth/decorators/role.decorator";
 import { JwtGuard } from "@/auth/guards/jwt.guard";
@@ -38,6 +42,13 @@ export class AchievementsController {
     return achievements;
   }
 
+  @Get("all")
+  async getAllAchivements(): Promise<AchievementResponse[]> {
+    const achievements = await this.achievementsService.getAllAchievements();
+
+    return achievements;
+  }
+
   @Get("friend/:id")
   @UseGuards(JwtGuard)
   async getFriendAchievements(
@@ -58,34 +69,13 @@ export class AchievementsController {
     return achievements;
   }
 
-  @Get("@me/:id")
-  @UseGuards(JwtGuard)
-  async getAchievementData(
-    @Param("id") achievementId: string,
-    @User() user: JwtUser,
-  ): Promise<UserAchievementResponse> {
-    const userAchievement = await this.achievementsService.getAchievementData(
-      user.id,
-      achievementId,
-    );
-
-    return userAchievement;
-  }
-
-  @ApiBody({
-    schema: {
-      example: {
-        achievementId: "0c2793ea-0636-46d5-8181-ab51ab949d6f",
-      },
-    },
-  })
   @Post("")
   @UseGuards(JwtGuard)
   @Role(["ADMIN"])
   async giveAchievement(
     @User() user: JwtUser,
     @Body() body: CreateUserAchievementRequest,
-  ): Promise<UserAchievementResponse> {
+  ): Promise<UserAchievementGiveResponse> {
     const achievement = await this.achievementsService.getAchievement(
       body.achievementId,
     );

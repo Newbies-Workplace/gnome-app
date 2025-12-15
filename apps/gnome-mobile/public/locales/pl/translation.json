@@ -1,6 +1,7 @@
 {
   "achievements": {
-    "title": "Osiągnięcia"
+    "title": "Osiągnięcia",
+    "notEarnedYet": "Jeszcze nie zdobyto"
   },
   "addFriend": {
     "addFriend": "dodaj znajomego",

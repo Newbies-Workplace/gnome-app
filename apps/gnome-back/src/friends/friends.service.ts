@@ -53,13 +53,13 @@ export class FriendsService {
       where: {
         id: id,
       },
-      select: {
-        id: true,
-        name: true,
-        pictureUrl: true,
+      include: {
+        achievements: {
+          include: {
+            achievement: true,
+          },
+        },
         gnomeInteractions: true,
-        achievements: true,
-        inviteCode: true,
       },
     });
 

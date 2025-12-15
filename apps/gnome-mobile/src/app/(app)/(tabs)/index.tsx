@@ -28,6 +28,7 @@ import { GnomeDetailsBottomSheet } from "@/components/ui/GnomeDetailsBottomSheet
 import ResourcesBar from "@/components/ui/ResourcesBar";
 import { Text } from "@/components/ui/text";
 import { getClosestGnome } from "@/lib/getClosestGnome";
+import { useAchievementsStore } from "@/store/useAchievementsStore";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useFriendsStore } from "@/store/useFriendsStore";
 import { useGnomeInteractionStore } from "@/store/useGnomeInteractionStore";
@@ -143,8 +144,8 @@ const MapScreen = () => {
     useGnomeInteractionStore();
   const [isInteractionSheetVisible, setIsInteractionSheetVisible] =
     useState(false);
+  const { fetchAchivements, fetchUserAchivements } = useAchievementsStore();
   const [selectedGnomeId, setSelectedGnomeId] = useState<string | null>(null);
-
   const closestGnomeData = gnomes.find((g) => g.id === closestGnomeId);
   const selectedGnome = gnomes.find((g) => g.id === selectedGnomeId);
 
@@ -173,6 +174,8 @@ const MapScreen = () => {
     fetchGnomes();
     fetchMyInteractions();
     fetchUserFriends();
+    fetchAchivements();
+    fetchUserAchivements();
   }, []);
 
   useEffect(() => {
