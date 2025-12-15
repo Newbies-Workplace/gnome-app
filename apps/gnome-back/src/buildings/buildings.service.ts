@@ -1,132 +1,105 @@
 import {
+  ConflictException,
   ForbiddenException,
   Injectable,
   NotFoundException,
-  UnauthorizedException,
 } from "@nestjs/common";
 import { Building, UserRole } from "@prisma/client";
 import { Action, CreateBuildingRequest } from "@repo/shared/requests";
-import { BuildingResponse } from "@repo/shared/responses";
 import { distance, featureCollection, nearestPoint, point } from "@turf/turf";
 import { JwtUser } from "@/auth/types/jwt-user";
+import {
+  BUILDINGS,
+  BUILDINGS_MIN_DISTANCE_METERS_BETWEEN,
+  BuildingConstants,
+} from "@/buildings/buildings.constants";
 import { PrismaService } from "@/db/prisma.service";
+import { DistrictsService } from "@/districts/districts.service";
 
-const BUILDINGS = [
-  {
-    type: "MINE",
-    costs: { berries: 15, sticks: 15, stones: 15 },
-    maxHealth: 75,
-  },
-  {
-    type: "WATCHTOWER",
-    costs: { berries: 15, sticks: 15, stones: 15 },
-    maxHealth: 100,
-  },
-];
 @Injectable()
 export class BuildingsService {
-  constructor(private readonly prismaService: PrismaService) {}
-  async CreateBuilding(data: CreateBuildingRequest, user: JwtUser) {
-    const buildings = await this.prismaService.building.findMany({
-      select: {
-        latitude: true,
-        longitude: true,
-      },
-    });
-    const buildingData = BUILDINGS.find((b) => b.type === data.type);
-    const { berries, sticks, stones } = buildingData.costs;
-    const resources = await this.prismaService.userResource.findUnique({
-      where: {
-        userId: user.id,
-      },
-    });
-    if (
-      resources.berries > berries &&
-      resources.sticks > sticks &&
-      resources.stones > stones
-    ) {
-      const _removeResources = await this.prismaService.userResource.update({
-        where: {
-          userId: user.id,
-        },
-        data: {
-          berries: { decrement: berries },
-          sticks: { decrement: sticks },
-          stones: { decrement: stones },
-        },
-      });
-      const newPoint = point([data.longitude, data.latitude]);
-      const oldPoints = buildings.map((b) => point([b.longitude, b.latitude]));
-      if (oldPoints.length > 0) {
-        const collection = featureCollection(oldPoints);
-        const nearest = nearestPoint(newPoint, collection);
+  constructor(
+    private readonly prismaService: PrismaService,
+    private readonly districtsService: DistrictsService,
+  ) {}
 
-        const dist = distance(newPoint, nearest, { units: "meters" });
-        console.log(dist, "metrow");
-        if (dist < 50) {
-          throw new ForbiddenException("Za blisko innego budynku");
-        }
-      }
+  async createBuilding(data: CreateBuildingRequest, user: JwtUser) {
+    const buildingConstants = BUILDINGS.find((b) => b.type === data.type);
+
+    await this.assertNoBuildingsColliding(data.latitude, data.longitude);
+
+    const districtId = await this.districtsService.findDistrictId([
+      Number(data.longitude),
+      Number(data.latitude),
+    ]);
+
+    const createdBuilding = await this.prismaService.$transaction(async () => {
+      await this.withdrawUserResourcesForBuilding(user.id, buildingConstants);
 
       return this.prismaService.building.create({
         data: {
           gnomeCount: data.gnomeCount,
-          health: buildingData.maxHealth,
+          health: buildingConstants.maxHealth,
           latitude: data.latitude,
-          districtId: data.districtId,
           longitude: data.longitude,
+          districtId: districtId,
           type: data.type,
           ownerId: user.id,
         },
       });
-    } else {
-      throw new UnauthorizedException("Nie masz wystarczająco surowców");
-    }
+    });
+
+    return createdBuilding;
   }
-  async getBuildingById(id: string): Promise<BuildingResponse> {
-    return await this.prismaService.building.findUnique({
+
+  async getBuildingById(id: string): Promise<Building> {
+    return this.prismaService.building.findUnique({
       where: {
         id: id,
       },
     });
   }
-  async getAllBuildings(): Promise<BuildingResponse[]> {
+
+  async getAllBuildings(): Promise<Building[]> {
     return this.prismaService.building.findMany();
   }
+
   async deleteBuilding(
     buildingId: string,
     userId: string,
     role: UserRole,
-  ): Promise<BuildingResponse | Building> {
+  ): Promise<Building> {
     const building = await this.prismaService.building.findUnique({
       where: { id: buildingId },
       select: { ownerId: true },
     });
-    if (building.ownerId !== userId || role === "ADMIN")
-      return await this.prismaService.building.delete({
-        where: {
-          id: buildingId,
-        },
-      });
-    else {
-      throw new ForbiddenException("Brak uprawnień");
+
+    if (building.ownerId !== userId && role !== "ADMIN") {
+      throw new ForbiddenException("No permission to delete this building");
     }
+
+    return this.prismaService.building.delete({
+      where: {
+        id: buildingId,
+      },
+    });
   }
-  async empowerBuilding(
-    id: string,
-    gnomeIncrement: number,
-  ): Promise<BuildingResponse> {
+
+  async empowerBuilding(id: string, gnomeIncrement: number): Promise<Building> {
     const building = await this.prismaService.building.findUnique({
       where: { id: id },
       select: { health: true, type: true },
     });
+
     if (!building) {
-      throw new NotFoundException("Nie ma takiego budynku");
+      throw new NotFoundException(`Building with id ${id} not found`);
     }
+
     const buildingData = BUILDINGS.find((b) => b.type === building.type);
     const maxHealth = buildingData.maxHealth;
     const newHealth = Math.min(building.health + gnomeIncrement * 2, maxHealth);
-    return await this.prismaService.building.update({
+
+    return this.prismaService.building.update({
       where: {
         id: id,
       },
@@ -136,12 +109,8 @@ export class BuildingsService {
       },
     });
   }
-  async removeDeadBuildings() {
-    await this.prismaService.building.deleteMany({
-      where: { health: { lte: 0 } },
-    });
-  }
-  async attackBuilding(id: string, damage: number): Promise<BuildingResponse> {
+
+  async attackBuilding(id: string, damage: number): Promise<Building> {
     const buildingData = await this.prismaService.building.findUnique({
       where: {
         id: id,
@@ -151,7 +120,7 @@ export class BuildingsService {
       },
     });
     if (!buildingData) {
-      throw new NotFoundException("Budynek nie istnieje");
+      throw new NotFoundException(`Building with id ${id} not found`);
     }
     await this.prismaService.building.update({
       where: {
@@ -169,6 +138,7 @@ export class BuildingsService {
       },
     });
   }
+
   async decayBuildings() {
     await this.prismaService.building.updateMany({
       where: {
@@ -201,7 +171,7 @@ export class BuildingsService {
     action: Action,
     amount: number,
   ) {
-    const _interaction = await this.prismaService.buildingInteraction.create({
+    await this.prismaService.buildingInteraction.create({
       data: {
         interactionType: action,
         buildingId,
@@ -209,5 +179,72 @@ export class BuildingsService {
         amount,
       },
     });
+  }
+
+  private async removeDeadBuildings() {
+    await this.prismaService.building.deleteMany({
+      where: { health: { lte: 0 } },
+    });
+  }
+
+  private async withdrawUserResourcesForBuilding(
+    userId: string,
+    constants: BuildingConstants,
+  ) {
+    const { berries, sticks, stones } = constants.costs;
+    const resources = await this.prismaService.userResource.findUnique({
+      where: {
+        userId: userId,
+      },
+    });
+
+    if (
+      !(
+        resources.berries > berries &&
+        resources.sticks > sticks &&
+        resources.stones > stones
+      )
+    ) {
+      throw new ConflictException("Not enough resources");
+    }
+
+    await this.prismaService.userResource.update({
+      where: {
+        userId: userId,
+      },
+      data: {
+        berries: { decrement: berries },
+        sticks: { decrement: sticks },
+        stones: { decrement: stones },
+      },
+    });
+  }
+
+  private async assertNoBuildingsColliding(
+    latitude: number,
+    longitude: number,
+  ) {
+    const buildings = await this.prismaService.building.findMany({
+      select: {
+        latitude: true,
+        longitude: true,
+      },
+    });
+
+    const newPoint = point([longitude, latitude]);
+    const currentBuildingsPoints = buildings.map((b) =>
+      point([b.longitude, b.latitude]),
+    );
+
+    if (currentBuildingsPoints.length > 0) {
+      const collection = featureCollection(currentBuildingsPoints);
+      const nearest = nearestPoint(newPoint, collection);
+
+      const dist = distance(newPoint, nearest, { units: "meters" });
+
+      if (dist < BUILDINGS_MIN_DISTANCE_METERS_BETWEEN) {
+        throw new ConflictException("Za blisko innego budynku");
+      }
+    }
   }
 }

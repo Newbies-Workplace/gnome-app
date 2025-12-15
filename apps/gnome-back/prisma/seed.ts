@@ -203,7 +203,7 @@ async function main() {
   }
 
   for (const gnome of gnomes) {
-    const districtId = await districtsService.findPointInPolygon([
+    const districtId = await districtsService.findDistrictId([
       gnome.longitude,
       gnome.latitude,
     ]);

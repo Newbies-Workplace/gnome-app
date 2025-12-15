@@ -1,18 +1,13 @@
 import {
-  Body,
   ConflictException,
   Controller,
   Get,
-  NotFoundException,
   Param,
-  Post,
   UseGuards,
 } from "@nestjs/common";
 import { ApiBearerAuth } from "@nestjs/swagger";
-import { CreateUserAchievementRequest } from "@repo/shared/requests";
 import {
   AchievementResponse,
-  UserAchievementGiveResponse,
   UserAchievementResponse,
 } from "@repo/shared/responses";
 import {

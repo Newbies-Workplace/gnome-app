@@ -29,7 +29,7 @@ export class DistrictsService {
     return districts;
   }
 
-  async findPointInPolygon(pointXY: [number, number]) {
+  async findDistrictId(pointXY: [number, number]): Promise<number | null> {
     const [x, y] = pointXY;
     const turfPoint = point(pointXY);
     const polygons = await this.prismaService.district.findMany({

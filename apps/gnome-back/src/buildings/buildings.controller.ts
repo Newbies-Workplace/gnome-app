@@ -9,7 +9,6 @@ import {
   Post,
   UseGuards,
 } from "@nestjs/common";
-import { Cron, CronExpression } from "@nestjs/schedule";
 import { ApiBearerAuth, ApiBody } from "@nestjs/swagger";
 import {
   AttackBuildingRequest,
@@ -25,12 +24,18 @@ import { Role } from "@/auth/decorators/role.decorator";
 import { JwtGuard } from "@/auth/guards/jwt.guard";
 import { RoleGuard } from "@/auth/guards/role.guard";
 import { JwtUser } from "@/auth/types/jwt-user";
+import { MAX_ATTACK_DAMAGE } from "@/buildings/buildings.constants";
+import {
+  toBuildingInteractionResponse,
+  toBuildingResponse,
+} from "@/buildings/buildings.converter";
 import { BuildingsService } from "@/buildings/buildings.service";
 
 @ApiBearerAuth()
 @Controller("buildings")
 export class BuildingsController {
   constructor(private readonly buildingsService: BuildingsService) {}
+
   @ApiBody({
     schema: {
       example: {
@@ -48,7 +53,12 @@ export class BuildingsController {
     @User() user: JwtUser,
     @Body() body: CreateBuildingRequest,
   ) {
-    return await this.buildingsService.CreateBuilding(body, user);
+    const createdBuilding = await this.buildingsService.createBuilding(
+      body,
+      user,
+    );
+
+    return toBuildingResponse(createdBuilding);
   }
 
   @Get(":id")
@@ -58,16 +68,20 @@ export class BuildingsController {
   ): Promise<BuildingResponse> {
     const buildingData =
       await this.buildingsService.getBuildingById(buildingId);
+
     if (!buildingData) {
-      throw new NotFoundException("Nie znaleziono budynku");
+      throw new NotFoundException(`Building with id ${buildingId} not found`);
     }
-    return buildingData;
+
+    return toBuildingResponse(buildingData);
   }
 
   @Get("")
   @UseGuards(JwtGuard)
   async getAllBuildings(): Promise<BuildingResponse[]> {
-    return await this.buildingsService.getAllBuildings();
+    const buildings = await this.buildingsService.getAllBuildings();
+
+    return buildings.map(toBuildingResponse);
   }
 
   @Get(":id/interactions")
@@ -79,9 +93,13 @@ export class BuildingsController {
     const building = await this.buildingsService.getBuildingById(buildingId);
 
     if (!building) {
-      throw new NotFoundException("Building not found");
+      throw new NotFoundException(`Building with id ${buildingId} not found`);
     }
-    return await this.buildingsService.getBuildingInteractions(buildingId);
+
+    const interactions =
+      await this.buildingsService.getBuildingInteractions(buildingId);
+
+    return interactions.map(toBuildingInteractionResponse);
   }
 
   @Delete(":id")
@@ -89,13 +107,10 @@ export class BuildingsController {
   async deleteBuilding(
     @Param("id") buildingId: string,
     @User() user,
-  ): Promise<BuildingResponse> {
-    return await this.buildingsService.deleteBuilding(
-      buildingId,
-      user.id,
-      user.role,
-    );
+  ): Promise<void> {
+    await this.buildingsService.deleteBuilding(buildingId, user.id, user.role);
   }
+
   @ApiBody({
     schema: {
       example: {
@@ -105,7 +120,7 @@ export class BuildingsController {
   })
   @Patch(":id/empower")
   @UseGuards(JwtGuard)
-  async updateBuilding(
+  async empowerBuilding(
     @Param("id") buildingId: string,
     @User() user: JwtUser,
     @Body() body: EmpowerBuildingRequest,
@@ -116,11 +131,15 @@ export class BuildingsController {
       "EMPOWER",
       body.gnomeCount,
     );
-    return await this.buildingsService.empowerBuilding(
+
+    const updatedBuilding = await this.buildingsService.empowerBuilding(
       buildingId,
       body.gnomeCount,
     );
+
+    return toBuildingResponse(updatedBuilding);
   }
+
   @ApiBody({
     schema: {
       example: {
@@ -135,18 +154,20 @@ export class BuildingsController {
     @User() user: JwtUser,
     @Body() body: AttackBuildingRequest,
   ) {
-    const maxDamage = 40;
-    const damage = Math.min(body.clicks * 0.2, maxDamage);
+    const damage = Math.min(body.clicks * 0.2, MAX_ATTACK_DAMAGE);
+
     await this.buildingsService.createInteraction(
       user.id,
       buildingId,
       "ATTACK",
       damage,
     );
-    return await this.buildingsService.attackBuilding(buildingId, damage);
-  }
-  @Cron(CronExpression.EVERY_HOUR)
-  async decayBuildings() {
-    await this.buildingsService.decayBuildings();
+
+    const updatedBuilding = await this.buildingsService.attackBuilding(
+      buildingId,
+      damage,
+    );
+
+    return toBuildingResponse(updatedBuilding);
   }
 }

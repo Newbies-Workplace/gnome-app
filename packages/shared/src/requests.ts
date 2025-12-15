@@ -122,10 +122,6 @@ export class CreateBuildingRequest {
   @IsLongitude()
   @IsNotEmpty()
   longitude!: number;
-  @Type(() => Number)
-  @IsInt()
-  @IsNotEmpty()
-  districtId!: number;
 
   @IsEnum(BuildingType)
   @IsNotEmpty()
