@@ -9,9 +9,8 @@ import { PrismaModule } from "@/db/prisma.module";
 import { DistrictsModule } from "@/districts/districts.module";
 import { FriendsModule } from "@/friends/friends.module";
 import { GnomesModule } from "@/gnomes/gnomes.module";
+import { MetricsModule } from "@/metrics/metrics.module";
 import { MinioModule } from "@/minio/minio.module";
-import { MetricsModule } from "@/prometheus/metrics.module";
-import { ReportsModule } from "@/reports/reports.module";
 import { UsersModule } from "@/users/users.module";
 
 @Module({
@@ -25,7 +24,6 @@ import { UsersModule } from "@/users/users.module";
     UsersModule,
     GnomesModule,
     FriendsModule,
-    ReportsModule,
     MinioModule,
     DistrictsModule,
     BuildingsModule,

@@ -10,7 +10,7 @@ const getUserAchievements = async () => {
 
 const getAllAchievements = async () => {
   return await axiosInstance
-    .get("api/rest/v1/achievements/all")
+    .get("api/rest/v1/achievements")
     .then((response) => {
       return response.data;
     });

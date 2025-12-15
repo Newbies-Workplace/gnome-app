@@ -108,6 +108,7 @@ export class UsersService {
 
     return newInviteCode;
   }
+
   async getUserResources(userId: string): Promise<UserResource | null> {
     return this.prismaService.userResource.findFirst({
       where: {

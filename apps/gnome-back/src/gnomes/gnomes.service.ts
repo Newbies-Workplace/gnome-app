@@ -8,6 +8,7 @@ import {
 import { PrismaService } from "@/db/prisma.service";
 import { DistrictsService } from "@/districts/districts.service";
 import { MinioService } from "@/minio/minio.service";
+
 @Injectable()
 export class GnomesService {
   constructor(
@@ -136,18 +137,13 @@ export class GnomesService {
     const { resource1, resource2, amount1, amount2 } =
       await this.getRandomResources();
 
-    const _updatedResources = await this.prismaService.userResource.update({
+    const newResources = await this.prismaService.userResource.update({
       where: {
         userId: userId,
       },
       data: {
         [resource1]: { increment: amount1 },
         [resource2]: { increment: amount2 },
-      },
-    });
-    const newResources = await this.prismaService.userResource.findUnique({
-      where: {
-        userId: userId,
       },
       select: {
         berries: true,

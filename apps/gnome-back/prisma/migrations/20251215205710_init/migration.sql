@@ -71,19 +71,6 @@ CREATE TABLE "UserAchievement" (
 );
 
 -- CreateTable
-CREATE TABLE "Report" (
-    "id" TEXT NOT NULL,
-    "gnomeName" TEXT NOT NULL,
-    "pictureUrl" TEXT NOT NULL,
-    "latitude" DOUBLE PRECISION NOT NULL,
-    "longitude" DOUBLE PRECISION NOT NULL,
-    "location" TEXT NOT NULL,
-    "reportAuthor" TEXT NOT NULL,
-
-    CONSTRAINT "Report_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
 CREATE TABLE "GnomeInteraction" (
     "id" TEXT NOT NULL,
     "interactionDate" TIMESTAMP(3) NOT NULL,
@@ -159,9 +146,6 @@ CREATE UNIQUE INDEX "Achievement_id_key" ON "Achievement"("id");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "UserAchievement_userId_achievementId_key" ON "UserAchievement"("userId", "achievementId");
-
--- CreateIndex
-CREATE UNIQUE INDEX "Report_id_key" ON "Report"("id");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "GnomeInteraction_id_key" ON "GnomeInteraction"("id");

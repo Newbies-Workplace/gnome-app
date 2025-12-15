@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { Cron, CronExpression } from "@nestjs/schedule";
-import { MetricsService } from "@/prometheus/metrics";
+import { MetricsService } from "@/metrics/metrics";
 
 @Injectable()
 export class MetricsCron {

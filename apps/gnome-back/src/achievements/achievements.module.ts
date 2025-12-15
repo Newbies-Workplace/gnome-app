@@ -1,7 +1,7 @@
 import { Module } from "@nestjs/common";
+import { AchievementsController } from "@/achievements/achievements.controller";
+import { AchievementsService } from "@/achievements/achievements.service";
 import { FriendsModule } from "@/friends/friends.module";
-import { AchievementsController } from "./achievements.controller";
-import { AchievementsService } from "./achievements.service";
 
 @Module({
   imports: [FriendsModule],

@@ -49,7 +49,7 @@ export class UsersController {
     return this.usersService.getUsers(page, name);
   }
 
-  @Get("@me") // moj profil
+  @Get("@me")
   @UseGuards(JwtGuard)
   async getMe(@User() user: JwtUser): Promise<PrismaUser> {
     return this.usersService.findUserById(user.id);
@@ -62,7 +62,7 @@ export class UsersController {
       },
     },
   })
-  @Patch("@me") // zaaktualizuj profil
+  @Patch("@me")
   @UseInterceptors(FileInterceptor("file"))
   @UseGuards(JwtGuard)
   async changeUserData(
@@ -110,6 +110,7 @@ export class UsersController {
 
     return { inviteCode: newInviteCode };
   }
+
   @Get("@me/resource")
   @UseGuards(JwtGuard)
   async getUserResources(@User() user: JwtUser): Promise<UserResource> {

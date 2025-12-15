@@ -15,12 +15,12 @@ import {
   UserAchievementGiveResponse,
   UserAchievementResponse,
 } from "@repo/shared/responses";
+import { AchievementsService } from "@/achievements/achievements.service";
 import { User } from "@/auth/decorators/jwt-user.decorator";
 import { Role } from "@/auth/decorators/role.decorator";
 import { JwtGuard } from "@/auth/guards/jwt.guard";
 import { JwtUser } from "@/auth/types/jwt-user";
 import { FriendsService } from "@/friends/friends.service";
-import { AchievementsService } from "./achievements.service";
 
 @ApiBearerAuth()
 @Controller("achievements")
@@ -42,8 +42,8 @@ export class AchievementsController {
     return achievements;
   }
 
-  @Get("all")
-  async getAllAchivements(): Promise<AchievementResponse[]> {
+  @Get("")
+  async getAllAchievements(): Promise<AchievementResponse[]> {
     const achievements = await this.achievementsService.getAllAchievements();
 
     return achievements;
