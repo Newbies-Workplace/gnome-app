@@ -146,7 +146,22 @@ export interface AchievementDataResponse {
   users: number;
 }
 
+export interface AchievementResponse {
+  id: string;
+  name: string;
+  description: string;
+}
+
 export interface UserAchievementResponse {
+  achievement: {
+    id: string;
+    name: string;
+    description: string;
+  };
+  earnedAt: Date;
+}
+
+export interface UserAchievementGiveResponse {
   achievementId: string;
   earnedAt: Date;
 }

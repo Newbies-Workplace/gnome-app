@@ -1,6 +1,7 @@
 {
   "achievements": {
-    "title": null
+    "title": null,
+    "notEarnedYet": null
   },
   "addFriend": {
     "addFriend": null,

@@ -9,12 +9,15 @@ import FriendsIcon from "@/assets/icons/friends.svg";
 import LastSeenIcon from "@/assets/icons/last-seen.svg";
 import LogoutIcon from "@/assets/icons/log-out.svg";
 import SettingsIcon from "@/assets/icons/settings.svg";
+import ShareIcon from "@/assets/icons/share-right.svg";
+import { Achievement } from "@/components/Achievement";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { GnomeCard } from "@/components/ui/GnomeCard";
 import {
   ProfileButton,
   ProfileButtonLogout,
 } from "@/components/ui/ProfileButton";
+import { useAchievementsStore } from "@/store/useAchievementsStore";
 import { useAuthStore } from "@/store/useAuthStore";
 
 export default function ProfileScreen() {
@@ -22,6 +25,9 @@ export default function ProfileScreen() {
   const { logout, user } = useAuthStore();
   const navigation = useNavigation();
   const router = useRouter();
+  const { userAchivements } = useAchievementsStore();
+
+  const latestEarnedAchievements = userAchivements.slice(0, 3);
 
   const handleLogout = () => {
     Alert.alert(
@@ -65,7 +71,7 @@ export default function ProfileScreen() {
   }
 
   return (
-    <View className="p-6 flex-1 bg-primary-foreground items-center">
+    <View className="p-4 flex-1 bg-primary-foreground items-center">
       <View className="flex flex-row items-center gap-5 mb-5 rounded-lg bg-background-foreground w-full justify-center">
         <Avatar alt="Your avatar" className="w-20 h-20">
           <AvatarImage source={{ uri: user.pictureUrl }} />
@@ -84,12 +90,21 @@ export default function ProfileScreen() {
           image={<FriendsIcon className="text-tekst" />}
           onClick={() => router.navigate("/friends")}
         />
-        <ProfileButton
-          text={t("achievements.title")}
-          image={<AchievementsIcon className="text-tekst" />}
-          onClick={() => router.push("/achievements")}
-        />
 
+        <View>
+          <ProfileButton
+            text={t("achievements.title")}
+            image={<AchievementsIcon className="text-tekst" />}
+            onClick={() => router.push("/achievements")}
+          />
+          {latestEarnedAchievements.length === 3 && (
+            <View className="w-full flex-row justify-between">
+              {latestEarnedAchievements.map(({ achievement }) => (
+                <Achievement key={achievement.id} title={achievement.name} />
+              ))}
+            </View>
+          )}
+        </View>
         <View className="mb-4">
           <ProfileButton
             text={t("profile.lastGnomes")}

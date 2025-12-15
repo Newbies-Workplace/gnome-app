@@ -1,6 +1,8 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import {
   AchievementDataResponse,
+  AchievementResponse,
+  UserAchievementGiveResponse,
   UserAchievementResponse,
 } from "@repo/shared/responses";
 import { PrismaService } from "@/db/prisma.service";
@@ -21,36 +23,18 @@ const GNOME_ACHIEVEMENT_MAP: Record<number, string> = {
 export class AchievementsService {
   constructor(private readonly prismaService: PrismaService) {}
 
-  async getAchievementData(
-    userId: string,
-    achievementId: string,
-  ): Promise<UserAchievementResponse> {
-    const achievement = await this.prismaService.userAchievement.findFirst({
-      where: {
-        achievementId: achievementId,
-        userId: userId,
-      },
-    });
-
-    if (!achievement) {
-      throw new NotFoundException("Achievement not found in user");
-    }
-
-    return {
-      achievementId: achievement.achievementId,
-      earnedAt: achievement.earnedAt,
-    };
-  }
-
   async getUserAchievements(
     userId: string,
   ): Promise<UserAchievementResponse[]> {
     const achievements = await this.prismaService.userAchievement.findMany({
       where: { userId },
+      include: {
+        achievement: true,
+      },
     });
 
     return achievements.map((a) => ({
-      achievementId: a.achievementId,
+      achievement: a.achievement,
       earnedAt: a.earnedAt,
     }));
   }
@@ -58,7 +42,7 @@ export class AchievementsService {
   async giveAchievement(
     userId: string,
     achievementId: string,
-  ): Promise<UserAchievementResponse> {
+  ): Promise<UserAchievementGiveResponse> {
     const achievement = await this.prismaService.userAchievement.create({
       data: {
         userId,
@@ -107,6 +91,16 @@ export class AchievementsService {
       data: {
         userId,
         achievementId: achievement.id,
+      },
+    });
+  }
+
+  async getAllAchievements(): Promise<AchievementResponse[]> {
+    return this.prismaService.achievement.findMany({
+      select: {
+        id: true,
+        name: true,
+        description: true,
       },
     });
   }
