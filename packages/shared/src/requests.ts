@@ -98,11 +98,6 @@ export class AddFriendRequest {
   inviteCode!: string;
 }
 
-export class DeleteFriend {
-  @IsUUID()
-  friendId!: string;
-}
-
 export enum BuildingType {
   WATCHTOWER = "WATCHTOWER",
   MINE = "MINE",

@@ -7,19 +7,7 @@ import { PrismaService } from "@/db/prisma.service";
 export class DistrictsService {
   constructor(private readonly prismaService: PrismaService) {}
 
-  async findDistrict(id: number): Promise<DistrictsResponse> {
-    const district = await this.prismaService.district.findFirst({
-      where: {
-        id: id,
-      },
-      select: {
-        id: true,
-        name: true,
-      },
-    });
-    return district;
-  }
-  async findManyDistricts(): Promise<DistrictsResponse[]> {
+  async getAllDistricts(): Promise<DistrictsResponse[]> {
     const districts = await this.prismaService.district.findMany({
       select: {
         id: true,

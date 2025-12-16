@@ -11,12 +11,7 @@ export class DistrictsController {
 
   @Get("")
   @UseGuards(JwtGuard)
-  async findDistricts(): Promise<DistrictsResponse[]> {
-    return await this.districtService.findManyDistricts();
-  }
-
-  @Get(":id")
-  async findDistrictById(@Param("id") id: number): Promise<DistrictsResponse> {
-    return await this.districtService.findDistrict(Number(id));
+  async getAllDistricts(): Promise<DistrictsResponse[]> {
+    return await this.districtService.getAllDistricts();
   }
 }

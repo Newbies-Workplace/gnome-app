@@ -7,12 +7,10 @@ export interface UserResponse {
   role: string;
 }
 
-export interface UserFriendResponse {
+export interface FriendDetailsResponse {
   id: string;
   name: string;
   pictureUrl: string;
-  gnomeInteractions: InteractionResponse[];
-  achievements: UserAchievementResponse[];
   inviteCode: string;
 }
 
