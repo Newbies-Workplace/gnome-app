@@ -88,7 +88,9 @@ export class UsersService {
     return nanoid();
   }
 
-  async createUserWithGoogleData(data: GoogleUser): Promise<User> {
+  async createUserWithGoogleData(
+    data: GoogleUser,
+  ): Promise<User & { Resource: UserResource }> {
     const user = await this.prismaService.user.create({
       data: {
         email: data.email,
@@ -96,20 +98,31 @@ export class UsersService {
         pictureUrl: data.pictureUrl,
         googleId: data.id,
         inviteCode: await this.generateInviteCode(),
+        Resource: {
+          create: {
+            berries: 0,
+            stones: 0,
+            sticks: 0,
+          },
+        },
+      },
+      include: {
+        Resource: true,
       },
     });
-    await this.prismaService.userResource.create({
-      data: {
-        userId: user.id,
-      },
-    });
+
     return user;
   }
 
-  async findUserByGoogleId(googleId: string): Promise<User | null> {
+  async findUserByGoogleId(
+    googleId: string,
+  ): Promise<(User & { Resource: UserResource }) | null> {
     return this.prismaService.user.findFirst({
       where: {
         googleId,
+      },
+      include: {
+        Resource: true,
       },
     });
   }

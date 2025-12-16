@@ -140,7 +140,6 @@ export class GnomesController {
     file: Express.Multer.File,
     @Body() createGnomeDto: CreateGnomeRequest,
   ): Promise<GnomeDetailsResponse> {
-    await this.minioService.createBucketIfNotExists();
     const typeSplit = file.mimetype.split("/");
     const type = typeSplit[typeSplit.length - 1];
     const fileName = `${createGnomeDto.name}.${type}`;

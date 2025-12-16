@@ -8,6 +8,7 @@ import { User } from "@/auth/decorators/jwt-user.decorator";
 import { GoogleAuthRequest } from "@/auth/dto/google-auth.request";
 import { GoogleGuard } from "@/auth/guards/google.guard";
 import { JwtUser } from "@/auth/types/jwt-user";
+import { UsersConverter } from "@/users/users.converter";
 import { UsersService } from "@/users/users.service";
 
 @ApiBearerAuth()
@@ -17,6 +18,7 @@ export class AuthController {
     private readonly authService: AuthService,
     private readonly usersService: UsersService,
     private readonly jwtService: JwtService,
+    private readonly usersConverter: UsersConverter,
   ) {}
 
   @Get("google/redirect")
@@ -60,14 +62,7 @@ export class AuthController {
     };
 
     return {
-      user: {
-        id: user.id,
-        name: user.name,
-        email: user.email,
-        pictureUrl: user.pictureUrl,
-        inviteCode: user.inviteCode,
-        role: user.role,
-      },
+      user: await this.usersConverter.toUserResponse(user),
       access_token: this.jwtService.sign({ user: jwtUser }),
     };
   }

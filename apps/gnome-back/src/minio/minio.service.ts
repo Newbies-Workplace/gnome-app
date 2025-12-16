@@ -1,11 +1,11 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, OnModuleInit } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import * as Minio from "minio";
 
 @Injectable()
-export class MinioService {
+export class MinioService implements OnModuleInit {
   private minioClient: Minio.Client;
-  private bucketName: string;
+  private readonly bucketName: string;
 
   constructor(private readonly configService: ConfigService) {
     this.minioClient = new Minio.Client({
@@ -15,10 +15,54 @@ export class MinioService {
       accessKey: this.configService.get("MINIO_ACCESS_KEY"),
       secretKey: this.configService.get("MINIO_SECRET_KEY"),
     });
+
     this.bucketName = this.configService.get("MINIO_BUCKET_NAME");
   }
 
-  async createBucketIfNotExists() {
+  async onModuleInit() {
+    await this.createBucketIfNotExists();
+  }
+
+  async uploadFile(
+    file: Express.Multer.File,
+    fileName: string,
+    directory: string,
+  ) {
+    if (!file) {
+      return { fileName: null };
+    }
+    const name = `${fileName}`;
+    const filePath = `${directory}/${name}`;
+
+    await this.minioClient.putObject(
+      this.bucketName,
+      filePath,
+      file.buffer,
+      file.size,
+      {
+        "Content-Type": file.mimetype,
+      },
+    );
+
+    return { fileName: name, filePath: filePath };
+  }
+
+  async getFileUrl(filePath: string) {
+    const presignedURL = await this.minioClient.presignedUrl(
+      "GET",
+      this.bucketName,
+      filePath,
+    );
+    const URLArray = presignedURL.split("?");
+
+    return URLArray[0];
+  }
+
+  async deleteFile(bucketName: string, objectName: string) {
+    await this.minioClient.removeObject(bucketName, objectName);
+  }
+
+  private async createBucketIfNotExists() {
     const bucketExists = await this.minioClient.bucketExists(this.bucketName);
     if (!bucketExists) {
       const policy = {
@@ -38,42 +82,5 @@ export class MinioService {
         JSON.stringify(policy),
       );
     }
-  }
-
-  async uploadFile(
-    file: Express.Multer.File,
-    fileNameString: string,
-    catalogueName: string,
-  ) {
-    if (!file) {
-      return { fileName: null };
-    }
-    const fileName = `${fileNameString}`;
-    const filePath = `${catalogueName}/${fileNameString}`;
-    await this.minioClient.putObject(
-      this.bucketName,
-      filePath,
-      file.buffer,
-      file.size,
-      {
-        "Content-Type": file.mimetype,
-      },
-    );
-
-    return { fileName: fileName, filePath: filePath };
-  }
-
-  async getFileUrl(filePath: string) {
-    const presignedURL = await this.minioClient.presignedUrl(
-      "GET",
-      this.bucketName,
-      filePath,
-    );
-    const URLArray = presignedURL.split("?");
-
-    return URLArray[0];
-  }
-  async deleteFile(bucketName: string, objectName: string) {
-    await this.minioClient.removeObject(bucketName, objectName);
   }
 }

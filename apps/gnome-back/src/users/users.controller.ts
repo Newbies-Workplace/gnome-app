@@ -18,10 +18,10 @@ import {
 import { FileInterceptor } from "@nestjs/platform-express";
 import { ApiBearerAuth, ApiBody } from "@nestjs/swagger";
 import {
-  AssignTeam,
+  AssignTeamRequest,
   PaginationRequest,
-  SearchByNameReuqest,
-  UserUpdate,
+  SearchByNameRequest,
+  UserUpdateRequest,
 } from "@repo/shared/requests";
 import {
   UserResponse,
@@ -50,7 +50,7 @@ export class UsersController {
   @Role(["ADMIN"])
   async getUsers(
     @Query() { page }: PaginationRequest,
-    @Query() { name }: SearchByNameReuqest,
+    @Query() { name }: SearchByNameRequest,
   ): Promise<UserResponse[]> {
     const users = await this.usersService.getUsers(page, name);
 
@@ -79,7 +79,7 @@ export class UsersController {
   @UseGuards(JwtGuard)
   async changeUserData(
     @User() user: JwtUser,
-    @Body() body: UserUpdate,
+    @Body() body: UserUpdateRequest,
     @UploadedFile(
       new ParseFilePipe({
         fileIsRequired: false,
@@ -98,7 +98,6 @@ export class UsersController {
     const fileName = `${user.id}.jpg`;
     const catalogueName = "userProfilePictures";
     if (file) {
-      await this.minioService.createBucketIfNotExists();
       await this.minioService.uploadFile(file, fileName, catalogueName);
     }
     const filePath = `${catalogueName}/${fileName}`;
@@ -139,7 +138,7 @@ export class UsersController {
   @Put("@me/teams")
   @HttpCode(204)
   @UseGuards(JwtGuard)
-  async assignTeam(@User() user: JwtUser, @Body() body: AssignTeam) {
+  async assignTeam(@User() user: JwtUser, @Body() body: AssignTeamRequest) {
     return this.usersService.assignTeam(user.id, body.team);
   }
 }

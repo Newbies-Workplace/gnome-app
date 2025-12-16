@@ -16,7 +16,7 @@ import { useUserStore } from "@/store/useUserStore";
 export default function UserDetailPanel() {
   const navigate = useNavigate();
 
-  const { users, loading, error, fetchUsers } = useUserStore();
+  const { users, fetchUsers } = useUserStore();
 
   useEffect(() => {
     fetchUsers();
@@ -70,17 +70,17 @@ export default function UserDetailPanel() {
               <div className="flex flex-row w-full justify-between">
                 <div className="flex flex-row items-center gap-2">
                   <img src={BerryIcon} className="w-8 h-8" />
-                  <div>12</div>
+                  <div>{user.resources.berries}</div>
                 </div>
 
                 <div className="flex flex-row items-center gap-2">
                   <img src={StoneIcon} className="w-8 h-8" />
-                  <div>10</div>
+                  <div>{user.resources.stones}</div>
                 </div>
 
                 <div className="flex flex-row items-center gap-2">
                   <img src={WoodIcon} className="w-8 h-8" />
-                  <div>5</div>
+                  <div>{user.resources.sticks}</div>
                 </div>
               </div>
             </div>
