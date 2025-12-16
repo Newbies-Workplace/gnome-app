@@ -10,42 +10,13 @@ import {
   IsNumber,
   IsOptional,
   IsString,
-  IsUrl,
-  IsUUID,
-  isNotEmpty,
   Matches,
 } from "class-validator";
 
-export class UserUpdate {
+export class UserUpdateRequest {
   @IsString()
   @IsOptional()
   name?: string;
-}
-
-export class CreateReportRequest {
-  @IsString()
-  @IsNotEmpty()
-  gnomeName!: string;
-
-  @IsUrl()
-  @IsNotEmpty()
-  pictureUrl?: string;
-
-  @IsLatitude()
-  @IsNotEmpty()
-  latitude!: number;
-
-  @IsLongitude()
-  @IsNotEmpty()
-  longitude!: number;
-
-  @IsString()
-  @IsNotEmpty()
-  location!: string;
-
-  @IsString()
-  @IsNotEmpty()
-  reportAuthor!: string;
 }
 
 export class CreateGnomeRequest {
@@ -81,10 +52,6 @@ export class CreateInteractionRequest {
   @IsDate()
   @Type(() => Date)
   interactionDate!: Date;
-
-  @IsString()
-  @IsNotEmpty()
-  gnomeId!: string;
 }
 
 export class CreateUserAchievementRequest {
@@ -140,14 +107,14 @@ export class PaginationRequest {
   page?: number;
 }
 
-export class SearchByNameReuqest {
+export class SearchByNameRequest {
   @Type(() => String)
   name?: string;
 }
 
 export type Team = "TEAM_YELLOW" | "TEAM_BLUE" | "TEAM_GREEN";
 
-export class AssignTeam {
+export class AssignTeamRequest {
   @IsNotEmpty()
   team!: Team;
 }

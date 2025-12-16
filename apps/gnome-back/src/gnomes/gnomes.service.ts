@@ -1,13 +1,13 @@
-import { Injectable } from "@nestjs/common";
-import { Gnome } from "@prisma/client";
+import { ConflictException, Injectable } from "@nestjs/common";
+import { Gnome, GnomeInteraction } from "@prisma/client";
 import { CreateGnomeRequest, UpdateGnomeRequest } from "@repo/shared/requests";
-import {
-  GnomeIdResponse,
-  InteractionExtendedResponse,
-} from "@repo/shared/responses";
+import { InteractionExtendedResponse } from "@repo/shared/responses";
 import { PrismaService } from "@/db/prisma.service";
 import { DistrictsService } from "@/districts/districts.service";
+import { GnomeInteractionCreateResult } from "@/gnomes/gnomes.dto";
 import { MinioService } from "@/minio/minio.service";
+
+const MIN_INTERACTION_INTERVAL = 5 * 60 * 1000;
 
 @Injectable()
 export class GnomesService {
@@ -19,30 +19,6 @@ export class GnomesService {
 
   async getAllGnomes(): Promise<Gnome[]> {
     return this.prismaService.gnome.findMany();
-  }
-
-  async getGnomeData(id: string): Promise<GnomeIdResponse> {
-    const gnome = await this.prismaService.gnome.findUnique({
-      where: { id },
-    });
-    if (!gnome) {
-      return undefined;
-    }
-
-    const allGnomes = await this.prismaService.gnome.findMany({
-      where: { id: { not: id } },
-    });
-
-    const nearest = allGnomes
-      .sort(
-        (a, b) =>
-          (a.latitude - gnome.latitude) ** 2 +
-          (a.longitude - gnome.longitude) ** 2 -
-          ((b.latitude - gnome.latitude) ** 2 +
-            (b.longitude - gnome.longitude) ** 2),
-      )
-      .slice(0, 3);
-    return { ...gnome, nearest };
   }
 
   async getGnomeUniqueInteractionCount(gnomeId: string): Promise<number> {
@@ -61,23 +37,35 @@ export class GnomesService {
     return collection.length;
   }
 
-  async getMyGnomesInteractions(id: string) {
+  async getMyGnomesInteractions(id: string): Promise<GnomeInteraction[]> {
     return this.prismaService.gnomeInteraction.findMany({
       where: { userId: id },
     });
   }
 
-  async getLastInteraction(id: string, user: string) {
-    const hasInteraction = await this.prismaService.gnomeInteraction.findFirst({
-      where: {
-        userId: user,
-        gnomeId: id,
+  async assertNoRecentInteractions(gnomeId: string, userId: string) {
+    const lastInteraction = await this.prismaService.gnomeInteraction.findFirst(
+      {
+        where: {
+          userId: userId,
+          gnomeId: gnomeId,
+        },
+        orderBy: {
+          interactionDate: "desc",
+        },
       },
-      orderBy: {
-        interactionDate: "desc",
-      },
-    });
-    return hasInteraction;
+    );
+
+    if (lastInteraction) {
+      if (
+        Date.now() - new Date(lastInteraction.interactionDate).getTime() <
+        MIN_INTERACTION_INTERVAL
+      ) {
+        throw new ConflictException(
+          `Interaction cooldown - gnomeId: ${gnomeId}`,
+        );
+      }
+    }
   }
 
   async createGnome(data: CreateGnomeRequest, pictureUrl: string) {
@@ -100,28 +88,13 @@ export class GnomesService {
       },
     });
   }
-  async getRandomResources() {
-    const resources = ["berries", "sticks", "stones"];
 
-    const i = Math.floor(Math.random() * resources.length);
-
-    let j = Math.floor(Math.random() * (resources.length - 1));
-    if (j >= i) j++;
-
-    const resource1 = resources[i];
-    const resource2 = resources[j];
-
-    const amount1 = Math.ceil(Math.random() * 5);
-    const amount2 = Math.ceil(Math.random() * 5);
-
-    return { resource1, resource2, amount1, amount2 };
-  }
   async createInteraction(
     userId: string,
     interactionDate: Date,
     gnomeId: string,
-  ): Promise<InteractionExtendedResponse> {
-    const createGnome = await this.prismaService.gnomeInteraction.create({
+  ): Promise<GnomeInteractionCreateResult> {
+    const interaction = await this.prismaService.gnomeInteraction.create({
       data: {
         userId,
         interactionDate,
@@ -129,13 +102,8 @@ export class GnomesService {
       },
     });
 
-    const findGnome = await this.prismaService.gnome.findUnique({
-      where: {
-        id: gnomeId,
-      },
-    });
     const { resource1, resource2, amount1, amount2 } =
-      await this.getRandomResources();
+      await this.getInteractionRandomResources();
 
     const newResources = await this.prismaService.userResource.update({
       where: {
@@ -145,21 +113,12 @@ export class GnomesService {
         [resource1]: { increment: amount1 },
         [resource2]: { increment: amount2 },
       },
-      select: {
-        berries: true,
-        stones: true,
-        sticks: true,
-      },
     });
+
     return {
-      ...createGnome,
-      gnome: findGnome,
+      interaction: interaction,
       _metadata: {
-        userResources: {
-          berries: newResources.berries,
-          stones: newResources.stones,
-          sticks: newResources.sticks,
-        },
+        userResources: newResources,
         gatheredResources: {
           [resource1]: amount1,
           [resource2]: amount2,
@@ -167,6 +126,7 @@ export class GnomesService {
       },
     };
   }
+
   async deleteGnome(id: string) {
     const gnomes = await this.prismaService.gnome.findUnique({
       where: {
@@ -190,6 +150,7 @@ export class GnomesService {
       data: { ...gnomeData },
     });
   }
+
   async updateGnomePicture(gnomeId: string, file: Express.Multer.File) {
     const gnome = await this.prismaService.gnome.findUnique({
       where: {
@@ -205,7 +166,8 @@ export class GnomesService {
     const fileName = `${gnome.name}.${type}`;
     const catalogueName = "defaultGnomePictures";
     await this.minioService.uploadFile(file, fileName, catalogueName);
-    await this.prismaService.gnome.update({
+
+    return this.prismaService.gnome.update({
       where: {
         id: gnomeId,
       },
@@ -214,6 +176,7 @@ export class GnomesService {
       },
     });
   }
+
   async deleteGnomePicture(gnomeId: string) {
     const gnome = await this.prismaService.gnome.findUnique({
       where: {
@@ -224,10 +187,11 @@ export class GnomesService {
         name: true,
       },
     });
+
     if (gnome.pictureUrl) {
       const bucketName = "images";
       const fullUrl = gnome.pictureUrl.split("/images/")[1];
-      console.log(fullUrl);
+
       await this.minioService.deleteFile(bucketName, fullUrl);
       await this.prismaService.gnome.update({
         where: {
@@ -238,5 +202,22 @@ export class GnomesService {
         },
       });
     }
+  }
+
+  private async getInteractionRandomResources() {
+    const resources = ["berries", "sticks", "stones"];
+
+    const i = Math.floor(Math.random() * resources.length);
+
+    let j = Math.floor(Math.random() * (resources.length - 1));
+    if (j >= i) j++;
+
+    const resource1 = resources[i];
+    const resource2 = resources[j];
+
+    const amount1 = Math.ceil(Math.random() * 5);
+    const amount2 = Math.ceil(Math.random() * 5);
+
+    return { resource1, resource2, amount1, amount2 };
   }
 }

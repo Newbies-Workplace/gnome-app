@@ -40,22 +40,11 @@ export interface GnomeResponse {
   creationDate: Date;
   description: string;
   exists: boolean;
-  pictureUrl: string;
+  pictureUrl?: string;
   districtId?: number | null;
 }
 
-export interface GnomeIdResponse {
-  name: string;
-  id: string;
-  funFact: string;
-  latitude: number;
-  longitude: number;
-  location: string;
-  creationDate: Date;
-  description: string;
-  exists: boolean;
-  pictureUrl?: string;
-  districtId?: number | null;
+export interface GnomeDetailsResponse extends GnomeResponse {
   nearest: GnomeResponse[];
 }
 
@@ -65,11 +54,9 @@ export interface InteractionResponse {
   userId: string;
   interactionDate: Date;
 }
+
 export interface InteractionExtendedResponse extends InteractionResponse {
-  gnome: {
-    id: string;
-    name: string;
-  };
+  gnome: GnomeResponse;
   _metadata: {
     userResources: {
       berries: number;
@@ -82,15 +69,6 @@ export interface InteractionExtendedResponse extends InteractionResponse {
       sticks?: number;
     };
   };
-}
-export interface ReportResponse {
-  id: string;
-  gnomeName: string;
-  pictureUrl?: string;
-  latitude: number;
-  longitude: number;
-  location: string;
-  reportAuthor: string;
 }
 
 export interface FriendSearchResponse {
