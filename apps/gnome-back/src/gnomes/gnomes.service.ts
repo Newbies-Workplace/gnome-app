@@ -1,7 +1,6 @@
 import { ConflictException, Injectable } from "@nestjs/common";
 import { Gnome, GnomeInteraction } from "@prisma/client";
 import { CreateGnomeRequest, UpdateGnomeRequest } from "@repo/shared/requests";
-import { InteractionExtendedResponse } from "@repo/shared/responses";
 import { PrismaService } from "@/db/prisma.service";
 import { DistrictsService } from "@/districts/districts.service";
 import { GnomeInteractionCreateResult } from "@/gnomes/gnomes.dto";

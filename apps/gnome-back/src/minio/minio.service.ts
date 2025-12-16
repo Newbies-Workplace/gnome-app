@@ -70,8 +70,8 @@ export class MinioService {
       filePath,
     );
     const URLArray = presignedURL.split("?");
-    const URL = URLArray[0];
-    return URL;
+
+    return URLArray[0];
   }
   async deleteFile(bucketName: string, objectName: string) {
     await this.minioClient.removeObject(bucketName, objectName);

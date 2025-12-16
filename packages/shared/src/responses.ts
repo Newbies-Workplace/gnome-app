@@ -5,6 +5,15 @@ export interface UserResponse {
   pictureUrl: string;
   inviteCode: string;
   role: string;
+  resources: {
+    berries: number;
+    stones: number;
+    sticks: number;
+  };
+}
+
+export interface UserUpdateInviteCodeResponse {
+  inviteCode: string;
 }
 
 export interface FriendDetailsResponse {
@@ -12,12 +21,6 @@ export interface FriendDetailsResponse {
   name: string;
   pictureUrl: string;
   inviteCode: string;
-}
-
-export interface UserPatchResponse {
-  id: string;
-  name: string;
-  pictureUrl: string;
 }
 
 export interface GoogleUserResponse {
@@ -115,12 +118,6 @@ export interface BuildingResponse {
   createdAt: Date;
   ownerId: string;
 }
-export interface AchievementDataResponse {
-  id: string;
-  name: string;
-  description: string;
-  users: number;
-}
 
 export interface AchievementResponse {
   id: string;
@@ -134,11 +131,6 @@ export interface UserAchievementResponse {
     name: string;
     description: string;
   };
-  earnedAt: Date;
-}
-
-export interface UserAchievementGiveResponse {
-  achievementId: string;
   earnedAt: Date;
 }
 
