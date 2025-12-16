@@ -268,6 +268,7 @@ const MapScreen = () => {
     distance !== undefined &&
     distance <= MIN_REACHED_DISTANCE &&
     closestGnomeId !== undefined;
+  const isCurrentScreenFocused = pathname === "/";
 
   const selectedGnomeDistance = selectedGnome
     ? getDistance(
@@ -347,7 +348,7 @@ const MapScreen = () => {
         ))}
       </MapView>
       <View className="absolute bottom-12 left-0 right-0 p-4 bg-transparent z-10">
-        {isGnomeTrackerVisible && pathname === "/" && (
+        {isGnomeTrackerVisible && isCurrentScreenFocused && (
           <DistanceTracker distance={distance} />
         )}
         {isGnomeCatcherVisible && (
