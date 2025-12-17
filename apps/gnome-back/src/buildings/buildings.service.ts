@@ -195,11 +195,9 @@ export class BuildingsService {
     });
 
     if (
-      !(
-        resources.berries > berries &&
-        resources.sticks > sticks &&
-        resources.stones > stones
-      )
+      resources.berries < berries ||
+      resources.sticks < sticks ||
+      resources.stones < stones
     ) {
       throw new ConflictException("Not enough resources");
     }

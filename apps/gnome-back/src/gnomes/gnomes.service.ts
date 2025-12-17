@@ -69,8 +69,8 @@ export class GnomesService {
 
   async createGnome(data: CreateGnomeRequest, pictureUrl: string) {
     const districtId = await this.districtsService.findDistrictId([
-      Number(data.latitude),
       Number(data.longitude),
+      Number(data.latitude),
     ]);
 
     return this.prismaService.gnome.create({

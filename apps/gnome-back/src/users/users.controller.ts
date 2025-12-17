@@ -125,7 +125,7 @@ export class UsersController {
   @HttpCode(204)
   @UseGuards(JwtGuard)
   async deleteUserAccount(@User() user: JwtUser) {
-    return this.usersService.deleteAccount(user.id);
+    await this.usersService.deleteAccount(user.id);
   }
 
   @ApiBody({
@@ -139,6 +139,6 @@ export class UsersController {
   @HttpCode(204)
   @UseGuards(JwtGuard)
   async assignTeam(@User() user: JwtUser, @Body() body: AssignTeamRequest) {
-    return this.usersService.assignTeam(user.id, body.team);
+    await this.usersService.assignTeam(user.id, body.team);
   }
 }

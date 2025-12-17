@@ -4,6 +4,7 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
   Param,
   Post,
   UseGuards,
@@ -86,6 +87,7 @@ export class FriendsController {
   }
 
   @Delete(":id")
+  @HttpCode(204)
   @UseGuards(JwtGuard)
   async deleteFriend(@User() user: JwtUser, @Param("id") friendId: string) {
     await this.friendsService.deleteFriend(user.id, friendId);
