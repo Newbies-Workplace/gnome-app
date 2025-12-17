@@ -40,6 +40,7 @@ export class AuthService {
       name: existingUser.name,
       email: existingUser.email,
       googleId: existingUser.googleId,
+      role: existingUser.role,
     };
 
     return this.jwtService.sign({

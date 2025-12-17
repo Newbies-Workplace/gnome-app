@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
   NotFoundException,
   Param,
   Patch,
@@ -25,16 +26,16 @@ import { JwtGuard } from "@/auth/guards/jwt.guard";
 import { RoleGuard } from "@/auth/guards/role.guard";
 import { JwtUser } from "@/auth/types/jwt-user";
 import { MAX_ATTACK_DAMAGE } from "@/buildings/buildings.constants";
-import {
-  toBuildingInteractionResponse,
-  toBuildingResponse,
-} from "@/buildings/buildings.converter";
+import { BuildingsConverter } from "@/buildings/buildings.converter";
 import { BuildingsService } from "@/buildings/buildings.service";
 
 @ApiBearerAuth()
 @Controller("buildings")
 export class BuildingsController {
-  constructor(private readonly buildingsService: BuildingsService) {}
+  constructor(
+    private readonly buildingsService: BuildingsService,
+    private readonly converter: BuildingsConverter,
+  ) {}
 
   @ApiBody({
     schema: {
@@ -52,13 +53,13 @@ export class BuildingsController {
   async createBuilding(
     @User() user: JwtUser,
     @Body() body: CreateBuildingRequest,
-  ) {
+  ): Promise<BuildingResponse> {
     const createdBuilding = await this.buildingsService.createBuilding(
       body,
       user,
     );
 
-    return toBuildingResponse(createdBuilding);
+    return await this.converter.toBuildingResponse(createdBuilding);
   }
 
   @Get(":id")
@@ -73,7 +74,7 @@ export class BuildingsController {
       throw new NotFoundException(`Building with id ${buildingId} not found`);
     }
 
-    return toBuildingResponse(buildingData);
+    return await this.converter.toBuildingResponse(buildingData);
   }
 
   @Get("")
@@ -81,7 +82,11 @@ export class BuildingsController {
   async getAllBuildings(): Promise<BuildingResponse[]> {
     const buildings = await this.buildingsService.getAllBuildings();
 
-    return buildings.map(toBuildingResponse);
+    return Promise.all(
+      buildings.map(async (building) =>
+        this.converter.toBuildingResponse(building),
+      ),
+    );
   }
 
   @Get(":id/interactions")
@@ -99,16 +104,11 @@ export class BuildingsController {
     const interactions =
       await this.buildingsService.getBuildingInteractions(buildingId);
 
-    return interactions.map(toBuildingInteractionResponse);
-  }
-
-  @Delete(":id")
-  @UseGuards(JwtGuard)
-  async deleteBuilding(
-    @Param("id") buildingId: string,
-    @User() user,
-  ): Promise<void> {
-    await this.buildingsService.deleteBuilding(buildingId, user.id, user.role);
+    return Promise.all(
+      interactions.map(async (interaction) =>
+        this.converter.toBuildingInteractionResponse(interaction),
+      ),
+    );
   }
 
   @ApiBody({
@@ -124,7 +124,7 @@ export class BuildingsController {
     @Param("id") buildingId: string,
     @User() user: JwtUser,
     @Body() body: EmpowerBuildingRequest,
-  ) {
+  ): Promise<BuildingResponse> {
     await this.buildingsService.createInteraction(
       user.id,
       buildingId,
@@ -137,7 +137,7 @@ export class BuildingsController {
       body.gnomeCount,
     );
 
-    return toBuildingResponse(updatedBuilding);
+    return this.converter.toBuildingResponse(updatedBuilding);
   }
 
   @ApiBody({
@@ -153,7 +153,7 @@ export class BuildingsController {
     @Param("id") buildingId: string,
     @User() user: JwtUser,
     @Body() body: AttackBuildingRequest,
-  ) {
+  ): Promise<BuildingResponse> {
     const damage = Math.min(body.clicks * 0.2, MAX_ATTACK_DAMAGE);
 
     await this.buildingsService.createInteraction(
@@ -168,6 +168,16 @@ export class BuildingsController {
       damage,
     );
 
-    return toBuildingResponse(updatedBuilding);
+    return this.converter.toBuildingResponse(updatedBuilding);
+  }
+
+  @Delete(":id")
+  @HttpCode(204)
+  @UseGuards(JwtGuard)
+  async deleteBuilding(
+    @Param("id") buildingId: string,
+    @User() user: JwtUser,
+  ): Promise<void> {
+    await this.buildingsService.deleteBuilding(buildingId, user.id, user.role);
   }
 }

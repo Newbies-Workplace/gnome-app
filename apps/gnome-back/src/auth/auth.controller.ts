@@ -59,6 +59,7 @@ export class AuthController {
       name: user.name,
       email: user.email,
       googleId: user.googleId,
+      role: user.role,
     };
 
     return {

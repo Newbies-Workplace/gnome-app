@@ -10,10 +10,7 @@ import {
   AchievementResponse,
   UserAchievementResponse,
 } from "@repo/shared/responses";
-import {
-  toAchievementResponse,
-  toUserAchievementResponse,
-} from "@/achievements/achievements.converter";
+import { AchievementsConverter } from "@/achievements/achievements.converter";
 import { AchievementsService } from "@/achievements/achievements.service";
 import { User } from "@/auth/decorators/jwt-user.decorator";
 import { JwtGuard } from "@/auth/guards/jwt.guard";
@@ -26,6 +23,7 @@ export class AchievementsController {
   constructor(
     private readonly achievementsService: AchievementsService,
     private readonly friendsService: FriendsService,
+    private readonly converter: AchievementsConverter,
   ) {}
 
   @Get("@me")
@@ -37,14 +35,18 @@ export class AchievementsController {
       user.id,
     );
 
-    return achievements.map(toUserAchievementResponse);
+    return Promise.all(
+      achievements.map(this.converter.toUserAchievementResponse),
+    );
   }
 
   @Get("")
   async getAllAchievements(): Promise<AchievementResponse[]> {
     const allAchievements = await this.achievementsService.getAllAchievements();
 
-    return allAchievements.map(toAchievementResponse);
+    return Promise.all(
+      allAchievements.map(this.converter.toAchievementResponse),
+    );
   }
 
   @Get("friend/:id")
@@ -64,6 +66,8 @@ export class AchievementsController {
     const achievements =
       await this.achievementsService.getUserAchievements(friendId);
 
-    return achievements.map(toUserAchievementResponse);
+    return Promise.all(
+      achievements.map(this.converter.toUserAchievementResponse),
+    );
   }
 }

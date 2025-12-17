@@ -157,12 +157,8 @@ export class BuildingsService {
         buildingId,
       },
     });
-    return interactions.map((e) => ({
-      userId: e.userId,
-      createdAt: e.createdAt,
-      interactionType: e.interactionType,
-      amount: e.amount,
-    }));
+
+    return interactions;
   }
 
   async createInteraction(
