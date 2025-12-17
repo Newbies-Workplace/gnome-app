@@ -36,7 +36,7 @@ export class AchievementsController {
     );
 
     return Promise.all(
-      achievements.map(this.converter.toUserAchievementResponse),
+      achievements.map((a) => this.converter.toUserAchievementResponse(a)),
     );
   }
 
@@ -45,7 +45,7 @@ export class AchievementsController {
     const allAchievements = await this.achievementsService.getAllAchievements();
 
     return Promise.all(
-      allAchievements.map(this.converter.toAchievementResponse),
+      allAchievements.map((a) => this.converter.toAchievementResponse(a)),
     );
   }
 
@@ -67,7 +67,7 @@ export class AchievementsController {
       await this.achievementsService.getUserAchievements(friendId);
 
     return Promise.all(
-      achievements.map(this.converter.toUserAchievementResponse),
+      achievements.map((a) => this.converter.toUserAchievementResponse(a)),
     );
   }
 }
