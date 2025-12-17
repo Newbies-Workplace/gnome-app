@@ -360,7 +360,6 @@ const MapScreen = () => {
           />
         )}
       </View>
-      r
       {isGnomeCatcherVisible && (
         <LinearGradient
           className={"absolute bottom-0 left-0 right-0 h-[130px]"}
