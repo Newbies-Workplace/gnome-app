@@ -24,6 +24,7 @@ const ThemeSelectorBottomSheet: React.FC<ThemeSelectorBottomSheetProps> = ({
     <BottomSheetView className="w-full px-6 py-6">
       {Object.keys(options).map((key) => (
         <TouchableOpacity
+          key={key}
           className="py-4 border-b border-tekst flex-row justify-between items-center"
           onPress={() => {
             toggleTheme(key as "dark" | "light" | "system");

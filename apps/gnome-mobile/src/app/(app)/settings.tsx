@@ -1,6 +1,5 @@
 import BottomSheet from "@gorhom/bottom-sheet";
 import { useNavigation } from "@react-navigation/native";
-import { Portal } from "@rn-primitives/portal";
 import { useRouter } from "expo-router";
 import { useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
