@@ -1,7 +1,7 @@
 import { Portal } from "@rn-primitives/portal";
 import { LinearGradient } from "expo-linear-gradient";
 import * as Location from "expo-location";
-import { router, useFocusEffect, useRouter } from "expo-router";
+import { router, useFocusEffect, usePathname, useRouter } from "expo-router";
 import { getDistance } from "geolib";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -148,6 +148,7 @@ const MapScreen = () => {
   const [selectedGnomeId, setSelectedGnomeId] = useState<string | null>(null);
   const closestGnomeData = gnomes.find((g) => g.id === closestGnomeId);
   const selectedGnome = gnomes.find((g) => g.id === selectedGnomeId);
+  const pathname = usePathname();
 
   const defaultRegion = {
     latitude: 51.109967,
@@ -267,6 +268,7 @@ const MapScreen = () => {
     distance !== undefined &&
     distance <= MIN_REACHED_DISTANCE &&
     closestGnomeId !== undefined;
+  const isCurrentScreenFocused = pathname === "/";
 
   const selectedGnomeDistance = selectedGnome
     ? getDistance(
@@ -299,7 +301,6 @@ const MapScreen = () => {
           />
         )}
       </View>
-
       <MapView
         style={styles.map}
         initialRegion={defaultRegion}
@@ -346,9 +347,10 @@ const MapScreen = () => {
           </Marker>
         ))}
       </MapView>
-
       <View className="absolute bottom-12 left-0 right-0 p-4 bg-transparent z-10">
-        {isGnomeTrackerVisible && <DistanceTracker distance={distance} />}
+        {isGnomeTrackerVisible && isCurrentScreenFocused && (
+          <DistanceTracker distance={distance} />
+        )}
         {isGnomeCatcherVisible && (
           <DraggableGnome
             onUnlock={() => {
