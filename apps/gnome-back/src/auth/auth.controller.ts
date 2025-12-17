@@ -1,15 +1,16 @@
 import { Body, Controller, Get, Post, Res, UseGuards } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
-import { ApiBearerAuth, ApiBody } from "@nestjs/swagger";
-import { UserRole } from "@prisma/client";
+import { ApiBearerAuth } from "@nestjs/swagger";
 import { GoogleUserResponse, UserResponse } from "@repo/shared/responses";
 import { Response } from "express";
 import { AuthService } from "@/auth/auth.service";
-import { GoogleAuthRequest } from "@/auth/dto/google-auth.request.dto";
+import { User } from "@/auth/decorators/jwt-user.decorator";
+import { GoogleAuthRequest } from "@/auth/dto/google-auth.request";
+import { GoogleGuard } from "@/auth/guards/google.guard";
 import { JwtUser } from "@/auth/types/jwt-user";
+import { UsersConverter } from "@/users/users.converter";
 import { UsersService } from "@/users/users.service";
-import { User } from "./decorators/jwt-user.decorator";
-import { GoogleGuard } from "./guards/google.guard";
+
 @ApiBearerAuth()
 @Controller("auth")
 export class AuthController {
@@ -17,6 +18,7 @@ export class AuthController {
     private readonly authService: AuthService,
     private readonly usersService: UsersService,
     private readonly jwtService: JwtService,
+    private readonly usersConverter: UsersConverter,
   ) {}
 
   @Get("google/redirect")
@@ -57,17 +59,11 @@ export class AuthController {
       name: user.name,
       email: user.email,
       googleId: user.googleId,
+      role: user.role,
     };
 
     return {
-      user: {
-        id: user.id,
-        name: user.name,
-        email: user.email,
-        pictureUrl: user.pictureUrl,
-        inviteCode: user.inviteCode,
-        role: user.role,
-      },
+      user: await this.usersConverter.toUserResponse(user),
       access_token: this.jwtService.sign({ user: jwtUser }),
     };
   }

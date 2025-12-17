@@ -1,17 +1,8 @@
-import {
-  Body,
-  Controller,
-  Get,
-  Param,
-  Post,
-  Query,
-  UseGuards,
-} from "@nestjs/common";
+import { Controller, Get, UseGuards } from "@nestjs/common";
 import { ApiBearerAuth } from "@nestjs/swagger";
 import { DistrictsResponse } from "@repo/shared/responses";
 import { JwtGuard } from "@/auth/guards/jwt.guard";
-import { Role } from "@/role/role.decorator";
-import { DistrictsService } from "./districts.service";
+import { DistrictsService } from "@/districts/districts.service";
 
 @ApiBearerAuth()
 @Controller("districts")
@@ -20,12 +11,7 @@ export class DistrictsController {
 
   @Get("")
   @UseGuards(JwtGuard)
-  async findDistricts(): Promise<DistrictsResponse[]> {
-    return await this.districtService.findManyDistricts();
-  }
-
-  @Get(":id")
-  async findDistrictById(@Param("id") id: number): Promise<DistrictsResponse> {
-    return await this.districtService.findDistrict(Number(id));
+  async getAllDistricts(): Promise<DistrictsResponse[]> {
+    return await this.districtService.getAllDistricts();
   }
 }

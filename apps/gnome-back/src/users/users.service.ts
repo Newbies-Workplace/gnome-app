@@ -1,29 +1,41 @@
 import { ConflictException, Injectable } from "@nestjs/common";
 import { Team as PrismaTeam, User, UserResource } from "@prisma/client";
-import { AssignTeam, Team } from "@repo/shared/requests";
+import { Team } from "@repo/shared/requests";
 import { customAlphabet } from "nanoid";
 import { GoogleUser } from "@/auth/types/google-user";
 import { PrismaService } from "@/db/prisma.service";
+
+const PAGE_LIMIT = 50;
 
 @Injectable()
 export class UsersService {
   constructor(private readonly prismaService: PrismaService) {}
 
-  async findUserById(id: string): Promise<User | null> {
+  async findUserById(
+    id: string,
+  ): Promise<(User & { Resource: UserResource }) | null> {
     return this.prismaService.user.findUnique({
       where: {
         id,
       },
+      include: {
+        Resource: true,
+      },
     });
   }
 
-  async getUsers(page = 0, name?: string): Promise<User[]> {
-    const LIMIT = 50;
-    const OFFSET = page * LIMIT;
+  async getUsers(
+    page = 0,
+    name?: string,
+  ): Promise<(User & { Resource: UserResource })[]> {
+    const OFFSET = page * PAGE_LIMIT;
 
     return this.prismaService.user.findMany({
-      take: LIMIT,
+      take: PAGE_LIMIT,
       skip: OFFSET,
+      include: {
+        Resource: true,
+      },
       where: name
         ? {
             name: { contains: name },
@@ -34,9 +46,14 @@ export class UsersService {
 
   async changeUserData(
     id: string,
-    name: string,
-    pictureUrl: string,
-  ): Promise<{ id: string; name: string; pictureUrl: string }> {
+    {
+      name,
+      pictureUrl,
+    }: {
+      name?: string;
+      pictureUrl?: string;
+    },
+  ): Promise<User & { Resource: UserResource }> {
     const dataToUpdate: any = {};
 
     if (name) {
@@ -47,13 +64,12 @@ export class UsersService {
       dataToUpdate.pictureUrl = pictureUrl;
     }
 
-    if (Object.keys(dataToUpdate).length === 0) {
-      return { id, name, pictureUrl };
-    }
-
     return this.prismaService.user.update({
       where: { id: id },
       data: dataToUpdate,
+      include: {
+        Resource: true,
+      },
     });
   }
 
@@ -72,7 +88,9 @@ export class UsersService {
     return nanoid();
   }
 
-  async createUserWithGoogleData(data: GoogleUser): Promise<User> {
+  async createUserWithGoogleData(
+    data: GoogleUser,
+  ): Promise<User & { Resource: UserResource }> {
     const user = await this.prismaService.user.create({
       data: {
         email: data.email,
@@ -80,20 +98,31 @@ export class UsersService {
         pictureUrl: data.pictureUrl,
         googleId: data.id,
         inviteCode: await this.generateInviteCode(),
+        Resource: {
+          create: {
+            berries: 0,
+            stones: 0,
+            sticks: 0,
+          },
+        },
+      },
+      include: {
+        Resource: true,
       },
     });
-    const resource = await this.prismaService.userResource.create({
-      data: {
-        userId: user.id,
-      },
-    });
+
     return user;
   }
 
-  async findUserByGoogleId(googleId: string): Promise<User | null> {
+  async findUserByGoogleId(
+    googleId: string,
+  ): Promise<(User & { Resource: UserResource }) | null> {
     return this.prismaService.user.findFirst({
       where: {
         googleId,
+      },
+      include: {
+        Resource: true,
       },
     });
   }
@@ -107,13 +136,6 @@ export class UsersService {
     });
 
     return newInviteCode;
-  }
-  async getUserResources(userId: string): Promise<UserResource | null> {
-    return this.prismaService.userResource.findFirst({
-      where: {
-        userId: userId,
-      },
-    });
   }
 
   async assignTeam(userId: string, team: Team) {

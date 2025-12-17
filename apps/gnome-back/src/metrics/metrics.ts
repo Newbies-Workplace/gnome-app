@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { Counter, Gauge } from "prom-client";
-import { PrismaService } from "../db/prisma.service";
+import { PrismaService } from "@/db/prisma.service";
 
 @Injectable()
 export class MetricsService {

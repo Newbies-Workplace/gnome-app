@@ -2,9 +2,9 @@ import { MiddlewareConsumer, Module } from "@nestjs/common";
 import { ScheduleModule } from "@nestjs/schedule";
 import { PrometheusModule } from "@willsoto/nestjs-prometheus";
 import { PrismaModule } from "@/db/prisma.module";
-import { MetricsService } from "./metrics";
-import { MetricsCron } from "./metrics.cron";
-import { MetricsMiddleware } from "./metrics.middleware";
+import { MetricsService } from "@/metrics/metrics";
+import { MetricsCron } from "@/metrics/metrics.cron";
+import { MetricsMiddleware } from "@/metrics/metrics.middleware";
 
 @Module({
   imports: [

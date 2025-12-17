@@ -1,26 +1,12 @@
-import {
-  BadRequestException,
-  Injectable,
-  NotFoundException,
-} from "@nestjs/common";
-import { Friendship, User } from "@prisma/client";
-import {
-  FriendResponse,
-  FriendSearchResponse,
-  FriendShipResponse,
-  UserFriendResponse,
-} from "@repo/shared/responses";
+import { ForbiddenException, Injectable } from "@nestjs/common";
+import { User } from "@prisma/client";
 import { PrismaService } from "@/db/prisma.service";
-import { GnomesService } from "@/gnomes/gnomes.service";
 
 @Injectable()
 export class FriendsService {
-  constructor(
-    private readonly prismaService: PrismaService,
-    private readonly gnomesService: GnomesService,
-  ) {}
+  constructor(private readonly prismaService: PrismaService) {}
 
-  async findUserFriends(userId: string): Promise<FriendResponse[]> {
+  async findUserFriends(userId: string): Promise<User[]> {
     const friendShips = await this.prismaService.friendship.findMany({
       where: {
         OR: [{ senderId: userId }, { receiverId: userId }],
@@ -31,57 +17,34 @@ export class FriendsService {
       },
     });
 
-    const friends = friendShips.map((friendShip) => {
+    return friendShips.map((friendShip) => {
       const isSender = friendShip.sender.id === userId;
       return isSender ? friendShip.receiver : friendShip.sender;
     });
-
-    return Promise.all(
-      friends.map(async (friend) => {
-        const interactions =
-          await this.gnomesService.getUserUniqueInteractionCount(friend.id);
-        return {
-          id: friend.id,
-          name: friend.name,
-          avatar: friend.pictureUrl,
-          interactions: interactions,
-        };
-      }),
-    );
   }
 
-  async getFriendData(id: string, userId: string): Promise<UserFriendResponse> {
-    const isFriends = await this.findFriendship(id, userId);
-    if (isFriends.length === 0) {
-      return null;
+  async getFriendData(friendId: string, userId: string): Promise<User> {
+    const friendship = await this.findFriendship(friendId, userId);
+
+    if (friendship === null) {
+      throw new ForbiddenException("Friend not found");
     }
-    const findFriend = await this.prismaService.user.findUnique({
-      where: {
-        id: id,
-      },
-      include: {
-        achievements: {
-          include: {
-            achievement: true,
-          },
-        },
-        gnomeInteractions: true,
-      },
-    });
 
-    return findFriend;
+    const isSender = friendship.sender.id === friendId;
+    return isSender ? friendship.sender : friendship.receiver;
   }
 
-  async findFriendship(
-    senderId: string,
-    receiverId: string,
-  ): Promise<FriendShipResponse[] | null> {
-    return this.prismaService.friendship.findMany({
+  async findFriendship(senderId: string, receiverId: string) {
+    return this.prismaService.friendship.findFirst({
       where: {
         OR: [
           { senderId: senderId, receiverId: receiverId },
           { senderId: receiverId, receiverId: senderId },
         ],
+      },
+      select: {
+        sender: true,
+        receiver: true,
       },
     });
   }
@@ -96,19 +59,13 @@ export class FriendsService {
   }
 
   async deleteFriend(senderId: string, receiverId: string) {
-    return this.prismaService.$transaction(async (prisma) => {
-      const findFriendship = await this.findFriendship(senderId, receiverId);
-
-      const deleteFriendship = await prisma.friendship.deleteMany({
-        where: {
-          OR: [
-            { senderId: senderId, receiverId: receiverId },
-            { senderId: receiverId, receiverId: senderId },
-          ],
-        },
-      });
-
-      return { deleteFriendship };
+    await this.prismaService.friendship.deleteMany({
+      where: {
+        OR: [
+          { senderId: senderId, receiverId: receiverId },
+          { senderId: receiverId, receiverId: senderId },
+        ],
+      },
     });
   }
 }

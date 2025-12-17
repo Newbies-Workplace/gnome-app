@@ -1,8 +1,7 @@
+import * as fs from "node:fs/promises";
 import { ConfigService } from "@nestjs/config";
 import { PrismaClient } from "@prisma/client";
-import * as fs from "fs/promises";
 import { PrismaService } from "../src/db/prisma.service";
-import { DistrictsService } from "../src/districts/districts.service";
 import { MinioService } from "../src/minio/minio.service";
 
 const prisma = new PrismaClient();
@@ -25,7 +24,7 @@ function extractCoords(coords: number[][][]) {
 
 async function main() {
   await prismaService.$connect();
-  const districtsService = new DistrictsService(prismaService);
+  // const districtsService = new DistrictsService(prismaService);
 
   const json = await fs.readFile("./assets/GraniceOsiedli.geojson", "utf-8");
   const data = JSON.parse(json);
@@ -49,7 +48,9 @@ async function main() {
           maxY: bounds.maxY,
         },
       });
-    } catch (error) {}
+    } catch (error) {
+      console.error(error);
+    }
 
     id++;
   }
@@ -203,15 +204,11 @@ async function main() {
   }
 
   for (const gnome of gnomes) {
-    const districtId = await districtsService.findPointInPolygon([
-      gnome.longitude,
-      gnome.latitude,
-    ]);
     await prisma.gnome.upsert({
       where: { id: gnome.id },
       update: {
         pictureUrl: gnome.pictureUrl || "",
-        districtId: districtId,
+        districtId: null,
       },
       create: {
         pictureUrl: gnome.pictureUrl || "",
@@ -224,7 +221,7 @@ async function main() {
         description: gnome.description,
         exists: gnome.exists,
         funFact: gnome.funFact,
-        districtId: districtId,
+        districtId: null,
       },
     });
   }

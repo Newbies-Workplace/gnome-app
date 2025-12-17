@@ -1,28 +1,21 @@
 import {
-  Body,
   ConflictException,
   Controller,
   Get,
-  NotFoundException,
   Param,
-  Post,
   UseGuards,
 } from "@nestjs/common";
-import { ApiBearerAuth, ApiBody } from "@nestjs/swagger";
-import { CreateUserAchievementRequest } from "@repo/shared/requests";
+import { ApiBearerAuth } from "@nestjs/swagger";
 import {
-  AchievementDataResponse,
   AchievementResponse,
-  UserAchievementGiveResponse,
   UserAchievementResponse,
 } from "@repo/shared/responses";
-import { NotFoundError } from "rxjs";
+import { AchievementsConverter } from "@/achievements/achievements.converter";
+import { AchievementsService } from "@/achievements/achievements.service";
 import { User } from "@/auth/decorators/jwt-user.decorator";
 import { JwtGuard } from "@/auth/guards/jwt.guard";
 import { JwtUser } from "@/auth/types/jwt-user";
 import { FriendsService } from "@/friends/friends.service";
-import { Role } from "@/role/role.decorator";
-import { AchievementsService } from "./achievements.service";
 
 @ApiBearerAuth()
 @Controller("achievements")
@@ -30,6 +23,7 @@ export class AchievementsController {
   constructor(
     private readonly achievementsService: AchievementsService,
     private readonly friendsService: FriendsService,
+    private readonly converter: AchievementsConverter,
   ) {}
 
   @Get("@me")
@@ -41,14 +35,18 @@ export class AchievementsController {
       user.id,
     );
 
-    return achievements;
+    return Promise.all(
+      achievements.map(this.converter.toUserAchievementResponse),
+    );
   }
 
-  @Get("all")
-  async getAllAchivements(): Promise<AchievementResponse[]> {
-    const achievements = await this.achievementsService.getAllAchievements();
+  @Get("")
+  async getAllAchievements(): Promise<AchievementResponse[]> {
+    const allAchievements = await this.achievementsService.getAllAchievements();
 
-    return achievements;
+    return Promise.all(
+      allAchievements.map(this.converter.toAchievementResponse),
+    );
   }
 
   @Get("friend/:id")
@@ -68,28 +66,8 @@ export class AchievementsController {
     const achievements =
       await this.achievementsService.getUserAchievements(friendId);
 
-    return achievements;
-  }
-
-  @Post("")
-  @UseGuards(JwtGuard)
-  @Role(["ADMIN"])
-  async giveAchievement(
-    @User() user: JwtUser,
-    @Body() body: CreateUserAchievementRequest,
-  ): Promise<UserAchievementGiveResponse> {
-    const achievement = await this.achievementsService.getAchievement(
-      body.achievementId,
+    return Promise.all(
+      achievements.map(this.converter.toUserAchievementResponse),
     );
-
-    if (!achievement) {
-      throw new NotFoundException("Achievement not found");
-    }
-    const give = await this.achievementsService.giveAchievement(
-      user.id,
-      body.achievementId,
-    );
-
-    return give;
   }
 }

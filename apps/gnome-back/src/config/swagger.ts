@@ -1,14 +1,17 @@
 import { INestApplication } from "@nestjs/common";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 
-export function swaggerSetup(app: INestApplication) {
+export function setupSwagger(app: INestApplication) {
   const config = new DocumentBuilder()
-    .setTitle("Endpointy")
-    .setDescription("xdd")
-    .setVersion("11.0")
-    .addBearerAuth()
+    .setTitle("Krasnal GO")
+    .addBearerAuth({
+      type: "apiKey",
+      in: "header",
+      name: "Authorization",
+    })
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup("api", app, document);
+
+  SwaggerModule.setup("docs", app, document);
 }

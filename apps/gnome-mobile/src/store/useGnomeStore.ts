@@ -63,8 +63,7 @@ export const useGnomeStore = create<GnomeState>((set) => ({
 
   addInteraction: async (gnomeId: string) => {
     const interactionDate = new Date();
-    const interaction = await GnomesService.addInteraction({
-      gnomeId,
+    const interaction = await GnomesService.addInteraction(gnomeId, {
       interactionDate,
     });
     set((state) => ({

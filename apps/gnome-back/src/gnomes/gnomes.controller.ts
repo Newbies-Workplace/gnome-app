@@ -1,10 +1,10 @@
 import {
   Body,
-  ConflictException,
   Controller,
   Delete,
   FileTypeValidator,
   Get,
+  HttpCode,
   MaxFileSizeValidator,
   NotFoundException,
   Param,
@@ -23,83 +23,91 @@ import {
   UpdateGnomeRequest,
 } from "@repo/shared/requests";
 import {
-  GnomeIdResponse,
+  GnomeDetailsResponse,
   GnomeResponse,
   InteractionExtendedResponse,
   InteractionResponse,
 } from "@repo/shared/responses";
 import { Express } from "express";
-import multer from "multer";
 import { AchievementsService } from "@/achievements/achievements.service";
 import { User } from "@/auth/decorators/jwt-user.decorator";
+import { Role } from "@/auth/decorators/role.decorator";
 import { JwtGuard } from "@/auth/guards/jwt.guard";
+import { RoleGuard } from "@/auth/guards/role.guard";
 import { JwtUser } from "@/auth/types/jwt-user";
+import { PrismaService } from "@/db/prisma.service";
+import { GnomesConverter } from "@/gnomes/gnomes.converter";
+import { GnomesService } from "@/gnomes/gnomes.service";
 import { MinioService } from "@/minio/minio.service";
-import { Role } from "@/role/role.decorator";
-import { RoleGuard } from "@/roleguard/role.guard";
-import { GnomesService } from "./gnomes.service";
-
-const MIN_INTERACTION_INTERVAL = 5 * 60 * 1000;
 
 @ApiBearerAuth()
 @Controller("gnomes")
 export class GnomesController {
   constructor(
+    private readonly prismaService: PrismaService,
     private readonly gnomeService: GnomesService,
+    private readonly converter: GnomesConverter,
     private readonly minioService: MinioService,
     private readonly achievementService: AchievementsService,
   ) {}
-
-  // Pobieranie wszystkich gnomów
 
   @Get("")
   @UseGuards(JwtGuard)
   async getAllGnomes(): Promise<GnomeResponse[]> {
     const gnomes = await this.gnomeService.getAllGnomes();
-    if (!gnomes) {
-      throw new NotFoundException("Nie znaleziono gnomów");
-    }
-    return gnomes;
-  }
 
-  // Pobranie danych gnoma
+    return Promise.all(
+      gnomes.map(async (gnome) => this.converter.toGnomeResponse(gnome)),
+    );
+  }
 
   @Get(":id")
   @UseGuards(JwtGuard)
-  async getGnomeData(@Param("id") gnomeId: string): Promise<GnomeIdResponse> {
-    const gnomeData = await this.gnomeService.getGnomeData(gnomeId);
-    if (!gnomeData) {
-      throw new NotFoundException("Nie znaleziono gnoma");
+  async getGnome(@Param("id") gnomeId: string): Promise<GnomeDetailsResponse> {
+    const gnome = await this.prismaService.gnome.findUnique({
+      where: { id: gnomeId },
+    });
+
+    if (!gnome) {
+      throw new NotFoundException(`Gnome with id ${gnomeId} not found`);
     }
-    return gnomeData;
+
+    return this.converter.toGnomeDetailsResponse(gnome);
   }
 
-  // Pobieranie interakcji gnoma
+  // todo replace with count in gnome details
   @Get(":id/interactions/count")
   @UseGuards(JwtGuard)
   async getGnomeInteractionCount(
     @Param("id") gnomeId: string,
   ): Promise<number> {
-    const findGnome = await this.gnomeService.getGnomeData(gnomeId);
-    if (!findGnome) {
-      throw new NotFoundException("Nie znaleziono gnoma");
-    }
-    const interactionCount =
-      this.gnomeService.getGnomeUniqueInteractionCount(gnomeId);
-    return interactionCount;
-  }
+    const gnome = await this.prismaService.gnome.findUnique({
+      where: { id: gnomeId },
+    });
 
-  // Wyświetlanie swojej interakcji z gnomem
+    if (!gnome) {
+      throw new NotFoundException(`Gnome with id ${gnomeId} not found`);
+    }
+
+    return this.gnomeService.getGnomeUniqueInteractionCount(gnomeId);
+  }
 
   @Get("@me/interactions")
   @UseGuards(JwtGuard)
   async getMyGnomesInteractions(
     @User() user: JwtUser,
   ): Promise<InteractionResponse[]> {
-    return this.gnomeService.getMyGnomesInteractions(user.id);
+    const interactions = await this.gnomeService.getMyGnomesInteractions(
+      user.id,
+    );
+
+    return Promise.all(
+      interactions.map(async (interaction) =>
+        this.converter.toInteractionResponse(interaction),
+      ),
+    );
   }
 
-  // Tworzenie nowego gnoma
   @ApiBody({
     schema: {
       example: {
@@ -131,8 +139,7 @@ export class GnomesController {
     )
     file: Express.Multer.File,
     @Body() createGnomeDto: CreateGnomeRequest,
-  ): Promise<GnomeResponse> {
-    await this.minioService.createBucketIfNotExists();
+  ): Promise<GnomeDetailsResponse> {
     const typeSplit = file.mimetype.split("/");
     const type = typeSplit[typeSplit.length - 1];
     const fileName = `${createGnomeDto.name}.${type}`;
@@ -141,14 +148,14 @@ export class GnomesController {
     await this.minioService.uploadFile(file, fileName, catalogueName);
     const fileUrl = await this.minioService.getFileUrl(filePath);
 
-    const gnomeCreate = await this.gnomeService.createGnome(
+    const createdGnome = await this.gnomeService.createGnome(
       createGnomeDto,
       fileUrl,
     );
-    return gnomeCreate;
+
+    return this.converter.toGnomeDetailsResponse(createdGnome);
   }
 
-  // Tworzenie interakcji usera z gnomem
   @ApiBody({
     schema: {
       example: {
@@ -157,48 +164,29 @@ export class GnomesController {
       },
     },
   })
-  @Post("interaction")
+  @Post(":id/interactions")
   @UseGuards(JwtGuard)
   async createInteraction(
     @User() user: JwtUser,
+    @Param("id") gnomeId: string,
     @Body() body: CreateInteractionRequest,
   ): Promise<InteractionExtendedResponse> {
-    const lastUserInteraction = await this.gnomeService.getLastInteraction(
-      body.gnomeId,
-      user.id,
-    );
-    if (lastUserInteraction) {
-      if (
-        new Date().getTime() -
-          new Date(lastUserInteraction.interactionDate).getTime() <
-        MIN_INTERACTION_INTERVAL
-      ) {
-        throw new ConflictException(
-          `Interaction cooldown - gnomeId: ${body.gnomeId}`,
-        );
-      }
-    }
+    await this.gnomeService.assertNoRecentInteractions(gnomeId, user.id);
 
-    const interaction = await this.gnomeService.createInteraction(
+    const interactionResult = await this.gnomeService.createInteraction(
       user.id,
       body.interactionDate,
-      body.gnomeId,
+      gnomeId,
     );
 
     const gnomeCount = await this.gnomeService.getUserUniqueInteractionCount(
       user.id,
     );
-
     await this.achievementService.unlockGnomeAchievement(user.id, gnomeCount);
 
-    return interaction;
+    return this.converter.toInteractionExtendedResponse(interactionResult);
   }
-  @Delete(":id")
-  @UseGuards(JwtGuard, RoleGuard)
-  @Role(["ADMIN"])
-  async deleteGnome(@Param("id") id: string) {
-    await this.gnomeService.deleteGnome(id);
-  }
+
   @ApiBody({
     schema: {
       example: {
@@ -220,14 +208,20 @@ export class GnomesController {
   async updateGnome(
     @Param("id") gnomeId: string,
     @Body() body: UpdateGnomeRequest,
-  ) {
-    const gnome = await this.gnomeService.getGnomeData(gnomeId);
+  ): Promise<GnomeDetailsResponse> {
+    const gnome = await this.prismaService.gnome.findUnique({
+      where: { id: gnomeId },
+    });
 
     if (!gnome) {
-      throw new ConflictException("Gnome not found - no data changed");
+      throw new NotFoundException(`Gnome with id ${gnomeId} not found`);
     }
-    return await this.gnomeService.updateGnome(gnomeId, body);
+
+    const updatedGnome = await this.gnomeService.updateGnome(gnomeId, body);
+
+    return this.converter.toGnomeDetailsResponse(updatedGnome);
   }
+
   @Patch(":id/photo")
   @UseGuards(JwtGuard, RoleGuard)
   @Role(["ADMIN"])
@@ -244,13 +238,25 @@ export class GnomesController {
       }),
     )
     file: Express.Multer.File,
-  ) {
-    return await this.gnomeService.updateGnomePicture(id, file);
+  ): Promise<GnomeResponse> {
+    const updatedGnome = await this.gnomeService.updateGnomePicture(id, file);
+
+    return this.converter.toGnomeResponse(updatedGnome);
   }
+
+  @Delete(":id")
+  @UseGuards(JwtGuard, RoleGuard)
+  @Role(["ADMIN"])
+  @HttpCode(204)
+  async deleteGnome(@Param("id") id: string): Promise<void> {
+    await this.gnomeService.deleteGnome(id);
+  }
+
   @Delete(":id/photo")
   @UseGuards(JwtGuard, RoleGuard)
   @Role(["ADMIN"])
-  async deleteGnomePhoto(@Param("id") id: string) {
-    return await this.gnomeService.deleteGnomePicture(id);
+  @HttpCode(204)
+  async deleteGnomePhoto(@Param("id") id: string): Promise<void> {
+    await this.gnomeService.deleteGnomePicture(id);
   }
 }
