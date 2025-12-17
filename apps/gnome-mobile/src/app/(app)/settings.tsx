@@ -2,8 +2,6 @@ import BottomSheet from "@gorhom/bottom-sheet";
 import { useNavigation } from "@react-navigation/native";
 import { Portal } from "@rn-primitives/portal";
 import { useRouter } from "expo-router";
-import { setStatusBarStyle } from "expo-status-bar";
-import { colorScheme } from "nativewind";
 import { useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { Linking, TouchableOpacity, View } from "react-native";
@@ -15,10 +13,10 @@ import NotificationsIcon from "@/assets/icons/notifications.svg";
 import AccoutDeleteIcon from "@/assets/icons/security.svg";
 import DeleteAccountBottomSheet from "@/components/settings-components/AccountDeleteBottomSheet";
 import { LanguageSelector } from "@/components/settings-components/LanguageSelector";
-import ThemeSelector from "@/components/settings-components/ThemeSelector";
+import ThemeSelectorBottomSheet from "@/components/settings-components/ThemeSelectorBottomSheet";
 import { SettingsOption } from "@/components/ui/SettingsOption";
 import { Text } from "@/components/ui/text";
-import { useColorScheme } from "@/lib/useColorScheme";
+import { useTheme } from "@/contexts/ThemeContext";
 import { useAuthStore } from "@/store/useAuthStore";
 
 function SettingsScreen() {
@@ -28,8 +26,8 @@ function SettingsScreen() {
   const deleteAccountBottomSheetRef = useRef<BottomSheet>(null);
   const themeBottomSheetRef = useRef<BottomSheet>(null);
   const languageBottomSheetRef = useRef<BottomSheet>(null);
-  const { setColorScheme } = useColorScheme();
   const { deleteAccount } = useAuthStore();
+  const { theme } = useTheme();
 
   useEffect(() => {
     navigation.setOptions({
@@ -63,12 +61,7 @@ function SettingsScreen() {
             themeBottomSheetRef.current?.expand();
             deleteAccountBottomSheetRef.current?.close();
           }}
-          customClass="mb-4"
-        />
-        <SettingsOption
-          text={t("settings.notifications")}
-          image={NotificationsIcon}
-          onClick={() => Linking.openSettings()}
+          extraText={t(`settings.theme.${theme}`)}
           customClass="mb-4"
         />
         <SettingsOption
@@ -79,7 +72,13 @@ function SettingsScreen() {
             languageBottomSheetRef.current?.expand();
             deleteAccountBottomSheetRef.current?.close();
           }}
-          extraText={i18n.language}
+          extraText={t("settings.languageTitle")}
+          customClass="mb-4"
+        />
+        <SettingsOption
+          text={t("settings.notifications")}
+          image={NotificationsIcon}
+          onClick={() => Linking.openSettings()}
           customClass="mb-4"
         />
         <SettingsOption
@@ -102,11 +101,10 @@ function SettingsScreen() {
           backgroundClassName={"bg-background"}
           handleIndicatorClassName={"bg-tekst w-24 mt-2 rounded-lg"}
         >
-          <ThemeSelector
-            colorScheme={colorScheme}
-            setColorScheme={setColorScheme}
-            themeBottomSheetRef={themeBottomSheetRef}
-            setStatusBarStyle={setStatusBarStyle}
+          <ThemeSelectorBottomSheet
+            onDismiss={() => {
+              themeBottomSheetRef.current?.close();
+            }}
           />
         </BottomSheet>
         <BottomSheet

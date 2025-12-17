@@ -2,28 +2,22 @@ import { BottomSheetView } from "@gorhom/bottom-sheet";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { Text, TouchableOpacity } from "react-native";
+import { useTheme } from "@/contexts/ThemeContext";
 
-interface ThemeSelectorProps {
-  colorScheme: { get?: () => "light" | "dark" };
-  setColorScheme?: (value: "light" | "dark") => void;
-  themeBottomSheetRef: React.RefObject<any>;
-  setStatusBarStyle: (value: "light" | "dark") => void;
+interface ThemeSelectorBottomSheetProps {
+  onDismiss?: () => void;
 }
 
-const ThemeSelector: React.FC<ThemeSelectorProps> = ({
-  colorScheme,
-  setColorScheme,
-  themeBottomSheetRef,
-  setStatusBarStyle,
+const ThemeSelectorBottomSheet: React.FC<ThemeSelectorBottomSheetProps> = ({
+  onDismiss,
 }) => {
   const { t } = useTranslation();
-  const closeSheet = () => {
-    themeBottomSheetRef.current?.close();
-  };
+  const { theme, toggleTheme } = useTheme();
 
   const options = {
     dark: t("settings.theme.dark"),
     light: t("settings.theme.light"),
+    system: t("settings.theme.system"),
   };
 
   return (
@@ -32,22 +26,20 @@ const ThemeSelector: React.FC<ThemeSelectorProps> = ({
         <TouchableOpacity
           className="py-4 border-b border-tekst flex-row justify-between items-center"
           onPress={() => {
-            setColorScheme?.(key as keyof typeof options);
-            closeSheet();
-            setStatusBarStyle(key === "dark" ? "light" : "dark");
+            toggleTheme(key as "dark" | "light" | "system");
+
+            onDismiss?.();
           }}
         >
           <Text className="text-tekst text-xl font-bold">
             {options[key as keyof typeof options]}
           </Text>
 
-          {colorScheme.get?.() === key && (
-            <Text className="text-tekst text-xl">✓</Text>
-          )}
+          {theme === key && <Text className="text-tekst text-xl">✓</Text>}
         </TouchableOpacity>
       ))}
     </BottomSheetView>
   );
 };
 
-export default ThemeSelector;
+export default ThemeSelectorBottomSheet;
