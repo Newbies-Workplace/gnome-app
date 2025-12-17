@@ -22,7 +22,7 @@ import { useAuthStore } from "@/store/useAuthStore";
 function SettingsScreen() {
   const navigation = useNavigation();
   const router = useRouter();
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const deleteAccountBottomSheetRef = useRef<BottomSheet>(null);
   const themeBottomSheetRef = useRef<BottomSheet>(null);
   const languageBottomSheetRef = useRef<BottomSheet>(null);
@@ -93,41 +93,39 @@ function SettingsScreen() {
         />
       </View>
 
-      <Portal name={"bottom-sheets"}>
-        <BottomSheet
-          ref={themeBottomSheetRef}
-          index={-1}
-          enablePanDownToClose
-          backgroundClassName={"bg-background"}
-          handleIndicatorClassName={"bg-tekst w-24 mt-2 rounded-lg"}
-        >
-          <ThemeSelectorBottomSheet
-            onDismiss={() => {
-              themeBottomSheetRef.current?.close();
-            }}
-          />
-        </BottomSheet>
-        <BottomSheet
-          ref={languageBottomSheetRef}
-          index={-1}
-          enablePanDownToClose
-          backgroundClassName={"bg-background"}
-          handleIndicatorClassName={"bg-tekst w-24 mt-2 rounded-lg"}
-        >
-          <LanguageSelector
-            onDismiss={() => {
-              languageBottomSheetRef.current?.close();
-            }}
-          />
-        </BottomSheet>
-        <DeleteAccountBottomSheet
-          onDelete={() => {
-            deleteAccount();
-            router.replace("/welcome");
+      <BottomSheet
+        ref={themeBottomSheetRef}
+        index={-1}
+        enablePanDownToClose
+        backgroundClassName={"bg-background"}
+        handleIndicatorClassName={"bg-tekst w-24 mt-2 rounded-lg"}
+      >
+        <ThemeSelectorBottomSheet
+          onDismiss={() => {
+            themeBottomSheetRef.current?.close();
           }}
-          deleteAccountBottomSheetRef={deleteAccountBottomSheetRef}
         />
-      </Portal>
+      </BottomSheet>
+      <BottomSheet
+        ref={languageBottomSheetRef}
+        index={-1}
+        enablePanDownToClose
+        backgroundClassName={"bg-background"}
+        handleIndicatorClassName={"bg-tekst w-24 mt-2 rounded-lg"}
+      >
+        <LanguageSelector
+          onDismiss={() => {
+            languageBottomSheetRef.current?.close();
+          }}
+        />
+      </BottomSheet>
+      <DeleteAccountBottomSheet
+        onDelete={() => {
+          deleteAccount();
+          router.replace("/welcome");
+        }}
+        deleteAccountBottomSheetRef={deleteAccountBottomSheetRef}
+      />
     </SafeAreaView>
   );
 }
