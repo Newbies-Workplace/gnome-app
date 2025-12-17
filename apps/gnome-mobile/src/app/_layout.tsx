@@ -6,7 +6,6 @@ import BottomSheet, {
   BottomSheetModalProvider,
 } from "@gorhom/bottom-sheet";
 import { PortalHost } from "@rn-primitives/portal";
-import { StatusBar } from "expo-status-bar";
 import { cssInterop } from "nativewind";
 import React, { useEffect, useState } from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
@@ -14,6 +13,7 @@ import Svg, { Circle, Rect, Text as SvgText } from "react-native-svg";
 import { useAuthStore } from "@/store/useAuthStore";
 import CustomSplash from "./splashscreen";
 import "@/i18n";
+import { ThemeProvider } from "@/contexts/ThemeContext";
 
 SplashScreen.setOptions({
   duration: 800,
@@ -54,9 +54,9 @@ export default function RootLayout() {
     handleIndicatorClassName: { target: "handleIndicatorStyle" },
   };
 
-  [BottomSheet, BottomSheetModal].forEach((Component) => {
+  for (const Component of [BottomSheet, BottomSheetModal]) {
     cssInterop(Component, sheetInteropConfig);
-  });
+  }
 
   cssInterop(Svg, {
     className: {
@@ -100,16 +100,16 @@ export default function RootLayout() {
 
   return (
     <GestureHandlerRootView>
-      <BottomSheetModalProvider>
-        <StatusBar />
-        <Stack
-          screenOptions={{
-            // Hide the header for this route
-            headerShown: false,
-          }}
-        />
-        <PortalHost />
-      </BottomSheetModalProvider>
+      <ThemeProvider>
+        <BottomSheetModalProvider>
+          <Stack
+            screenOptions={{
+              headerShown: false,
+            }}
+          />
+          <PortalHost />
+        </BottomSheetModalProvider>
+      </ThemeProvider>
     </GestureHandlerRootView>
   );
 }
