@@ -96,6 +96,7 @@
     "theme": {
       "dark": "Ciemny",
       "light": "Jasny",
+      "system": "Systemowy",
       "title": "Motyw"
     },
     "title": "Ustawienia"
