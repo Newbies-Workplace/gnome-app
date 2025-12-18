@@ -5,7 +5,7 @@ import EditIcon from "@/assets/icons/edit-icon.svg";
 import FoundIcon from "@/assets/icons/found-icon.svg";
 import GoBack from "@/assets/icons/goBack-icon.svg";
 import LocationIcon from "@/assets/icons/location-icon.svg";
-import PlaceHolder from "@/assets/images/placeholder.png";
+import PlaceHolder from "@/assets/images/gnomeplaceholder.svg";
 import { Button } from "@/components/ui/button";
 import { useToastNavigate } from "@/hooks/useToastNavigate";
 import { useDistrictStore } from "@/store/useDistrictStore";

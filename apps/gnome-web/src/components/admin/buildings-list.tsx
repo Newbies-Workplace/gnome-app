@@ -1,6 +1,6 @@
 import { Link, useOutletContext } from "react-router-dom";
 import ClockIcon from "@/assets/icons/clock-icon.svg";
-import BuildPlaceHolder from "@/assets/images/placeholder.png";
+import BuildPlaceHolder from "@/assets/images/gnomeplaceholder.svg";
 import { Item } from "@/components/ui/item.tsx";
 import { convertHealthToRemainingTime } from "@/lib/convert-health-to-remaining-time.ts";
 import { useBuildStore } from "@/store/useBuildStore";
@@ -10,8 +10,7 @@ type OutletContextType = {
 };
 
 const BuildingsList = () => {
-  const { getBuildingsWithOwnerName, loading, error } = useBuildStore();
-  const buildings = getBuildingsWithOwnerName();
+  const { buildings, loading, error } = useBuildStore();
   const { onBuildingMarkerClick } = useOutletContext<OutletContextType>();
 
   if (loading) return <p>Ładowanie...</p>;
@@ -47,7 +46,7 @@ const BuildingsList = () => {
                 </div>
 
                 <div className="text-gray-400 text-xs leading-tight">
-                  {build.ownerName}
+                  {build.ownerId}
                 </div>
               </div>
             </div>
