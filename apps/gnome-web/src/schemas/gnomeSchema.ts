@@ -13,7 +13,8 @@ export const gnomeSchema = z.object({
     .refine(
       (file) => file instanceof FileList && file.length > 0,
       "Dodaj zdjęcie",
-    ),
+    )
+    .optional(),
   latitude: z.number().optional(),
   longitude: z.number().optional(),
 });

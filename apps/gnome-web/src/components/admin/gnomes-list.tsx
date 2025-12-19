@@ -1,5 +1,5 @@
 import { Link, useOutletContext } from "react-router-dom";
-import PlaceHolder from "@/assets/images/placeholder.png";
+import PlaceHolder from "@/assets/images/gnomeplaceholder.svg";
 import { Item } from "@/components/ui/item.tsx";
 import { useDistrictStore } from "@/store/useDistrictStore.ts";
 import { useGnomeStore } from "@/store/useGnomeStore.ts";
@@ -51,14 +51,14 @@ const GnomesList = ({ search = "" }: GnomesListProps) => {
             onClick={() => onGnomeMarkerClick(gnome.id)}
           >
             <Item className="hover:bg-white/10" size={"sm"}>
-              <div className="flex items-center">
+              <div className="flex items-center gap-4">
                 <img
                   src={gnome.pictureUrl || PlaceHolder}
                   alt={gnome.name}
                   onError={(e) => (e.currentTarget.src = PlaceHolder)}
-                  className="w-16 h-16 object-cover rounded"
+                  className="w-16 h-16 object-cover rounded-sm"
                 />
-                <div className="flex flex-col ml-4">
+                <div className="flex flex-col">
                   <div className="text-white font-bold text-lg">
                     {gnome.name}
                   </div>
