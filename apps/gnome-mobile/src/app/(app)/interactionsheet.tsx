@@ -6,18 +6,16 @@ import BottomSheet, {
 import { useRouter } from "expo-router";
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { Image, Text, TouchableOpacity, View } from "react-native";
+import { Text, TouchableOpacity, View } from "react-native";
 import BerryIcon from "@/assets/icons/berry-icon.svg";
 import CameraIcon from "@/assets/icons/camera.svg";
 import StoneIcon from "@/assets/icons/stone-icon.svg";
 import WoodIcon from "@/assets/icons/wood-icon.svg";
-
-const placeholder = require("@/assets/images/placeholder.png");
+import { GnomeImage } from "@/components/GnomeImage";
+import { useGnomeStore } from "@/store/useGnomeStore";
 
 interface InteractionSheetProps {
   onClose: () => void;
-  name?: string;
-  pictureUrl?: string;
   gnomeId: string;
   gatheredResources?: {
     berries?: number;
@@ -28,12 +26,13 @@ interface InteractionSheetProps {
 
 const InteractionBottomSheet: React.FC<InteractionSheetProps> = ({
   onClose,
-  name,
-  pictureUrl,
   gnomeId,
   gatheredResources,
 }) => {
   const { t } = useTranslation();
+  const gnome = useGnomeStore((state) =>
+    state.gnomes.find((g) => g.id === gnomeId),
+  );
   const { navigate, push } = useRouter();
 
   const renderBackdrop = (props: BottomSheetBackdropProps) => (
@@ -60,13 +59,10 @@ const InteractionBottomSheet: React.FC<InteractionSheetProps> = ({
           </Text>
         </View>
         <View className="flex flex-row gap-3">
-          <Image
-            className="w-28 h-32 rounded-xl"
-            source={pictureUrl ? { uri: pictureUrl } : placeholder}
-          />
+          <GnomeImage gnomeId={gnomeId} className="w-28 h-32 rounded-xl" />
 
           <View className="flex flex-col place-items-start">
-            <Text className="text-tekst font-bold text-lg">{name}</Text>
+            <Text className="text-tekst font-bold text-lg">{gnome?.name}</Text>
 
             {gatheredResources?.berries ? (
               <View className="flex flex-row items-center gap-1">
@@ -106,7 +102,7 @@ const InteractionBottomSheet: React.FC<InteractionSheetProps> = ({
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={() => navigate(`/camera?gnomeid=${gnomeId}`)}
+            onPress={() => navigate(`/camera?gnomeId=${gnomeId}`)}
             className="bg-primary py-2 px-10 rounded-lg"
           >
             <View className="flex-row gap-2 items-center">

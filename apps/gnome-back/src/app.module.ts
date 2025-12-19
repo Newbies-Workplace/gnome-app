@@ -32,7 +32,7 @@ import { UsersModule } from "@/users/users.module";
       throttlers: [
         {
           ttl: 1000,
-          limit: 5,
+          limit: 50,
         },
       ],
     }),

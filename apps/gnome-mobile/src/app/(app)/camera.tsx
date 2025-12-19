@@ -1,13 +1,12 @@
-import * as MediaLibrary from "expo-media-library";
-import * as Network from "expo-network";
+import { CameraRoll } from "@react-native-camera-roll/camera-roll";
 import { useLocalSearchParams, useNavigation, useRouter } from "expo-router";
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
   Image,
+  Platform,
   StyleSheet,
   Text,
-  ToastAndroid,
   TouchableOpacity,
   View,
 } from "react-native";
@@ -18,23 +17,20 @@ import {
   useCameraDevices,
 } from "react-native-vision-camera";
 import BackIcon from "@/assets/icons/arrow-left.svg";
+import { checkAndroidMediaPermission } from "@/lib/media-permissions";
 import { useGnomeImageStore } from "@/store/useGnomeImageStore";
-import { useGnomeInteractionStore } from "@/store/useGnomeInteractionStore";
 import { useGnomeStore } from "@/store/useGnomeStore";
 
 const CameraScreen = () => {
   const { t } = useTranslation();
   const { addInteraction } = useGnomeStore();
   const { setImageForGnome } = useGnomeImageStore();
-  const { addPendingInteraction } = useGnomeInteractionStore();
-  const { gnomeid } = useLocalSearchParams<{ gnomeid: string }>();
+  const { gnomeId } = useLocalSearchParams<{ gnomeId: string }>();
   const devices = useCameraDevices();
   const [device, setDevice] = useState<CameraDevice | null>(null);
   const cameraRef = useRef<Camera>(null);
   const [hasPermission, setHasPermission] = useState(false);
   const [flashMode, setFlashMode] = useState<"off" | "on" | "auto">("off");
-  const [mediaPermissionResponse, requestMediaPermission] =
-    MediaLibrary.usePermissions();
 
   //Header
   const navigation = useNavigation();
@@ -60,7 +56,7 @@ const CameraScreen = () => {
         <TouchableOpacity
           className="p-5"
           onPress={() => {
-            addInteraction(gnomeid);
+            addInteraction(gnomeId);
             router.push("/collection");
           }}
         >
@@ -82,13 +78,6 @@ const CameraScreen = () => {
     (async () => {
       const cameraPermission = await Camera.requestCameraPermission();
       setHasPermission(cameraPermission === "granted");
-
-      if (
-        !mediaPermissionResponse ||
-        mediaPermissionResponse.status !== "granted"
-      ) {
-        await requestMediaPermission();
-      }
     })();
   }, []);
 
@@ -98,55 +87,28 @@ const CameraScreen = () => {
     }
   }, [devices]);
 
-  // Robienie zdj
   const takePhoto = async () => {
     if (cameraRef.current) {
-      const photo = await cameraRef.current.takePhoto({
+      const file = await cameraRef.current.takePhoto({
         flash: flashMode,
       });
 
-      console.log("Media permission:", mediaPermissionResponse);
-
-      if (mediaPermissionResponse?.status === "granted") {
-        try {
-          const asset = await MediaLibrary.createAssetAsync(photo.path);
-          const albumName = "GnomeCollection";
-
-          let album = await MediaLibrary.getAlbumAsync(albumName);
-
-          if (!album) {
-            album = await MediaLibrary.createAlbumAsync(
-              albumName,
-              asset,
-              false,
-            );
-          } else {
-            await MediaLibrary.addAssetsToAlbumAsync([asset], album.id, false);
-          }
-          console.log("Saved to album: ", asset.uri);
-
-          setImageForGnome({
-            gnomeId: gnomeid,
-            assetUri: asset.uri,
-          });
-        } catch (error) {
-          console.error("Error saving photo: ", error);
-        }
+      if (Platform.OS === "android" && !(await checkAndroidMediaPermission())) {
+        return;
       }
-      await addInteraction(gnomeid).catch(async () => {
-        const net = await Network.getNetworkStateAsync();
 
-        if (!net.isConnected || net.isInternetReachable === false) {
-          await addPendingInteraction(gnomeid);
-        } else {
-          ToastAndroid.show(t("common.genericError"), ToastAndroid.SHORT);
-        }
+      const photo = await CameraRoll.saveAsset(`file://${file.path}`, {
+        type: "photo",
+        album: t("common.appName"),
+      });
+      setImageForGnome({
+        gnomeId: gnomeId,
+        assetUri: photo.node.image.uri,
       });
       router.push("/collection");
     }
   };
 
-  // Przełączenie flasha
   const toggleFlash = () => {
     setFlashMode((prev) => (prev === "off" ? "on" : "off"));
   };
@@ -170,8 +132,8 @@ const CameraScreen = () => {
             ref={cameraRef}
             className="flex-1"
             device={device}
-            isActive={true}
-            photo={true}
+            isActive
+            photo
           />
         ) : (
           <View className="flex-1 justify-center items-center">

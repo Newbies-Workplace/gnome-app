@@ -112,17 +112,17 @@ export default function ProfileScreen() {
           />
           <View className="justify-center flex-row">
             <GnomeCard
-              image={require("@/assets/images/placeholder.png")}
+              gnomeId={"1"}
               text="?"
               onClick={() => router.replace("/collection")}
             />
             <GnomeCard
-              image={require("@/assets/images/placeholder.png")}
+              gnomeId={"2"}
               text="?"
               onClick={() => router.replace("/collection")}
             />
             <GnomeCard
-              image={require("@/assets/images/placeholder.png")}
+              gnomeId={"2"}
               text="?"
               onClick={() => router.replace("/collection")}
             />

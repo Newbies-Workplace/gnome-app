@@ -9,21 +9,21 @@ interface AchievementsStore {
   achivements: AchievementResponse[];
   userAchivements: UserAchievementResponse[];
 
-  fetchAchivements: () => Promise<void>;
-  fetchUserAchivements: () => Promise<void>;
+  fetchAchievements: () => Promise<void>;
+  fetchUserAchievements: () => Promise<void>;
 }
 
 export const useAchievementsStore = create<AchievementsStore>((set) => ({
   achivements: [],
   userAchivements: [],
 
-  fetchAchivements: async () => {
+  fetchAchievements: async () => {
     const achivements = await AchievementsService.getAllAchievements();
 
     set({ achivements });
   },
 
-  fetchUserAchivements: async () => {
+  fetchUserAchievements: async () => {
     const userAchievements = await AchievementsService.getUserAchievements();
 
     set({ userAchivements: userAchievements });
