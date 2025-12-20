@@ -94,12 +94,14 @@ export class GnomesController {
 
   @Get("@me/interactions")
   @UseGuards(JwtGuard)
-  async getMyGnomesInteractions(
+  async getMyGnomesUniqueInteractions(
     @User() user: JwtUser,
   ): Promise<InteractionResponse[]> {
-    const interactions = await this.gnomeService.getMyGnomesInteractions(
+    const interactions = await this.gnomeService.getMyGnomesUniqueInteractions(
       user.id,
     );
+
+    console.log("interactions", interactions);
 
     return Promise.all(
       interactions.map(async (interaction) =>
