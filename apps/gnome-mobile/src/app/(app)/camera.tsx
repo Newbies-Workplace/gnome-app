@@ -1,23 +1,17 @@
-import { CameraRoll } from "@react-native-camera-roll/camera-roll";
+import {
+  CameraType,
+  CameraView,
+  FlashMode,
+  useCameraPermissions,
+} from "expo-camera";
+import * as MediaLibrary from "expo-media-library";
 import { useLocalSearchParams, useNavigation, useRouter } from "expo-router";
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import {
-  Image,
-  Platform,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import {
-  Camera,
-  CameraDevice,
-  useCameraDevices,
-} from "react-native-vision-camera";
 import BackIcon from "@/assets/icons/arrow-left.svg";
-import { checkAndroidMediaPermission } from "@/lib/media-permissions";
+import CameraIcon from "@/assets/icons/camera.svg";
 import { useGnomeImageStore } from "@/store/useGnomeImageStore";
 import { useGnomeStore } from "@/store/useGnomeStore";
 
@@ -26,15 +20,25 @@ const CameraScreen = () => {
   const { addInteraction } = useGnomeStore();
   const { setImageForGnome } = useGnomeImageStore();
   const { gnomeId } = useLocalSearchParams<{ gnomeId: string }>();
-  const devices = useCameraDevices();
-  const [device, setDevice] = useState<CameraDevice | null>(null);
-  const cameraRef = useRef<Camera>(null);
-  const [hasPermission, setHasPermission] = useState(false);
-  const [flashMode, setFlashMode] = useState<"off" | "on" | "auto">("off");
+  const cameraRef = useRef<CameraView>(null);
+  const [cameraPermission, requestCameraPermission] = useCameraPermissions();
+  const [mediaPermission, requestMediaPermission] = MediaLibrary.usePermissions(
+    { writeOnly: false },
+  );
+
+  const [facing, setFacing] = useState<CameraType>("back");
+  const [flashMode, setFlashMode] = useState<FlashMode>("off");
+  const [isCameraReady, setIsCameraReady] = useState(false);
 
   //Header
   const navigation = useNavigation();
   const router = useRouter();
+
+  useEffect(() => {
+    requestCameraPermission().then(() => {
+      requestMediaPermission();
+    });
+  }, []);
 
   useEffect(() => {
     navigation.setOptions({
@@ -74,38 +78,51 @@ const CameraScreen = () => {
     });
   });
 
-  useEffect(() => {
-    (async () => {
-      const cameraPermission = await Camera.requestCameraPermission();
-      setHasPermission(cameraPermission === "granted");
-    })();
-  }, []);
-
-  useEffect(() => {
-    if (backCamera) {
-      setDevice(backCamera);
-    }
-  }, [devices]);
-
   const takePhoto = async () => {
-    if (cameraRef.current) {
-      const file = await cameraRef.current.takePhoto({
-        flash: flashMode,
-      });
+    if (
+      !cameraRef.current ||
+      !isCameraReady ||
+      !cameraPermission?.granted ||
+      !mediaPermission?.granted
+    ) {
+      console.log("Camera or media permission not granted or camera not ready");
+      return;
+    }
 
-      if (Platform.OS === "android" && !(await checkAndroidMediaPermission())) {
-        return;
+    const albumName = t("common.appName");
+    let album = await MediaLibrary.getAlbumAsync(albumName);
+
+    try {
+      const { uri } = await cameraRef.current.takePictureAsync({});
+      const asset = await MediaLibrary.createAssetAsync(uri);
+
+      if (album == null) {
+        album = await MediaLibrary.createAlbumAsync(albumName, asset, false);
+      } else {
+        await MediaLibrary.addAssetsToAlbumAsync([asset], album, false);
       }
 
-      const photo = await CameraRoll.saveAsset(`file://${file.path}`, {
-        type: "photo",
-        album: t("common.appName"),
+      // get the newest asset in the album (the one we just added)
+      const assetsInAlbum = await MediaLibrary.getAssetsAsync({
+        album: album.id,
+        sortBy: [MediaLibrary.SortBy.creationTime],
+        first: 1,
       });
-      setImageForGnome({
-        gnomeId: gnomeId,
-        assetUri: photo.node.image.uri,
-      });
+
+      console.log("Newest asset in album:", assetsInAlbum.assets[0]);
+      if (assetsInAlbum.assets.length > 0) {
+        const newestAsset = assetsInAlbum.assets[0];
+        setImageForGnome({
+          gnomeId: gnomeId,
+          assetUri: newestAsset.uri,
+        });
+      } else {
+        console.log("No assets found in album");
+      }
+
       router.push("/collection");
+    } catch (error) {
+      console.log("Error taking photo:", error);
     }
   };
 
@@ -113,27 +130,22 @@ const CameraScreen = () => {
     setFlashMode((prev) => (prev === "off" ? "on" : "off"));
   };
 
-  // Zmiana kierunku kamery
-  const backCamera = devices.find((device) => device.position === "back");
-  const frontCamera = devices.find((device) => device.position === "front");
-
   const switchCamera = () => {
-    setDevice((prev) =>
-      prev?.position === "back" ? (frontCamera ?? prev) : (backCamera ?? prev),
-    );
+    setFacing((prev) => (prev === "back" ? "front" : "back"));
   };
 
   return (
     <SafeAreaView className="flex-1 items-center bg-primary-foreground p-4">
       <View className=" w-full h-[80%] rounded-2xl border-4 border-red-500 overflow-hidden flex justify-center items-center p-4">
-        {device && hasPermission ? (
-          <Camera
-            style={StyleSheet.absoluteFill}
+        {cameraPermission?.granted ? (
+          <CameraView
             ref={cameraRef}
-            className="flex-1"
-            device={device}
-            isActive
-            photo
+            style={StyleSheet.absoluteFill}
+            facing={facing}
+            mode={"picture"}
+            flash={flashMode}
+            onMountError={(error) => console.log(error)}
+            onCameraReady={() => setIsCameraReady(true)}
           />
         ) : (
           <View className="flex-1 justify-center items-center">
@@ -148,9 +160,9 @@ const CameraScreen = () => {
         <TouchableOpacity
           onPress={toggleFlash}
           className={`p-4 rounded-full ${
-            device && hasPermission ? "bg-background" : "bg-gray-500"
+            cameraPermission?.granted ? "bg-background" : "bg-gray-500"
           }`}
-          disabled={!device || !hasPermission}
+          disabled={!cameraPermission?.granted}
         >
           <Image
             source={require("@/assets/icons/flash-off.png")}
@@ -161,17 +173,27 @@ const CameraScreen = () => {
         <TouchableOpacity
           onPress={takePhoto}
           className={`w-16 h-16 rounded-full flex justify-center items-center ${
-            device && hasPermission ? "bg-white" : "bg-gray-700"
+            cameraPermission?.granted &&
+            mediaPermission?.granted &&
+            isCameraReady
+              ? "bg-white"
+              : "bg-gray-700"
           }`}
-          disabled={!device || !hasPermission}
-        />
+          disabled={
+            !cameraPermission?.granted ||
+            !mediaPermission?.granted ||
+            !isCameraReady
+          }
+        >
+          <CameraIcon className="w-8 h-8" />
+        </TouchableOpacity>
 
         <TouchableOpacity
           onPress={switchCamera}
           className={`p-4 rounded-full ${
-            device && hasPermission ? "bg-background" : "bg-gray-500"
+            cameraPermission?.granted ? "bg-background" : "bg-gray-500"
           }`}
-          disabled={!device || !hasPermission}
+          disabled={!cameraPermission?.granted}
         >
           <Image
             source={require("@/assets/icons/reload.png")}

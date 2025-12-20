@@ -1,65 +1,54 @@
 import { BottomSheetView } from "@gorhom/bottom-sheet";
+import { CameraView, useCameraPermissions } from "expo-camera";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { Linking, Text, View } from "react-native";
-import {
-  Camera,
-  CameraDevice,
-  useCodeScanner,
-} from "react-native-vision-camera";
 import { Button } from "./ui/button";
 
 export const Scanner = ({
   onCodeScanned,
-  onRequestPermission,
-  device,
 }: {
   onCodeScanned: (code: string) => void;
-  onRequestPermission: () => void;
-  device: CameraDevice | undefined;
 }) => {
   const { t } = useTranslation();
-  const permissionStatus = Camera.getCameraPermissionStatus();
+  const [cameraPermission, requestCameraPermission] = useCameraPermissions();
   const [hasCodeScanned, setHasCodeScanned] = React.useState(false);
-  const codeScanner = useCodeScanner({
-    codeTypes: ["qr"],
-    onCodeScanned: (code) => {
-      console.log("Scanned code:", code);
-      if (hasCodeScanned || !code[0].value) return;
-      setHasCodeScanned(true);
-      onCodeScanned(code[0].value);
-    },
-  });
+  const handleCodeScanned = (code: string) => {
+    if (hasCodeScanned) return;
 
-  const requestCameraPermission = async () => {
-    if (permissionStatus === "not-determined") {
-      await Camera.requestCameraPermission();
+    setHasCodeScanned(true);
+    onCodeScanned(code);
+  };
+
+  const requestPermission = async () => {
+    if (cameraPermission?.status === "undetermined") {
+      await requestCameraPermission();
     }
 
-    if (permissionStatus === "denied" || permissionStatus === "restricted") {
+    if (cameraPermission?.status === "denied") {
       Linking.openSettings();
     }
-
-    onRequestPermission();
   };
 
   return (
     <BottomSheetView>
-      {!device ||
-        (permissionStatus !== "granted" && (
-          <View className="gap-10 p-10">
-            <Text className="text-tekst">{t("friends.scanner.rationale")}</Text>
-            <Button onPress={requestCameraPermission}>
-              <Text>{t("friends.scanner.allow")}</Text>
-            </Button>
-          </View>
-        ))}
-      {device && permissionStatus === "granted" && (
-        <Camera
-          codeScanner={codeScanner}
+      {cameraPermission?.status !== "granted" && (
+        <View className="gap-10 p-10">
+          <Text className="text-tekst">{t("friends.scanner.rationale")}</Text>
+          <Button onPress={requestPermission}>
+            <Text>{t("friends.scanner.allow")}</Text>
+          </Button>
+        </View>
+      )}
+      {cameraPermission?.status === "granted" && (
+        <CameraView
+          onBarcodeScanned={(result) => {
+            handleCodeScanned(result.data);
+          }}
+          barcodeScannerSettings={{
+            barcodeTypes: ["qr"],
+          }}
           style={{ width: "100%", height: 410 }}
-          device={device}
-          isActive
         />
       )}
     </BottomSheetView>

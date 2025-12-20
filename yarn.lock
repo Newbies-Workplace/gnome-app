@@ -2850,11 +2850,6 @@
   dependencies:
     merge-options "^3.0.4"
 
-"@react-native-camera-roll/camera-roll@^7.10.2":
-  version "7.10.2"
-  resolved "https://registry.yarnpkg.com/@react-native-camera-roll/camera-roll/-/camera-roll-7.10.2.tgz#af2234f60f0b55aff9afb60888ce7f0669d52593"
-  integrity sha512-XgJQJDFUycmqSX+MH7vTcRigQwEIQNLIu1GvOngCZRwlSV2mF61UzeruSmmHwkBcGnHZFXkKg9fil0FQVfyglw==
-
 "@react-native-clipboard/clipboard@^1.16.3":
   version "1.16.3"
   resolved "https://registry.yarnpkg.com/@react-native-clipboard/clipboard/-/clipboard-1.16.3.tgz#7807a90fd9984bf4d3a96faf2eee20457984a9bd"
@@ -8068,6 +8063,13 @@ expo-build-properties@~1.0.9:
     ajv "^8.11.0"
     semver "^7.6.0"
 
+expo-camera@^17.0.10:
+  version "17.0.10"
+  resolved "https://registry.yarnpkg.com/expo-camera/-/expo-camera-17.0.10.tgz#b3a217f0eb811a6e3522c2aff9f42be578aa6456"
+  integrity sha512-w1RBw83mAGVk4BPPwNrCZyFop0VLiVSRE3c2V9onWbdFwonpRhzmB4drygG8YOUTl1H3wQvALJHyMPTbgsK1Jg==
+  dependencies:
+    invariant "^2.2.4"
+
 expo-checkbox@~5.0.8:
   version "5.0.8"
   resolved "https://registry.yarnpkg.com/expo-checkbox/-/expo-checkbox-5.0.8.tgz#b0b6c783fdfb4ff911cd0f23cc307c5cca33987a"
@@ -8127,6 +8129,11 @@ expo-location@~19.0.7:
   version "19.0.7"
   resolved "https://registry.yarnpkg.com/expo-location/-/expo-location-19.0.7.tgz#58ab5b9b59db3a26d0495c19e719d5f559948b1c"
   integrity sha512-YNkh4r9E6ECbPkBCAMG5A5yHDgS0pw+Rzyd0l2ZQlCtjkhlODB55nMCKr5CZnUI0mXTkaSm8CwfoCO8n2MpYfg==
+
+expo-media-library@^18.2.1:
+  version "18.2.1"
+  resolved "https://registry.yarnpkg.com/expo-media-library/-/expo-media-library-18.2.1.tgz#22aac022cc3fabfc3e004e3f3f031c7b2cd355d8"
+  integrity sha512-dV1acx6Aseu+I5hmF61wY8UkD4vdt8d7YXHDfgNp6ZSs06qxayUxgrBsiG2eigLe54VLm3ycbFBbWi31lhfsCA==
 
 expo-modules-autolinking@3.0.22:
   version "3.0.22"
@@ -12947,11 +12954,6 @@ react-native-svg@15.12.1:
     css-select "^5.1.0"
     css-tree "^1.1.3"
     warn-once "0.1.1"
-
-react-native-vision-camera@^4.7.2:
-  version "4.7.3"
-  resolved "https://registry.yarnpkg.com/react-native-vision-camera/-/react-native-vision-camera-4.7.3.tgz#ed03cedabcaec54774f5aa40e69afa30069924d4"
-  integrity sha512-g1/neOyjSqn1kaAa2FxI/qp5KzNvPcF0bnQw6NntfbxH6tm0+8WFZszlgb5OV+iYlB6lFUztCbDtyz5IpL47OA==
 
 react-native-web@^0.21.0:
   version "0.21.2"
