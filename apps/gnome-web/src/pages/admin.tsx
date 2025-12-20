@@ -54,14 +54,13 @@ export default function AdminPage() {
   const navigate = useNavigate();
   const { gnomes, fetchGnomes } = useGnomeStore();
   const { fetchDistricts } = useDistrictStore();
-  const { buildings, fetchBuildings, fetchUsers } = useBuildStore();
+  const { buildings, fetchBuildings } = useBuildStore();
 
   useEffect(() => {
     fetchGnomes();
     fetchDistricts();
-    fetchUsers();
     fetchBuildings();
-  }, [fetchGnomes]);
+  }, []);
 
   const onGnomeMarkerClick = (gnomeId: string) => {
     const gnome = gnomes.find((g) => g.id === gnomeId);
@@ -175,44 +174,14 @@ export default function AdminPage() {
 
   return (
     <div
-      className="h-screen w-screen p-2 gap-2 bg-cover bg-center bg-no-repeat flex flex-col min-w-[375px]"
+      className="h-screen w-screen p-2 gap-2 bg-cover bg-center bg-no-repeat flex flex-col md:flex-row"
       style={{ backgroundImage: `url(${backgroundImage})` }}
     >
-      <div className="flex flex-col md:flex-row gap-2 items-center">
+      <div className="flex flex-col w-full">
         <div className="w-full md:flex-1 flex items-stretch">
           <AdminToolbar />
         </div>
-
-        <div className="w-full md:w-[420px] min-w-[300px] bg-primary-gray rounded-2xl h-16 flex items-center">
-          <Tabs value={currentTab} className="w-full">
-            <TabsList className="grid grid-cols-4 gap-2 p-2 w-full bg-primary-gray rounded-4xl h-16 items-center">
-              <TabsTrigger value="gnomes" asChild>
-                <NavLink to="/admin">
-                  <img src={GnomeIcon} alt="gnome" />
-                </NavLink>
-              </TabsTrigger>
-              <TabsTrigger value="buildings" asChild>
-                <NavLink to="/admin/buildings">
-                  <img src={BuildingsIcon} alt="buildings" />
-                </NavLink>
-              </TabsTrigger>
-              <TabsTrigger value="events" asChild>
-                <NavLink to="/admin/events">
-                  <img src={EventsIcon} alt="events" />
-                </NavLink>
-              </TabsTrigger>
-              <TabsTrigger value="users" asChild>
-                <NavLink to="/admin/users">
-                  <img src={UsersIcon} alt="users" />
-                </NavLink>
-              </TabsTrigger>
-            </TabsList>
-          </Tabs>
-        </div>
-      </div>
-
-      <div className="flex flex-col md:flex-row gap-2 flex-1 overflow-hidden">
-        <div className="relative w-full md:flex-1 rounded-2xl overflow-hidden min-h-[300px]">
+        <div className="relative w-full rounded-2xl overflow-hidden min-h-[300px] md:h-full">
           {isLoaded && (
             <GoogleMap
               mapContainerStyle={{ width: "100%", height: "100%" }}
@@ -254,6 +223,35 @@ export default function AdminPage() {
           <div className="absolute bottom-4 left-4 z-10">
             <MapOptions filters={filters} setFilters={setFilters} />
           </div>
+        </div>
+      </div>
+
+      <div className="flex flex-col gap-2">
+        <div className="w-full md:w-[420px] min-w-[300px] bg-primary-gray rounded-2xl h-16 flex items-center">
+          <Tabs value={currentTab} className="w-full">
+            <TabsList className="grid grid-cols-4 gap-2 p-2 w-full bg-primary-gray rounded-4xl h-16 items-center">
+              <TabsTrigger value="gnomes" asChild>
+                <NavLink to="/admin">
+                  <img src={GnomeIcon} alt="gnome" />
+                </NavLink>
+              </TabsTrigger>
+              <TabsTrigger value="buildings" asChild>
+                <NavLink to="/admin/buildings">
+                  <img src={BuildingsIcon} alt="buildings" />
+                </NavLink>
+              </TabsTrigger>
+              <TabsTrigger value="events" asChild>
+                <NavLink to="/admin/events">
+                  <img src={EventsIcon} alt="events" />
+                </NavLink>
+              </TabsTrigger>
+              <TabsTrigger value="users" asChild>
+                <NavLink to="/admin/users">
+                  <img src={UsersIcon} alt="users" />
+                </NavLink>
+              </TabsTrigger>
+            </TabsList>
+          </Tabs>
         </div>
 
         <div className="w-full md:w-[420px] min-w-[300px] bg-primary-gray flex flex-col p-2 rounded-2xl overflow-auto">

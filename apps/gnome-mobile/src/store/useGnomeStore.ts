@@ -49,8 +49,8 @@ export const useGnomeStore = create<GnomeState>((set) => ({
       if (!user) {
         throw new Error("User is not authenticated");
       }
-      const data = await GnomesService.getMyGnomesInteractions();
-      console.log("Fetched interactions:", data); // Log data
+      const data = await GnomesService.getMyGnomesUniqueInteractions();
+      console.log("Fetched interactions:", data);
       if (!Array.isArray(data))
         throw new Error("Invalid interaction data format");
 

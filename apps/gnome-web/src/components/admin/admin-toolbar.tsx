@@ -8,7 +8,7 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu.tsx";
-import { useAuthStore } from "@/store/useAuthStore.tsx";
+import { useAuthStore } from "@/store/useAuthStore.ts";
 
 function AdminToolbar() {
   const { user, logout } = useAuthStore();
