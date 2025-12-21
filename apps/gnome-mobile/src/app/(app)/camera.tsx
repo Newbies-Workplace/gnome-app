@@ -13,11 +13,9 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import BackIcon from "@/assets/icons/arrow-left.svg";
 import CameraIcon from "@/assets/icons/camera.svg";
 import { useGnomeImageStore } from "@/store/useGnomeImageStore";
-import { useGnomeStore } from "@/store/useGnomeStore";
 
 const CameraScreen = () => {
   const { t } = useTranslation();
-  const { addInteraction } = useGnomeStore();
   const { setImageForGnome } = useGnomeImageStore();
   const { gnomeId } = useLocalSearchParams<{ gnomeId: string }>();
   const cameraRef = useRef<CameraView>(null);
@@ -60,7 +58,6 @@ const CameraScreen = () => {
         <TouchableOpacity
           className="p-5"
           onPress={() => {
-            addInteraction(gnomeId);
             router.push("/collection");
           }}
         >

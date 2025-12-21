@@ -6,26 +6,26 @@ import { create } from "zustand";
 import { AchievementsService } from "@/lib/api/Achievements.service";
 
 interface AchievementsStore {
-  achivements: AchievementResponse[];
-  userAchivements: UserAchievementResponse[];
+  achievements: AchievementResponse[];
+  userAchievements: UserAchievementResponse[];
 
   fetchAchievements: () => Promise<void>;
   fetchUserAchievements: () => Promise<void>;
 }
 
 export const useAchievementsStore = create<AchievementsStore>((set) => ({
-  achivements: [],
-  userAchivements: [],
+  achievements: [],
+  userAchievements: [],
 
   fetchAchievements: async () => {
-    const achivements = await AchievementsService.getAllAchievements();
+    const achievements = await AchievementsService.getAllAchievements();
 
-    set({ achivements });
+    set({ achievements: achievements });
   },
 
   fetchUserAchievements: async () => {
     const userAchievements = await AchievementsService.getUserAchievements();
 
-    set({ userAchivements: userAchievements });
+    set({ userAchievements: userAchievements });
   },
 }));

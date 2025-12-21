@@ -12,11 +12,11 @@ import WoodIcon from "@/assets/icons/wood-icon.svg";
 import StandingGnomeImage from "@/assets/images/StandingGnome.svg";
 
 interface ResourcesBottomSheetProps {
-  onClose?: () => void;
+  onDismiss?: () => void;
 }
 
 const ResourcesBottomSheet: React.FC<ResourcesBottomSheetProps> = ({
-  onClose,
+  onDismiss,
 }) => {
   const { t } = useTranslation();
   const renderBackdrop = (props: BottomSheetBackdropProps) => (
@@ -33,7 +33,7 @@ const ResourcesBottomSheet: React.FC<ResourcesBottomSheetProps> = ({
       backgroundClassName="bg-primary-foreground"
       handleIndicatorClassName="bg-tekst w-20 mt-2 rounded-lg"
       enablePanDownToClose
-      onClose={onClose}
+      onClose={onDismiss}
       backdropComponent={renderBackdrop}
     >
       <BottomSheetView className="flex flex-col gap-3 px-4 pt-2 pb-14 z-10">
@@ -44,6 +44,7 @@ const ResourcesBottomSheet: React.FC<ResourcesBottomSheetProps> = ({
           <Text className="text-tekst font-bold text-lg">
             {t("resources.description")}
           </Text>
+
           <View className="flex flex-col gap-5 px-2">
             <View className="flex-row items-center gap-1">
               <BerryIcon width={20} height={20} />
@@ -66,6 +67,7 @@ const ResourcesBottomSheet: React.FC<ResourcesBottomSheetProps> = ({
               </Text>
             </View>
           </View>
+
           <Text className="text-tekst font-bold text-lg">
             {t("resources.description2")}
           </Text>

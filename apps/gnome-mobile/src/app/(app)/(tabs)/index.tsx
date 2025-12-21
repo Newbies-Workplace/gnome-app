@@ -1,7 +1,7 @@
 import { Portal } from "@rn-primitives/portal";
 import { LinearGradient } from "expo-linear-gradient";
 import * as Location from "expo-location";
-import { router, useFocusEffect, usePathname, useRouter } from "expo-router";
+import { useFocusEffect, usePathname, useRouter } from "expo-router";
 import { getDistance } from "geolib";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -12,7 +12,8 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
+import MapView, { Marker, PROVIDER_GOOGLE, Region } from "react-native-maps";
+import { LatLng } from "react-native-maps/lib/sharedTypes";
 import { SafeAreaView } from "react-native-safe-area-context";
 import FriendIcon from "@/assets/icons/add-friend.svg";
 import LocationOffIcon from "@/assets/icons/location-off.svg";
@@ -31,12 +32,16 @@ import { getClosestGnome } from "@/lib/getClosestGnome";
 import { useAchievementsStore } from "@/store/useAchievementsStore";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useFriendsStore } from "@/store/useFriendsStore";
-import { useGnomeInteractionStore } from "@/store/useGnomeInteractionStore";
 import { useGnomeStore } from "@/store/useGnomeStore";
 import InteractionBottomSheet from "../interactionsheet";
 
 const MIN_TRACKER_DISTANCE = 50;
 const MIN_REACHED_DISTANCE = 15;
+
+const INITIAL_COORDINATES = {
+  latitude: 51.109967,
+  longitude: 17.031843,
+};
 
 interface HeaderControlsProps {
   user: { pictureUrl: string };
@@ -128,21 +133,21 @@ const HeaderControls: React.FC<HeaderControlsProps> = ({
 
 const MapScreen = () => {
   const { user } = useAuthStore();
-  const { gnomes, fetchGnomes, interactions, fetchMyInteractions } =
-    useGnomeStore();
+  const {
+    gnomes,
+    fetchGnomes,
+    interactions,
+    fetchMyInteractions,
+    addInteraction,
+  } = useGnomeStore();
   const { fetchUserFriends } = useFriendsStore();
   const { fetchAchievements, fetchUserAchievements } = useAchievementsStore();
-  const { addPendingInteraction, latestInteractions } =
-    useGnomeInteractionStore();
 
   const ref = useRef<MapView>(null);
 
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
-  const [userLocation, setUserLocation] = useState({
-    latitude: 51.109967,
-    longitude: 17.031843,
-  });
+  const [userLocation, setUserLocation] = useState<LatLng>(INITIAL_COORDINATES);
   const [distance, setDistance] = useState<number>();
 
   const [closestGnomeId, setClosestGnomeId] = useState<string>();
@@ -152,9 +157,8 @@ const MapScreen = () => {
     useState(false);
   const pathname = usePathname();
 
-  const defaultRegion = {
-    latitude: 51.109967,
-    longitude: 17.031843,
+  const defaultRegion: Region = {
+    ...INITIAL_COORDINATES,
     latitudeDelta: 0.01,
     longitudeDelta: 0.05,
   };
@@ -251,7 +255,7 @@ const MapScreen = () => {
       return { gnome, distance };
     });
 
-    const closestGnome = getClosestGnome(distances, latestInteractions);
+    const closestGnome = getClosestGnome(distances, interactions);
 
     if (closestGnome) {
       setClosestGnomeId(closestGnome.gnome.id);
@@ -339,7 +343,7 @@ const MapScreen = () => {
         {isGnomeCatcherVisible && (
           <DraggableGnome
             onUnlock={() => {
-              addPendingInteraction(closestGnomeId);
+              addInteraction(closestGnomeId);
               setIsInteractionSheetVisible(true);
             }}
           />
@@ -357,24 +361,20 @@ const MapScreen = () => {
           <GnomeDetailsBottomSheet
             gnomeId={selectedGnomeId}
             userLocation={userLocation}
-            onClick={() => {
-              setSelectedGnomeId(null);
-              router.push(`/gnomes/${selectedGnomeId}`);
-            }}
-            onClose={() => setSelectedGnomeId(null)}
+            onDismiss={() => setSelectedGnomeId(null)}
           />
         )}
 
         {isInteractionSheetVisible && !!closestGnomeId && (
           <InteractionBottomSheet
-            onClose={() => setIsInteractionSheetVisible(false)}
+            onDismiss={() => setIsInteractionSheetVisible(false)}
             gnomeId={closestGnomeId}
           />
         )}
 
         {isResourceSheetVisible && (
           <ResourcesBottomSheet
-            onClose={() => setIsResourceSheetVisible(false)}
+            onDismiss={() => setIsResourceSheetVisible(false)}
           />
         )}
       </Portal>

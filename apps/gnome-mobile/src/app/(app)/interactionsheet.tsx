@@ -15,7 +15,7 @@ import { GnomeImage } from "@/components/GnomeImage";
 import { useGnomeStore } from "@/store/useGnomeStore";
 
 interface InteractionSheetProps {
-  onClose: () => void;
+  onDismiss: () => void;
   gnomeId: string;
   gatheredResources?: {
     berries?: number;
@@ -25,7 +25,7 @@ interface InteractionSheetProps {
 }
 
 const InteractionBottomSheet: React.FC<InteractionSheetProps> = ({
-  onClose,
+  onDismiss,
   gnomeId,
   gatheredResources,
 }) => {
@@ -33,7 +33,7 @@ const InteractionBottomSheet: React.FC<InteractionSheetProps> = ({
   const gnome = useGnomeStore((state) =>
     state.gnomes.find((g) => g.id === gnomeId),
   );
-  const { navigate, push } = useRouter();
+  const router = useRouter();
 
   const renderBackdrop = (props: BottomSheetBackdropProps) => (
     <BottomSheetBackdrop
@@ -49,7 +49,7 @@ const InteractionBottomSheet: React.FC<InteractionSheetProps> = ({
       backgroundClassName="bg-primary-foreground"
       handleIndicatorClassName="bg-tekst w-20 mt-2 rounded-lg"
       enablePanDownToClose
-      onClose={onClose}
+      onClose={onDismiss}
       backdropComponent={renderBackdrop}
     >
       <BottomSheetView className="flex flex-col gap-3 px-4 pt-2 pb-12 z-10">
@@ -94,7 +94,7 @@ const InteractionBottomSheet: React.FC<InteractionSheetProps> = ({
         </View>
         <View className="flex flex-row justify-center gap-4">
           <TouchableOpacity
-            onPress={() => push(`/gnomes/${gnomeId}`)}
+            onPress={() => router.push(`/gnomes/${gnomeId}`)}
             className="bg-background py-2 px-8 rounded-lg"
           >
             <Text className="text-tekst text-lg">
@@ -102,7 +102,7 @@ const InteractionBottomSheet: React.FC<InteractionSheetProps> = ({
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={() => navigate(`/camera?gnomeId=${gnomeId}`)}
+            onPress={() => router.push(`/camera?gnomeId=${gnomeId}`)}
             className="bg-primary py-2 px-10 rounded-lg"
           >
             <View className="flex-row gap-2 items-center">
