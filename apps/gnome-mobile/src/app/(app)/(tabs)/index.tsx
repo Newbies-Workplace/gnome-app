@@ -3,7 +3,13 @@ import { LinearGradient } from "expo-linear-gradient";
 import * as Location from "expo-location";
 import { useFocusEffect, usePathname, useRouter } from "expo-router";
 import { getDistance } from "geolib";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { useTranslation } from "react-i18next";
 import {
   Alert,
@@ -19,13 +25,13 @@ import FriendIcon from "@/assets/icons/add-friend.svg";
 import LocationOffIcon from "@/assets/icons/location-off.svg";
 import GnomePin from "@/assets/images/GnomePin.svg";
 import GnomePinCatch from "@/assets/images/GnomePinCatch.svg";
+import { GnomeDetailsBottomSheet } from "@/components/GnomeDetailsBottomSheet";
 import { MapStyle } from "@/components/map-styles";
 import ResourcesBottomSheet from "@/components/ResourcesInfoBottomSheet";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Compass from "@/components/ui/compass";
 import DistanceTracker from "@/components/ui/DistanceTracker";
 import DraggableGnome from "@/components/ui/DraggableGnome";
-import { GnomeDetailsBottomSheet } from "@/components/ui/GnomeDetailsBottomSheet";
 import ResourcesBar from "@/components/ui/ResourcesBar";
 import { Text } from "@/components/ui/text";
 import { getClosestGnome } from "@/lib/getClosestGnome";
@@ -41,6 +47,12 @@ const MIN_REACHED_DISTANCE = 15;
 const INITIAL_COORDINATES = {
   latitude: 51.109967,
   longitude: 17.031843,
+};
+
+const DEFAULT_REGION: Region = {
+  ...INITIAL_COORDINATES,
+  latitudeDelta: 0.01,
+  longitudeDelta: 0.05,
 };
 
 interface HeaderControlsProps {
@@ -157,11 +169,17 @@ const MapScreen = () => {
     useState(false);
   const pathname = usePathname();
 
-  const defaultRegion: Region = {
-    ...INITIAL_COORDINATES,
-    latitudeDelta: 0.01,
-    longitudeDelta: 0.05,
-  };
+  // todo fix filtering logic
+  const filteredGnomes = useMemo(
+    () =>
+      gnomes.filter((gnome) => {
+        return getDistance(userLocation, {
+          latitude: gnome.latitude,
+          longitude: gnome.longitude,
+        });
+      }),
+    [gnomes, userLocation],
+  );
 
   useFocusEffect(
     useCallback(() => {
@@ -232,16 +250,6 @@ const MapScreen = () => {
     };
   }, []);
 
-  // filtrowanie
-  const filteredGnomes = gnomes.filter((gnome) => {
-    const distance = getDistance(userLocation, {
-      latitude: gnome.latitude,
-      longitude: gnome.longitude,
-    });
-
-    return distance;
-  });
-
   useEffect(() => {
     const distances = gnomes.map((gnome) => {
       const distance = getDistance(
@@ -277,7 +285,7 @@ const MapScreen = () => {
   const isCurrentScreenFocused = pathname === "/";
 
   return (
-    <SafeAreaView className="flex-1">
+    <SafeAreaView className="flex-1 relative">
       <View className="absolute top-10 left-1/2 -translate-x-1/2 px-10 gap-2 z-10">
         <Compass />
 
@@ -291,8 +299,8 @@ const MapScreen = () => {
         )}
       </View>
       <MapView
-        style={styles.map}
-        initialRegion={defaultRegion}
+        style={StyleSheet.absoluteFillObject}
+        initialRegion={DEFAULT_REGION}
         showsUserLocation={true}
         provider={PROVIDER_GOOGLE}
         zoomEnabled={true}
@@ -307,7 +315,7 @@ const MapScreen = () => {
         mapPadding={{
           top: 100,
           right: 5,
-          bottom: 160,
+          bottom: 100,
           left: 5,
         }}
         minZoomLevel={10}
@@ -381,23 +389,5 @@ const MapScreen = () => {
     </SafeAreaView>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "flex-end",
-  },
-  mapContainer: {
-    flex: 1,
-  },
-  map: {
-    ...StyleSheet.absoluteFillObject,
-  },
-  text: {
-    fontSize: 16,
-    textAlign: "center",
-    marginTop: 20,
-  },
-});
 
 export default MapScreen;

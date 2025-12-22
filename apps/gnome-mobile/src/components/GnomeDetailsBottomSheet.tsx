@@ -13,6 +13,7 @@ import GnomeCaughtCountIcon from "@/assets/icons/GnomeCaughtCount.svg";
 import GnomeHowFarAwayIcon from "@/assets/icons/GnomeHowFarAway.svg";
 import GnomeLocationIcon from "@/assets/icons/GnomeLocation.svg";
 import { GnomeImage } from "@/components/GnomeImage";
+import { formatDistance } from "@/lib/distanceUtils";
 import { useGnomeStore } from "@/store/useGnomeStore";
 
 interface GnomeDetailsBottomSheetProps {
@@ -53,9 +54,7 @@ export const GnomeDetailsBottomSheet: React.FC<
 
   const formattedDistance =
     selectedGnomeDistance !== null
-      ? selectedGnomeDistance < 1000
-        ? `${selectedGnomeDistance} m`
-        : `${(selectedGnomeDistance / 1000).toFixed(2)} km`
+      ? formatDistance(selectedGnomeDistance)
       : null;
 
   const renderBackdrop = (props: BottomSheetBackdropProps) => (
