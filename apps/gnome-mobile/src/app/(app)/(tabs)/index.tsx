@@ -169,7 +169,6 @@ const MapScreen = () => {
     useState(false);
   const pathname = usePathname();
 
-  // todo fix filtering logic
   const filteredGnomes = useMemo(
     () =>
       gnomes.filter((gnome) => {
