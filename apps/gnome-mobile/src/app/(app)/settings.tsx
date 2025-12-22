@@ -1,7 +1,10 @@
-import BottomSheet from "@gorhom/bottom-sheet";
+import BottomSheet, {
+  BottomSheetBackdrop,
+  BottomSheetModal,
+} from "@gorhom/bottom-sheet";
 import { useNavigation } from "@react-navigation/native";
 import { useRouter } from "expo-router";
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { Linking, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -17,6 +20,7 @@ import { SettingsOption } from "@/components/ui/SettingsOption";
 import { Text } from "@/components/ui/text";
 import { useTheme } from "@/contexts/ThemeContext";
 import { useAuthStore } from "@/store/useAuthStore";
+import { BottomSheetDefaultBackdropProps } from "@gorhom/bottom-sheet/lib/typescript/components/bottomSheetBackdrop/types";
 
 function SettingsScreen() {
   const navigation = useNavigation();
@@ -49,6 +53,19 @@ function SettingsScreen() {
     });
   }, [navigation, router, t]);
 
+  const renderBackdrop = useCallback(
+    (
+      props: React.JSX.IntrinsicAttributes & BottomSheetDefaultBackdropProps
+    ) => (
+      <BottomSheetBackdrop
+        {...props}
+        appearsOnIndex={0}
+        disappearsOnIndex={-1}
+      />
+    ),
+    []
+  );
+
   return (
     <SafeAreaView className="flex-1 bg-primary-foreground">
       <View className="w-full px-4 mt-4">
@@ -75,12 +92,6 @@ function SettingsScreen() {
           customClass="mb-4"
         />
         <SettingsOption
-          text={t("settings.notifications")}
-          image={NotificationsIcon}
-          onClick={() => Linking.openSettings()}
-          customClass="mb-4"
-        />
-        <SettingsOption
           text={t("settings.deleteAccount.title")}
           image={AccoutDeleteIcon}
           onClick={() => {
@@ -94,9 +105,9 @@ function SettingsScreen() {
 
       <BottomSheet
         ref={themeBottomSheetRef}
-        index={-1}
         enablePanDownToClose
         backgroundClassName={"bg-background"}
+        backdropComponent={renderBackdrop}
         handleIndicatorClassName={"bg-tekst w-24 mt-2 rounded-lg"}
       >
         <ThemeSelectorBottomSheet
@@ -107,8 +118,8 @@ function SettingsScreen() {
       </BottomSheet>
       <BottomSheet
         ref={languageBottomSheetRef}
-        index={-1}
         enablePanDownToClose
+        backdropComponent={renderBackdrop}
         backgroundClassName={"bg-background"}
         handleIndicatorClassName={"bg-tekst w-24 mt-2 rounded-lg"}
       >

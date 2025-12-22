@@ -1,8 +1,12 @@
-import { BottomSheetModal, BottomSheetView } from "@gorhom/bottom-sheet";
+import {
+  BottomSheetBackdrop,
+  BottomSheetModal,
+  BottomSheetView,
+} from "@gorhom/bottom-sheet";
 import { useNavigation } from "@react-navigation/native";
 import dayjs from "dayjs";
 import { useRouter } from "expo-router";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { FlatList, Text, TouchableOpacity, View } from "react-native";
 import AchievementLocked from "@/assets/icons/achievementLocked.svg";
@@ -10,6 +14,7 @@ import AchievementUnlocked from "@/assets/icons/achievementUnlocked.svg";
 import ArrowLeft from "@/assets/icons/arrow-left.svg";
 import { Achievement } from "@/components/Achievement";
 import { useAchievementsStore } from "@/store/useAchievementsStore";
+import { BottomSheetDefaultBackdropProps } from "@gorhom/bottom-sheet/lib/typescript/components/bottomSheetBackdrop/types";
 
 type AchievementType = {
   id: string;
@@ -53,6 +58,19 @@ export default function AchivementScreen() {
     setSelectedAchivement(achievement);
   };
 
+  const renderBackdrop = useCallback(
+    (
+      props: React.JSX.IntrinsicAttributes & BottomSheetDefaultBackdropProps
+    ) => (
+      <BottomSheetBackdrop
+        {...props}
+        appearsOnIndex={0}
+        disappearsOnIndex={-1}
+      />
+    ),
+    []
+  );
+
   return (
     <>
       <View className="bg-primary-foreground h-full p-4">
@@ -63,7 +81,7 @@ export default function AchivementScreen() {
           numColumns={3}
           renderItem={({ item }) => {
             const isEarned = userAchivements.find(
-              (ach) => ach.achievement.id === item.id,
+              (ach) => ach.achievement.id === item.id
             );
 
             if (isEarned) {
@@ -94,6 +112,7 @@ export default function AchivementScreen() {
         handleIndicatorClassName={"bg-tekst w-24 mt-2 rounded-lg"}
         backgroundClassName={"bg-background"}
         ref={achievementRef}
+        backdropComponent={renderBackdrop}
         enableDismissOnClose
         onDismiss={achievementRef.current?.close}
       >

@@ -1,8 +1,8 @@
-import { BottomSheetModal } from "@gorhom/bottom-sheet";
+import { BottomSheetBackdrop, BottomSheetModal } from "@gorhom/bottom-sheet";
 import Clipboard from "@react-native-clipboard/clipboard";
 import { useNavigation } from "@react-navigation/native";
 import { useRouter } from "expo-router";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Image, TouchableOpacity, View } from "react-native";
 import { QrCodeSvg } from "react-native-qr-svg";
@@ -22,6 +22,7 @@ import { Input } from "@/components/ui/input";
 import { Text } from "@/components/ui/text";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useFriendsStore } from "@/store/useFriendsStore";
+import { BottomSheetDefaultBackdropProps } from "@gorhom/bottom-sheet/lib/typescript/components/bottomSheetBackdrop/types";
 
 export default function AddFriendScreen() {
   const { t } = useTranslation();
@@ -93,6 +94,19 @@ export default function AddFriendScreen() {
       .filter(Boolean)
       .join(" ");
   };
+
+  const renderBackdrop = useCallback(
+    (
+      props: React.JSX.IntrinsicAttributes & BottomSheetDefaultBackdropProps
+    ) => (
+      <BottomSheetBackdrop
+        {...props}
+        appearsOnIndex={0}
+        disappearsOnIndex={-1}
+      />
+    ),
+    []
+  );
 
   return (
     <View className="flex-1 bg-primary-foreground p-6 items-center gap-5">
@@ -176,6 +190,7 @@ export default function AddFriendScreen() {
         backgroundClassName={"bg-background"}
         ref={scanInvitationSheetRef}
         enableDismissOnClose
+        backdropComponent={renderBackdrop}
         onDismiss={scanInvitationSheetRef.current?.close}
       >
         <Scanner
@@ -189,6 +204,7 @@ export default function AddFriendScreen() {
         backgroundClassName={"bg-background"}
         ref={regenerateInviteCodeSheetRef}
         enableDismissOnClose
+        backdropComponent={renderBackdrop}
         onDismiss={regenerateInviteCodeSheetRef.current?.close}
       >
         <ConfirmDialog
