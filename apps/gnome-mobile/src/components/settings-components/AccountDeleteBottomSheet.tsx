@@ -12,76 +12,65 @@ import { Button } from "../ui/button";
 
 interface DeleteAccountBottomSheetProps {
   onDelete: () => void;
-  deleteAccountBottomSheetRef: React.RefObject<any>;
+  closeSheet: () => void;
 }
 
 export const DeleteAccountBottomSheet: React.FC<
   DeleteAccountBottomSheetProps
-> = ({ onDelete, deleteAccountBottomSheetRef }) => {
+> = ({ onDelete, closeSheet }) => {
   const { t } = useTranslation();
-  const closeSheet = () => {
-    deleteAccountBottomSheetRef.current?.close();
-  };
   const [confirmation, setConfirmation] = useState("");
   const canDelete =
     confirmation.trim().toLowerCase() ===
     t("settings.deleteAccount.confirmationPhrase").toLowerCase();
 
   return (
-    <BottomSheet
-      ref={deleteAccountBottomSheetRef}
-      index={-1}
-      enablePanDownToClose
-      backgroundClassName={"bg-background"}
-      handleIndicatorClassName={"bg-tekst w-24 mt-2 rounded-lg"}
-    >
-      <BottomSheetView className="px-5 pb-4">
-        <SafeAreaView className="flex-1 justify-center items-center">
-          <Text className="text-2xl font-bold text-tekst mb-2 text-center">
-            {t("settings.deleteAccount.confirmationTitle")}
-          </Text>
+    <BottomSheetView className="px-5 pb-4">
+      <SafeAreaView className="flex-1 justify-center items-center">
+        <Text className="text-2xl font-bold text-tekst mb-2 text-center">
+          {t("settings.deleteAccount.confirmationTitle")}
+        </Text>
 
-          <Text className="text-base text-tekst mb-8 text-center">
-            {t("settings.deleteAccount.description")}
-          </Text>
+        <Text className="text-base text-tekst mb-8 text-center">
+          {t("settings.deleteAccount.description")}
+        </Text>
 
-          <BottomSheetTextInput
-            placeholder={t("settings.deleteAccount.typeConfirmation")}
-            placeholderTextColor="gray"
-            onChangeText={setConfirmation}
-            value={confirmation}
-            className="border rounded-2xl px-3 py-2 text-tekst mb-5 w-full border-tekst"
-          />
+        <BottomSheetTextInput
+          placeholder={t("settings.deleteAccount.typeConfirmation")}
+          placeholderTextColor="gray"
+          onChangeText={setConfirmation}
+          value={confirmation}
+          className="border rounded-2xl px-3 py-2 text-tekst mb-5 w-full border-tekst"
+        />
 
-          <View className="flex-row gap-4 w-full">
-            <Button
-              className="flex-1 flex-row gap-2 items-center bg-primary-foreground justify-center"
-              onPress={() => {
-                closeSheet();
-                Keyboard.dismiss();
-              }}
-            >
-              <CancelIcon className="w-7 h-7 text-tekst" />
-              <Text className="text-tekst">{t("common.cancel")}</Text>
-            </Button>
+        <View className="flex-row gap-4 w-full">
+          <Button
+            className="flex-1 flex-row gap-2 items-center bg-primary-foreground justify-center"
+            onPress={() => {
+              closeSheet();
+              Keyboard.dismiss();
+            }}
+          >
+            <CancelIcon className="w-7 h-7 text-tekst" />
+            <Text className="text-tekst">{t("common.cancel")}</Text>
+          </Button>
 
-            <Button
-              className={`flex-1 flex-row gap-2 items-center justify-center ${
-                canDelete ? "bg-primary" : "bg-primary"
-              }`}
-              disabled={!canDelete}
-              onPress={() => {
-                onDelete();
-                closeSheet();
-              }}
-            >
-              <TrashcanIcon className="w-7 h-7 text-tekst" />
-              <Text className="text-tekst">{t("common.delete")}</Text>
-            </Button>
-          </View>
-        </SafeAreaView>
-      </BottomSheetView>
-    </BottomSheet>
+          <Button
+            className={`flex-1 flex-row gap-2 items-center justify-center ${
+              canDelete ? "bg-primary" : "bg-primary"
+            }`}
+            disabled={!canDelete}
+            onPress={() => {
+              onDelete();
+              closeSheet();
+            }}
+          >
+            <TrashcanIcon className="w-7 h-7 text-tekst" />
+            <Text className="text-tekst">{t("common.delete")}</Text>
+          </Button>
+        </View>
+      </SafeAreaView>
+    </BottomSheetView>
   );
 };
 

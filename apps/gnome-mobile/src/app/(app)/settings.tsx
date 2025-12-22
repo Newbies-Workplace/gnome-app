@@ -1,17 +1,14 @@
-import BottomSheet, {
-  BottomSheetBackdrop,
-  BottomSheetModal,
-} from "@gorhom/bottom-sheet";
+import { BottomSheetBackdrop, BottomSheetModal } from "@gorhom/bottom-sheet";
+import { BottomSheetDefaultBackdropProps } from "@gorhom/bottom-sheet/lib/typescript/components/bottomSheetBackdrop/types";
 import { useNavigation } from "@react-navigation/native";
 import { useRouter } from "expo-router";
 import { useCallback, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
-import { Linking, TouchableOpacity, View } from "react-native";
+import { TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import ArrowLeft from "@/assets/icons/arrow-left.svg";
 import LanguageIcon from "@/assets/icons/language.svg";
 import ModeIcon from "@/assets/icons/mode.svg";
-import NotificationsIcon from "@/assets/icons/notifications.svg";
 import AccoutDeleteIcon from "@/assets/icons/security.svg";
 import DeleteAccountBottomSheet from "@/components/settings-components/AccountDeleteBottomSheet";
 import { LanguageSelector } from "@/components/settings-components/LanguageSelector";
@@ -20,15 +17,14 @@ import { SettingsOption } from "@/components/ui/SettingsOption";
 import { Text } from "@/components/ui/text";
 import { useTheme } from "@/contexts/ThemeContext";
 import { useAuthStore } from "@/store/useAuthStore";
-import { BottomSheetDefaultBackdropProps } from "@gorhom/bottom-sheet/lib/typescript/components/bottomSheetBackdrop/types";
 
 function SettingsScreen() {
   const navigation = useNavigation();
   const router = useRouter();
   const { t } = useTranslation();
-  const deleteAccountBottomSheetRef = useRef<BottomSheet>(null);
-  const themeBottomSheetRef = useRef<BottomSheet>(null);
-  const languageBottomSheetRef = useRef<BottomSheet>(null);
+  const deleteAccountBottomSheetRef = useRef<BottomSheetModal>(null);
+  const themeBottomSheetRef = useRef<BottomSheetModal>(null);
+  const languageBottomSheetRef = useRef<BottomSheetModal>(null);
   const { deleteAccount } = useAuthStore();
   const { theme } = useTheme();
 
@@ -55,7 +51,7 @@ function SettingsScreen() {
 
   const renderBackdrop = useCallback(
     (
-      props: React.JSX.IntrinsicAttributes & BottomSheetDefaultBackdropProps
+      props: React.JSX.IntrinsicAttributes & BottomSheetDefaultBackdropProps,
     ) => (
       <BottomSheetBackdrop
         {...props}
@@ -63,7 +59,7 @@ function SettingsScreen() {
         disappearsOnIndex={-1}
       />
     ),
-    []
+    [],
   );
 
   return (
@@ -74,7 +70,7 @@ function SettingsScreen() {
           image={ModeIcon}
           onClick={() => {
             languageBottomSheetRef.current?.close();
-            themeBottomSheetRef.current?.expand();
+            themeBottomSheetRef.current?.present();
             deleteAccountBottomSheetRef.current?.close();
           }}
           extraText={t(`settings.theme.${theme}`)}
@@ -85,7 +81,7 @@ function SettingsScreen() {
           image={LanguageIcon}
           onClick={() => {
             themeBottomSheetRef.current?.close();
-            languageBottomSheetRef.current?.expand();
+            languageBottomSheetRef.current?.present();
             deleteAccountBottomSheetRef.current?.close();
           }}
           extraText={t("settings.languageTitle")}
@@ -95,7 +91,7 @@ function SettingsScreen() {
           text={t("settings.deleteAccount.title")}
           image={AccoutDeleteIcon}
           onClick={() => {
-            deleteAccountBottomSheetRef.current?.expand();
+            deleteAccountBottomSheetRef.current?.present();
             themeBottomSheetRef.current?.close();
             languageBottomSheetRef.current?.close();
           }}
@@ -103,9 +99,8 @@ function SettingsScreen() {
         />
       </View>
 
-      <BottomSheet
+      <BottomSheetModal
         ref={themeBottomSheetRef}
-        enablePanDownToClose
         backgroundClassName={"bg-background"}
         backdropComponent={renderBackdrop}
         handleIndicatorClassName={"bg-tekst w-24 mt-2 rounded-lg"}
@@ -115,8 +110,8 @@ function SettingsScreen() {
             themeBottomSheetRef.current?.close();
           }}
         />
-      </BottomSheet>
-      <BottomSheet
+      </BottomSheetModal>
+      <BottomSheetModal
         ref={languageBottomSheetRef}
         enablePanDownToClose
         backdropComponent={renderBackdrop}
@@ -128,14 +123,24 @@ function SettingsScreen() {
             languageBottomSheetRef.current?.close();
           }}
         />
-      </BottomSheet>
-      <DeleteAccountBottomSheet
-        onDelete={() => {
-          deleteAccount();
-          router.replace("/welcome");
-        }}
-        deleteAccountBottomSheetRef={deleteAccountBottomSheetRef}
-      />
+      </BottomSheetModal>
+      <BottomSheetModal
+        ref={deleteAccountBottomSheetRef}
+        enablePanDownToClose
+        backdropComponent={renderBackdrop}
+        backgroundClassName={"bg-background"}
+        handleIndicatorClassName={"bg-tekst w-24 mt-2 rounded-lg"}
+      >
+        <DeleteAccountBottomSheet
+          onDelete={() => {
+            deleteAccount();
+            router.replace("/welcome");
+          }}
+          closeSheet={() => {
+            deleteAccountBottomSheetRef.current?.close();
+          }}
+        />
+      </BottomSheetModal>
     </SafeAreaView>
   );
 }

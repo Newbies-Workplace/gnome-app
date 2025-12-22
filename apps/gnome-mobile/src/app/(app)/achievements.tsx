@@ -3,6 +3,7 @@ import {
   BottomSheetModal,
   BottomSheetView,
 } from "@gorhom/bottom-sheet";
+import { BottomSheetDefaultBackdropProps } from "@gorhom/bottom-sheet/lib/typescript/components/bottomSheetBackdrop/types";
 import { useNavigation } from "@react-navigation/native";
 import dayjs from "dayjs";
 import { useRouter } from "expo-router";
@@ -14,7 +15,6 @@ import AchievementUnlocked from "@/assets/icons/achievementUnlocked.svg";
 import ArrowLeft from "@/assets/icons/arrow-left.svg";
 import { Achievement } from "@/components/Achievement";
 import { useAchievementsStore } from "@/store/useAchievementsStore";
-import { BottomSheetDefaultBackdropProps } from "@gorhom/bottom-sheet/lib/typescript/components/bottomSheetBackdrop/types";
 
 type AchievementType = {
   id: string;
@@ -31,6 +31,19 @@ export default function AchivementScreen() {
   const [selectedAchivement, setSelectedAchivement] =
     useState<AchievementType | null>(null);
   const { t } = useTranslation();
+
+  const renderBackdrop = useCallback(
+    (
+      props: React.JSX.IntrinsicAttributes & BottomSheetDefaultBackdropProps,
+    ) => (
+      <BottomSheetBackdrop
+        {...props}
+        appearsOnIndex={0}
+        disappearsOnIndex={-1}
+      />
+    ),
+    [],
+  );
 
   useEffect(() => {
     navigation.setOptions({
@@ -58,19 +71,6 @@ export default function AchivementScreen() {
     setSelectedAchivement(achievement);
   };
 
-  const renderBackdrop = useCallback(
-    (
-      props: React.JSX.IntrinsicAttributes & BottomSheetDefaultBackdropProps
-    ) => (
-      <BottomSheetBackdrop
-        {...props}
-        appearsOnIndex={0}
-        disappearsOnIndex={-1}
-      />
-    ),
-    []
-  );
-
   return (
     <>
       <View className="bg-primary-foreground h-full p-4">
@@ -81,7 +81,7 @@ export default function AchivementScreen() {
           numColumns={3}
           renderItem={({ item }) => {
             const isEarned = userAchivements.find(
-              (ach) => ach.achievement.id === item.id
+              (ach) => ach.achievement.id === item.id,
             );
 
             if (isEarned) {
