@@ -39,7 +39,7 @@ const MIN_TRACKER_DISTANCE = 50;
 const MIN_REACHED_DISTANCE = 15;
 
 interface HeaderControlsProps {
-  user: { pictureUrl: string }; // Adjust the type based on your user object structure
+  user: { pictureUrl: string };
   errorMsg: string | null;
   setErrorMsg: (msg: string | null) => void;
   openResourcesInfo: () => void;
@@ -131,23 +131,25 @@ const MapScreen = () => {
   const { gnomes, fetchGnomes, interactions, fetchMyInteractions } =
     useGnomeStore();
   const { fetchUserFriends } = useFriendsStore();
+  const { fetchAchievements, fetchUserAchievements } = useAchievementsStore();
+  const { addPendingInteraction, latestInteractions } =
+    useGnomeInteractionStore();
+
   const ref = useRef<MapView>(null);
+
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+
   const [userLocation, setUserLocation] = useState({
     latitude: 51.109967,
     longitude: 17.031843,
   });
   const [distance, setDistance] = useState<number>();
+
   const [closestGnomeId, setClosestGnomeId] = useState<string>();
+  const [selectedGnomeId, setSelectedGnomeId] = useState<string | null>(null);
   const [isResourceSheetVisible, setIsResourceSheetVisible] = useState(false);
-  const { addPendingInteraction, latestInteractions } =
-    useGnomeInteractionStore();
   const [isInteractionSheetVisible, setIsInteractionSheetVisible] =
     useState(false);
-  const { fetchAchivements, fetchUserAchivements } = useAchievementsStore();
-  const [selectedGnomeId, setSelectedGnomeId] = useState<string | null>(null);
-  const closestGnomeData = gnomes.find((g) => g.id === closestGnomeId);
-  const selectedGnome = gnomes.find((g) => g.id === selectedGnomeId);
   const pathname = usePathname();
 
   const defaultRegion = {
@@ -175,8 +177,8 @@ const MapScreen = () => {
     fetchGnomes();
     fetchMyInteractions();
     fetchUserFriends();
-    fetchAchivements();
-    fetchUserAchivements();
+    fetchAchievements();
+    fetchUserAchievements();
   }, []);
 
   useEffect(() => {
@@ -270,23 +272,6 @@ const MapScreen = () => {
     closestGnomeId !== undefined;
   const isCurrentScreenFocused = pathname === "/";
 
-  const selectedGnomeDistance = selectedGnome
-    ? getDistance(
-        { latitude: userLocation.latitude, longitude: userLocation.longitude },
-        {
-          latitude: selectedGnome.latitude,
-          longitude: selectedGnome.longitude,
-        },
-      )
-    : null;
-
-  const formattedDistance =
-    selectedGnomeDistance !== null
-      ? selectedGnomeDistance < 1000
-        ? `${selectedGnomeDistance} m`
-        : `${(selectedGnomeDistance / 1000).toFixed(2)} km`
-      : null;
-
   return (
     <SafeAreaView className="flex-1">
       <View className="absolute top-10 left-1/2 -translate-x-1/2 px-10 gap-2 z-10">
@@ -368,10 +353,10 @@ const MapScreen = () => {
         />
       )}
       <Portal name={"bottom-sheets"}>
-        {!!selectedGnome && (
+        {!!selectedGnomeId && (
           <GnomeDetailsBottomSheet
-            selectedGnome={selectedGnome}
-            formattedDistance={formattedDistance}
+            gnomeId={selectedGnomeId}
+            userLocation={userLocation}
             onClick={() => {
               setSelectedGnomeId(null);
               router.push(`/gnomes/${selectedGnomeId}`);
@@ -383,8 +368,6 @@ const MapScreen = () => {
         {isInteractionSheetVisible && !!closestGnomeId && (
           <InteractionBottomSheet
             onClose={() => setIsInteractionSheetVisible(false)}
-            name={closestGnomeData?.name}
-            pictureUrl={closestGnomeData?.pictureUrl}
             gnomeId={closestGnomeId}
           />
         )}

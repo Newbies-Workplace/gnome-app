@@ -6,7 +6,6 @@ import React, { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Image, TouchableOpacity, View } from "react-native";
 import { QrCodeSvg } from "react-native-qr-svg";
-import { useCameraDevice } from "react-native-vision-camera";
 import ArrowLeft from "@/assets/icons/arrow-left.svg";
 import CameraIcon from "@/assets/icons/camera.svg";
 import CopyIcon from "@/assets/icons/copy.svg";
@@ -32,7 +31,6 @@ export default function AddFriendScreen() {
   const regenerateInviteCodeSheetRef = useRef<BottomSheetModal>(null);
   const scanInvitationSheetRef = useRef<BottomSheetModal>(null);
   const [inviteCodeInputText, setInviteCodeInputText] = useState<string>("");
-  const device = useCameraDevice("back");
   const IS_NATIVE_DIALOG_ADDED = false;
 
   useEffect(() => {
@@ -152,7 +150,7 @@ export default function AddFriendScreen() {
           value={inviteCodeInputText}
           onChangeText={handleTextChange}
         />
-        {inviteCodeInputText.length === 0 && device ? (
+        {inviteCodeInputText.length === 0 ? (
           <Button
             size="icon"
             className="rounded-full"
@@ -178,11 +176,7 @@ export default function AddFriendScreen() {
         enableDismissOnClose
         onDismiss={scanInvitationSheetRef.current?.close}
       >
-        <Scanner
-          onCodeScanned={onCodeScanned}
-          onRequestPermission={() => scanInvitationSheetRef.current?.close()}
-          device={device}
-        />
+        <Scanner onCodeScanned={onCodeScanned} />
       </BottomSheetModal>
       <BottomSheetModal
         handleIndicatorClassName={"bg-tekst w-24 mt-2 rounded-lg"}

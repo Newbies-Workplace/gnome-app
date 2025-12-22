@@ -3,41 +3,58 @@ import BottomSheet, {
   BottomSheetBackdropProps,
   BottomSheetView,
 } from "@gorhom/bottom-sheet";
+import { getDistance } from "geolib";
 import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { Image, Text, TouchableOpacity, View } from "react-native";
+import { Text, TouchableOpacity, View } from "react-native";
 import GnomeDetailsFullScreenIcon from "@/assets/icons/FullscreenButton.svg";
 import GnomeCaughtCountIcon from "@/assets/icons/GnomeCaughtCount.svg";
 import GnomeHowFarAwayIcon from "@/assets/icons/GnomeHowFarAway.svg";
 import GnomeLocationIcon from "@/assets/icons/GnomeLocation.svg";
-import { useGnomeImage } from "@/lib/useGnomeImage";
+import { GnomeImage } from "@/components/GnomeImage";
 import { useGnomeInteractionStore } from "@/store/useGnomeInteractionStore";
+import { useGnomeStore } from "@/store/useGnomeStore";
 
 interface GnomeDetailsBottomSheetProps {
-  selectedGnome: {
-    id: string;
-    name: string;
-    location: string;
-    pictureUrl: string;
-  };
-  formattedDistance?: string | null;
+  gnomeId: string;
+  userLocation: { latitude: number; longitude: number };
   onClose?: () => void;
   onClick: () => void;
 }
 
 export const GnomeDetailsBottomSheet: React.FC<
   GnomeDetailsBottomSheetProps
-> = ({ selectedGnome, formattedDistance, onClose, onClick }) => {
+> = ({ gnomeId, userLocation, onClose, onClick }) => {
   const { t } = useTranslation();
+  const gnome = useGnomeStore((state) =>
+    state.gnomes.find((gnome) => gnome.id === gnomeId),
+  );
+
   const { interactionCount, fetchInteractionCount } =
     useGnomeInteractionStore();
-  const gnomeImage = useGnomeImage(selectedGnome?.id);
 
   useEffect(() => {
-    if (selectedGnome) {
-      fetchInteractionCount(selectedGnome.id);
+    if (gnome) {
+      fetchInteractionCount(gnome.id);
     }
-  }, [selectedGnome]);
+  }, [gnome]);
+
+  const selectedGnomeDistance = gnome
+    ? getDistance(
+        { latitude: userLocation.latitude, longitude: userLocation.longitude },
+        {
+          latitude: gnome.latitude,
+          longitude: gnome.longitude,
+        },
+      )
+    : null;
+
+  const formattedDistance =
+    selectedGnomeDistance !== null
+      ? selectedGnomeDistance < 1000
+        ? `${selectedGnomeDistance} m`
+        : `${(selectedGnomeDistance / 1000).toFixed(2)} km`
+      : null;
 
   const renderBackdrop = (props: BottomSheetBackdropProps) => (
     <BottomSheetBackdrop
@@ -58,12 +75,12 @@ export const GnomeDetailsBottomSheet: React.FC<
     >
       <BottomSheetView className="p-5 rounded-t-2xl relative z-10">
         <View className="flex-row items-start space-x-4">
-          <Image source={gnomeImage} className="w-28 h-32 rounded-xl" />
+          <GnomeImage gnomeId={gnomeId} className="w-28 h-32 rounded-xl" />
 
           <View className="flex-1 space-y-2 ml-3">
             <View className="flex-row justify-between items-start">
               <Text className="text-2xl font-semibold text-tekst">
-                {selectedGnome?.name}
+                {gnome?.name}
               </Text>
 
               <TouchableOpacity onPress={onClick}>
@@ -75,7 +92,7 @@ export const GnomeDetailsBottomSheet: React.FC<
               <View className="flex-row items-center">
                 <GnomeLocationIcon className="text-tekst" />
                 <Text className="ml-2 text-base text-tekst">
-                  {selectedGnome?.location}
+                  {gnome?.location}
                 </Text>
               </View>
 
@@ -91,9 +108,7 @@ export const GnomeDetailsBottomSheet: React.FC<
               <View className="flex-row items-center">
                 <GnomeCaughtCountIcon className="text-tekst" />
                 <Text className="ml-2 text-base text-tekst">
-                  {selectedGnome
-                    ? (interactionCount[selectedGnome.id] ?? 0)
-                    : 0}{" "}
+                  {gnome ? (interactionCount[gnome.id] ?? 0) : 0}{" "}
                   {t("gnomeDetails.users")}
                 </Text>
               </View>

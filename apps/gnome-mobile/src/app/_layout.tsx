@@ -83,6 +83,7 @@ export default function RootLayout() {
         width: true,
         height: true,
         stroke: true,
+        borderRadius: true,
         strokeWidth: true,
         fill: true,
       },

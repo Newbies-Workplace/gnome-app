@@ -9,7 +9,6 @@ import FriendsIcon from "@/assets/icons/friends.svg";
 import LastSeenIcon from "@/assets/icons/last-seen.svg";
 import LogoutIcon from "@/assets/icons/log-out.svg";
 import SettingsIcon from "@/assets/icons/settings.svg";
-import ShareIcon from "@/assets/icons/share-right.svg";
 import { Achievement } from "@/components/Achievement";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { GnomeCard } from "@/components/ui/GnomeCard";
@@ -113,17 +112,17 @@ export default function ProfileScreen() {
           />
           <View className="justify-center flex-row">
             <GnomeCard
-              image={require("@/assets/images/placeholder.png")}
+              gnomeId={"1"}
               text="?"
               onClick={() => router.replace("/collection")}
             />
             <GnomeCard
-              image={require("@/assets/images/placeholder.png")}
+              gnomeId={"2"}
               text="?"
               onClick={() => router.replace("/collection")}
             />
             <GnomeCard
-              image={require("@/assets/images/placeholder.png")}
+              gnomeId={"2"}
               text="?"
               onClick={() => router.replace("/collection")}
             />
