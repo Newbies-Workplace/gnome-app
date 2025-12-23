@@ -35,6 +35,7 @@ const Collection = () => {
 
   return (
     <SafeAreaView className={"flex-1 bg-primary-foreground"}>
+      <SectionTitle title={t("collection.collectedGnomes")} />
       <FlatList
         data={gnomes}
         contentContainerClassName={"bg-primary-foreground"}
@@ -65,8 +66,13 @@ const Collection = () => {
           )
         }
       />
+      <SectionTitle title={t("collection.uncollectedGnomes")} />
     </SafeAreaView>
   );
 };
+
+function SectionTitle({ title }: { title: string }) {
+  return <Text className="text-tekst font-bold text-lg">{title}</Text>;
+}
 
 export default Collection;
