@@ -16,7 +16,7 @@ export default function AchievementScreen() {
   const { achievements } = useAchievementsStore();
   const [selectedAchievementId, setSelectedAchievementId] = useState<string>();
   const { t } = useTranslation();
-  const achivementRef = useRef<BottomSheetModal>(null);
+  const achievementRef = useRef<BottomSheetModal>(null);
 
   useEffect(() => {
     navigation.setOptions({
@@ -56,7 +56,7 @@ export default function AchievementScreen() {
             <Achievement
               onPress={() => {
                 setSelectedAchievementId(item.id);
-                achivementRef.current?.present();
+                achievementRef.current?.present();
               }}
               title={item.name}
             />
@@ -66,10 +66,14 @@ export default function AchievementScreen() {
       </View>
 
       <BottomSheetWrapper
-        ref={achivementRef}
-        onDismiss={() => setSelectedAchievementId(undefined)}
+        ref={achievementRef}
+        onDismiss={() => achievementRef.current?.dismiss()}
       >
-        <AchievementDetailsBottomSheet achievementId={selectedAchievementId!} />
+        {selectedAchievementId && (
+          <AchievementDetailsBottomSheet
+            achievementId={selectedAchievementId}
+          />
+        )}
       </BottomSheetWrapper>
     </>
   );

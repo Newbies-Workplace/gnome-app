@@ -50,19 +50,6 @@ function SettingsScreen() {
     });
   }, [navigation, router, t]);
 
-  const renderBackdrop = useCallback(
-    (
-      props: React.JSX.IntrinsicAttributes & BottomSheetDefaultBackdropProps,
-    ) => (
-      <BottomSheetBackdrop
-        {...props}
-        appearsOnIndex={0}
-        disappearsOnIndex={-1}
-      />
-    ),
-    [],
-  );
-
   return (
     <SafeAreaView className="flex-1 bg-primary-foreground">
       <View className="w-full px-4 mt-4">
@@ -70,9 +57,9 @@ function SettingsScreen() {
           text={t("settings.theme.title")}
           image={ModeIcon}
           onClick={() => {
-            languageBottomSheetRef.current?.close();
+            languageBottomSheetRef.current?.dismiss();
             themeBottomSheetRef.current?.present();
-            deleteAccountBottomSheetRef.current?.close();
+            deleteAccountBottomSheetRef.current?.dismiss();
           }}
           extraText={t(`settings.theme.${theme}`)}
           customClass="mb-4"
@@ -81,9 +68,9 @@ function SettingsScreen() {
           text={t("settings.language")}
           image={LanguageIcon}
           onClick={() => {
-            themeBottomSheetRef.current?.close();
+            themeBottomSheetRef.current?.dismiss();
             languageBottomSheetRef.current?.present();
-            deleteAccountBottomSheetRef.current?.close();
+            deleteAccountBottomSheetRef.current?.dismiss();
           }}
           extraText={t("settings.languageTitle")}
           customClass="mb-4"
@@ -93,8 +80,8 @@ function SettingsScreen() {
           image={AccoutDeleteIcon}
           onClick={() => {
             deleteAccountBottomSheetRef.current?.present();
-            themeBottomSheetRef.current?.close();
-            languageBottomSheetRef.current?.close();
+            themeBottomSheetRef.current?.dismiss();
+            languageBottomSheetRef.current?.dismiss();
           }}
           customClass="mb-8 text-primary"
         />
@@ -103,14 +90,14 @@ function SettingsScreen() {
       <BottomSheetWrapper ref={themeBottomSheetRef}>
         <ThemeSelectorBottomSheet
           onDismiss={() => {
-            themeBottomSheetRef.current?.close();
+            themeBottomSheetRef.current?.dismiss();
           }}
         />
       </BottomSheetWrapper>
       <BottomSheetWrapper ref={languageBottomSheetRef}>
         <LanguageSelector
           onDismiss={() => {
-            languageBottomSheetRef.current?.close();
+            languageBottomSheetRef.current?.dismiss();
           }}
         />
       </BottomSheetWrapper>
@@ -120,8 +107,8 @@ function SettingsScreen() {
             deleteAccount();
             router.replace("/welcome");
           }}
-          closeSheet={() => {
-            deleteAccountBottomSheetRef.current?.close();
+          onDismiss={() => {
+            deleteAccountBottomSheetRef.current?.dismiss();
           }}
         />
       </BottomSheetWrapper>

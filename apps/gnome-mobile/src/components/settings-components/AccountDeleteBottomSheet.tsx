@@ -12,12 +12,12 @@ import { Button } from "../ui/button";
 
 interface DeleteAccountBottomSheetProps {
   onDelete: () => void;
-  closeSheet: () => void;
+  onDismiss: () => void;
 }
 
 export const DeleteAccountBottomSheet: React.FC<
   DeleteAccountBottomSheetProps
-> = ({ onDelete, closeSheet }) => {
+> = ({ onDelete, onDismiss }) => {
   const { t } = useTranslation();
   const [confirmation, setConfirmation] = useState("");
   const canDelete =
@@ -47,7 +47,7 @@ export const DeleteAccountBottomSheet: React.FC<
           <Button
             className="flex-1 flex-row gap-2 items-center bg-primary-foreground justify-center"
             onPress={() => {
-              closeSheet();
+              onDismiss();
               Keyboard.dismiss();
             }}
           >
@@ -62,7 +62,7 @@ export const DeleteAccountBottomSheet: React.FC<
             disabled={!canDelete}
             onPress={() => {
               onDelete();
-              closeSheet();
+              onDismiss();
             }}
           >
             <TrashcanIcon className="w-7 h-7 text-tekst" />
