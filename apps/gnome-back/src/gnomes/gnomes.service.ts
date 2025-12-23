@@ -36,9 +36,11 @@ export class GnomesService {
     return collection.length;
   }
 
-  async getMyGnomesInteractions(id: string): Promise<GnomeInteraction[]> {
+  async getMyGnomesUniqueInteractions(id: string): Promise<GnomeInteraction[]> {
     return this.prismaService.gnomeInteraction.findMany({
       where: { userId: id },
+      distinct: ["gnomeId"],
+      orderBy: { interactionDate: "desc" },
     });
   }
 

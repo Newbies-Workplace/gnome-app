@@ -12,7 +12,9 @@ const getGnomes = async (): Promise<GnomeResponse[]> => {
     .then((response) => response.data);
 };
 
-const getMyGnomesInteractions = async (): Promise<InteractionResponse[]> => {
+const getMyGnomesUniqueInteractions = async (): Promise<
+  InteractionResponse[]
+> => {
   return await axiosInstance
     .get("api/rest/v1/gnomes/@me/interactions")
     .then((response) => response.data);
@@ -43,7 +45,7 @@ const getInteractionCount = async (gnomeId: string): Promise<number> => {
 
 export const GnomesService = {
   getGnomes,
-  getMyGnomesInteractions,
+  getMyGnomesUniqueInteractions,
   getGnomeById,
   addInteraction,
   getInteractionCount,

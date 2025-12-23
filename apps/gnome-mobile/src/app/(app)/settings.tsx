@@ -10,6 +10,7 @@ import ArrowLeft from "@/assets/icons/arrow-left.svg";
 import LanguageIcon from "@/assets/icons/language.svg";
 import ModeIcon from "@/assets/icons/mode.svg";
 import AccoutDeleteIcon from "@/assets/icons/security.svg";
+import { BottomSheetWrapper } from "@/components/BottomSheetWrapper";
 import DeleteAccountBottomSheet from "@/components/settings-components/AccountDeleteBottomSheet";
 import { LanguageSelector } from "@/components/settings-components/LanguageSelector";
 import ThemeSelectorBottomSheet from "@/components/settings-components/ThemeSelectorBottomSheet";
@@ -99,38 +100,21 @@ function SettingsScreen() {
         />
       </View>
 
-      <BottomSheetModal
-        ref={themeBottomSheetRef}
-        backgroundClassName={"bg-background"}
-        backdropComponent={renderBackdrop}
-        handleIndicatorClassName={"bg-tekst w-24 mt-2 rounded-lg"}
-      >
+      <BottomSheetWrapper ref={themeBottomSheetRef}>
         <ThemeSelectorBottomSheet
           onDismiss={() => {
             themeBottomSheetRef.current?.close();
           }}
         />
-      </BottomSheetModal>
-      <BottomSheetModal
-        ref={languageBottomSheetRef}
-        enablePanDownToClose
-        backdropComponent={renderBackdrop}
-        backgroundClassName={"bg-background"}
-        handleIndicatorClassName={"bg-tekst w-24 mt-2 rounded-lg"}
-      >
+      </BottomSheetWrapper>
+      <BottomSheetWrapper ref={languageBottomSheetRef}>
         <LanguageSelector
           onDismiss={() => {
             languageBottomSheetRef.current?.close();
           }}
         />
-      </BottomSheetModal>
-      <BottomSheetModal
-        ref={deleteAccountBottomSheetRef}
-        enablePanDownToClose
-        backdropComponent={renderBackdrop}
-        backgroundClassName={"bg-background"}
-        handleIndicatorClassName={"bg-tekst w-24 mt-2 rounded-lg"}
-      >
+      </BottomSheetWrapper>
+      <BottomSheetWrapper ref={deleteAccountBottomSheetRef}>
         <DeleteAccountBottomSheet
           onDelete={() => {
             deleteAccount();
@@ -140,7 +124,7 @@ function SettingsScreen() {
             deleteAccountBottomSheetRef.current?.close();
           }}
         />
-      </BottomSheetModal>
+      </BottomSheetWrapper>
     </SafeAreaView>
   );
 }

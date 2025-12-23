@@ -1,15 +1,15 @@
 import { BottomSheetBackdrop, BottomSheetModal } from "@gorhom/bottom-sheet";
 import { BottomSheetDefaultBackdropProps } from "@gorhom/bottom-sheet/lib/typescript/components/bottomSheetBackdrop/types";
-
 import { useCallback } from "react";
-import { StyleSheet } from "react-native";
 
 export function BottomSheetWrapper({
   children,
   ref,
+  onDismiss,
 }: {
   children: React.ReactNode;
   ref: React.RefObject<BottomSheetModal | null>;
+  onDismiss?: () => void;
 }) {
   const renderBackdrop = useCallback(
     (
@@ -25,11 +25,13 @@ export function BottomSheetWrapper({
   );
   return (
     <BottomSheetModal
-      backgroundStyle={{ backgroundColor: "bg-background" }}
+      handleIndicatorClassName="bg-tekst w-24 mt-2 rounded-lg"
+      backgroundClassName="bg-background"
       ref={ref}
       backdropComponent={renderBackdrop}
       enableDismissOnClose
-      onDismiss={ref.current?.close}
+      enablePanDownToClose
+      onDismiss={() => onDismiss?.()}
     >
       {children}
     </BottomSheetModal>

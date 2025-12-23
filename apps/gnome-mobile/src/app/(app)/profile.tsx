@@ -9,7 +9,6 @@ import FriendsIcon from "@/assets/icons/friends.svg";
 import LastSeenIcon from "@/assets/icons/last-seen.svg";
 import LogoutIcon from "@/assets/icons/log-out.svg";
 import SettingsIcon from "@/assets/icons/settings.svg";
-import ShareIcon from "@/assets/icons/share-right.svg";
 import { Achievement } from "@/components/Achievement";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { GnomeCard } from "@/components/ui/GnomeCard";
@@ -25,9 +24,9 @@ export default function ProfileScreen() {
   const { logout, user } = useAuthStore();
   const navigation = useNavigation();
   const router = useRouter();
-  const { userAchivements } = useAchievementsStore();
+  const { userAchievements } = useAchievementsStore();
 
-  const latestEarnedAchievements = userAchivements.slice(0, 3);
+  const latestEarnedAchievements = userAchievements.slice(0, 3);
 
   const handleLogout = () => {
     Alert.alert(
@@ -88,7 +87,7 @@ export default function ProfileScreen() {
         <ProfileButton
           text={t("friends.title")}
           image={<FriendsIcon className="text-tekst" />}
-          onClick={() => router.navigate("/friends")}
+          onClick={() => router.push("/friends")}
         />
 
         <View>
@@ -109,23 +108,23 @@ export default function ProfileScreen() {
           <ProfileButton
             text={t("profile.lastGnomes")}
             image={<LastSeenIcon className="text-tekst" />}
-            onClick={() => router.replace("/(app)/(tabs)/collection")}
+            onClick={() => router.push("/(app)/(tabs)/collection")}
           />
           <View className="justify-center flex-row">
             <GnomeCard
-              image={require("@/assets/images/placeholder.png")}
+              gnomeId={"1"}
               text="?"
-              onClick={() => router.replace("/collection")}
+              onClick={() => router.push("/collection")}
             />
             <GnomeCard
-              image={require("@/assets/images/placeholder.png")}
+              gnomeId={"2"}
               text="?"
-              onClick={() => router.replace("/collection")}
+              onClick={() => router.push("/collection")}
             />
             <GnomeCard
-              image={require("@/assets/images/placeholder.png")}
+              gnomeId={"2"}
               text="?"
-              onClick={() => router.replace("/collection")}
+              onClick={() => router.push("/collection")}
             />
           </View>
         </View>

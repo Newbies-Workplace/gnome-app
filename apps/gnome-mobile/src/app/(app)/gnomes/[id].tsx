@@ -2,16 +2,16 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import { GnomeResponse } from "@repo/shared/responses";
 import dayjs from "dayjs";
 import { useRouter } from "expo-router";
-import { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
+import { ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import ArrowLeft from "@/assets/icons/arrow-left.svg";
 import DateIcon from "@/assets/icons/date.svg";
 import FoundIcon from "@/assets/icons/found.svg";
+import { GnomeImage } from "@/components/GnomeImage";
 import { GnomeCard } from "@/components/ui/GnomeCard";
 import { GnomesService } from "@/lib/api/Gnomes.service";
-import { useGnomeImage } from "@/lib/useGnomeImage";
 import { useGnomeStore } from "@/store/useGnomeStore";
 
 const GnomeDetail = () => {
@@ -24,7 +24,6 @@ const GnomeDetail = () => {
   const [nearestGnomes, setNearestGnomes] = useState<GnomeResponse[]>([]);
   const router = useRouter();
   const navigation = useNavigation();
-  const gnomeImage = useGnomeImage(gnomeId);
 
   const interaction = useMemo(
     () => interactions.find((i) => i.gnomeId === gnomeId),
@@ -78,11 +77,11 @@ const GnomeDetail = () => {
       edges={["bottom", "left", "right"]}
     >
       <ScrollView className={"px-4"}>
-        <View className="items-center mb-5 mt-5">
-          <Image
-            source={gnomeImage}
+        <View className="items-center mb-5 mt-5 w-full">
+          <GnomeImage
+            gnomeId={gnomeId}
             style={{ width: 379, height: 455 }}
-            className={"rounded-xl"}
+            className="rounded-xl"
           />
         </View>
 
@@ -108,7 +107,7 @@ const GnomeDetail = () => {
           <DateIcon width={20} height={20} className="text-tekst" />
           <Text className="text-tekst ml-2.5">
             {t("gnomeDetails.creationDate")}{" "}
-            {dayjs(gnome.creationDate).format("DD.MM-YYYY")}
+            {dayjs(gnome.creationDate).format("DD.MM.YYYY")}
           </Text>
         </View>
         <View className="border-b border-primary my-2.5 w-4/5 self-center" />
@@ -126,7 +125,7 @@ const GnomeDetail = () => {
               key={gnome.id}
               gnomeId={gnome.id}
               text={gnome.name}
-              onClick={() => router.push(`/gnomes/${gnome.id}`)}
+              onClick={() => router.replace(`/gnomes/${gnome.id}`)}
             />
           ))}
         </View>

@@ -1,4 +1,5 @@
 import { BottomSheetBackdrop, BottomSheetModal } from "@gorhom/bottom-sheet";
+import { BottomSheetDefaultBackdropProps } from "@gorhom/bottom-sheet/lib/typescript/components/bottomSheetBackdrop/types";
 import Clipboard from "@react-native-clipboard/clipboard";
 import { useNavigation } from "@react-navigation/native";
 import { useRouter } from "expo-router";
@@ -6,13 +7,13 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Image, TouchableOpacity, View } from "react-native";
 import { QrCodeSvg } from "react-native-qr-svg";
-import { useCameraDevice } from "react-native-vision-camera";
 import ArrowLeft from "@/assets/icons/arrow-left.svg";
 import CameraIcon from "@/assets/icons/camera.svg";
 import CopyIcon from "@/assets/icons/copy.svg";
 import PlusIcon from "@/assets/icons/plus.svg";
 import RefreshIcon from "@/assets/icons/refresh.svg";
 import ShareIcon from "@/assets/icons/share-right.svg";
+import { BottomSheetWrapper } from "@/components/BottomSheetWrapper";
 import { ConfirmDialog } from "@/components/ConfirmDialog";
 import { Divider } from "@/components/Divider";
 import LoadingScreen from "@/components/LoadingScreen";
@@ -22,7 +23,6 @@ import { Input } from "@/components/ui/input";
 import { Text } from "@/components/ui/text";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useFriendsStore } from "@/store/useFriendsStore";
-import { BottomSheetDefaultBackdropProps } from "@gorhom/bottom-sheet/lib/typescript/components/bottomSheetBackdrop/types";
 
 export default function AddFriendScreen() {
   const { t } = useTranslation();
@@ -33,7 +33,6 @@ export default function AddFriendScreen() {
   const regenerateInviteCodeSheetRef = useRef<BottomSheetModal>(null);
   const scanInvitationSheetRef = useRef<BottomSheetModal>(null);
   const [inviteCodeInputText, setInviteCodeInputText] = useState<string>("");
-  const device = useCameraDevice("back");
   const IS_NATIVE_DIALOG_ADDED = false;
 
   useEffect(() => {
@@ -95,19 +94,6 @@ export default function AddFriendScreen() {
       .join(" ");
   };
 
-  const renderBackdrop = useCallback(
-    (
-      props: React.JSX.IntrinsicAttributes & BottomSheetDefaultBackdropProps
-    ) => (
-      <BottomSheetBackdrop
-        {...props}
-        appearsOnIndex={0}
-        disappearsOnIndex={-1}
-      />
-    ),
-    []
-  );
-
   return (
     <View className="flex-1 bg-primary-foreground p-6 items-center gap-5">
       <View className="w-full flex-row items-center gap-3">
@@ -166,7 +152,7 @@ export default function AddFriendScreen() {
           value={inviteCodeInputText}
           onChangeText={handleTextChange}
         />
-        {inviteCodeInputText.length === 0 && device ? (
+        {inviteCodeInputText.length === 0 ? (
           <Button
             size="icon"
             className="rounded-full"
@@ -185,26 +171,14 @@ export default function AddFriendScreen() {
           </Button>
         )}
       </View>
-      <BottomSheetModal
-        handleIndicatorClassName={"bg-tekst w-24 mt-2 rounded-lg"}
-        backgroundClassName={"bg-background"}
+      <BottomSheetWrapper
         ref={scanInvitationSheetRef}
-        enableDismissOnClose
-        backdropComponent={renderBackdrop}
         onDismiss={scanInvitationSheetRef.current?.close}
       >
-        <Scanner
-          onCodeScanned={onCodeScanned}
-          onRequestPermission={() => scanInvitationSheetRef.current?.close()}
-          device={device}
-        />
-      </BottomSheetModal>
-      <BottomSheetModal
-        handleIndicatorClassName={"bg-tekst w-24 mt-2 rounded-lg"}
-        backgroundClassName={"bg-background"}
+        <Scanner onCodeScanned={onCodeScanned} />
+      </BottomSheetWrapper>
+      <BottomSheetWrapper
         ref={regenerateInviteCodeSheetRef}
-        enableDismissOnClose
-        backdropComponent={renderBackdrop}
         onDismiss={regenerateInviteCodeSheetRef.current?.close}
       >
         <ConfirmDialog
@@ -224,7 +198,7 @@ export default function AddFriendScreen() {
             </>
           }
         />
-      </BottomSheetModal>
+      </BottomSheetWrapper>
     </View>
   );
 }

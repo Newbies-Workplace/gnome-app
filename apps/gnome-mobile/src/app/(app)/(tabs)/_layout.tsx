@@ -1,34 +1,17 @@
-import * as Network from "expo-network";
 import { Redirect } from "expo-router";
-import { useEffect } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import HomeTabs from "@/app/(app)/navigator/HomeTabs";
 import LoadingScreen from "@/components/LoadingScreen";
 import { WelcomeBottomSheet } from "@/components/WelcomeBottomSheet";
+import { useGnomeInteractionsSync } from "@/lib/useGnomeInteractionsSync";
 import { useAuthStore } from "@/store/useAuthStore";
-import { useGnomeInteractionStore } from "@/store/useGnomeInteractionStore";
 import { isFirstAppEntryStore } from "@/store/useisFirstAppEntryStore";
 
 export default function AppLayout() {
   const { accessToken, isLoading } = useAuthStore();
   const { isFirstAppEntry, setIsFirstAppEntryToFalse } = isFirstAppEntryStore();
-  const syncPending = useGnomeInteractionStore((s) => s.syncPending);
 
-  useEffect(() => {
-    const subscription = Network.addNetworkStateListener(
-      ({ isConnected, isInternetReachable }) => {
-        console.log(
-          `Connected: ${isConnected}, Internet Reachable: ${isInternetReachable}`,
-        );
-        if (isConnected && isInternetReachable) {
-          syncPending();
-        }
-      },
-    );
-    return () => {
-      subscription?.remove();
-    };
-  }, []);
+  useGnomeInteractionsSync();
 
   if (isLoading) {
     return <LoadingScreen />;
