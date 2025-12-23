@@ -1,12 +1,13 @@
-import BottomSheet from "@gorhom/bottom-sheet";
+import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { useNavigation } from "@react-navigation/native";
 import { useRouter } from "expo-router";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { FlatList, Text, TouchableOpacity, View } from "react-native";
 import ArrowLeft from "@/assets/icons/arrow-left.svg";
 import { Achievement } from "@/components/Achievement";
 import { AchievementDetailsBottomSheet } from "@/components/AchievementDetailsBottomSheet";
+import { BottomSheetWrapper } from "@/components/BottomSheetWrapper";
 import { useAchievementsStore } from "@/store/useAchievementsStore";
 
 export default function AchievementScreen() {
@@ -15,6 +16,7 @@ export default function AchievementScreen() {
   const { achievements } = useAchievementsStore();
   const [selectedAchievementId, setSelectedAchievementId] = useState<string>();
   const { t } = useTranslation();
+  const achievementRef = useRef<BottomSheetModal>(null);
 
   useEffect(() => {
     navigation.setOptions({
@@ -52,7 +54,10 @@ export default function AchievementScreen() {
           numColumns={3}
           renderItem={({ item }) => (
             <Achievement
-              onPress={() => setSelectedAchievementId(item.id)}
+              onPress={() => {
+                setSelectedAchievementId(item.id);
+                achievementRef.current?.present();
+              }}
               title={item.name}
             />
           )}
@@ -60,20 +65,16 @@ export default function AchievementScreen() {
         />
       </View>
 
-      {selectedAchievementId !== undefined && (
-        <BottomSheet
-          handleIndicatorClassName={"bg-tekst w-24 mt-2 rounded-lg"}
-          backgroundClassName={"bg-background"}
-          enableDismissOnClose
-          enablePanDownToClose
-          index={0}
-          onClose={() => setSelectedAchievementId(undefined)}
-        >
+      <BottomSheetWrapper
+        ref={achievementRef}
+        onDismiss={() => achievementRef.current?.dismiss()}
+      >
+        {selectedAchievementId && (
           <AchievementDetailsBottomSheet
             achievementId={selectedAchievementId}
           />
-        </BottomSheet>
-      )}
+        )}
+      </BottomSheetWrapper>
     </>
   );
 }

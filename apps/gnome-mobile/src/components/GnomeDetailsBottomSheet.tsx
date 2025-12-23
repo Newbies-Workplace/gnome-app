@@ -19,12 +19,11 @@ import { useGnomeStore } from "@/store/useGnomeStore";
 interface GnomeDetailsBottomSheetProps {
   gnomeId: string;
   userLocation: { latitude: number; longitude: number };
-  onDismiss: () => void;
 }
 
 export const GnomeDetailsBottomSheet: React.FC<
   GnomeDetailsBottomSheetProps
-> = ({ gnomeId, userLocation, onDismiss }) => {
+> = ({ gnomeId, userLocation }) => {
   const { t } = useTranslation();
   const router = useRouter();
   const { interactionCount, fetchInteractionCount } = useGnomeStore();
@@ -38,8 +37,6 @@ export const GnomeDetailsBottomSheet: React.FC<
 
   const handleOpenGnomeDetails = () => {
     router.push(`/gnomes/${gnomeId}`);
-
-    onDismiss();
   };
 
   const selectedGnomeDistance = gnome
@@ -57,66 +54,49 @@ export const GnomeDetailsBottomSheet: React.FC<
       ? formatDistance(selectedGnomeDistance)
       : null;
 
-  const renderBackdrop = (props: BottomSheetBackdropProps) => (
-    <BottomSheetBackdrop
-      {...props}
-      disappearsOnIndex={-1}
-      appearsOnIndex={0}
-      pressBehavior="close"
-    />
-  );
-
   return (
-    <BottomSheet
-      backgroundClassName="bg-background"
-      handleIndicatorClassName="bg-tekst w-20 mt-2 rounded-lg"
-      enablePanDownToClose
-      backdropComponent={renderBackdrop}
-      onClose={onDismiss}
-    >
-      <BottomSheetView className="p-5 rounded-t-2xl relative z-10">
-        <View className="flex-row items-start space-x-4">
-          <GnomeImage gnomeId={gnomeId} className="w-28 h-32 rounded-xl" />
+    <BottomSheetView className="p-5 rounded-t-2xl relative z-10">
+      <View className="flex-row items-start space-x-4">
+        <GnomeImage gnomeId={gnomeId} className="w-28 h-32 rounded-xl" />
 
-          <View className="flex-1 space-y-2 ml-3">
-            <View className="flex-row justify-between items-start">
-              <Text className="text-2xl font-semibold text-tekst">
-                {gnome?.name}
+        <View className="flex-1 space-y-2 ml-3">
+          <View className="flex-row justify-between items-start">
+            <Text className="text-2xl font-semibold text-tekst">
+              {gnome?.name}
+            </Text>
+
+            <TouchableOpacity onPress={handleOpenGnomeDetails}>
+              <GnomeDetailsFullScreenIcon />
+            </TouchableOpacity>
+          </View>
+
+          <View className="space-y-1">
+            <View className="flex-row items-center">
+              <GnomeLocationIcon className="text-tekst" />
+              <Text className="ml-2 text-base text-tekst">
+                {gnome?.location}
               </Text>
-
-              <TouchableOpacity onPress={handleOpenGnomeDetails}>
-                <GnomeDetailsFullScreenIcon />
-              </TouchableOpacity>
             </View>
 
-            <View className="space-y-1">
+            {!!formattedDistance && (
               <View className="flex-row items-center">
-                <GnomeLocationIcon className="text-tekst" />
+                <GnomeHowFarAwayIcon className="text-tekst" />
                 <Text className="ml-2 text-base text-tekst">
-                  {gnome?.location}
+                  {formattedDistance}
                 </Text>
               </View>
+            )}
 
-              {!!formattedDistance && (
-                <View className="flex-row items-center">
-                  <GnomeHowFarAwayIcon className="text-tekst" />
-                  <Text className="ml-2 text-base text-tekst">
-                    {formattedDistance}
-                  </Text>
-                </View>
-              )}
-
-              <View className="flex-row items-center">
-                <GnomeCaughtCountIcon className="text-tekst" />
-                <Text className="ml-2 text-base text-tekst">
-                  {gnome ? (interactionCount[gnome.id] ?? 0) : 0}{" "}
-                  {t("gnomeDetails.users")}
-                </Text>
-              </View>
+            <View className="flex-row items-center">
+              <GnomeCaughtCountIcon className="text-tekst" />
+              <Text className="ml-2 text-base text-tekst">
+                {gnome ? (interactionCount[gnome.id] ?? 0) : 0}{" "}
+                {t("gnomeDetails.users")}
+              </Text>
             </View>
           </View>
         </View>
-      </BottomSheetView>
-    </BottomSheet>
+      </View>
+    </BottomSheetView>
   );
 };

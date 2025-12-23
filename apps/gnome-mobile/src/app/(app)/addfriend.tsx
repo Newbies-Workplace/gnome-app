@@ -1,8 +1,9 @@
-import { BottomSheetModal } from "@gorhom/bottom-sheet";
+import { BottomSheetBackdrop, BottomSheetModal } from "@gorhom/bottom-sheet";
+import { BottomSheetDefaultBackdropProps } from "@gorhom/bottom-sheet/lib/typescript/components/bottomSheetBackdrop/types";
 import Clipboard from "@react-native-clipboard/clipboard";
 import { useNavigation } from "@react-navigation/native";
 import { useRouter } from "expo-router";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Image, TouchableOpacity, View } from "react-native";
 import { QrCodeSvg } from "react-native-qr-svg";
@@ -12,6 +13,7 @@ import CopyIcon from "@/assets/icons/copy.svg";
 import PlusIcon from "@/assets/icons/plus.svg";
 import RefreshIcon from "@/assets/icons/refresh.svg";
 import ShareIcon from "@/assets/icons/share-right.svg";
+import { BottomSheetWrapper } from "@/components/BottomSheetWrapper";
 import { ConfirmDialog } from "@/components/ConfirmDialog";
 import { Divider } from "@/components/Divider";
 import LoadingScreen from "@/components/LoadingScreen";
@@ -169,20 +171,14 @@ export default function AddFriendScreen() {
           </Button>
         )}
       </View>
-      <BottomSheetModal
-        handleIndicatorClassName={"bg-tekst w-24 mt-2 rounded-lg"}
-        backgroundClassName={"bg-background"}
+      <BottomSheetWrapper
         ref={scanInvitationSheetRef}
-        enableDismissOnClose
         onDismiss={scanInvitationSheetRef.current?.close}
       >
         <Scanner onCodeScanned={onCodeScanned} />
-      </BottomSheetModal>
-      <BottomSheetModal
-        handleIndicatorClassName={"bg-tekst w-24 mt-2 rounded-lg"}
-        backgroundClassName={"bg-background"}
+      </BottomSheetWrapper>
+      <BottomSheetWrapper
         ref={regenerateInviteCodeSheetRef}
-        enableDismissOnClose
         onDismiss={regenerateInviteCodeSheetRef.current?.close}
       >
         <ConfirmDialog
@@ -202,7 +198,7 @@ export default function AddFriendScreen() {
             </>
           }
         />
-      </BottomSheetModal>
+      </BottomSheetWrapper>
     </View>
   );
 }

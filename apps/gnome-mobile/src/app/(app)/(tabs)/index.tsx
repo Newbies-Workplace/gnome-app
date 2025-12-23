@@ -1,3 +1,4 @@
+import { BottomSheetModal, BottomSheetView } from "@gorhom/bottom-sheet";
 import { Portal } from "@rn-primitives/portal";
 import { LinearGradient } from "expo-linear-gradient";
 import * as Location from "expo-location";
@@ -25,6 +26,7 @@ import FriendIcon from "@/assets/icons/add-friend.svg";
 import LocationOffIcon from "@/assets/icons/location-off.svg";
 import GnomePin from "@/assets/images/GnomePin.svg";
 import GnomePinCatch from "@/assets/images/GnomePinCatch.svg";
+import { BottomSheetWrapper } from "@/components/BottomSheetWrapper";
 import { GnomeDetailsBottomSheet } from "@/components/GnomeDetailsBottomSheet";
 import { MapStyle } from "@/components/map-styles";
 import ResourcesBottomSheet from "@/components/ResourcesInfoBottomSheet";
@@ -164,10 +166,10 @@ const MapScreen = () => {
 
   const [closestGnomeId, setClosestGnomeId] = useState<string>();
   const [selectedGnomeId, setSelectedGnomeId] = useState<string | null>(null);
-  const [isResourceSheetVisible, setIsResourceSheetVisible] = useState(false);
-  const [isInteractionSheetVisible, setIsInteractionSheetVisible] =
-    useState(false);
   const pathname = usePathname();
+  const selectedGnomeRef = useRef<BottomSheetModal>(null);
+  const interactionSheetRef = useRef<BottomSheetModal>(null);
+  const resourcesSheetRef = useRef<BottomSheetModal>(null);
 
   const filteredGnomes = useMemo(
     () =>
@@ -187,8 +189,6 @@ const MapScreen = () => {
           "Map screen unfocused, resetting selected gnome and closing sheets",
         );
 
-        setIsResourceSheetVisible(false);
-        setIsInteractionSheetVisible(false);
         setSelectedGnomeId(null);
       };
     }, []),
@@ -285,7 +285,7 @@ const MapScreen = () => {
 
   return (
     <SafeAreaView className="flex-1 relative">
-      <View className="absolute top-10 left-1/2 -translate-x-1/2 px-10 gap-2 z-10">
+      <SafeAreaView className="absolute top-4 left-4 right-4 gap-2 z-10">
         <Compass />
 
         {user && (
@@ -293,10 +293,10 @@ const MapScreen = () => {
             user={user}
             errorMsg={errorMsg}
             setErrorMsg={setErrorMsg}
-            openResourcesInfo={() => setIsResourceSheetVisible(true)}
+            openResourcesInfo={() => resourcesSheetRef.current?.present()}
           />
         )}
-      </View>
+      </SafeAreaView>
       <MapView
         style={StyleSheet.absoluteFillObject}
         initialRegion={DEFAULT_REGION}
@@ -325,6 +325,7 @@ const MapScreen = () => {
           <Marker
             onPress={() => {
               setSelectedGnomeId(gnome.id);
+              selectedGnomeRef.current?.present();
               gnome.location;
             }}
             key={gnome.id}
@@ -351,7 +352,7 @@ const MapScreen = () => {
           <DraggableGnome
             onUnlock={() => {
               addInteraction(closestGnomeId);
-              setIsInteractionSheetVisible(true);
+              interactionSheetRef.current?.present();
             }}
           />
         )}
@@ -363,28 +364,36 @@ const MapScreen = () => {
           colors={["transparent", "hsl(359 63.4% 56.1%)"]}
         />
       )}
-      <Portal name={"bottom-sheets"}>
-        {!!selectedGnomeId && (
+      <BottomSheetWrapper
+        ref={selectedGnomeRef}
+        onDismiss={() => setSelectedGnomeId(null)}
+      >
+        {selectedGnomeId && (
           <GnomeDetailsBottomSheet
             gnomeId={selectedGnomeId}
             userLocation={userLocation}
-            onDismiss={() => setSelectedGnomeId(null)}
           />
         )}
+      </BottomSheetWrapper>
 
-        {isInteractionSheetVisible && !!closestGnomeId && (
+      <BottomSheetWrapper
+        ref={interactionSheetRef}
+        onDismiss={() => interactionSheetRef.current?.dismiss()}
+      >
+        {!!closestGnomeId && (
           <InteractionBottomSheet
-            onDismiss={() => setIsInteractionSheetVisible(false)}
+            onDismiss={() => interactionSheetRef.current?.dismiss()}
             gnomeId={closestGnomeId}
           />
         )}
+      </BottomSheetWrapper>
 
-        {isResourceSheetVisible && (
-          <ResourcesBottomSheet
-            onDismiss={() => setIsResourceSheetVisible(false)}
-          />
-        )}
-      </Portal>
+      <BottomSheetWrapper
+        ref={resourcesSheetRef}
+        onDismiss={() => resourcesSheetRef.current?.dismiss()}
+      >
+        <ResourcesBottomSheet />
+      </BottomSheetWrapper>
     </SafeAreaView>
   );
 };
