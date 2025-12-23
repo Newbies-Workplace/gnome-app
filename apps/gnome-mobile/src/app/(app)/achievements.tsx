@@ -14,6 +14,7 @@ import AchievementLocked from "@/assets/icons/achievementLocked.svg";
 import AchievementUnlocked from "@/assets/icons/achievementUnlocked.svg";
 import ArrowLeft from "@/assets/icons/arrow-left.svg";
 import { Achievement } from "@/components/Achievement";
+import { BottomSheetWrapper } from "@/components/BottomSheetWrapper";
 import { useAchievementsStore } from "@/store/useAchievementsStore";
 
 type AchievementType = {
@@ -31,19 +32,6 @@ export default function AchivementScreen() {
   const [selectedAchivement, setSelectedAchivement] =
     useState<AchievementType | null>(null);
   const { t } = useTranslation();
-
-  const renderBackdrop = useCallback(
-    (
-      props: React.JSX.IntrinsicAttributes & BottomSheetDefaultBackdropProps,
-    ) => (
-      <BottomSheetBackdrop
-        {...props}
-        appearsOnIndex={0}
-        disappearsOnIndex={-1}
-      />
-    ),
-    [],
-  );
 
   useEffect(() => {
     navigation.setOptions({
@@ -108,14 +96,7 @@ export default function AchivementScreen() {
           keyExtractor={(item) => item.id}
         />
       </View>
-      <BottomSheetModal
-        handleIndicatorClassName={"bg-tekst w-24 mt-2 rounded-lg"}
-        backgroundClassName={"bg-background"}
-        ref={achievementRef}
-        backdropComponent={renderBackdrop}
-        enableDismissOnClose
-        onDismiss={achievementRef.current?.close}
-      >
+      <BottomSheetWrapper ref={achievementRef}>
         <BottomSheetView className="p-4">
           <View className="flex-row">
             <Achievement />
@@ -146,7 +127,7 @@ export default function AchivementScreen() {
             </View>
           </View>
         </BottomSheetView>
-      </BottomSheetModal>
+      </BottomSheetWrapper>
     </>
   );
 }

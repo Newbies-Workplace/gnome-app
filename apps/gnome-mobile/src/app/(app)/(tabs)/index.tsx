@@ -367,34 +367,32 @@ const MapScreen = () => {
           colors={["transparent", "hsl(359 63.4% 56.1%)"]}
         />
       )}
-      <Portal name={"bottom-sheets"}>
-        {!!selectedGnome && (
-          <GnomeDetailsBottomSheet
-            selectedGnome={selectedGnome}
-            formattedDistance={formattedDistance}
-            onClick={() => {
-              setSelectedGnomeId(null);
-              router.push(`/gnomes/${selectedGnomeId}`);
-            }}
-            onClose={() => setSelectedGnomeId(null)}
-          />
-        )}
+      {!!selectedGnome && (
+        <GnomeDetailsBottomSheet
+          selectedGnome={selectedGnome}
+          formattedDistance={formattedDistance}
+          onClick={() => {
+            setSelectedGnomeId(null);
+            router.push(`/gnomes/${selectedGnomeId}`);
+          }}
+          onClose={() => setSelectedGnomeId(null)}
+        />
+      )}
 
-        {isInteractionSheetVisible && !!closestGnomeId && (
-          <InteractionBottomSheet
-            onClose={() => setIsInteractionSheetVisible(false)}
-            name={closestGnomeData?.name}
-            pictureUrl={closestGnomeData?.pictureUrl}
-            gnomeId={closestGnomeId}
-          />
-        )}
+      {isInteractionSheetVisible && !!closestGnomeId && (
+        <InteractionBottomSheet
+          onClose={() => setIsInteractionSheetVisible(false)}
+          name={closestGnomeData?.name}
+          pictureUrl={closestGnomeData?.pictureUrl}
+          gnomeId={closestGnomeId}
+        />
+      )}
 
-        {isResourceSheetVisible && (
-          <ResourcesBottomSheet
-            onClose={() => setIsResourceSheetVisible(false)}
-          />
-        )}
-      </Portal>
+      {isResourceSheetVisible && (
+        <ResourcesBottomSheet
+          onClose={() => setIsResourceSheetVisible(false)}
+        />
+      )}
     </SafeAreaView>
   );
 };
