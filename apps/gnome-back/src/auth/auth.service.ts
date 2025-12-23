@@ -43,9 +43,7 @@ export class AuthService {
       role: existingUser.role,
     };
 
-    return this.jwtService.sign({
-      user: jwtUser,
-    });
+    return jwtUser;
   }
 
   async verifyGoogleToken(idToken: string): Promise<GoogleUser> {
@@ -60,5 +58,51 @@ export class AuthService {
       name: payload.name,
       pictureUrl: payload.picture,
     };
+  }
+
+  async generateTokens(jwtUser: JwtUser) {
+    const access_token = this.jwtService.sign({ user: jwtUser });
+    const refresh_token = this.generateRefreshToken(jwtUser.id);
+    return { access_token, refresh_token };
+  }
+
+  generateRefreshToken(userId: string) {
+    const payload = {
+      userId,
+      iat: Math.floor(Date.now() / 1000),
+    };
+    return this.jwtService.sign(payload, {
+      secret: process.env.JWT_REFRESH_SECRET,
+      expiresIn: "30d",
+    });
+  }
+
+  verifyRefreshToken(token: string): { userId: string } {
+    try {
+      return this.jwtService.verify(token, {
+        secret: process.env.JWT_REFRESH_SECRET,
+      });
+    } catch {
+      throw new Error("Invalid refresh token");
+    }
+  }
+
+  async refreshTokens(refreshToken: string) {
+    const payload = this.verifyRefreshToken(refreshToken);
+
+    const user = await this.prismaService.user.findUnique({
+      where: { id: payload.userId },
+    });
+    if (!user) throw new Error("User not found");
+
+    const jwtUser: JwtUser = {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      googleId: user.googleId,
+      role: user.role,
+    };
+
+    return this.generateTokens(jwtUser);
   }
 }

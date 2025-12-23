@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Post, Res, UseGuards } from "@nestjs/common";
-import { JwtService } from "@nestjs/jwt";
 import { ApiBearerAuth } from "@nestjs/swagger";
+import { RefreshTokenRequest } from "@repo/shared/requests";
 import { GoogleUserResponse, UserResponse } from "@repo/shared/responses";
 import { Response } from "express";
 import { AuthService } from "@/auth/auth.service";
@@ -17,7 +17,6 @@ export class AuthController {
   constructor(
     private readonly authService: AuthService,
     private readonly usersService: UsersService,
-    private readonly jwtService: JwtService,
     private readonly usersConverter: UsersConverter,
   ) {}
 
@@ -32,20 +31,39 @@ export class AuthController {
     @Res() res: Response,
   ) {
     const FRONTEND_URL = process.env.FRONTEND_URL;
-    const token = await this.authService.googleAuth(user);
-    res.cookie("access_token", token, {
+    const jwtUser = await this.authService.googleAuth(user);
+    const { access_token, refresh_token } =
+      await this.authService.generateTokens(jwtUser);
+
+    res.cookie("access_token", access_token, {
       httpOnly: false,
       secure: true,
       sameSite: "none",
       maxAge: 60 * 60 * 1000, // 1 hour
     });
+    res.cookie("refresh_token", refresh_token, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "none",
+      maxAge: 30 * 24 * 60 * 60 * 1000, // 30 dni
+    });
 
     return res.redirect(`${FRONTEND_URL}/login/callback`);
   }
+
+  @Post("refresh")
+  async refresh(@Body() body: RefreshTokenRequest) {
+    const { access_token, refresh_token } =
+      await this.authService.refreshTokens(body.refreshToken);
+
+    return { access_token, refresh_token };
+  }
+
   @Post("google")
   async google(@Body() body: GoogleAuthRequest): Promise<{
     user: UserResponse;
     access_token: string;
+    refresh_token: string;
   }> {
     const userData = await this.authService.verifyGoogleToken(body.idToken);
     let user = await this.usersService.findUserByGoogleId(userData.id);
@@ -62,9 +80,13 @@ export class AuthController {
       role: user.role,
     };
 
+    const { access_token, refresh_token } =
+      await this.authService.generateTokens(jwtUser);
+
     return {
       user: await this.usersConverter.toUserResponse(user),
-      access_token: this.jwtService.sign({ user: jwtUser }),
+      access_token,
+      refresh_token,
     };
   }
 }

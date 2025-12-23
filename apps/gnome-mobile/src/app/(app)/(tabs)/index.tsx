@@ -43,6 +43,7 @@ import InteractionBottomSheet from "../interactionsheet";
 
 const MIN_TRACKER_DISTANCE = 50;
 const MIN_REACHED_DISTANCE = 15;
+const MIN_POSITION_UPDATE_INTERVAL = 5000;
 
 const INITIAL_COORDINATES = {
   latitude: 51.109967,
@@ -216,7 +217,7 @@ const MapScreen = () => {
         subscription = await Location.watchPositionAsync(
           {
             accuracy: Location.Accuracy.High,
-            timeInterval: 1,
+            timeInterval: MIN_POSITION_UPDATE_INTERVAL,
             distanceInterval: 1,
           },
           (newLocation) => {
