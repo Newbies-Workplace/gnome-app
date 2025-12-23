@@ -3,6 +3,7 @@ import BottomSheet, {
   BottomSheetBackdropProps,
   BottomSheetView,
 } from "@gorhom/bottom-sheet";
+import { useRouter } from "expo-router";
 import { getDistance } from "geolib";
 import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
@@ -12,32 +13,34 @@ import GnomeCaughtCountIcon from "@/assets/icons/GnomeCaughtCount.svg";
 import GnomeHowFarAwayIcon from "@/assets/icons/GnomeHowFarAway.svg";
 import GnomeLocationIcon from "@/assets/icons/GnomeLocation.svg";
 import { GnomeImage } from "@/components/GnomeImage";
-import { useGnomeInteractionStore } from "@/store/useGnomeInteractionStore";
+import { formatDistance } from "@/lib/distanceUtils";
 import { useGnomeStore } from "@/store/useGnomeStore";
 
 interface GnomeDetailsBottomSheetProps {
   gnomeId: string;
   userLocation: { latitude: number; longitude: number };
-  onClose?: () => void;
-  onClick: () => void;
+  onDismiss: () => void;
 }
 
 export const GnomeDetailsBottomSheet: React.FC<
   GnomeDetailsBottomSheetProps
-> = ({ gnomeId, userLocation, onClose, onClick }) => {
+> = ({ gnomeId, userLocation, onDismiss }) => {
   const { t } = useTranslation();
+  const router = useRouter();
+  const { interactionCount, fetchInteractionCount } = useGnomeStore();
   const gnome = useGnomeStore((state) =>
     state.gnomes.find((gnome) => gnome.id === gnomeId),
   );
 
-  const { interactionCount, fetchInteractionCount } =
-    useGnomeInteractionStore();
-
   useEffect(() => {
-    if (gnome) {
-      fetchInteractionCount(gnome.id);
-    }
-  }, [gnome]);
+    fetchInteractionCount(gnomeId);
+  }, [gnomeId]);
+
+  const handleOpenGnomeDetails = () => {
+    router.push(`/gnomes/${gnomeId}`);
+
+    onDismiss();
+  };
 
   const selectedGnomeDistance = gnome
     ? getDistance(
@@ -51,9 +54,7 @@ export const GnomeDetailsBottomSheet: React.FC<
 
   const formattedDistance =
     selectedGnomeDistance !== null
-      ? selectedGnomeDistance < 1000
-        ? `${selectedGnomeDistance} m`
-        : `${(selectedGnomeDistance / 1000).toFixed(2)} km`
+      ? formatDistance(selectedGnomeDistance)
       : null;
 
   const renderBackdrop = (props: BottomSheetBackdropProps) => (
@@ -71,7 +72,7 @@ export const GnomeDetailsBottomSheet: React.FC<
       handleIndicatorClassName="bg-tekst w-20 mt-2 rounded-lg"
       enablePanDownToClose
       backdropComponent={renderBackdrop}
-      onClose={onClose}
+      onClose={onDismiss}
     >
       <BottomSheetView className="p-5 rounded-t-2xl relative z-10">
         <View className="flex-row items-start space-x-4">
@@ -83,7 +84,7 @@ export const GnomeDetailsBottomSheet: React.FC<
                 {gnome?.name}
               </Text>
 
-              <TouchableOpacity onPress={onClick}>
+              <TouchableOpacity onPress={handleOpenGnomeDetails}>
                 <GnomeDetailsFullScreenIcon />
               </TouchableOpacity>
             </View>
