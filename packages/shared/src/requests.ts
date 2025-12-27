@@ -174,3 +174,9 @@ export class BuildingInteractionRequest {
   @IsNumber()
   amount!: number;
 }
+
+export class RefreshTokenRequest {
+  @IsNotEmpty()
+  @IsString()
+  refreshToken!: string;
+}
