@@ -177,7 +177,7 @@ export default function AdminPage() {
       className="h-screen w-screen p-2 gap-2 bg-cover bg-center bg-no-repeat flex flex-col md:flex-row"
       style={{ backgroundImage: `url(${backgroundImage})` }}
     >
-      <div className="flex flex-col w-full">
+      <div className="flex flex-col w-full gap-2">
         <div className="w-full md:flex-1 flex items-stretch">
           <AdminToolbar />
         </div>
@@ -254,7 +254,7 @@ export default function AdminPage() {
           </Tabs>
         </div>
 
-        <div className="w-full md:w-[420px] min-w-[300px] bg-primary-gray flex flex-col p-2 rounded-2xl overflow-auto">
+        <div className="w-full h-full md:w-[420px] min-w-[300px] bg-primary-gray flex flex-col p-2 rounded-2xl overflow-auto">
           <Outlet
             context={{
               selectedPosition,

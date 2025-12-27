@@ -1,7 +1,11 @@
 import { Body, Controller, Get, Post, Res, UseGuards } from "@nestjs/common";
 import { ApiBearerAuth } from "@nestjs/swagger";
 import { RefreshTokenRequest } from "@repo/shared/requests";
-import { GoogleUserResponse, UserResponse } from "@repo/shared/responses";
+import {
+  GoogleUserResponse,
+  RefreshTokenResponse,
+  UserResponse,
+} from "@repo/shared/responses";
 import { Response } from "express";
 import { AuthService } from "@/auth/auth.service";
 import { User } from "@/auth/decorators/jwt-user.decorator";
@@ -39,32 +43,37 @@ export class AuthController {
       httpOnly: false,
       secure: true,
       sameSite: "none",
-      maxAge: 60 * 60 * 1000, // 1 hour
+      maxAge: 60 * 60 * 1000,
     });
     res.cookie("refresh_token", refresh_token, {
-      httpOnly: true,
+      httpOnly: false,
       secure: true,
       sameSite: "none",
-      maxAge: 30 * 24 * 60 * 60 * 1000, // 30 dni
+      maxAge: 30 * 24 * 60 * 60 * 1000,
     });
 
     return res.redirect(`${FRONTEND_URL}/login/callback`);
   }
 
   @Post("refresh")
-  async refresh(@Body() body: RefreshTokenRequest) {
+  async refresh(
+    @Body() body: RefreshTokenRequest,
+  ): Promise<RefreshTokenResponse> {
     const { access_token, refresh_token } =
       await this.authService.refreshTokens(body.refreshToken);
 
-    return { access_token, refresh_token };
+    return {
+      accessToken: access_token,
+      refreshToken: refresh_token,
+    };
   }
 
   @Post("google")
-  async google(@Body() body: GoogleAuthRequest): Promise<{
-    user: UserResponse;
-    access_token: string;
-    refresh_token: string;
-  }> {
+  async google(@Body() body: GoogleAuthRequest): Promise<
+    RefreshTokenResponse & {
+      user: UserResponse;
+    }
+  > {
     const userData = await this.authService.verifyGoogleToken(body.idToken);
     let user = await this.usersService.findUserByGoogleId(userData.id);
 
@@ -85,8 +94,8 @@ export class AuthController {
 
     return {
       user: await this.usersConverter.toUserResponse(user),
-      access_token,
-      refresh_token,
+      accessToken: access_token,
+      refreshToken: refresh_token,
     };
   }
 }

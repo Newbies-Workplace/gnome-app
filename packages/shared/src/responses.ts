@@ -140,3 +140,8 @@ export interface BuildingInteractionResponse {
   interactionType: string;
   amount: number;
 }
+
+export interface RefreshTokenResponse {
+  accessToken: string;
+  refreshToken: string;
+}
