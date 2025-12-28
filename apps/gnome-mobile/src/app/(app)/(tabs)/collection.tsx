@@ -1,9 +1,16 @@
 import { GnomeResponse } from "@repo/shared/responses";
 import { useRouter } from "expo-router";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { SectionList, SectionListRenderItem, Text, View } from "react-native";
+import {
+  SectionList,
+  SectionListRenderItem,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import Search from "@/assets/icons/search.svg";
 import LoadingScreen from "@/components/LoadingScreen";
 import { GnomeCard } from "@/components/ui/GnomeCard";
 import { useGnomeImageStore } from "@/store/useGnomeImageStore";
@@ -14,6 +21,7 @@ const Collection = () => {
   const { gnomes, interactions, error } = useGnomeStore();
   const { getImageForGnome } = useGnomeImageStore();
   const router = useRouter();
+  const [isSearching, setIsSearching] = useState(false);
   const collectedGnomeIds = useMemo(
     () => interactions.map((i) => i.gnomeId),
     [interactions],
@@ -74,7 +82,8 @@ const Collection = () => {
   };
 
   return (
-    <SafeAreaView className="bg-primary-foreground">
+    <SafeAreaView className="bg-primary-foreground p-4 gap-6">
+      <CollectionHeader />
       <SectionList
         sections={gnomeSectionsData}
         keyExtractor={(item) => item.id.toString()}
@@ -91,6 +100,18 @@ const Collection = () => {
         }
       />
     </SafeAreaView>
+  );
+};
+
+const CollectionHeader = () => {
+  return (
+    <View className="flex-row justify-between items-center">
+      <View />
+      <Text className="text-tekst font-bold text-3xl">Twoja kolekcja</Text>
+      <TouchableOpacity>
+        <Search width={24} height={24} className="text-tekst" />
+      </TouchableOpacity>
+    </View>
   );
 };
 
