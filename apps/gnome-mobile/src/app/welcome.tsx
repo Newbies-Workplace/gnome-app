@@ -32,6 +32,7 @@ export default function SignInScreen() {
       await GoogleSignin.hasPlayServices();
       const signInResponse = await GoogleSignin.signIn();
       const idToken = signInResponse?.data?.idToken;
+
       if (idToken) {
         await login(idToken);
         replace("/");

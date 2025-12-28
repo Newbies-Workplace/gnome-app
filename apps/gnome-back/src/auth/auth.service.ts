@@ -70,11 +70,13 @@ export class AuthService {
     };
 
     const access_token = this.jwtService.sign(accessTokenPayload, {
-      expiresIn: "1h",
+      // expiresIn: "1h",
+      expiresIn: "2m",
     });
 
     const refresh_token = this.jwtService.sign(refreshTokenPayload, {
-      expiresIn: "30d",
+      // expiresIn: "30d",
+      expiresIn: "3m",
     });
 
     return { access_token, refresh_token };

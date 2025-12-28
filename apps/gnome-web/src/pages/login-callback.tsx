@@ -7,7 +7,7 @@ const ACCESS_TOKEN_COOKIE_NAME = "access_token";
 const REFRESH_TOKEN_COOKIE_NAME = "refresh_token";
 
 export default function LoginCallback() {
-  const { handleTokens } = useAuthStore();
+  const { handleTokens, init } = useAuthStore();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -19,6 +19,7 @@ export default function LoginCallback() {
 
     if (accessToken && refreshToken) {
       handleTokens(accessToken, refreshToken)
+        .then(() => init())
         .then(() => {
           navigate("/admin");
         })

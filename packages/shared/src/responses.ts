@@ -145,3 +145,7 @@ export interface RefreshTokenResponse {
   accessToken: string;
   refreshToken: string;
 }
+
+export type GoogleLoginResponse = {
+  user: UserResponse;
+} & RefreshTokenResponse;

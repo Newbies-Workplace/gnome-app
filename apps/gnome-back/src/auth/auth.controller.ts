@@ -2,9 +2,9 @@ import { Body, Controller, Get, Post, Res, UseGuards } from "@nestjs/common";
 import { ApiBearerAuth } from "@nestjs/swagger";
 import { RefreshTokenRequest } from "@repo/shared/requests";
 import {
+  GoogleLoginResponse,
   GoogleUserResponse,
   RefreshTokenResponse,
-  UserResponse,
 } from "@repo/shared/responses";
 import { Response } from "express";
 import { AuthService } from "@/auth/auth.service";
@@ -69,11 +69,7 @@ export class AuthController {
   }
 
   @Post("google")
-  async google(@Body() body: GoogleAuthRequest): Promise<
-    RefreshTokenResponse & {
-      user: UserResponse;
-    }
-  > {
+  async google(@Body() body: GoogleAuthRequest): Promise<GoogleLoginResponse> {
     const userData = await this.authService.verifyGoogleToken(body.idToken);
     let user = await this.usersService.findUserByGoogleId(userData.id);
 

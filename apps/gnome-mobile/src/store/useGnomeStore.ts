@@ -47,9 +47,7 @@ export const useGnomeStore = create<GnomeState>()(
           const data = await GnomesService.getGnomes();
 
           set({ gnomes: data, loading: false });
-        } catch (error) {
-          console.error("Fetch error:", error);
-
+        } catch {
           set({ error: "Failed to load gnomes", loading: false });
         }
       },
@@ -61,7 +59,7 @@ export const useGnomeStore = create<GnomeState>()(
             interactionCount: { ...state.interactionCount, [gnomeId]: count },
           }));
         } catch (error) {
-          console.error("Nie udało się pobrać liczby interakcji:", error);
+          console.error("Failed to load interactions count", error);
         }
       },
 
@@ -71,8 +69,7 @@ export const useGnomeStore = create<GnomeState>()(
           const data = await GnomesService.getMyGnomesUniqueInteractions();
 
           set({ interactions: data, loading: false });
-        } catch (error) {
-          console.error("Fetch error:", error);
+        } catch {
           set({ error: "Failed to load interactions", loading: false });
         }
       },
