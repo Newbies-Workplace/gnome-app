@@ -1,7 +1,11 @@
 import { Body, Controller, Get, Post, Res, UseGuards } from "@nestjs/common";
-import { JwtService } from "@nestjs/jwt";
 import { ApiBearerAuth } from "@nestjs/swagger";
-import { GoogleUserResponse, UserResponse } from "@repo/shared/responses";
+import { RefreshTokenRequest } from "@repo/shared/requests";
+import {
+  GoogleLoginResponse,
+  GoogleUserResponse,
+  RefreshTokenResponse,
+} from "@repo/shared/responses";
 import { Response } from "express";
 import { AuthService } from "@/auth/auth.service";
 import { User } from "@/auth/decorators/jwt-user.decorator";
@@ -17,7 +21,6 @@ export class AuthController {
   constructor(
     private readonly authService: AuthService,
     private readonly usersService: UsersService,
-    private readonly jwtService: JwtService,
     private readonly usersConverter: UsersConverter,
   ) {}
 
@@ -32,21 +35,41 @@ export class AuthController {
     @Res() res: Response,
   ) {
     const FRONTEND_URL = process.env.FRONTEND_URL;
-    const token = await this.authService.googleAuth(user);
-    res.cookie("access_token", token, {
+    const jwtUser = await this.authService.googleAuth(user);
+    const { access_token, refresh_token } =
+      await this.authService.generateTokens(jwtUser);
+
+    res.cookie("access_token", access_token, {
       httpOnly: false,
       secure: true,
       sameSite: "none",
-      maxAge: 60 * 60 * 1000, // 1 hour
+      maxAge: 60 * 60 * 1000,
+    });
+    res.cookie("refresh_token", refresh_token, {
+      httpOnly: false,
+      secure: true,
+      sameSite: "none",
+      maxAge: 30 * 24 * 60 * 60 * 1000,
     });
 
     return res.redirect(`${FRONTEND_URL}/login/callback`);
   }
+
+  @Post("refresh")
+  async refresh(
+    @Body() body: RefreshTokenRequest,
+  ): Promise<RefreshTokenResponse> {
+    const { access_token, refresh_token } =
+      await this.authService.refreshTokens(body.refreshToken);
+
+    return {
+      accessToken: access_token,
+      refreshToken: refresh_token,
+    };
+  }
+
   @Post("google")
-  async google(@Body() body: GoogleAuthRequest): Promise<{
-    user: UserResponse;
-    access_token: string;
-  }> {
+  async google(@Body() body: GoogleAuthRequest): Promise<GoogleLoginResponse> {
     const userData = await this.authService.verifyGoogleToken(body.idToken);
     let user = await this.usersService.findUserByGoogleId(userData.id);
 
@@ -62,9 +85,13 @@ export class AuthController {
       role: user.role,
     };
 
+    const { access_token, refresh_token } =
+      await this.authService.generateTokens(jwtUser);
+
     return {
       user: await this.usersConverter.toUserResponse(user),
-      access_token: this.jwtService.sign({ user: jwtUser }),
+      accessToken: access_token,
+      refreshToken: refresh_token,
     };
   }
 }

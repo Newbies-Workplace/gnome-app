@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, UnauthorizedException } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import { GoogleUserResponse } from "@repo/shared/responses";
 import { OAuth2Client } from "google-auth-library";
@@ -43,9 +43,7 @@ export class AuthService {
       role: existingUser.role,
     };
 
-    return this.jwtService.sign({
-      user: jwtUser,
-    });
+    return jwtUser;
   }
 
   async verifyGoogleToken(idToken: string): Promise<GoogleUser> {
@@ -60,5 +58,52 @@ export class AuthService {
       name: payload.name,
       pictureUrl: payload.picture,
     };
+  }
+
+  async generateTokens(jwtUser: JwtUser) {
+    const accessTokenPayload = {
+      user: jwtUser,
+    };
+    const refreshTokenPayload = {
+      userId: jwtUser.id,
+      iat: Math.floor(Date.now() / 1000),
+    };
+
+    const access_token = this.jwtService.sign(accessTokenPayload, {
+      expiresIn: "1h",
+    });
+
+    const refresh_token = this.jwtService.sign(refreshTokenPayload, {
+      expiresIn: "30d",
+    });
+
+    return { access_token, refresh_token };
+  }
+
+  verifyRefreshToken(token: string): { userId: string } {
+    try {
+      return this.jwtService.verify(token);
+    } catch {
+      throw new UnauthorizedException("Invalid refresh token");
+    }
+  }
+
+  async refreshTokens(refreshToken: string) {
+    const payload = this.verifyRefreshToken(refreshToken);
+
+    const user = await this.prismaService.user.findUnique({
+      where: { id: payload.userId },
+    });
+    if (!user) throw new UnauthorizedException("User not found");
+
+    const jwtUser: JwtUser = {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      googleId: user.googleId,
+      role: user.role,
+    };
+
+    return this.generateTokens(jwtUser);
   }
 }

@@ -7,9 +7,12 @@ import { UserService } from "@/api/User.service";
 type AuthState = {
   isLoading: boolean;
   user: UserResponse | null;
+
   accessToken: string | null;
+  refreshToken: string | null;
+
   init: () => Promise<void>;
-  handleAccessToken: (token: string) => Promise<void>;
+  handleTokens: (accessToken: string, refreshToken: string) => Promise<void>;
   logout: () => void;
 };
 
@@ -18,7 +21,9 @@ export const useAuthStore = create<AuthState>()(
     (set, get) => ({
       isLoading: true,
       user: null,
+
       accessToken: null,
+      refreshToken: null,
 
       init: async () => {
         const token = get().accessToken;
@@ -37,20 +42,21 @@ export const useAuthStore = create<AuthState>()(
         }
       },
 
-      handleAccessToken: async (token: string) => {
+      handleTokens: async (accessToken: string, refreshToken: string) => {
         set({ isLoading: true });
-        axiosInstance.defaults.headers.Authorization = `Bearer ${token}`;
-        try {
-          const user = await UserService.getMyUser();
-          set({ accessToken: token, user, isLoading: false });
-        } catch {
-          set({ accessToken: null, user: null, isLoading: false });
-        }
+
+        axiosInstance.defaults.headers.Authorization = `Bearer ${accessToken}`;
+
+        set({
+          accessToken: accessToken,
+          refreshToken: refreshToken,
+          isLoading: false,
+        });
       },
 
       logout: () => {
         axiosInstance.defaults.headers.Authorization = "";
-        set({ user: null, accessToken: null });
+        set({ user: null, accessToken: null, refreshToken: null });
       },
     }),
     {
