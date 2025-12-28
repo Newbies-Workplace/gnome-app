@@ -1,14 +1,8 @@
 import { GnomeResponse } from "@repo/shared/responses";
-import { useNavigation, useRouter } from "expo-router";
-import { useEffect } from "react";
+import { useRouter } from "expo-router";
+import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import {
-  FlatList,
-  SectionList,
-  SectionListRenderItem,
-  Text,
-  View,
-} from "react-native";
+import { SectionList, SectionListRenderItem, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import LoadingScreen from "@/components/LoadingScreen";
 import { GnomeCard } from "@/components/ui/GnomeCard";
@@ -20,23 +14,28 @@ const Collection = () => {
   const { gnomes, interactions, error } = useGnomeStore();
   const { getImageForGnome } = useGnomeImageStore();
   const router = useRouter();
-  const navigation = useNavigation();
-  const collectedGnomeIds = interactions.map((i) => i.gnomeId);
-  const collectedGnomes = gnomes.filter((g) =>
-    collectedGnomeIds.includes(g.id),
+  const collectedGnomeIds = useMemo(
+    () => interactions.map((i) => i.gnomeId),
+    [interactions],
   );
-  const uncollectedGnomes = gnomes.filter(
-    (g) => !collectedGnomeIds.includes(g.id),
+  const collectedGnomes = useMemo(
+    () => gnomes.filter((g) => collectedGnomeIds.includes(g.id)),
+    [gnomes, collectedGnomeIds],
   );
+  const uncollectedGnomes = useMemo(
+    () => gnomes.filter((g) => !collectedGnomeIds.includes(g.id)),
+    [gnomes, collectedGnomeIds],
+  );
+
   const gnomeSectionsData = [
     { title: t("collection.collectedGnomes"), data: collectedGnomes },
     { title: t("collection.uncollectedGnomes"), data: uncollectedGnomes },
   ];
 
-  const renderGnome = (gnome: { id: string; name: string }) => {
+  const renderGnome = (gnome: GnomeResponse) => {
     const img = getImageForGnome(gnome.id);
     return (
-      <View className="w-1/3" key={gnome.id}>
+      <View className="w-1/3 h-48" key={gnome.id}>
         <GnomeCard
           gnomeId={gnome.id}
           text={gnome.name}
@@ -71,32 +70,14 @@ const Collection = () => {
     );
   };
 
-  useEffect(() => {
-    navigation.setOptions({
-      headerTitle: () => (
-        <View className="flex justify-center">
-          <Text className="text-tekst text-2xl font-bold">
-            {t("collection.yourCollection")}
-          </Text>
-        </View>
-      ),
-      headerTitleAlign: "center",
-      headerStyle: {
-        backgroundColor: "#131413",
-      },
-      headerShadowVisible: false,
-      headerShown: true,
-    });
-  }, [navigation, t]);
-
   return (
-    <SafeAreaView className={"flex-1 bg-primary-foreground"}>
+    <SafeAreaView className="bg-primary-foreground">
       <SectionList
         sections={gnomeSectionsData}
         keyExtractor={(item) => item.id.toString()}
         renderItem={renderItemList}
         renderSectionHeader={({ section: { title } }) => (
-          <SectionTitle>{title}</SectionTitle>
+          <Text className="text-tekst font-bold text-lg">{title}</Text>
         )}
         ListEmptyComponent={() =>
           error ? (
@@ -109,9 +90,5 @@ const Collection = () => {
     </SafeAreaView>
   );
 };
-
-function SectionTitle({ children }: { children: React.ReactNode }) {
-  return <Text className="text-tekst font-bold text-lg">{children}</Text>;
-}
 
 export default Collection;

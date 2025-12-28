@@ -17,7 +17,6 @@ export const GnomeCard: React.FC<GnomeCardProps> = ({
   onClick,
   interaction,
 }) => {
-  // Determine which icon to show
   const getIcon = () => {
     if (interaction?.found && interaction?.userPicture)
       return <CameraIcon width={20} height={20} />;
