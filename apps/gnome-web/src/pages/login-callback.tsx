@@ -14,9 +14,6 @@ export default function LoginCallback() {
     const accessToken = Cookies.get(ACCESS_TOKEN_COOKIE_NAME);
     const refreshToken = Cookies.get(REFRESH_TOKEN_COOKIE_NAME);
 
-    console.log("LoginCallback - accessToken:", accessToken);
-    console.log("LoginCallback - refreshToken:", refreshToken);
-
     if (accessToken && refreshToken) {
       handleTokens(accessToken, refreshToken)
         .then(() => init())

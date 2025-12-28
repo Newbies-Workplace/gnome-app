@@ -69,13 +69,15 @@ axiosInstance.interceptors.request.use(
 
       if (error instanceof AxiosError && error.response?.status === 401) {
         console.error("Token refresh failed, logging out user.");
-        await useAuthStore.getState().logout();
+        useAuthStore.getState().logout().then();
 
         throw new AxiosError(
           "Request cancelled due to failed token refresh",
           "ERR_CANCELED",
         );
       }
+
+      throw error;
     }
 
     return config;

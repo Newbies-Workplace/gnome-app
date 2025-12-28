@@ -70,13 +70,11 @@ export class AuthService {
     };
 
     const access_token = this.jwtService.sign(accessTokenPayload, {
-      // expiresIn: "1h",
-      expiresIn: "2m",
+      expiresIn: "1h",
     });
 
     const refresh_token = this.jwtService.sign(refreshTokenPayload, {
-      // expiresIn: "30d",
-      expiresIn: "3m",
+      expiresIn: "30d",
     });
 
     return { access_token, refresh_token };
@@ -96,7 +94,7 @@ export class AuthService {
     const user = await this.prismaService.user.findUnique({
       where: { id: payload.userId },
     });
-    if (!user) throw new Error("User not found");
+    if (!user) throw new UnauthorizedException("User not found");
 
     const jwtUser: JwtUser = {
       id: user.id,

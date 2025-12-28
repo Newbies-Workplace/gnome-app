@@ -76,6 +76,8 @@ axiosInstance.interceptors.request.use(
           "ERR_CANCELED",
         );
       }
+
+      throw error;
     }
 
     return config;

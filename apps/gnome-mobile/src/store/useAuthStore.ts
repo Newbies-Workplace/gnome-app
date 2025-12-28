@@ -40,10 +40,9 @@ export const useAuthStore = create<AuthStore>()(
       },
 
       logout: async () => {
-        GoogleSignin.configure({
-          webClientId: process.env.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID,
+        await GoogleSignin.signOut().catch((error) => {
+          console.warn("Google sign-out failed:", error);
         });
-        await GoogleSignin.signOut().catch();
         set({
           user: null,
           accessToken: null,
@@ -52,7 +51,7 @@ export const useAuthStore = create<AuthStore>()(
         });
       },
 
-      handleTokens: async (accessToken: string, refreshToken: string) => {
+      handleTokens: (accessToken: string, refreshToken: string) => {
         set({
           accessToken: accessToken,
           refreshToken: refreshToken,
