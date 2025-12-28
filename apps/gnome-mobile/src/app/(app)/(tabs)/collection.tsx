@@ -27,10 +27,13 @@ const Collection = () => {
     [gnomes, collectedGnomeIds],
   );
 
-  const gnomeSectionsData = [
-    { title: t("collection.collectedGnomes"), data: collectedGnomes },
-    { title: t("collection.uncollectedGnomes"), data: uncollectedGnomes },
-  ];
+  const gnomeSectionsData = useMemo(
+    () => [
+      { title: t("collection.collectedGnomes"), data: collectedGnomes },
+      { title: t("collection.uncollectedGnomes"), data: uncollectedGnomes },
+    ],
+    [t, collectedGnomes, uncollectedGnomes],
+  );
 
   const renderGnome = (gnome: GnomeResponse) => {
     const img = getImageForGnome(gnome.id);
