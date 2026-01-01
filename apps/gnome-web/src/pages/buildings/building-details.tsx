@@ -13,7 +13,6 @@ import {
   ItemDescription,
   ItemTitle,
 } from "@/components/ui/item.tsx";
-import { useBuildStore } from "@/store/useBuildStore";
 import { useUserStore } from "@/store/useUserStore";
 
 export default function BuildingDetailsPage() {
