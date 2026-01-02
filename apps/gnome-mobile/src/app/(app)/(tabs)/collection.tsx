@@ -10,9 +10,11 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import ArrowLeft from "@/assets/icons/arrow-left.svg";
 import Search from "@/assets/icons/search.svg";
 import LoadingScreen from "@/components/LoadingScreen";
 import { GnomeCard } from "@/components/ui/GnomeCard";
+import { Input } from "@/components/ui/input";
 import { useGnomeImageStore } from "@/store/useGnomeImageStore";
 import { useGnomeStore } from "@/store/useGnomeStore";
 
@@ -21,7 +23,8 @@ const Collection = () => {
   const { gnomes, interactions, error } = useGnomeStore();
   const { getImageForGnome } = useGnomeImageStore();
   const router = useRouter();
-  const [isSearching, setIsSearching] = useState(false);
+  const [isSearching, setIsSearching] = useState<boolean>(false);
+  const [searchQuery, setSearchQuery] = useState<string>("");
   const collectedGnomeIds = useMemo(
     () => interactions.map((i) => i.gnomeId),
     [interactions],
@@ -42,6 +45,19 @@ const Collection = () => {
     ],
     [t, collectedGnomes, uncollectedGnomes],
   );
+
+  const filteredGnomeSectionsData = useMemo(() => {
+    return gnomeSectionsData
+      .map((section) => ({
+        ...section,
+        data: section.data.filter(
+          (gnome) =>
+            gnome.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            gnome.location.toLowerCase().includes(searchQuery.toLowerCase()),
+        ),
+      }))
+      .filter((section) => section.data.length > 0);
+  }, [gnomeSectionsData, searchQuery]);
 
   const renderGnome = (gnome: GnomeResponse) => {
     const img = getImageForGnome(gnome.id);
@@ -82,10 +98,25 @@ const Collection = () => {
   };
 
   return (
-    <SafeAreaView className="bg-primary-foreground p-4 gap-6">
-      <CollectionHeader />
+    <SafeAreaView className="flex-1 bg-primary-foreground p-4 gap-6">
+      <CollectionHeader
+        isSearching={isSearching}
+        setIsSearching={setIsSearching}
+        t={t}
+      />
+      {isSearching && (
+        <Input
+          className="text-tekst bg-transparent rounded-2xl  border-tekst border-2"
+          placeholder={t("collection.searchGnomesPlaceholder")}
+          placeholderTextColor="#B5B5B5"
+          inputMode="search"
+          value={searchQuery}
+          onChangeText={setSearchQuery}
+        />
+      )}
       <SectionList
-        sections={gnomeSectionsData}
+        sections={isSearching ? filteredGnomeSectionsData : gnomeSectionsData}
+        className="mb-20"
         keyExtractor={(item) => item.id.toString()}
         renderItem={renderItemList}
         renderSectionHeader={({ section: { title } }) => (
@@ -94,6 +125,8 @@ const Collection = () => {
         ListEmptyComponent={() =>
           error ? (
             <Text className="text-tekst">{t("common.genericError")}</Text>
+          ) : isSearching ? (
+            <Text className="text-tekst">{t("collection.noGnomesFound")}</Text>
           ) : (
             <LoadingScreen />
           )
@@ -103,14 +136,42 @@ const Collection = () => {
   );
 };
 
-const CollectionHeader = () => {
+const CollectionHeader = ({
+  isSearching,
+  setIsSearching,
+  t,
+}: {
+  isSearching: boolean;
+  setIsSearching: React.Dispatch<React.SetStateAction<boolean>>;
+  t: (key: string) => string;
+}) => {
   return (
-    <View className="flex-row justify-between items-center">
-      <View />
-      <Text className="text-tekst font-bold text-3xl">Twoja kolekcja</Text>
-      <TouchableOpacity>
-        <Search width={24} height={24} className="text-tekst" />
-      </TouchableOpacity>
+    <View className="flex-row justify-center items-center">
+      {isSearching ? (
+        <TouchableOpacity
+          className="absolute left-4"
+          onPress={() => setIsSearching(false)}
+        >
+          <ArrowLeft width={24} height={24} className="text-tekst" />
+        </TouchableOpacity>
+      ) : (
+        <View />
+      )}
+      <Text className="text-tekst font-bold text-3xl">
+        {isSearching
+          ? t("collection.searchGnomes")
+          : t("collection.yourGnomesCollection")}
+      </Text>
+      {isSearching ? (
+        <View />
+      ) : (
+        <TouchableOpacity
+          className="absolute right-4"
+          onPress={() => setIsSearching(true)}
+        >
+          <Search width={24} height={24} className="text-tekst" />
+        </TouchableOpacity>
+      )}
     </View>
   );
 };
