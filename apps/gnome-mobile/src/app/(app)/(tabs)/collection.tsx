@@ -12,7 +12,9 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import ArrowLeft from "@/assets/icons/arrow-left.svg";
 import Search from "@/assets/icons/search.svg";
+import SearchGnome from "@/assets/images/SearchGnome.svg";
 import LoadingScreen from "@/components/LoadingScreen";
+import { EmptyState } from "@/components/ui/EmptyState";
 import { GnomeCard } from "@/components/ui/GnomeCard";
 import { Input } from "@/components/ui/input";
 import { useGnomeImageStore } from "@/store/useGnomeImageStore";
@@ -101,7 +103,12 @@ const Collection = () => {
     <SafeAreaView className="flex-1 bg-primary-foreground p-4 gap-6">
       <CollectionHeader
         isSearching={isSearching}
-        setIsSearching={setIsSearching}
+        onSearchToogle={() => {
+          setIsSearching(!isSearching);
+          if (isSearching) {
+            setSearchQuery("");
+          }
+        }}
         t={t}
       />
       {isSearching && (
@@ -115,21 +122,31 @@ const Collection = () => {
         />
       )}
       <SectionList
-        sections={isSearching ? filteredGnomeSectionsData : gnomeSectionsData}
+        sections={filteredGnomeSectionsData}
         className="mb-20"
         keyExtractor={(item) => item.id.toString()}
         renderItem={renderItemList}
         renderSectionHeader={({ section: { title } }) => (
-          <Text className="text-tekst font-bold text-lg">{title}</Text>
+          <Text className="text-tekst font-bold text-lg px-2">{title}</Text>
         )}
         ListEmptyComponent={() =>
           error ? (
             <Text className="text-tekst">{t("common.genericError")}</Text>
           ) : isSearching ? (
-            <Text className="text-tekst">{t("collection.noGnomesFound")}</Text>
+            <View className="flex-1 items-center justify-center">
+              <EmptyState
+                image={<SearchGnome />}
+                title={t("collection.noGnomesFound")}
+              />
+            </View>
           ) : (
             <LoadingScreen />
           )
+        }
+        contentContainerStyle={
+          filteredGnomeSectionsData.length === 0
+            ? { flexGrow: 1, justifyContent: "center" }
+            : undefined
         }
       />
     </SafeAreaView>
@@ -138,20 +155,17 @@ const Collection = () => {
 
 const CollectionHeader = ({
   isSearching,
-  setIsSearching,
+  onSearchToogle,
   t,
 }: {
   isSearching: boolean;
-  setIsSearching: React.Dispatch<React.SetStateAction<boolean>>;
+  onSearchToogle: () => void;
   t: (key: string) => string;
 }) => {
   return (
     <View className="flex-row justify-center items-center">
       {isSearching ? (
-        <TouchableOpacity
-          className="absolute left-4"
-          onPress={() => setIsSearching(false)}
-        >
+        <TouchableOpacity className="absolute left-4" onPress={onSearchToogle}>
           <ArrowLeft width={24} height={24} className="text-tekst" />
         </TouchableOpacity>
       ) : (
@@ -165,10 +179,7 @@ const CollectionHeader = ({
       {isSearching ? (
         <View />
       ) : (
-        <TouchableOpacity
-          className="absolute right-4"
-          onPress={() => setIsSearching(true)}
-        >
+        <TouchableOpacity className="absolute right-4" onPress={onSearchToogle}>
           <Search width={24} height={24} className="text-tekst" />
         </TouchableOpacity>
       )}

@@ -46,7 +46,7 @@ export default function Friends() {
         title={t("friends.listEmpty.title")}
         alert={t("friends.listEmpty.subtitle")}
         description={t("friends.listEmpty.description")}
-        ButtonTitle={t("friends.listEmpty.addFriendButton")}
+        buttonTitle={t("friends.listEmpty.addFriendButton")}
         onClick={() => router.push("/addfriend")}
       />
     </View>
