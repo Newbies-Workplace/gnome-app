@@ -26,9 +26,12 @@
     }
   },
   "collection": {
-    "yourCollection": null,
+    "yourGnomeCollection": null,
     "collectedGnomes": null,
-    "uncollectedGnomes": null
+    "uncollectedGnomes": null,
+    "searchGnomes": null,
+    "searchGnomesPlaceholder": null,
+    "noGnomesFound": null
   },
   "common": {
     "appName": null,

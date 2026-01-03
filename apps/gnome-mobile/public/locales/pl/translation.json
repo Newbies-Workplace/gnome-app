@@ -26,9 +26,12 @@
     }
   },
   "collection": {
-    "yourCollection": "Twoja kolekcja",
-    "collectedGnomes": "Zebrane krasnale",
-    "uncollectedGnomes": "Nieodnalezione krasnale"
+    "yourGnomesCollection": "Twoja kolekcja",
+    "collectedGnomes": "Odnalezione krasnale",
+    "uncollectedGnomes": "Nieodnalezione krasnale",
+    "searchGnomes": "Wyszukaj krasnala",
+    "searchGnomesPlaceholder": "Nazwa lub Dzielnica",
+    "noGnomesFound": "Nie znaleziono krasnali spełniających kryteria wyszukiwania"
   },
   "common": {
     "appName": "Krasnal GO",
