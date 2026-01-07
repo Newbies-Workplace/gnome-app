@@ -1,5 +1,4 @@
 import { Injectable } from "@nestjs/common";
-import { Gnome, GnomeInteraction } from "@prisma/client";
 import {
   GnomeDetailsResponse,
   GnomeResponse,
@@ -7,6 +6,7 @@ import {
   InteractionResponse,
 } from "@repo/shared/responses";
 import { PrismaService } from "@/db/prisma.service";
+import { Gnome, GnomeInteraction } from "@/generated/prisma/client";
 import { GnomeInteractionCreateResult } from "@/gnomes/gnomes.dto";
 
 @Injectable()

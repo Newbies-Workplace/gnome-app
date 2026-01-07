@@ -1,9 +1,9 @@
 import { Injectable } from "@nestjs/common";
-import { Achievement, UserAchievement } from "@prisma/client";
 import {
   AchievementResponse,
   UserAchievementResponse,
 } from "@repo/shared/responses";
+import { Achievement, UserAchievement } from "@/generated/prisma/client";
 
 @Injectable()
 export class AchievementsConverter {

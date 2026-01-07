@@ -1,5 +1,4 @@
 services:
-
   minio:
     image: docker.io/minio/minio:RELEASE.2022-12-12T19-27-27Z
     command: server /data --console-address ":9001"
@@ -11,18 +10,37 @@ services:
       - '9001:9001'
     volumes:
       - 'minio_data:/data'
+    networks:
+      - gnome-backend-network
 
   gnome-db:
     container_name: gnome-db
     image: postgres:15.3
     restart: unless-stopped
+    ports:
+      - "5432:5432"
     environment:
       POSTGRES_USER: gnome
       POSTGRES_PASSWORD: gnome
-    ports:
-      - "5432:5432" 
     volumes:
       - gnome-db-data:/var/lib/postgresql/data
+    networks:
+      - gnome-backend-network
+
+  gnome-back:
+    container_name: gnome-back
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    build:
+      context: .
+      dockerfile: ./apps/gnome-back/Dockerfile
+    depends_on:
+      - gnome-db
+    env_file:
+      - ./apps/gnome-back/.env.docker
+    networks:
+      - gnome-backend-network
 
   grafana:
     image: grafana/grafana:latest
@@ -47,6 +65,12 @@ services:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
     ports:
       - '9090:9090'
+    networks:
+      - gnome-backend-network
+
+networks:
+  gnome-backend-network:
+    driver: bridge
 
 volumes:
   gnome-db-data:

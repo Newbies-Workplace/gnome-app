@@ -1,8 +1,8 @@
 import { Injectable } from "@nestjs/common";
 import { PassportStrategy } from "@nestjs/passport";
-import { UserRole } from "@prisma/client";
 import { Strategy, VerifyCallback } from "passport-google-oauth20";
 import { PrismaService } from "@/db/prisma.service";
+import { UserRole } from "@/generated/prisma/client";
 
 @Injectable()
 export class GoogleStrategy extends PassportStrategy(Strategy, "google") {

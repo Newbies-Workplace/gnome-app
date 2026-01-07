@@ -1,10 +1,10 @@
 import * as fs from "node:fs/promises";
 import { ConfigService } from "@nestjs/config";
-import { PrismaClient } from "@prisma/client";
 import { PrismaService } from "../src/db/prisma.service";
+import { PrismaClient } from "../src/generated/prisma/client";
 import { MinioService } from "../src/minio/minio.service";
 
-const prisma = new PrismaClient();
+const prisma = new PrismaClient({});
 const prismaService = new PrismaService();
 const configService = new ConfigService();
 const minioService = new MinioService(configService);
