@@ -1,6 +1,7 @@
+import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { useNavigation } from "@react-navigation/native";
 import { useRouter } from "expo-router";
-import { useEffect } from "react";
+import { use, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { Alert, Text, TouchableOpacity, View } from "react-native";
 import AchievementsIcon from "@/assets/icons/achievements.svg";
@@ -10,6 +11,8 @@ import LastSeenIcon from "@/assets/icons/last-seen.svg";
 import LogoutIcon from "@/assets/icons/log-out.svg";
 import SettingsIcon from "@/assets/icons/settings.svg";
 import { Achievement } from "@/components/Achievement";
+import { BottomSheetWrapper } from "@/components/BottomSheetWrapper";
+import { ConfirmDialog } from "@/components/ConfirmDialog";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { GnomeCard } from "@/components/ui/GnomeCard";
 import {
@@ -25,25 +28,8 @@ export default function ProfileScreen() {
   const navigation = useNavigation();
   const router = useRouter();
   const { userAchievements } = useAchievementsStore();
-
+  const logoutDialogRef = useRef<BottomSheetModal>(null);
   const latestEarnedAchievements = userAchievements.slice(0, 3);
-
-  const handleLogout = () => {
-    Alert.alert(
-      t("profile.logout.title"),
-      t("profile.logout.confirmationTitle"),
-      [
-        { text: t("common.cancel"), style: "cancel" },
-        {
-          text: t("profile.logout.title"),
-          onPress: () => {
-            logout();
-            router.replace("/welcome");
-          },
-        },
-      ],
-    );
-  };
 
   useEffect(() => {
     navigation.setOptions({
@@ -138,8 +124,31 @@ export default function ProfileScreen() {
         <ProfileButtonLogout
           text={t("profile.logout.title")}
           image={<LogoutIcon className={"text-primary"} />}
-          onClick={handleLogout}
+          onClick={() => {
+            logoutDialogRef.current?.present();
+          }}
         />
+
+        <BottomSheetWrapper ref={logoutDialogRef}>
+          <ConfirmDialog
+            title={t("profile.logout.confirmationTitle")}
+            confirmContent={
+              <View className="flex-row gap-2 items-center">
+                <Text className="text-tekst font-bold">
+                  {t("profile.logout.title")}
+                </Text>
+                <LogoutIcon className="text-tekst" />
+              </View>
+            }
+            onConfirm={() => {
+              logout();
+              router.replace("/welcome");
+            }}
+            onDecline={() => {
+              logoutDialogRef.current?.dismiss();
+            }}
+          />
+        </BottomSheetWrapper>
       </View>
     </View>
   );
