@@ -8,8 +8,52 @@ on:
   push:
     branches:
       - main
+      - feat/docker-deployments # todo: remove this branch after testing
 
 env:
   REGISTRY: ghcr.io
 
 jobs:
+  docker:
+    name: Build Docker Image
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          target: gnome-back
+          push: true
+          tags: ${{ steps.meta-api.outputs.tags }}
+          labels: ${{ steps.meta-api.outputs.labels }}
+
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    environment: Production
+    needs: [ docker ]
+
+    steps:
+      - name: Deploy package to production
+        uses: appleboy/ssh-action@v1.2.4
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          script: bash ./startup.sh
