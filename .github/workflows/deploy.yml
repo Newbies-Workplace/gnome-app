@@ -6,9 +6,8 @@ concurrency:
 
 on:
   push:
-    branches:
-      - main
-      - feat/docker-deployments # todo: remove this branch after testing
+    tags:
+      - 'v*'
 
 env:
   REGISTRY: ghcr.io
