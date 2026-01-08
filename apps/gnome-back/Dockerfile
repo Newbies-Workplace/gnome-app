@@ -20,20 +20,14 @@ COPY --from=prepare /app/out/full/ .
 RUN yarn turbo build
 
 FROM base AS gnome-back
+WORKDIR /app
 
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nestjs
 USER nestjs
 
-COPY --from=builder --chown=nestjs:nodejs /app/apps/gnome-back/node_modules ./node_modules
-COPY --from=builder --chown=nestjs:nodejs /app/apps/gnome-back/package.json ./
-COPY --from=builder --chown=nestjs:nodejs /app/apps/gnome-back/assets ./assets
-COPY --from=builder --chown=nestjs:nodejs /app/apps/gnome-back/dist ./dist
-COPY --from=builder --chown=nestjs:nodejs /app/apps/gnome-back/prisma ./prisma
-COPY --from=builder --chown=nestjs:nodejs /app/apps/gnome-back/prisma.config.ts ./
+COPY --from=builder --chown=nestjs:nodejs /app/ .
 
 EXPOSE 3000
 
-CMD [ "npm", "run", "start:migrate:prod" ]
-
-# todo https://turborepo.com/docs/guides/tools/docker
+CMD [ "yarn", "workspace", "gnome-back", "start:migrate:prod" ]
