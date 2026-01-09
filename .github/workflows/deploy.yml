@@ -27,6 +27,12 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/newbies-workplace/gnome-back
+
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
 
@@ -37,10 +43,11 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: .
+          file: ./apps/gnome-back/Dockerfile
           target: gnome-back
           push: true
-          tags: ${{ steps.meta-api.outputs.tags }}
-          labels: ${{ steps.meta-api.outputs.labels }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
 
   deploy:
     name: Deploy
