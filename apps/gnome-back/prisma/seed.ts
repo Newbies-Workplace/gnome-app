@@ -1,11 +1,15 @@
 import * as fs from "node:fs/promises";
 import { ConfigService } from "@nestjs/config";
-import { PrismaService } from "../src/db/prisma.service";
+import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "../src/generated/prisma/client";
 import { MinioService } from "../src/minio/minio.service";
 
-const prisma = new PrismaClient({});
-const prismaService = new PrismaService();
+const pool = new PrismaPg({
+  connectionString: process.env.DATABASE_URL,
+});
+const prisma = new PrismaClient({
+  adapter: pool,
+});
 const configService = new ConfigService();
 const minioService = new MinioService(configService);
 
@@ -23,9 +27,6 @@ function extractCoords(coords: number[][][]) {
 }
 
 async function main() {
-  await prismaService.$connect();
-  // const districtsService = new DistrictsService(prismaService);
-
   const json = await fs.readFile("./assets/GraniceOsiedli.geojson", "utf-8");
   const data = JSON.parse(json);
 
@@ -299,11 +300,9 @@ async function main() {
 main()
   .then(async () => {
     await prisma.$disconnect();
-    await prismaService.$disconnect();
   })
   .catch(async (e) => {
     console.error(e);
     await prisma.$disconnect();
-    await prismaService.$disconnect();
     process.exit(1);
   });

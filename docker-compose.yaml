@@ -27,20 +27,20 @@ services:
     networks:
       - gnome-backend-network
 
-  gnome-back:
-    container_name: gnome-back
-    restart: unless-stopped
-    ports:
-      - "3000:3000"
-    build:
-      context: .
-      dockerfile: ./apps/gnome-back/Dockerfile
-    depends_on:
-      - gnome-db
-    env_file:
-      - ./apps/gnome-back/.env.docker
-    networks:
-      - gnome-backend-network
+#  gnome-back:
+#    container_name: gnome-back
+#    restart: unless-stopped
+#    ports:
+#      - "3000:3000"
+#    build:
+#      context: .
+#      dockerfile: ./apps/gnome-back/Dockerfile
+#    depends_on:
+#      - gnome-db
+#    env_file:
+#      - ./apps/gnome-back/.env.docker
+#    networks:
+#      - gnome-backend-network
 
   grafana:
     image: grafana/grafana:latest
