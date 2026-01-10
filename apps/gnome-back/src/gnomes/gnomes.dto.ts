@@ -1,4 +1,4 @@
-import { GnomeInteraction, UserResource } from "@prisma/client";
+import { GnomeInteraction, UserResource } from "@/generated/prisma/client";
 
 export type GnomeInteractionCreateResult = {
   interaction: GnomeInteraction;

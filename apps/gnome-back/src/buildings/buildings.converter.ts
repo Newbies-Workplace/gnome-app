@@ -1,9 +1,9 @@
 import { Injectable } from "@nestjs/common";
-import { Building, BuildingInteraction } from "@prisma/client";
 import {
   BuildingInteractionResponse,
   BuildingResponse,
 } from "@repo/shared/responses";
+import { Building, BuildingInteraction } from "@/generated/prisma/client";
 
 @Injectable()
 export class BuildingsConverter {

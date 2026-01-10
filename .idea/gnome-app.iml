@@ -9,6 +9,8 @@
       <excludeFolder url="file://$MODULE_DIR$/apps/gnome-mobile/.expo" />
       <excludeFolder url="file://$MODULE_DIR$/apps/gnome-mobile/android" />
       <excludeFolder url="file://$MODULE_DIR$/apps/gnome-back/.turbo" />
+      <excludeFolder url="file://$MODULE_DIR$/apps/gnome-back/generated" />
+      <excludeFolder url="file://$MODULE_DIR$/apps/gnome-back/src/generated" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

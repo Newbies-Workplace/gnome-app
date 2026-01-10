@@ -1,3 +1,5 @@
 dist
+/src/generated
 
 .env
+.env.docker

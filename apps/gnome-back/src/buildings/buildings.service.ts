@@ -4,7 +4,6 @@ import {
   Injectable,
   NotFoundException,
 } from "@nestjs/common";
-import { Building, UserRole } from "@prisma/client";
 import { Action, CreateBuildingRequest } from "@repo/shared/requests";
 import { distance, featureCollection, nearestPoint, point } from "@turf/turf";
 import { JwtUser } from "@/auth/types/jwt-user";
@@ -15,6 +14,7 @@ import {
 } from "@/buildings/buildings.constants";
 import { PrismaService } from "@/db/prisma.service";
 import { DistrictsService } from "@/districts/districts.service";
+import { Building, UserRole } from "@/generated/prisma/client";
 
 @Injectable()
 export class BuildingsService {
