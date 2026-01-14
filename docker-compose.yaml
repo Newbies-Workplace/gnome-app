@@ -2,9 +2,8 @@ services:
   minio:
     image: docker.io/minio/minio:RELEASE.2022-12-12T19-27-27Z
     command: server /data --console-address ":9001"
-    environment:
-      MINIO_ROOT_USER: minio
-      MINIO_ROOT_PASSWORD: supersecret
+    restart: unless-stopped
+    env_file: ./apps/gnome-back/.env
     ports:
       - '9000:9000'
       - '9001:9001'
@@ -19,32 +18,33 @@ services:
     restart: unless-stopped
     ports:
       - "5432:5432"
-    environment:
-      POSTGRES_USER: gnome
-      POSTGRES_PASSWORD: gnome
+    env_file: ./apps/gnome-back/.env
     volumes:
       - gnome-db-data:/var/lib/postgresql/data
     networks:
       - gnome-backend-network
 
-#  gnome-back:
-#    container_name: gnome-back
-#    restart: unless-stopped
-#    ports:
-#      - "3000:3000"
-#    build:
-#      context: .
-#      dockerfile: ./apps/gnome-back/Dockerfile
-#    depends_on:
-#      - gnome-db
-#    env_file:
-#      - ./apps/gnome-back/.env.docker
-#    networks:
-#      - gnome-backend-network
+  gnome-back:
+    build:
+      context: .
+      dockerfile: ./apps/gnome-back/Dockerfile
+    container_name: gnome-back
+    restart: unless-stopped
+    profiles: [ local ]
+    ports:
+      - "3000:3000"
+    depends_on:
+      - gnome-db
+      - minio
+    env_file:
+      - ./apps/gnome-back/.env.docker
+    networks:
+      - gnome-backend-network
 
   grafana:
     image: grafana/grafana:latest
     container_name: grafana
+    profiles: [ metrics ]
     restart: unless-stopped
     env_file: ./apps/gnome-back/.env
     ports:
@@ -61,6 +61,7 @@ services:
     image: prom/prometheus:latest
     container_name: prometheus
     restart: unless-stopped
+    profiles: [ metrics ]
     volumes:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
     ports:
