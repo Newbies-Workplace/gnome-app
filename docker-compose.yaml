@@ -1,14 +1,15 @@
 services:
-  minio:
+  gnome-minio:
+    container_name: gnome-minio
     image: docker.io/minio/minio:RELEASE.2022-12-12T19-27-27Z
     command: server /data --console-address ":9001"
     restart: unless-stopped
     env_file: ./apps/gnome-back/.env
     ports:
-      - '9000:9000'
-      - '9001:9001'
+      - '127.0.0.1:9000:9000'
+      - '127.0.0.1:9001:9001'
     volumes:
-      - 'minio_data:/data'
+      - gnome-minio-data:/data
     networks:
       - gnome-backend-network
 
@@ -16,15 +17,16 @@ services:
     container_name: gnome-db
     image: postgres:15.3
     restart: unless-stopped
-    ports:
-      - "5432:5432"
     env_file: ./apps/gnome-back/.env
+    ports:
+      - "127.0.0.1:5432:5432"
     volumes:
       - gnome-db-data:/var/lib/postgresql/data
     networks:
       - gnome-backend-network
 
   gnome-back:
+#   image: ghcr.io/newbies-workplace/gnome-back:latest
     build:
       context: .
       dockerfile: ./apps/gnome-back/Dockerfile
@@ -32,40 +34,40 @@ services:
     restart: unless-stopped
     profiles: [ local ]
     ports:
-      - "3000:3000"
+      - "127.0.0.1:3000:3000"
     depends_on:
       - gnome-db
-      - minio
+      - gnome-minio
     env_file:
       - ./apps/gnome-back/.env.docker
     networks:
       - gnome-backend-network
 
-  grafana:
+  gnome-grafana:
     image: grafana/grafana:latest
-    container_name: grafana
+    container_name: gnome-grafana
     profiles: [ metrics ]
     restart: unless-stopped
     env_file: ./apps/gnome-back/.env
     ports:
-      - '3001:3000'
+      - '127.0.0.1:3001:3000'
     volumes:
       - ./grafana/provisioning:/etc/grafana/provisioning
       - ./grafana/dashboards:/var/lib/grafana/dashboards
       - ./grafana/grafana.ini:/etc/grafana/grafana.ini
     depends_on:
-     - prometheus
+     - gnome-prometheus
      - gnome-db
 
-  prometheus:
+  gnome-prometheus:
     image: prom/prometheus:latest
-    container_name: prometheus
+    container_name: gnome-prometheus
     restart: unless-stopped
     profiles: [ metrics ]
+    ports:
+      - '127.0.0.1:9090:9090'
     volumes:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
-    ports:
-      - '9090:9090'
     networks:
       - gnome-backend-network
 
@@ -75,5 +77,6 @@ networks:
 
 volumes:
   gnome-db-data:
-  minio_data:
+    driver: local
+  gnome-minio-data:
     driver: local
