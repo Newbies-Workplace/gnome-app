@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
-import { User, UserResource } from "@prisma/client";
 import { UserResponse } from "@repo/shared/responses";
+import { User, UserResource } from "@/generated/prisma/client";
 
 @Injectable()
 export class UsersConverter {

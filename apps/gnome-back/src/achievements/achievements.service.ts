@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
-import { Achievement } from "@prisma/client";
 import { PrismaService } from "@/db/prisma.service";
+import { Achievement } from "@/generated/prisma/client";
 
 const GNOME_ACHIEVEMENT_MAP: Record<number, string> = {
   1: "gnomeCollect-1",

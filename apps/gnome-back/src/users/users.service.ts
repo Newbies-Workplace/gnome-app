@@ -1,9 +1,13 @@
 import { ConflictException, Injectable } from "@nestjs/common";
-import { Team as PrismaTeam, User, UserResource } from "@prisma/client";
 import { Team } from "@repo/shared/requests";
 import { customAlphabet } from "nanoid";
 import { GoogleUser } from "@/auth/types/google-user";
 import { PrismaService } from "@/db/prisma.service";
+import {
+  Team as PrismaTeam,
+  User,
+  UserResource,
+} from "@/generated/prisma/client";
 
 const PAGE_LIMIT = 50;
 

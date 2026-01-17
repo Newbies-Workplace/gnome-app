@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
-import { User } from "@prisma/client";
 import { FriendDetailsResponse, FriendResponse } from "@repo/shared/responses";
 import { PrismaService } from "@/db/prisma.service";
+import { User } from "@/generated/prisma/client";
 
 @Injectable()
 export class FriendsConverter {
