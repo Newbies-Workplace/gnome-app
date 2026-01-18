@@ -58,6 +58,8 @@ services:
     depends_on:
      - gnome-prometheus
      - gnome-db
+    networks:
+      - gnome-backend-network
 
   gnome-prometheus:
     image: prom/prometheus:latest
