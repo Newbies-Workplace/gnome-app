@@ -1,12 +1,20 @@
 {
+  "cli": {
+    "appVersionSource": "remote"
+  },
   "build": {
     "development": {
+      "extends": "production",
       "developmentClient": true,
       "distribution": "internal"
     },
     "preview": {
+      "extends": "production",
       "distribution": "internal"
     },
-    "production": {}
+    "production": {
+      "autoIncrement": true,
+      "node": "24.13.0"
+    }
   }
 }

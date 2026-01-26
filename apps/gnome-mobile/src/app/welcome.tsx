@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
   Alert,
+  Clipboard,
   Image,
   Linking,
   Pressable,
@@ -41,7 +42,18 @@ export default function SignInScreen() {
       }
     } catch (error) {
       console.error(error);
-      Alert.alert(t("common.genericError"));
+      Alert.alert(t("common.genericError"), JSON.stringify(error), [
+        {
+          text: "OK",
+          onPress: () => {
+            // copied to clipboard
+            // @ts-expect-error
+            Clipboard.setString(
+              JSON.stringify(error) + "res: " + JSON.stringify(error?.response),
+            );
+          },
+        },
+      ]);
     }
   };
 
@@ -93,7 +105,9 @@ export default function SignInScreen() {
           {t("welcome.appDescription")}
         </Text>
         <Pressable
-          onPress={() => Linking.openURL("http://localhost:5173/privacy")}
+          onPress={() =>
+            Linking.openURL(`${process.env.EXPO_PUBLIC_FRONT_URL}privacy`)
+          }
         >
           <Text className="text-primary font-bold text-center underline mt-1">
             {t("welcome.privacyPolicy")}
