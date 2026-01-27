@@ -6,7 +6,6 @@ import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
   Alert,
-  Clipboard,
   Image,
   Linking,
   Pressable,
@@ -42,18 +41,7 @@ export default function SignInScreen() {
       }
     } catch (error) {
       console.error(error);
-      Alert.alert(t("common.genericError"), JSON.stringify(error), [
-        {
-          text: "OK",
-          onPress: () => {
-            // copied to clipboard
-            // @ts-expect-error
-            Clipboard.setString(
-              JSON.stringify(error) + "res: " + JSON.stringify(error?.response),
-            );
-          },
-        },
-      ]);
+      Alert.alert(t("common.genericError"), JSON.stringify(error));
     }
   };
 

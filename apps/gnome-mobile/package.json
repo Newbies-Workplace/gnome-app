@@ -11,7 +11,8 @@
     "lint": "npx @biomejs/biome check --write ./src",
     "lint:ci": "npx @biomejs/biome ci ./src",
     "prebuild": "expo prebuild --clean",
-    "apk:prod": "eas build --profile production --platform android",
+    "apk:preview": "eas build --profile preview --platform android --local",
+    "apk:prod": "eas build --profile production --platform android --local",
     "i18n:sync": "npx i18next-cli extract --sync-primary",
     "i18n:lint": "npx i18next-cli lint"
   },
