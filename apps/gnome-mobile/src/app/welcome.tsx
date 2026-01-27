@@ -41,7 +41,7 @@ export default function SignInScreen() {
       }
     } catch (error) {
       console.error(error);
-      Alert.alert(t("common.genericError"));
+      Alert.alert(t("common.genericError"), JSON.stringify(error));
     }
   };
 
@@ -93,7 +93,9 @@ export default function SignInScreen() {
           {t("welcome.appDescription")}
         </Text>
         <Pressable
-          onPress={() => Linking.openURL("http://localhost:5173/privacy")}
+          onPress={() =>
+            Linking.openURL(`${process.env.EXPO_PUBLIC_FRONT_URL}privacy`)
+          }
         >
           <Text className="text-primary font-bold text-center underline mt-1">
             {t("welcome.privacyPolicy")}

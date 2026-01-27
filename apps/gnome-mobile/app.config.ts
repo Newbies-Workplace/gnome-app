@@ -3,7 +3,7 @@ import { ConfigContext, ExpoConfig } from "expo/config";
 export default ({ config }: ConfigContext): ExpoConfig => ({
   ...config,
   name: "Krasnal GO",
-  slug: "Krasnal GO",
+  slug: "gnome-mobile",
   owner: "rstnewbies",
   version: "1.0.0",
   orientation: "portrait",
