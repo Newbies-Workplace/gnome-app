@@ -52,6 +52,13 @@ export class AuthController {
       maxAge: 30 * 24 * 60 * 60 * 1000,
     });
 
+    // todo remove
+    res.cookie("test_cookie", "test_value", {
+      httpOnly: false,
+      secure: false,
+      maxAge: 30 * 24 * 60 * 60 * 1000,
+    });
+
     return res.redirect(`${FRONTEND_URL}/login/callback`);
   }
 
