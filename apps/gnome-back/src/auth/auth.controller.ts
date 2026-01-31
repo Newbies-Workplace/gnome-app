@@ -1,4 +1,5 @@
 import { Body, Controller, Get, Post, Res, UseGuards } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
 import { ApiBearerAuth } from "@nestjs/swagger";
 import { RefreshTokenRequest } from "@repo/shared/requests";
 import {
@@ -19,6 +20,7 @@ import { UsersService } from "@/users/users.service";
 @Controller("auth")
 export class AuthController {
   constructor(
+    private readonly configService: ConfigService,
     private readonly authService: AuthService,
     private readonly usersService: UsersService,
     private readonly usersConverter: UsersConverter,
@@ -34,32 +36,28 @@ export class AuthController {
     @User() user: GoogleUserResponse,
     @Res() res: Response,
   ) {
-    const FRONTEND_URL = process.env.FRONTEND_URL;
     const jwtUser = await this.authService.googleAuth(user);
     const { access_token, refresh_token } =
       await this.authService.generateTokens(jwtUser);
 
     res.cookie("access_token", access_token, {
+      domain: this.configService.get("COOKIE_DOMAIN"),
       httpOnly: false,
       secure: true,
       sameSite: "none",
       maxAge: 60 * 60 * 1000,
     });
     res.cookie("refresh_token", refresh_token, {
+      domain: this.configService.get("COOKIE_DOMAIN"),
       httpOnly: false,
       secure: true,
       sameSite: "none",
       maxAge: 30 * 24 * 60 * 60 * 1000,
     });
 
-    // todo remove
-    res.cookie("test_cookie", "test_value", {
-      httpOnly: false,
-      secure: false,
-      maxAge: 30 * 24 * 60 * 60 * 1000,
-    });
-
-    return res.redirect(`${FRONTEND_URL}/login/callback`);
+    return res.redirect(
+      `${this.configService.get("FRONTEND_URL")}/login/callback`,
+    );
   }
 
   @Post("refresh")
