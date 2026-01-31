@@ -17,6 +17,7 @@ import LoginCallback from "@/pages/login-callback";
 import Privacy from "@/pages/privacy";
 import UserDetail from "@/pages/users/users-detail-panel";
 import UsersPanel from "@/pages/users/users-panel";
+import AccountDeleteTutorialPage from "./pages/account-delete-tutorial";
 import { useAuthStore } from "./store/useAuthStore";
 
 const router = createBrowserRouter([
@@ -40,6 +41,10 @@ const router = createBrowserRouter([
         element: <LoginCallback />,
       },
     ],
+  },
+  {
+    path: "account-delete-tutorial",
+    element: <AccountDeleteTutorialPage />,
   },
   {
     path: "admin",
