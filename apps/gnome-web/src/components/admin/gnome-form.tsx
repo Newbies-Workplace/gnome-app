@@ -37,7 +37,7 @@ export function GnomeForm({
       funFact: "",
       latitude: 0,
       longitude: 0,
-      pictureURL: [] as any,
+      pictureURL: undefined,
     },
   });
 

@@ -69,7 +69,7 @@ export class GnomesService {
     }
   }
 
-  async createGnome(data: CreateGnomeRequest, pictureUrl: string) {
+  async createGnome(data: CreateGnomeRequest, pictureUrl: string | null) {
     const districtId = await this.districtsService.findDistrictId([
       Number(data.longitude),
       Number(data.latitude),

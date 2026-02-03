@@ -45,7 +45,7 @@ model Gnome {
   creationDate DateTime
   description  String
   exists       Boolean            @default(true)
-  pictureUrl   String
+  pictureUrl   String?             
   interactions GnomeInteraction[]
   districtId   Int?
   district     District?          @relation(fields: [districtId], references: [id])

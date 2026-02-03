@@ -23,7 +23,6 @@ export default function GnomeAddPage() {
     formData.append("name", data.name);
     formData.append("description", data.description);
     formData.append("location", data.location);
-
     formData.append("funFact", data.funFact || "");
     formData.append("latitude", String(data.latitude || 0));
     formData.append("longitude", String(data.longitude || 0));
@@ -40,7 +39,7 @@ export default function GnomeAddPage() {
         `Dodano nowego krasnala "${created.name}"`,
         "success",
       );
-    } catch (err) {
+    } catch {
       toastNavigate("/admin", "Nie udało się dodać krasnala", "error");
     }
   };
