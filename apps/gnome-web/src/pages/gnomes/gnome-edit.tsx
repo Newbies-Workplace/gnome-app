@@ -12,9 +12,8 @@ type OutletContextType = {
 export default function GnomeEditPage() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { gnomes, updateGnome } = useGnomeStore();
+  const { gnomes, updateGnome, updateGnomePicture } = useGnomeStore();
   const { selectedPosition } = useOutletContext<OutletContextType>();
-
   const gnome = gnomes.find((g) => g.id.toString() === id);
 
   if (!gnome) {
@@ -35,13 +34,14 @@ export default function GnomeEditPage() {
     };
 
     await updateGnome(gnome.id, updatedGnome);
+    await updateGnomePicture(gnome.id, data.pictureURL);
     toast.success(`Zapisano zmiany dla gnoma "${data.name}"`);
     navigate("/admin");
   };
 
   return (
     <GnomeForm
-      gnome={{ ...gnome, pictureUrl: gnome.pictureUrl }}
+      gnome={gnome}
       selectedPosition={selectedPosition}
       onSubmit={handleSubmit}
       onCancel={() => navigate("/admin")}

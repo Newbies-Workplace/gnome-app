@@ -15,6 +15,10 @@ interface GnomeState {
     id: string,
     payload: Partial<CreateGnomeRequest>,
   ) => Promise<GnomeResponse>;
+  updateGnomePicture: (
+    id: string,
+    payload: FileList | null | undefined,
+  ) => Promise<GnomeResponse>;
 }
 
 export const useGnomeStore = create<GnomeState>((set) => ({
@@ -87,6 +91,23 @@ export const useGnomeStore = create<GnomeState>((set) => ({
       return updated;
     } catch (error) {
       set({ loading: false, error: "Nie udało się zaktualizować gnoma" });
+      throw error;
+    }
+  },
+
+  updateGnomePicture: async (id, payload) => {
+    try {
+      const updated = await GnomesService.updateGnomePicture(id, payload);
+
+      set((state) => ({
+        gnomes: state.gnomes.map((g) => (g.id === id ? updated : g)),
+      }));
+      return updated;
+    } catch (error) {
+      set({
+        loading: false,
+        error: "Nie udało się zaktualizować zdjęcia gnoma",
+      });
       throw error;
     }
   },

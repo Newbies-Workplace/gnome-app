@@ -153,8 +153,6 @@ export class GnomesController {
       fileUrl = await this.minioService.getFileUrl(filePath);
     }
 
-    console.log("jestem na backendzie");
-
     const createdGnome = await this.gnomeService.createGnome(
       createGnomeDto,
       fileUrl,
@@ -237,15 +235,16 @@ export class GnomesController {
     @Param("id") id: string,
     @UploadedFile(
       new ParseFilePipe({
-        fileIsRequired: true,
+        fileIsRequired: false,
         validators: [
           new MaxFileSizeValidator({ maxSize: 10_000_000 }),
           new FileTypeValidator({ fileType: /^image/ }),
         ],
       }),
     )
-    file: Express.Multer.File,
+    file: Express.Multer.File | undefined,
   ): Promise<GnomeResponse> {
+    console.log("wywoluje to tu");
     const updatedGnome = await this.gnomeService.updateGnomePicture(id, file);
 
     return this.converter.toGnomeResponse(updatedGnome);

@@ -46,7 +46,6 @@ export function GnomeForm({
   });
 
   const pictureFile = watch("pictureURL");
-
   useEffect(() => {
     if (pictureFile && pictureFile.length > 0) {
       const file = pictureFile[0];
@@ -167,7 +166,7 @@ export function GnomeForm({
           type="submit"
           className="flex-1 bg-primary-color text-white rounded-2xl"
         >
-          Dodaj
+          {gnome ? "Zapisz" : "Dodaj"}
         </Button>
         <Button
           type="button"
