@@ -43,8 +43,6 @@ export default function GnomeEditPage() {
 
   return (
     <GnomeForm
-      // @ts-expect-error
-      defaultValues={gnome}
       districts={districts}
       selectedPosition={selectedPosition}
       onSubmit={handleSubmit}
