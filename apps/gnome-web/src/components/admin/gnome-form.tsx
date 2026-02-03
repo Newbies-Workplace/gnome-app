@@ -1,4 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import type { GnomeResponse } from "@repo/shared/responses";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import MarkerIcon from "@/assets/icons/mark-icon.svg";
@@ -9,18 +10,21 @@ import type { GnomeFormData } from "@/schemas/gnomeSchema.ts";
 import { gnomeSchema } from "@/schemas/gnomeSchema.ts";
 
 type GnomeFormProps = {
-  districts: { id: number; name: string }[];
+  gnome?: GnomeResponse;
   selectedPosition?: { lat: number; lng: number } | null;
   onSubmit: (data: GnomeFormData) => void;
   onCancel: () => void;
 };
 
 export function GnomeForm({
+  gnome,
   selectedPosition,
   onSubmit,
   onCancel,
 }: GnomeFormProps) {
-  const [preview, setPreview] = useState<string | null>(null);
+  const [preview, setPreview] = useState<string | null>(
+    gnome?.pictureUrl ?? null,
+  );
 
   const {
     register,
@@ -30,7 +34,7 @@ export function GnomeForm({
     formState: { errors },
   } = useForm<GnomeFormData>({
     resolver: zodResolver(gnomeSchema),
-    defaultValues: {
+    defaultValues: gnome ?? {
       name: "",
       description: "",
       location: "",

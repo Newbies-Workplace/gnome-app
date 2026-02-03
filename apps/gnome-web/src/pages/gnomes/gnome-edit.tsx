@@ -3,7 +3,6 @@ import { useNavigate, useOutletContext, useParams } from "react-router-dom";
 import { toast } from "sonner";
 import { GnomeForm } from "@/components/admin/gnome-form";
 import type { GnomeFormData } from "@/schemas/gnomeSchema";
-import { useDistrictStore } from "@/store/useDistrictStore";
 import { useGnomeStore } from "@/store/useGnomeStore";
 
 type OutletContextType = {
@@ -14,7 +13,6 @@ export default function GnomeEditPage() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { gnomes, updateGnome } = useGnomeStore();
-  const { districts } = useDistrictStore();
   const { selectedPosition } = useOutletContext<OutletContextType>();
 
   const gnome = gnomes.find((g) => g.id.toString() === id);
@@ -43,7 +41,7 @@ export default function GnomeEditPage() {
 
   return (
     <GnomeForm
-      districts={districts}
+      gnome={{ ...gnome, pictureUrl: gnome.pictureUrl }}
       selectedPosition={selectedPosition}
       onSubmit={handleSubmit}
       onCancel={() => navigate("/admin")}
