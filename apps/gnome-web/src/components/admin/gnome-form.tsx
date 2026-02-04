@@ -90,6 +90,20 @@ export function GnomeForm({
             {...register("pictureURL")}
             className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
           />
+          {preview && (
+            <Button
+              variant="default"
+              size="icon"
+              className="absolute top-0.5 right-0.5 cursor-pointer rounded-full bg-black/50"
+              onClick={(e) => {
+                e.preventDefault();
+                setPreview(null);
+                setValue("pictureURL", null);
+              }}
+            >
+              X
+            </Button>
+          )}
         </label>
 
         <div className="flex flex-col justify-between h-40 flex-1">
@@ -139,6 +153,7 @@ export function GnomeForm({
           )}
         </div>
       </div>
+
       <label className="flex flex-col gap-2">
         Opis:
         <textarea

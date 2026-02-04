@@ -196,12 +196,12 @@ export class GnomesService {
       const fullUrl = gnome.pictureUrl.split("/images/")[1];
 
       await this.minioService.deleteFile(bucketName, fullUrl);
-      await this.prismaService.gnome.update({
+      return await this.prismaService.gnome.update({
         where: {
           id: gnomeId,
         },
         data: {
-          pictureUrl: "",
+          pictureUrl: null,
         },
       });
     }

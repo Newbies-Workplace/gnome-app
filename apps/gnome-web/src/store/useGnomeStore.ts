@@ -16,6 +16,7 @@ interface GnomeState {
     payload: Partial<CreateGnomeRequest>,
   ) => Promise<GnomeResponse>;
   updateGnomePicture: (id: string, payload: FormData) => Promise<GnomeResponse>;
+  deleteGnomePicuture: (id: string) => Promise<GnomeResponse>;
 }
 
 export const useGnomeStore = create<GnomeState>((set) => ({
@@ -108,6 +109,22 @@ export const useGnomeStore = create<GnomeState>((set) => ({
         loading: false,
         error: "Nie udało się zaktualizować zdjęcia gnoma",
       });
+      throw error;
+    }
+  },
+  deleteGnomePicuture: async (id) => {
+    try {
+      set({ loading: true, error: null });
+      const updated = await GnomesService.deleteGnomePicture(id);
+
+      set((state) => ({
+        gnomes: state.gnomes.map((g) => (g.id === id ? updated : g)),
+        loading: false,
+      }));
+
+      return updated;
+    } catch (error) {
+      set({ loading: false, error: "Nie udało się usunąć zdjęcia gnoma" });
       throw error;
     }
   },

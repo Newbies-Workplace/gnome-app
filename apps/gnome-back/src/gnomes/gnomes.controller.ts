@@ -235,14 +235,14 @@ export class GnomesController {
     @Param("id") id: string,
     @UploadedFile(
       new ParseFilePipe({
-        fileIsRequired: false,
+        fileIsRequired: true,
         validators: [
           new MaxFileSizeValidator({ maxSize: 10_000_000 }),
           new FileTypeValidator({ fileType: /^image/ }),
         ],
       }),
     )
-    file: Express.Multer.File | undefined,
+    file: Express.Multer.File,
   ): Promise<GnomeResponse> {
     const updatedGnome = await this.gnomeService.updateGnomePicture(id, file);
 

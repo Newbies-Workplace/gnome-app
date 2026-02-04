@@ -32,10 +32,16 @@ const updateGnomePicture = async (
   return response.data;
 };
 
+const deleteGnomePicture = async (id: string): Promise<GnomeResponse> => {
+  const response = await axiosInstance.delete(`/gnomes/${id}/photo`);
+  return response.data;
+};
+
 export const GnomesService = {
   getGnomes,
   addGnome,
   updateGnome,
   removeGnome,
   updateGnomePicture,
+  deleteGnomePicture,
 };

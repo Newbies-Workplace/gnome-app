@@ -12,7 +12,8 @@ type OutletContextType = {
 export default function GnomeEditPage() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { gnomes, updateGnome, updateGnomePicture } = useGnomeStore();
+  const { gnomes, updateGnome, updateGnomePicture, deleteGnomePicuture } =
+    useGnomeStore();
   const { selectedPosition } = useOutletContext<OutletContextType>();
   const gnome = gnomes.find((g) => g.id.toString() === id);
 
@@ -39,6 +40,10 @@ export default function GnomeEditPage() {
       formData.append("file", data.pictureURL[0]);
 
       await updateGnomePicture(gnome.id, formData);
+    }
+
+    if (!data.pictureURL) {
+      await deleteGnomePicuture(gnome.id);
     }
 
     await updateGnome(gnome.id, updatedGnome);
