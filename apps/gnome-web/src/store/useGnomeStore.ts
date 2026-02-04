@@ -15,10 +15,7 @@ interface GnomeState {
     id: string,
     payload: Partial<CreateGnomeRequest>,
   ) => Promise<GnomeResponse>;
-  updateGnomePicture: (
-    id: string,
-    payload: File | null | undefined,
-  ) => Promise<GnomeResponse>;
+  updateGnomePicture: (id: string, payload: FormData) => Promise<GnomeResponse>;
 }
 
 export const useGnomeStore = create<GnomeState>((set) => ({
@@ -97,14 +94,14 @@ export const useGnomeStore = create<GnomeState>((set) => ({
 
   updateGnomePicture: async (id, payload) => {
     try {
-      const updated = await GnomesService.updateGnomePicture({
-        id,
-        payload,
-      });
+      set({ loading: true, error: null });
+      const updated = await GnomesService.updateGnomePicture(id, payload);
 
       set((state) => ({
         gnomes: state.gnomes.map((g) => (g.id === id ? updated : g)),
+        loading: false,
       }));
+
       return updated;
     } catch (error) {
       set({

@@ -34,7 +34,11 @@ export default function GnomeEditPage() {
     };
 
     if (data.pictureURL && data.pictureURL.length > 0) {
-      await updateGnomePicture(gnome.id, data.pictureURL[0]);
+      const formData = new FormData();
+
+      formData.append("file", data.pictureURL[0]);
+
+      await updateGnomePicture(gnome.id, formData);
     }
 
     await updateGnome(gnome.id, updatedGnome);
