@@ -33,8 +33,12 @@ export default function GnomeEditPage() {
       creationDate: new Date(gnome.creationDate),
     };
 
+    if (data.pictureURL && data.pictureURL.length > 0) {
+      await updateGnomePicture(gnome.id, data.pictureURL[0]);
+    }
+
     await updateGnome(gnome.id, updatedGnome);
-    await updateGnomePicture(gnome.id, data.pictureURL);
+
     toast.success(`Zapisano zmiany dla gnoma "${data.name}"`);
     navigate("/admin");
   };

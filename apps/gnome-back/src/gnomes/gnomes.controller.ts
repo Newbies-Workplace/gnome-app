@@ -244,7 +244,6 @@ export class GnomesController {
     )
     file: Express.Multer.File | undefined,
   ): Promise<GnomeResponse> {
-    console.log("wywoluje to tu");
     const updatedGnome = await this.gnomeService.updateGnomePicture(id, file);
 
     return this.converter.toGnomeResponse(updatedGnome);

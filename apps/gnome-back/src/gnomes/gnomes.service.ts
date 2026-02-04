@@ -166,14 +166,16 @@ export class GnomesService {
     const type = typeSplit[typeSplit.length - 1];
     const fileName = `${gnome.name}.${type}`;
     const catalogueName = "defaultGnomePictures";
+    const filePath = `${catalogueName}/${fileName}`;
     await this.minioService.uploadFile(file, fileName, catalogueName);
+    const fileUrl = await this.minioService.getFileUrl(filePath);
 
     return this.prismaService.gnome.update({
       where: {
         id: gnomeId,
       },
       data: {
-        pictureUrl: fileName,
+        pictureUrl: fileUrl,
       },
     });
   }

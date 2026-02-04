@@ -24,11 +24,18 @@ const removeGnome = async (id: string): Promise<void> => {
   await axiosInstance.delete(`/gnomes/${id}`);
 };
 
-const updateGnomePicture = async (
-  id: string,
-  payload: FileList | null | undefined,
-): Promise<GnomeResponse> => {
-  const response = await axiosInstance.patch(`/gnomes/${id}/photo`, payload);
+const updateGnomePicture = async ({
+  id,
+  payload,
+}: {
+  id: string;
+  payload: File | null | undefined;
+}): Promise<GnomeResponse> => {
+  const formData = new FormData();
+  if (payload) {
+    formData.append("file", payload);
+  }
+  const response = await axiosInstance.patch(`/gnomes/${id}/photo`, formData);
   return response.data;
 };
 
