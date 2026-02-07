@@ -1,65 +1,41 @@
+import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { useNavigation } from "@react-navigation/native";
 import { useRouter } from "expo-router";
-import { useEffect } from "react";
-import { Alert, Share, Text, TouchableOpacity, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { use, useEffect, useRef } from "react";
+import { useTranslation } from "react-i18next";
+import { Alert, Text, TouchableOpacity, View } from "react-native";
 import AchievementsIcon from "@/assets/icons/achievements.svg";
 import BackIcon from "@/assets/icons/arrow-left.svg";
 import FriendsIcon from "@/assets/icons/friends.svg";
 import LastSeenIcon from "@/assets/icons/last-seen.svg";
 import LogoutIcon from "@/assets/icons/log-out.svg";
-import QuestsIcon from "@/assets/icons/quests.svg";
 import SettingsIcon from "@/assets/icons/settings.svg";
-import ShareIcon from "@/assets/icons/share-right.svg";
+import { Achievement } from "@/components/Achievement";
+import { BottomSheetWrapper } from "@/components/BottomSheetWrapper";
+import { ConfirmDialog } from "@/components/ConfirmDialog";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { GnomeCard } from "@/components/ui/GnomeCard";
 import {
   ProfileButton,
   ProfileButtonLogout,
 } from "@/components/ui/ProfileButton";
+import { useAchievementsStore } from "@/store/useAchievementsStore";
 import { useAuthStore } from "@/store/useAuthStore";
 
 export default function ProfileScreen() {
+  const { t } = useTranslation();
   const { logout, user } = useAuthStore();
   const navigation = useNavigation();
   const router = useRouter();
+  const { userAchievements } = useAchievementsStore();
+  const logoutDialogRef = useRef<BottomSheetModal>(null);
+  const latestEarnedAchievements = userAchievements.slice(0, 3);
 
-  const handleLogout = () => {
-    Alert.alert("Wylogowanie", "Czy na pewno chcesz się wylogować?", [
-      { text: "Anuluj", style: "cancel" },
-      {
-        text: "Wyloguj",
-        onPress: () => {
-          logout();
-          router.replace("/welcome");
-        },
-      },
-    ]);
-  };
-
-  const handleShare = async () => {
-    try {
-      if (user?.name) {
-        await Share.share({
-          message: `Sprawdź profil użytkownika ${user.name}!`,
-        });
-      }
-    } catch (_ignored) {
-      Alert.alert("Błąd", "Nie udało się udostępnić");
-    }
-  };
-
-  // header z powrotem i udostepnianiem
   useEffect(() => {
     navigation.setOptions({
       headerLeft: () => (
         <TouchableOpacity className="p-5" onPress={() => router.back()}>
           <BackIcon className="w-7 h-7 text-tekst" />
-        </TouchableOpacity>
-      ),
-      headerRight: () => (
-        <TouchableOpacity className="p-5" onPress={handleShare}>
-          <ShareIcon className="w-7 h-7 text-tekst" />
         </TouchableOpacity>
       ),
       headerTitle: "",
@@ -69,94 +45,111 @@ export default function ProfileScreen() {
       headerShadowVisible: false,
       headerShown: true,
     });
-  }, [navigation, router, handleShare]);
+  }, [navigation, router]);
 
   if (!user) {
     return (
       <View className="flex-1 items-center justify-center">
-        <Text className="text-lg text-tekst">Brak danych użytkownika</Text>
+        <Text className="text-lg text-tekst">{t("common.loading")}</Text>
       </View>
     );
   }
 
   return (
-    <SafeAreaView className="p-6 flex-1 bg-primary-foreground items-center">
-      {/* Profil */}
+    <View className="p-4 flex-1 bg-primary-foreground items-center">
       <View className="flex flex-row items-center gap-5 mb-5 rounded-lg bg-background-foreground w-full justify-center">
         <Avatar alt="Your avatar" className="w-20 h-20">
           <AvatarImage source={{ uri: user.pictureUrl }} />
           <AvatarFallback>
-            <Text className="text-lg">You</Text>
+            <Text className="text-lg">{t("common.you")}</Text>
           </AvatarFallback>
         </Avatar>
         <View>
           <Text className="text-xl font-bold text-tekst">{user.name}</Text>
-          {/* <Button className="mt-2 px-4 py-2 rounded-full bg-background">
-            <Text className="text-tekst">Edytuj profil</Text>
-          </Button> */}
         </View>
       </View>
 
-      {/* Menu */}
       <View className="w-full mt-4">
         <ProfileButton
-          text="Znajomi"
+          text={t("friends.title")}
           image={<FriendsIcon className="text-tekst" />}
-          onClick={() => router.navigate("/friends")}
+          onClick={() => router.push("/friends")}
         />
-        <ProfileButton
-          text="Osiągnięcia"
-          image={<AchievementsIcon className="text-tekst" />}
-          onClick={() => router.push("/achievements")}
-        />
-        <ProfileButton
-          text="Zadania"
-          image={<QuestsIcon className="text-tekst" />}
-          onClick={() => router.push("/quests")}
-        />
-        {/* Ostatnio odkryte */}
+
+        <View>
+          <ProfileButton
+            text={t("achievements.title")}
+            image={<AchievementsIcon className="text-tekst" />}
+            onClick={() => router.push("/achievements")}
+          />
+          {latestEarnedAchievements.length === 3 && (
+            <View className="w-full flex-row justify-between">
+              {latestEarnedAchievements.map(({ achievement }) => (
+                <Achievement key={achievement.id} title={achievement.name} />
+              ))}
+            </View>
+          )}
+        </View>
         <View className="mb-4">
           <ProfileButton
-            text="Ostatnio odkryte"
+            text={t("profile.lastGnomes")}
             image={<LastSeenIcon className="text-tekst" />}
-            onClick={() => router.replace("/(app)/(tabs)/collection")}
+            onClick={() => router.push("/(app)/(tabs)/collection")}
           />
-          {/* Trzy zdjęcia z polami tekstowymi */}
-          <View>
-            <View className="justify-center flex-row">
-              <GnomeCard
-                image={require("@/assets/images/placeholder.png")}
-                text="?"
-                onClick={() => router.replace("/collection")}
-              />
-              <GnomeCard
-                image={require("@/assets/images/placeholder.png")}
-                text="?"
-                onClick={() => router.replace("/collection")}
-              />
-              <GnomeCard
-                image={require("@/assets/images/placeholder.png")}
-                text="?"
-                onClick={() => router.replace("/collection")}
-              />
-            </View>
+          <View className="justify-center flex-row">
+            <GnomeCard
+              gnomeId={"1"}
+              text="?"
+              onClick={() => router.push("/collection")}
+            />
+            <GnomeCard
+              gnomeId={"2"}
+              text="?"
+              onClick={() => router.push("/collection")}
+            />
+            <GnomeCard
+              gnomeId={"2"}
+              text="?"
+              onClick={() => router.push("/collection")}
+            />
           </View>
         </View>
 
-        {/* Ustawienia */}
         <ProfileButton
-          text="Ustawienia"
+          text={t("settings.title")}
           image={<SettingsIcon className="text-tekst" />}
           onClick={() => router.push("/settings")}
         />
 
-        {/* Wylogowanie */}
         <ProfileButtonLogout
-          text="Wyloguj"
+          text={t("profile.logout.title")}
           image={<LogoutIcon className={"text-primary"} />}
-          onClick={handleLogout}
+          onClick={() => {
+            logoutDialogRef.current?.present();
+          }}
         />
+
+        <BottomSheetWrapper ref={logoutDialogRef}>
+          <ConfirmDialog
+            title={t("profile.logout.confirmationTitle")}
+            confirmContent={
+              <View className="flex-row gap-2 items-center">
+                <Text className="text-tekst font-bold">
+                  {t("profile.logout.title")}
+                </Text>
+                <LogoutIcon className="text-tekst" />
+              </View>
+            }
+            onConfirm={() => {
+              logout();
+              router.replace("/welcome");
+            }}
+            onDecline={() => {
+              logoutDialogRef.current?.dismiss();
+            }}
+          />
+        </BottomSheetWrapper>
       </View>
-    </SafeAreaView>
+    </View>
   );
 }

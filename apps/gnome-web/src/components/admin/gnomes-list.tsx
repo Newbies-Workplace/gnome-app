@@ -1,5 +1,5 @@
 import { Link, useOutletContext } from "react-router-dom";
-import PlaceHolder from "@/assets/images/placeholder.png";
+import PlaceHolder from "@/assets/images/gnomeplaceholder.svg";
 import { Item } from "@/components/ui/item.tsx";
 import { useDistrictStore } from "@/store/useDistrictStore.ts";
 import { useGnomeStore } from "@/store/useGnomeStore.ts";
@@ -13,21 +13,22 @@ type GnomesListProps = {
 };
 
 const GnomesList = ({ search = "" }: GnomesListProps) => {
-  const { gnomes, loading, error } = useGnomeStore();
+  const { gnomes, loading } = useGnomeStore();
   const { districts } = useDistrictStore();
   const { onGnomeMarkerClick } = useOutletContext<OutletContextType>();
 
   if (loading) return <p>Ładowanie...</p>;
-  if (error) return <p className="text-red-500">{error}</p>;
-  if (!gnomes || gnomes.length === 0)
+
+  if (!gnomes || gnomes.length === 0) {
     return (
       <div className="text-white text-lg text-center">
         Brak krasnali do wyświetlenia
       </div>
     );
+  }
 
   const filtered = gnomes.filter((gnome) =>
-    gnome.name.toLowerCase().includes(search.toLowerCase()),
+    gnome.name?.toLowerCase().includes(search.toLowerCase()),
   );
 
   if (filtered.length === 0) {
@@ -50,14 +51,13 @@ const GnomesList = ({ search = "" }: GnomesListProps) => {
             onClick={() => onGnomeMarkerClick(gnome.id)}
           >
             <Item className="hover:bg-white/10" size={"sm"}>
-              <div className="flex items-center">
+              <div className="flex items-center gap-4">
                 <img
                   src={gnome.pictureUrl || PlaceHolder}
                   alt={gnome.name}
-                  onError={(e) => (e.currentTarget.src = PlaceHolder)}
-                  className="w-16 h-16 object-cover rounded"
+                  className="w-16 h-16 object-cover rounded-sm"
                 />
-                <div className="flex flex-col ml-4">
+                <div className="flex flex-col">
                   <div className="text-white font-bold text-lg">
                     {gnome.name}
                   </div>

@@ -1,0 +1,8 @@
+{
+  "name": "gnome-app",
+  "compatibility_date": "2026-01-16",
+  "assets": {
+    "directory": "./dist/",
+    "not_found_handling": "single-page-application"
+  }
+}

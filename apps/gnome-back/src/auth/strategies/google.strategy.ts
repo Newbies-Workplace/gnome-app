@@ -1,8 +1,8 @@
 import { Injectable } from "@nestjs/common";
 import { PassportStrategy } from "@nestjs/passport";
-import { User, UserRole } from "@prisma/client";
 import { Strategy, VerifyCallback } from "passport-google-oauth20";
 import { PrismaService } from "@/db/prisma.service";
+import { UserRole } from "@/generated/prisma/client";
 
 @Injectable()
 export class GoogleStrategy extends PassportStrategy(Strategy, "google") {
@@ -20,7 +20,7 @@ export class GoogleStrategy extends PassportStrategy(Strategy, "google") {
     _refreshToken: string,
     profile: any,
     done: VerifyCallback,
-  ): Promise<User> {
+  ): Promise<void> {
     const { id, name, emails, photos } = profile;
 
     const user = await this.prismaService.user.findFirst({

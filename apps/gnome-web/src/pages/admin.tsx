@@ -3,7 +3,6 @@ import {
   GoogleMap,
   Marker,
   Polygon,
-  Polyline,
   useJsApiLoader,
 } from "@react-google-maps/api";
 import { useCallback, useEffect, useState } from "react";
@@ -25,6 +24,9 @@ import { points } from "@/lib/wroclaw-coords";
 import { useBuildStore } from "@/store/useBuildStore.ts";
 import { useDistrictStore } from "@/store/useDistrictStore.ts";
 import { useGnomeStore } from "@/store/useGnomeStore";
+
+const defaultCenter = { lat: 51.105, lng: 17.038 };
+const defaultZoom = 12;
 
 export default function AdminPage() {
   const { isLoaded, loadError } = useJsApiLoader({
@@ -52,14 +54,13 @@ export default function AdminPage() {
   const navigate = useNavigate();
   const { gnomes, fetchGnomes } = useGnomeStore();
   const { fetchDistricts } = useDistrictStore();
-  const { buildings, fetchBuildings, fetchUsers } = useBuildStore();
+  const { buildings, fetchBuildings } = useBuildStore();
 
   useEffect(() => {
     fetchGnomes();
     fetchDistricts();
-    fetchUsers();
     fetchBuildings();
-  }, [fetchGnomes]);
+  }, []);
 
   const onGnomeMarkerClick = (gnomeId: string) => {
     const gnome = gnomes.find((g) => g.id === gnomeId);
@@ -86,6 +87,18 @@ export default function AdminPage() {
   const onMapLoad = useCallback((map: google.maps.Map) => {
     setMapRef(map);
   }, []);
+
+  useEffect(() => {
+    if (!mapRef) return;
+    if (
+      location.pathname === "/admin" ||
+      location.pathname === "/admin/buildings"
+    ) {
+      mapRef.panTo(defaultCenter);
+      mapRef.setZoom(defaultZoom);
+      setSelectedPosition(null);
+    }
+  }, [location.pathname, mapRef]);
 
   const mapOptions = {
     fullscreenControl: false,
@@ -161,14 +174,59 @@ export default function AdminPage() {
 
   return (
     <div
-      className="h-screen w-screen p-2 gap-2 bg-cover bg-center bg-no-repeat flex flex-col min-w-[375px]"
+      className="h-screen w-screen p-2 gap-2 bg-cover bg-center bg-no-repeat flex flex-col md:flex-row"
       style={{ backgroundImage: `url(${backgroundImage})` }}
     >
-      <div className="flex flex-col md:flex-row gap-2 items-center">
+      <div className="flex flex-col w-full gap-2">
         <div className="w-full md:flex-1 flex items-stretch">
           <AdminToolbar />
         </div>
+        <div className="relative w-full rounded-2xl overflow-hidden min-h-[300px] md:h-full">
+          {isLoaded && (
+            <GoogleMap
+              mapContainerStyle={{ width: "100%", height: "100%" }}
+              center={defaultCenter}
+              zoom={defaultZoom}
+              options={mapOptions}
+              onLoad={onMapLoad}
+              onClick={(e) => {
+                if (location.pathname === "/admin/gnomes/add") {
+                  const lat = e.latLng?.lat();
+                  const lng = e.latLng?.lng();
+                  if (typeof lat === "number" && typeof lng === "number") {
+                    setSelectedPosition({ lat, lng });
+                  }
+                }
+              }}
+            >
+              {selectedPosition && (
+                <Marker
+                  position={selectedPosition}
+                  icon={{
+                    url: MarkerIcon,
+                    scaledSize: new window.google.maps.Size(40, 40),
+                  }}
+                />
+              )}
+              <Polygon
+                paths={points}
+                options={{
+                  strokeColor: "#8a5416ff",
+                  strokeOpacity: 1,
+                  strokeWeight: 3,
+                  fillOpacity: 0,
+                  clickable: false,
+                }}
+              />
+            </GoogleMap>
+          )}
+          <div className="absolute bottom-4 left-4 z-10">
+            <MapOptions filters={filters} setFilters={setFilters} />
+          </div>
+        </div>
+      </div>
 
+      <div className="flex flex-col gap-2">
         <div className="w-full md:w-[420px] min-w-[300px] bg-primary-gray rounded-2xl h-16 flex items-center">
           <Tabs value={currentTab} className="w-full">
             <TabsList className="grid grid-cols-4 gap-2 p-2 w-full bg-primary-gray rounded-4xl h-16 items-center">
@@ -195,51 +253,8 @@ export default function AdminPage() {
             </TabsList>
           </Tabs>
         </div>
-      </div>
 
-      <div className="flex flex-col md:flex-row gap-2 flex-1 overflow-hidden">
-        <div className="relative w-full md:flex-1 rounded-2xl overflow-hidden min-h-[300px]">
-          {isLoaded && (
-            <GoogleMap
-              mapContainerStyle={{ width: "100%", height: "100%" }}
-              center={{ lat: 51.105, lng: 17.038 }}
-              zoom={12}
-              options={mapOptions}
-              onLoad={onMapLoad}
-              onClick={(e) => {
-                const lat = e.latLng?.lat();
-                const lng = e.latLng?.lng();
-                if (lat && lng && currentTab === "gnomes") {
-                  setSelectedPosition({ lat, lng });
-                }
-              }}
-            >
-              {selectedPosition && (
-                <Marker
-                  position={selectedPosition}
-                  icon={{
-                    url: MarkerIcon,
-                    scaledSize: new window.google.maps.Size(40, 40),
-                  }}
-                />
-              )}
-              <Polygon
-                paths={points}
-                options={{
-                  strokeColor: "#8a5416ff",
-                  strokeOpacity: 1,
-                  strokeWeight: 3,
-                  fillOpacity: 0,
-                }}
-              />
-            </GoogleMap>
-          )}
-          <div className="absolute bottom-4 left-4 z-10">
-            <MapOptions filters={filters} setFilters={setFilters} />
-          </div>
-        </div>
-
-        <div className="w-full md:w-[420px] min-w-[300px] bg-primary-gray flex flex-col p-2 rounded-2xl overflow-auto">
+        <div className="w-full h-full md:w-[420px] min-w-[300px] bg-primary-gray flex flex-col p-2 rounded-2xl overflow-auto">
           <Outlet
             context={{
               selectedPosition,

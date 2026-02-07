@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import ClockIcon from "@/assets/icons/clock-icon.svg";
 import GoBack from "@/assets/icons/goBack-icon.svg";
 import GreenTeam from "@/assets/icons/green-team.svg";
@@ -16,12 +16,13 @@ import {
 import { useUserStore } from "@/store/useUserStore";
 
 export default function BuildingDetailsPage() {
+  const { id } = useParams();
   const navigate = useNavigate();
-  const { users, loading, error, fetchUsers } = useUserStore();
+  const { users, fetchUsers } = useUserStore();
 
   useEffect(() => {
     fetchUsers();
-  }, []);
+  }, [id]);
 
   return (
     <div className="overflow-hidden flex flex-col px-4 gap-4 h-full">

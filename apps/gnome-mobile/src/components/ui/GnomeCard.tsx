@@ -1,8 +1,8 @@
 import React from "react";
-import { Image, Text, TouchableOpacity, View } from "react-native";
+import { Text, TouchableOpacity, View } from "react-native";
 import CameraIcon from "@/assets/icons/camera.svg";
 import NoCameraIcon from "@/assets/icons/no-camera.svg";
-import { useGnomeImage } from "@/lib/useGnomeImage";
+import { GnomeImage } from "@/components/GnomeImage";
 
 interface GnomeCardProps {
   gnomeId: string;
@@ -17,7 +17,6 @@ export const GnomeCard: React.FC<GnomeCardProps> = ({
   onClick,
   interaction,
 }) => {
-  // Determine which icon to show
   const getIcon = () => {
     if (interaction?.found && interaction?.userPicture)
       return <CameraIcon width={20} height={20} />;
@@ -26,15 +25,13 @@ export const GnomeCard: React.FC<GnomeCardProps> = ({
     return null;
   };
 
-  const gnomeImage = useGnomeImage(gnomeId);
-
   return (
     <TouchableOpacity
       onPress={onClick}
       className="flex-1 flex-col items-center h-48 p-2"
     >
       <View className={"items-center w-full"}>
-        <Image source={gnomeImage} className={"w-full h-40 rounded-xl"} />
+        <GnomeImage gnomeId={gnomeId} className={"w-full h-40 rounded-xl"} />
 
         <View className="absolute top-1 left-1">{getIcon()}</View>
       </View>

@@ -8,12 +8,7 @@ export const gnomeSchema = z.object({
     .string()
     .max(200, "Ciekawostka nie może przekraczać 200 znaków")
     .optional(),
-  pictureURL: z
-    .any()
-    .refine(
-      (file) => file instanceof FileList && file.length > 0,
-      "Dodaj zdjęcie",
-    ),
+  pictureURL: z.instanceof(FileList).nullable().optional(),
   latitude: z.number().optional(),
   longitude: z.number().optional(),
 });

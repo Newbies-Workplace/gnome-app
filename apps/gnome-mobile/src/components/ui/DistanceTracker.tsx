@@ -1,38 +1,30 @@
+import { Portal } from "@rn-primitives/portal";
 import React from "react";
-import { Image, Text, useWindowDimensions, View } from "react-native";
+import { useTranslation } from "react-i18next";
+import { Text, View } from "react-native";
+import Krasnal from "@/assets/images/krasnal.svg";
 
-type DistanceTrackerProps = {
-  distance: number;
-};
-
-const DistanceTracker: React.FC<DistanceTrackerProps> = ({ distance }) => {
-  const { width } = useWindowDimensions();
-  const viewWidth = width * 0.6;
+const DistanceTracker = ({ distance }: { distance: number }) => {
+  const { t } = useTranslation();
 
   return (
-    <View className="flex-1">
-      <View
-        className="absolute bg-background border rounded-xl p-4 bottom-2 left-2/3"
-        style={{
-          width: viewWidth,
-          transform: [{ translateX: -viewWidth / 2 }],
-        }}
-      >
-        <Text className="text-lg text-tekst font-bold">
-          Najbliższy krasnal znajduje{" "}
-        </Text>
-        <Text className="text-lg text-tekst font-bold">
-          się{" "}
-          <Text className="text-lg text-primary font-bold">{distance}m</Text> od
-          ciebie
+    <View>
+      <View className="absolute bg-background border rounded-xl p-4 bottom-11 left-1/4 w-60">
+        <Text className="text-tekst font-bold">
+          {t("home.closestGnomeMeters", { distance })}
         </Text>
       </View>
-      <View className="absolute left-6 bottom-[-35px]">
-        <Image
-          source={require("@/assets/images/krasnal.png")}
-          className="w-24 h-24" // 100x100 image
+      <Portal name="floating-gnome">
+        <Krasnal
+          style={{
+            position: "absolute",
+            bottom: 60,
+            left: 40,
+            width: 96,
+            height: 96,
+          }}
         />
-      </View>
+      </Portal>
     </View>
   );
 };

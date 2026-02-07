@@ -1,25 +1,13 @@
 import { Injectable } from "@nestjs/common";
 import { DistrictsResponse } from "@repo/shared/responses";
 import { booleanPointInPolygon, point, polygon } from "@turf/turf";
-import { PrismaService } from "../db/prisma.service";
+import { PrismaService } from "@/db/prisma.service";
 
 @Injectable()
 export class DistrictsService {
   constructor(private readonly prismaService: PrismaService) {}
 
-  async findDistrict(id: number): Promise<DistrictsResponse> {
-    const district = await this.prismaService.district.findFirst({
-      where: {
-        id: id,
-      },
-      select: {
-        id: true,
-        name: true,
-      },
-    });
-    return district;
-  }
-  async findManyDistricts(): Promise<DistrictsResponse[]> {
+  async getAllDistricts(): Promise<DistrictsResponse[]> {
     const districts = await this.prismaService.district.findMany({
       select: {
         id: true,
@@ -29,7 +17,7 @@ export class DistrictsService {
     return districts;
   }
 
-  async findPointInPolygon(pointXY: [number, number]) {
+  async findDistrictId(pointXY: [number, number]): Promise<number | null> {
     const [x, y] = pointXY;
     const turfPoint = point(pointXY);
     const polygons = await this.prismaService.district.findMany({

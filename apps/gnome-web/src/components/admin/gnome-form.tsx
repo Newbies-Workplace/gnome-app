@@ -1,26 +1,30 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import type { GnomeResponse } from "@repo/shared/responses";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import MarkerIcon from "@/assets/icons/mark-icon.svg";
-import placeholderImage from "@/assets/images/placeholder.png";
+import placeholderImage from "@/assets/images/gnomeplaceholder.svg";
 import { Button } from "@/components/ui/button.tsx";
 import { Input } from "@/components/ui/input.tsx";
 import type { GnomeFormData } from "@/schemas/gnomeSchema.ts";
 import { gnomeSchema } from "@/schemas/gnomeSchema.ts";
 
 type GnomeFormProps = {
-  districts: { id: number; name: string }[];
+  gnome?: GnomeResponse;
   selectedPosition?: { lat: number; lng: number } | null;
   onSubmit: (data: GnomeFormData) => void;
   onCancel: () => void;
 };
 
 export function GnomeForm({
+  gnome,
   selectedPosition,
   onSubmit,
   onCancel,
 }: GnomeFormProps) {
-  const [preview, setPreview] = useState<string | null>(null);
+  const [preview, setPreview] = useState<string | null>(
+    gnome?.pictureUrl ?? null,
+  );
 
   const {
     register,
@@ -30,19 +34,18 @@ export function GnomeForm({
     formState: { errors },
   } = useForm<GnomeFormData>({
     resolver: zodResolver(gnomeSchema),
-    defaultValues: {
+    defaultValues: gnome ?? {
       name: "",
       description: "",
       location: "",
       funFact: "",
       latitude: 0,
       longitude: 0,
-      pictureURL: [] as any,
+      pictureURL: undefined,
     },
   });
 
   const pictureFile = watch("pictureURL");
-
   useEffect(() => {
     if (pictureFile && pictureFile.length > 0) {
       const file = pictureFile[0];
@@ -62,9 +65,9 @@ export function GnomeForm({
   return (
     <form
       onSubmit={handleSubmit((data) => onSubmit(data))}
-      className="text-white p-6 flex flex-col gap-4 font-Afacad max-w-2xl mx-auto"
+      className="text-white p-4 flex flex-col w-full gap-4 font-Afacad max-w-2xl mx-auto"
     >
-      <div className="flex flex-row items-stretch gap-4">
+      <div className="flex flex-row gap-4">
         <label className="relative w-32 h-40 rounded overflow-hidden bg-[#282B28] cursor-pointer">
           {preview ? (
             <img
@@ -87,13 +90,21 @@ export function GnomeForm({
             {...register("pictureURL")}
             className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
           />
+          {preview && (
+            <Button
+              variant="default"
+              size="icon"
+              className="absolute top-0.5 right-0.5 cursor-pointer rounded-full bg-black/50"
+              onClick={(e) => {
+                e.preventDefault();
+                setPreview(null);
+                setValue("pictureURL", null);
+              }}
+            >
+              X
+            </Button>
+          )}
         </label>
-
-        {errors.pictureURL?.message && (
-          <div className="text-red-400">
-            {String(errors.pictureURL.message)}
-          </div>
-        )}
 
         <div className="flex flex-col justify-between h-40 flex-1">
           <Input
@@ -103,7 +114,7 @@ export function GnomeForm({
             className="p-2 rounded bg-[#282B28] text-white"
           />
           {errors.name && (
-            <div className="text-red-400">{errors.name.message}</div>
+            <div className="text-red-400 text-xs">{errors.name.message}</div>
           )}
           <Input
             type="text"
@@ -112,7 +123,9 @@ export function GnomeForm({
             className="p-2 rounded bg-[#282B28] text-white"
           />
           {errors.location && (
-            <div className="text-red-400">{errors.location.message}</div>
+            <div className="text-red-400 text-xs">
+              {errors.location.message}
+            </div>
           )}
 
           <Input
@@ -140,6 +153,7 @@ export function GnomeForm({
           )}
         </div>
       </div>
+
       <label className="flex flex-col gap-2">
         Opis:
         <textarea
@@ -167,7 +181,7 @@ export function GnomeForm({
           type="submit"
           className="flex-1 bg-primary-color text-white rounded-2xl"
         >
-          Dodaj
+          {gnome ? "Zapisz" : "Dodaj"}
         </Button>
         <Button
           type="button"

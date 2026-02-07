@@ -1,74 +1,140 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { GnomeResponse, InteractionResponse } from "@repo/shared/responses";
+import * as Network from "expo-network";
 import { create } from "zustand";
+import { createJSONStorage, persist } from "zustand/middleware";
 import { GnomesService } from "@/lib/api/Gnomes.service";
-import { useAuthStore } from "@/store/useAuthStore";
+
+interface PendingGnomeInteraction {
+  gnomeId: string;
+  interactionDate: Date;
+}
 
 interface GnomeState {
   gnomes: GnomeResponse[];
+
+  pendingInteractions: PendingGnomeInteraction[];
   interactions: InteractionResponse[];
+  interactionCount: Record<string, number>;
+
   loading: boolean;
   error: string | null;
 
   fetchGnomes: () => Promise<void>;
-  addGnome: (gnome: GnomeResponse) => void;
-  removeGnome: (id: string) => void;
+
   fetchMyInteractions: () => Promise<void>;
+  fetchInteractionCount: (gnomeId: string) => Promise<void>;
+
   addInteraction: (gnomeId: string) => Promise<void>;
+  syncPendingInteractions: () => Promise<void>;
 }
 
-export const useGnomeStore = create<GnomeState>((set) => ({
-  gnomes: [],
-  interactions: [],
-  loading: false,
-  error: null,
+export const useGnomeStore = create<GnomeState>()(
+  persist(
+    (set, get) => ({
+      gnomes: [],
 
-  fetchGnomes: async () => {
-    set({ loading: true, error: null });
-    try {
-      const data = await GnomesService.getGnomes();
-      if (!Array.isArray(data)) throw new Error("Invalid gnome data format");
+      pendingInteractions: [],
+      interactions: [],
+      interactionCount: {},
 
-      set({ gnomes: data, loading: false });
-    } catch (error) {
-      console.error("Fetch error:", error);
-      set({ error: "Failed to load gnomes", loading: false });
-    }
-  },
+      loading: false,
+      error: null,
 
-  addGnome: (gnome) => set((state) => ({ gnomes: [...state.gnomes, gnome] })),
+      fetchGnomes: async () => {
+        set({ loading: true, error: null });
+        try {
+          const data = await GnomesService.getGnomes();
 
-  removeGnome: (id) =>
-    set((state) => ({
-      gnomes: state.gnomes.filter((gnome) => gnome.id !== id),
-    })),
+          set({ gnomes: data, loading: false });
+        } catch {
+          set({ error: "Failed to load gnomes", loading: false });
+        }
+      },
+      fetchInteractionCount: async (gnomeId: string) => {
+        try {
+          const count = await GnomesService.getInteractionCount(gnomeId);
 
-  fetchMyInteractions: async () => {
-    set({ loading: true, error: null });
-    try {
-      const { user } = useAuthStore.getState();
-      if (!user) {
-        throw new Error("User is not authenticated");
-      }
-      const data = await GnomesService.getMyGnomesInteractions();
-      console.log("Fetched interactions:", data); // Log data
-      if (!Array.isArray(data))
-        throw new Error("Invalid interaction data format");
+          set((state) => ({
+            interactionCount: { ...state.interactionCount, [gnomeId]: count },
+          }));
+        } catch (error) {
+          console.error("Failed to load interactions count", error);
+        }
+      },
 
-      set({ interactions: data, loading: false });
-    } catch (error) {
-      console.error("Fetch error:", error);
-      set({ error: "Failed to load interactions", loading: false });
-    }
-  },
+      fetchMyInteractions: async () => {
+        set({ loading: true, error: null });
+        try {
+          const data = await GnomesService.getMyGnomesUniqueInteractions();
 
-  addInteraction: async (gnomeId: string) => {
-    const interactionDate = new Date();
-    const interaction = await GnomesService.addInteraction({
-      gnomeId,
-      interactionDate,
-    });
-    set((state) => ({
-      interactions: [...state.interactions, interaction],
-    }));
-  },
-}));
+          set({ interactions: data, loading: false });
+        } catch {
+          set({ error: "Failed to load interactions", loading: false });
+        }
+      },
+
+      addInteraction: async (gnomeId: string) => {
+        const interactionDate = new Date();
+
+        const pendingInteraction: PendingGnomeInteraction = {
+          gnomeId,
+          interactionDate,
+        };
+
+        set((state) => ({
+          pendingInteractions: [
+            ...state.pendingInteractions.filter(
+              (interaction) => interaction.gnomeId !== gnomeId,
+            ),
+            pendingInteraction,
+          ],
+        }));
+
+        await get().syncPendingInteractions();
+      },
+      syncPendingInteractions: async () => {
+        const net = await Network.getNetworkStateAsync();
+        if (!net.isConnected || net.isInternetReachable === false) return;
+
+        const { pendingInteractions } = get();
+        if (pendingInteractions.length === 0) return;
+
+        const stillPending: PendingGnomeInteraction[] = [];
+
+        for (const interaction of pendingInteractions) {
+          try {
+            const createdInteraction = await GnomesService.addInteraction(
+              interaction.gnomeId,
+              interaction,
+            );
+
+            set((state) => ({
+              interactions: [
+                ...state.interactions.filter(
+                  (i) => i.gnomeId !== createdInteraction.gnomeId,
+                ),
+                createdInteraction,
+              ],
+            }));
+          } catch (error) {
+            console.error("Error while adding interaction", error);
+            stillPending.push(interaction);
+          }
+        }
+
+        set({ pendingInteractions: stillPending });
+      },
+    }),
+    {
+      name: "gnome-storage",
+      storage: createJSONStorage(() => AsyncStorage),
+      partialize: (state) => ({
+        gnomes: state.gnomes,
+        pendingInteractions: state.pendingInteractions,
+        interactions: state.interactions,
+        interactionCount: state.interactionCount,
+      }),
+    },
+  ),
+);

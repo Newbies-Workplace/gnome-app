@@ -1,8 +1,7 @@
 import { useNavigate, useOutletContext } from "react-router-dom";
-import { toast } from "sonner";
 import { GnomeForm } from "@/components/admin/gnome-form";
+import { useToastNavigate } from "@/hooks/useToastNavigate";
 import type { GnomeFormData } from "@/schemas/gnomeSchema";
-import { useDistrictStore } from "@/store/useDistrictStore";
 import { useGnomeStore } from "@/store/useGnomeStore";
 
 type OutletContextType = {
@@ -12,9 +11,9 @@ type OutletContextType = {
 export default function GnomeAddPage() {
   const { selectedPosition } = useOutletContext<OutletContextType>();
   const navigate = useNavigate();
+  const toastNavigate = useToastNavigate();
 
   const addGnome = useGnomeStore((s) => s.addGnome);
-  const districts = useDistrictStore((s) => s.districts);
 
   const handleSubmit = async (data: GnomeFormData) => {
     const formData = new FormData();
@@ -22,8 +21,7 @@ export default function GnomeAddPage() {
     formData.append("name", data.name);
     formData.append("description", data.description);
     formData.append("location", data.location);
-
-    formData.append("funFact", data.funFact || "");
+    formData.append("funFact", data.funFact ?? "");
     formData.append("latitude", String(data.latitude || 0));
     formData.append("longitude", String(data.longitude || 0));
     formData.append("creationDate", new Date().toISOString());
@@ -32,15 +30,20 @@ export default function GnomeAddPage() {
       formData.append("file", data.pictureURL[0]);
     }
 
-    const created = await addGnome(formData);
-
-    toast.success(`Dodano nowego krasnala "${created.name}"`);
-    navigate("/admin");
+    try {
+      const created = await addGnome(formData);
+      toastNavigate(
+        "/admin",
+        `Dodano nowego krasnala "${created.name}"`,
+        "success",
+      );
+    } catch {
+      toastNavigate("/admin", "Nie udało się dodać krasnala", "error");
+    }
   };
 
   return (
     <GnomeForm
-      districts={districts}
       selectedPosition={selectedPosition}
       onSubmit={handleSubmit}
       onCancel={() => navigate("/admin")}

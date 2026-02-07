@@ -3,15 +3,14 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
   NotFoundException,
   Param,
   Patch,
   Post,
   UseGuards,
 } from "@nestjs/common";
-import { Cron, CronExpression } from "@nestjs/schedule";
 import { ApiBearerAuth, ApiBody } from "@nestjs/swagger";
-import { UserRole } from "@prisma/client";
 import {
   AttackBuildingRequest,
   CreateBuildingRequest,
@@ -21,19 +20,23 @@ import {
   BuildingInteractionResponse,
   BuildingResponse,
 } from "@repo/shared/responses";
-import { max } from "class-validator";
 import { User } from "@/auth/decorators/jwt-user.decorator";
+import { Role } from "@/auth/decorators/role.decorator";
 import { JwtGuard } from "@/auth/guards/jwt.guard";
+import { RoleGuard } from "@/auth/guards/role.guard";
 import { JwtUser } from "@/auth/types/jwt-user";
-import { PrismaService } from "@/db/prisma.service";
-import { Role } from "@/role/role.decorator";
-import { RoleGuard } from "@/roleguard/role.guard";
-import { BuildingsService } from "./buildings.service";
+import { MAX_ATTACK_DAMAGE } from "@/buildings/buildings.constants";
+import { BuildingsConverter } from "@/buildings/buildings.converter";
+import { BuildingsService } from "@/buildings/buildings.service";
 
 @ApiBearerAuth()
-@Controller("buildings")
+@Controller("/v1/buildings")
 export class BuildingsController {
-  constructor(private readonly buildingsService: BuildingsService) {}
+  constructor(
+    private readonly buildingsService: BuildingsService,
+    private readonly converter: BuildingsConverter,
+  ) {}
+
   @ApiBody({
     schema: {
       example: {
@@ -50,8 +53,13 @@ export class BuildingsController {
   async createBuilding(
     @User() user: JwtUser,
     @Body() body: CreateBuildingRequest,
-  ) {
-    return await this.buildingsService.CreateBuilding(body, user);
+  ): Promise<BuildingResponse> {
+    const createdBuilding = await this.buildingsService.createBuilding(
+      body,
+      user,
+    );
+
+    return await this.converter.toBuildingResponse(createdBuilding);
   }
 
   @Get(":id")
@@ -61,16 +69,24 @@ export class BuildingsController {
   ): Promise<BuildingResponse> {
     const buildingData =
       await this.buildingsService.getBuildingById(buildingId);
+
     if (!buildingData) {
-      throw new NotFoundException("Nie znaleziono budynku");
+      throw new NotFoundException(`Building with id ${buildingId} not found`);
     }
-    return buildingData;
+
+    return await this.converter.toBuildingResponse(buildingData);
   }
 
   @Get("")
   @UseGuards(JwtGuard)
   async getAllBuildings(): Promise<BuildingResponse[]> {
-    return await this.buildingsService.getAllBuildings();
+    const buildings = await this.buildingsService.getAllBuildings();
+
+    return Promise.all(
+      buildings.map(async (building) =>
+        this.converter.toBuildingResponse(building),
+      ),
+    );
   }
 
   @Get(":id/interactions")
@@ -82,23 +98,19 @@ export class BuildingsController {
     const building = await this.buildingsService.getBuildingById(buildingId);
 
     if (!building) {
-      throw new NotFoundException("Building not found");
+      throw new NotFoundException(`Building with id ${buildingId} not found`);
     }
-    return await this.buildingsService.getBuildingInteractions(buildingId);
-  }
 
-  @Delete(":id")
-  @UseGuards(JwtGuard)
-  async deleteBuilding(
-    @Param("id") buildingId: string,
-    @User() user,
-  ): Promise<BuildingResponse> {
-    return await this.buildingsService.deleteBuilding(
-      buildingId,
-      user.id,
-      user.role,
+    const interactions =
+      await this.buildingsService.getBuildingInteractions(buildingId);
+
+    return Promise.all(
+      interactions.map(async (interaction) =>
+        this.converter.toBuildingInteractionResponse(interaction),
+      ),
     );
   }
+
   @ApiBody({
     schema: {
       example: {
@@ -108,22 +120,26 @@ export class BuildingsController {
   })
   @Patch(":id/empower")
   @UseGuards(JwtGuard)
-  async updateBuilding(
+  async empowerBuilding(
     @Param("id") buildingId: string,
     @User() user: JwtUser,
     @Body() body: EmpowerBuildingRequest,
-  ) {
+  ): Promise<BuildingResponse> {
     await this.buildingsService.createInteraction(
       user.id,
       buildingId,
       "EMPOWER",
       body.gnomeCount,
     );
-    return await this.buildingsService.empowerBuilding(
+
+    const updatedBuilding = await this.buildingsService.empowerBuilding(
       buildingId,
       body.gnomeCount,
     );
+
+    return this.converter.toBuildingResponse(updatedBuilding);
   }
+
   @ApiBody({
     schema: {
       example: {
@@ -137,19 +153,31 @@ export class BuildingsController {
     @Param("id") buildingId: string,
     @User() user: JwtUser,
     @Body() body: AttackBuildingRequest,
-  ) {
-    const maxDamage = 40;
-    const damage = Math.min(body.clicks * 0.2, maxDamage);
+  ): Promise<BuildingResponse> {
+    const damage = Math.min(body.clicks * 0.2, MAX_ATTACK_DAMAGE);
+
     await this.buildingsService.createInteraction(
       user.id,
       buildingId,
       "ATTACK",
       damage,
     );
-    return await this.buildingsService.attackBuilding(buildingId, damage);
+
+    const updatedBuilding = await this.buildingsService.attackBuilding(
+      buildingId,
+      damage,
+    );
+
+    return this.converter.toBuildingResponse(updatedBuilding);
   }
-  @Cron(CronExpression.EVERY_HOUR)
-  async decayBuildings() {
-    await this.buildingsService.decayBuildings();
+
+  @Delete(":id")
+  @HttpCode(204)
+  @UseGuards(JwtGuard)
+  async deleteBuilding(
+    @Param("id") buildingId: string,
+    @User() user: JwtUser,
+  ): Promise<void> {
+    await this.buildingsService.deleteBuilding(buildingId, user.id, user.role);
   }
 }

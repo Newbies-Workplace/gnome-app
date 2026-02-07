@@ -2,18 +2,20 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import { GnomeResponse } from "@repo/shared/responses";
 import dayjs from "dayjs";
 import { useRouter } from "expo-router";
-import { useEffect, useMemo, useState } from "react";
-import { Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
+import React, { useEffect, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import ArrowLeft from "@/assets/icons/arrow-left.svg";
 import DateIcon from "@/assets/icons/date.svg";
 import FoundIcon from "@/assets/icons/found.svg";
+import { GnomeImage } from "@/components/GnomeImage";
 import { GnomeCard } from "@/components/ui/GnomeCard";
 import { GnomesService } from "@/lib/api/Gnomes.service";
-import { useGnomeImage } from "@/lib/useGnomeImage";
 import { useGnomeStore } from "@/store/useGnomeStore";
 
 const GnomeDetail = () => {
+  const { t } = useTranslation();
   const route = useRoute();
   const gnomeId = route.params?.id;
 
@@ -22,7 +24,6 @@ const GnomeDetail = () => {
   const [nearestGnomes, setNearestGnomes] = useState<GnomeResponse[]>([]);
   const router = useRouter();
   const navigation = useNavigation();
-  const gnomeImage = useGnomeImage(gnomeId);
 
   const interaction = useMemo(
     () => interactions.find((i) => i.gnomeId === gnomeId),
@@ -65,7 +66,7 @@ const GnomeDetail = () => {
   if (!gnome) {
     return (
       <View className="flex-1 justify-center items-center bg-primary-foreground">
-        <Text className="text-tekst text-lg">Ładowanie...</Text>
+        <Text className="text-tekst text-lg">{t("common.loading")}</Text>
       </View>
     );
   }
@@ -76,11 +77,11 @@ const GnomeDetail = () => {
       edges={["bottom", "left", "right"]}
     >
       <ScrollView className={"px-4"}>
-        <View className="items-center mb-5 mt-5">
-          <Image
-            source={gnomeImage}
+        <View className="items-center mb-5 mt-5 w-full">
+          <GnomeImage
+            gnomeId={gnomeId}
             style={{ width: 379, height: 455 }}
-            className={"rounded-xl"}
+            className="rounded-xl"
           />
         </View>
 
@@ -95,17 +96,18 @@ const GnomeDetail = () => {
         <View className="flex-row items-center mb-2.5">
           <FoundIcon width={20} height={20} className="text-tekst" />
           <Text className="text-tekst ml-2.5">
-            Data znalezienia:{" "}
+            {t("gnomeDetails.foundDate")}{" "}
             {interaction
               ? dayjs(interaction.interactionDate).format("DD.MM.YYYY")
-              : "Krasnal jeszcze nie znaleziony"}
+              : t("gnomeDetails.notFoundYet")}
           </Text>
         </View>
 
         <View className="flex-row items-center mb-2.5">
           <DateIcon width={20} height={20} className="text-tekst" />
           <Text className="text-tekst ml-2.5">
-            Data postawienia: {dayjs(gnome.creationDate).format("DD.MM-YYYY")}
+            {t("gnomeDetails.creationDate")}{" "}
+            {dayjs(gnome.creationDate).format("DD.MM.YYYY")}
           </Text>
         </View>
         <View className="border-b border-primary my-2.5 w-4/5 self-center" />
@@ -113,7 +115,7 @@ const GnomeDetail = () => {
         <Text className="text-tekst mb-2.5">{gnome.description}</Text>
 
         <Text className="text-tekst font-bold text-xl font-afacad my-2">
-          Ciekawostka:
+          {t("gnomeDetails.funFact")}
         </Text>
         <Text className="text-tekst font-afacad my-2">{gnome.funFact}</Text>
 
@@ -123,7 +125,7 @@ const GnomeDetail = () => {
               key={gnome.id}
               gnomeId={gnome.id}
               text={gnome.name}
-              onClick={() => router.push(`/gnomes/${gnome.id}`)}
+              onClick={() => router.replace(`/gnomes/${gnome.id}`)}
             />
           ))}
         </View>

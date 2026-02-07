@@ -5,21 +5,22 @@ export interface UserResponse {
   pictureUrl: string;
   inviteCode: string;
   role: string;
+  resources: {
+    berries: number;
+    stones: number;
+    sticks: number;
+  };
 }
 
-export interface UserFriendResponse {
-  id: string;
-  name: string;
-  pictureUrl: string;
-  gnomeInteractions: InteractionResponse[];
-  achievements: UserAchievementResponse[];
+export interface UserUpdateInviteCodeResponse {
   inviteCode: string;
 }
 
-export interface UserPatchResponse {
+export interface FriendDetailsResponse {
   id: string;
   name: string;
   pictureUrl: string;
+  inviteCode: string;
 }
 
 export interface GoogleUserResponse {
@@ -42,22 +43,11 @@ export interface GnomeResponse {
   creationDate: Date;
   description: string;
   exists: boolean;
-  pictureUrl: string;
+  pictureUrl?: string;
   districtId?: number | null;
 }
 
-export interface GnomeIdResponse {
-  name: string;
-  id: string;
-  funFact: string;
-  latitude: number;
-  longitude: number;
-  location: string;
-  creationDate: Date;
-  description: string;
-  exists: boolean;
-  pictureUrl?: string;
-  districtId?: number | null;
+export interface GnomeDetailsResponse extends GnomeResponse {
   nearest: GnomeResponse[];
 }
 
@@ -67,11 +57,9 @@ export interface InteractionResponse {
   userId: string;
   interactionDate: Date;
 }
+
 export interface InteractionExtendedResponse extends InteractionResponse {
-  gnome: {
-    id: string;
-    name: string;
-  };
+  gnome: GnomeResponse;
   _metadata: {
     userResources: {
       berries: number;
@@ -84,15 +72,6 @@ export interface InteractionExtendedResponse extends InteractionResponse {
       sticks?: number;
     };
   };
-}
-export interface ReportResponse {
-  id: string;
-  gnomeName: string;
-  pictureUrl?: string;
-  latitude: number;
-  longitude: number;
-  location: string;
-  reportAuthor: string;
 }
 
 export interface FriendSearchResponse {
@@ -139,15 +118,19 @@ export interface BuildingResponse {
   createdAt: Date;
   ownerId: string;
 }
-export interface AchievementDataResponse {
+
+export interface AchievementResponse {
   id: string;
   name: string;
   description: string;
-  users: number;
 }
 
 export interface UserAchievementResponse {
-  achievementId: string;
+  achievement: {
+    id: string;
+    name: string;
+    description: string;
+  };
   earnedAt: Date;
 }
 
@@ -157,3 +140,12 @@ export interface BuildingInteractionResponse {
   interactionType: string;
   amount: number;
 }
+
+export interface RefreshTokenResponse {
+  accessToken: string;
+  refreshToken: string;
+}
+
+export type GoogleLoginResponse = {
+  user: UserResponse;
+} & RefreshTokenResponse;

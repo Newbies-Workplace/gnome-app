@@ -1,11 +1,12 @@
 generator client {
-  provider      = "prisma-client-js"
+  provider      = "prisma-client"
+  output        = "../src/generated/prisma"
+  moduleFormat  = "cjs"
   binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
 }
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
 }
 
 model User {
@@ -44,7 +45,7 @@ model Gnome {
   creationDate DateTime
   description  String
   exists       Boolean            @default(true)
-  pictureUrl   String
+  pictureUrl   String?             
   interactions GnomeInteraction[]
   districtId   Int?
   district     District?          @relation(fields: [districtId], references: [id])
@@ -65,16 +66,6 @@ model UserAchievement {
   achievement   Achievement @relation(fields: [achievementId], references: [id])
 
   @@unique([userId, achievementId])
-}
-
-model Report {
-  id           String @id @unique @default(cuid())
-  gnomeName    String
-  pictureUrl   String
-  latitude     Float
-  longitude    Float
-  location     String
-  reportAuthor String
 }
 
 model GnomeInteraction {

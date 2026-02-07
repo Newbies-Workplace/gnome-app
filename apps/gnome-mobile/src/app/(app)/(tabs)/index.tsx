@@ -1,9 +1,17 @@
+import { BottomSheetModal, BottomSheetView } from "@gorhom/bottom-sheet";
 import { Portal } from "@rn-primitives/portal";
 import { LinearGradient } from "expo-linear-gradient";
 import * as Location from "expo-location";
-import { router, useFocusEffect, useRouter } from "expo-router";
+import { useFocusEffect, usePathname, useRouter } from "expo-router";
 import { getDistance } from "geolib";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
+import { useTranslation } from "react-i18next";
 import {
   Alert,
   Linking,
@@ -11,34 +19,47 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
+import MapView, { Marker, PROVIDER_GOOGLE, Region } from "react-native-maps";
+import { LatLng } from "react-native-maps/lib/sharedTypes";
 import { SafeAreaView } from "react-native-safe-area-context";
 import FriendIcon from "@/assets/icons/add-friend.svg";
 import LocationOffIcon from "@/assets/icons/location-off.svg";
-import TeamIcon from "@/assets/icons/team.svg";
 import GnomePin from "@/assets/images/GnomePin.svg";
 import GnomePinCatch from "@/assets/images/GnomePinCatch.svg";
+import { BottomSheetWrapper } from "@/components/BottomSheetWrapper";
+import { GnomeDetailsBottomSheet } from "@/components/GnomeDetailsBottomSheet";
 import { MapStyle } from "@/components/map-styles";
 import ResourcesBottomSheet from "@/components/ResourcesInfoBottomSheet";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Compass from "@/components/ui/compass";
 import DistanceTracker from "@/components/ui/DistanceTracker";
 import DraggableGnome from "@/components/ui/DraggableGnome";
-import { GnomeDetailsBottomSheet } from "@/components/ui/GnomeDetailsBottomSheet";
 import ResourcesBar from "@/components/ui/ResourcesBar";
 import { Text } from "@/components/ui/text";
 import { getClosestGnome } from "@/lib/getClosestGnome";
+import { useAchievementsStore } from "@/store/useAchievementsStore";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useFriendsStore } from "@/store/useFriendsStore";
-import { useGnomeInteractionStore } from "@/store/useGnomeInteractionStore";
 import { useGnomeStore } from "@/store/useGnomeStore";
 import InteractionBottomSheet from "../interactionsheet";
 
 const MIN_TRACKER_DISTANCE = 50;
 const MIN_REACHED_DISTANCE = 15;
+const MIN_POSITION_UPDATE_INTERVAL = 5000;
+
+const INITIAL_COORDINATES = {
+  latitude: 51.109967,
+  longitude: 17.031843,
+};
+
+const DEFAULT_REGION: Region = {
+  ...INITIAL_COORDINATES,
+  latitudeDelta: 0.01,
+  longitudeDelta: 0.05,
+};
 
 interface HeaderControlsProps {
-  user: { pictureUrl: string }; // Adjust the type based on your user object structure
+  user: { pictureUrl: string };
   errorMsg: string | null;
   setErrorMsg: (msg: string | null) => void;
   openResourcesInfo: () => void;
@@ -50,6 +71,7 @@ const HeaderControls: React.FC<HeaderControlsProps> = ({
   setErrorMsg,
   openResourcesInfo,
 }) => {
+  const { t } = useTranslation();
   const router = useRouter();
   const requestLocationPermission = async () => {
     try {
@@ -58,15 +80,15 @@ const HeaderControls: React.FC<HeaderControlsProps> = ({
         setErrorMsg(null);
       } else if (status === "denied") {
         Alert.alert(
-          "Krasnal kartograf zgubił Cię na mapie!",
-          "Pomóż biednemu krasnalowi! Włącz lokalizację, zanim zacznie pytać smoki o drogę! ",
+          t("home.missingLocationAlert.title"),
+          t("home.missingLocationAlert.description"),
           [
             {
-              text: "Nie chce :(",
+              text: t("common.cancel"),
               style: "cancel",
             },
             {
-              text: "Już włączam!",
+              text: t("home.missingLocationAlert.enableLocation"),
               onPress: () => {
                 Linking.openSettings();
               },
@@ -87,7 +109,7 @@ const HeaderControls: React.FC<HeaderControlsProps> = ({
             <Avatar alt="Your avatar" className="w-10 h-10">
               <AvatarImage source={{ uri: user.pictureUrl }} />
               <AvatarFallback>
-                <Text className="text-md">You</Text>
+                <Text className="text-md">{t("common.you")}</Text>
               </AvatarFallback>
             </Avatar>
           </TouchableOpacity>
@@ -118,17 +140,6 @@ const HeaderControls: React.FC<HeaderControlsProps> = ({
               className={"text-tekst"}
             />
           </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => router.push("/teams")}
-            className="w-10 h-10 bg-background rounded-full flex justify-center items-center"
-          >
-            <TeamIcon
-              width={20}
-              height={20}
-              fill="#000"
-              className={"text-tekst"}
-            />
-          </TouchableOpacity>
         </View>
       </View>
     </View>
@@ -137,33 +148,40 @@ const HeaderControls: React.FC<HeaderControlsProps> = ({
 
 const MapScreen = () => {
   const { user } = useAuthStore();
-  const { gnomes, fetchGnomes, interactions, fetchMyInteractions } =
-    useGnomeStore();
+  const {
+    gnomes,
+    fetchGnomes,
+    interactions,
+    fetchMyInteractions,
+    addInteraction,
+  } = useGnomeStore();
   const { fetchUserFriends } = useFriendsStore();
+  const { fetchAchievements, fetchUserAchievements } = useAchievementsStore();
+
   const ref = useRef<MapView>(null);
+
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
-  const [userLocation, setUserLocation] = useState({
-    latitude: 51.109967,
-    longitude: 17.031843,
-  });
+
+  const [userLocation, setUserLocation] = useState<LatLng>(INITIAL_COORDINATES);
   const [distance, setDistance] = useState<number>();
+
   const [closestGnomeId, setClosestGnomeId] = useState<string>();
-  const [isResourceSheetVisible, setIsResourceSheetVisible] = useState(false);
-  const { addPendingInteraction, latestInteractions } =
-    useGnomeInteractionStore();
-  const [isInteractionSheetVisible, setIsInteractionSheetVisible] =
-    useState(false);
   const [selectedGnomeId, setSelectedGnomeId] = useState<string | null>(null);
+  const pathname = usePathname();
+  const selectedGnomeRef = useRef<BottomSheetModal>(null);
+  const interactionSheetRef = useRef<BottomSheetModal>(null);
+  const resourcesSheetRef = useRef<BottomSheetModal>(null);
 
-  const closestGnomeData = gnomes.find((g) => g.id === closestGnomeId);
-  const selectedGnome = gnomes.find((g) => g.id === selectedGnomeId);
-
-  const defaultRegion = {
-    latitude: 51.109967,
-    longitude: 17.031843,
-    latitudeDelta: 0.01,
-    longitudeDelta: 0.05,
-  };
+  const filteredGnomes = useMemo(
+    () =>
+      gnomes.filter((gnome) => {
+        return getDistance(userLocation, {
+          latitude: gnome.latitude,
+          longitude: gnome.longitude,
+        });
+      }),
+    [gnomes, userLocation],
+  );
 
   useFocusEffect(
     useCallback(() => {
@@ -172,8 +190,6 @@ const MapScreen = () => {
           "Map screen unfocused, resetting selected gnome and closing sheets",
         );
 
-        setIsResourceSheetVisible(false);
-        setIsInteractionSheetVisible(false);
         setSelectedGnomeId(null);
       };
     }, []),
@@ -183,6 +199,8 @@ const MapScreen = () => {
     fetchGnomes();
     fetchMyInteractions();
     fetchUserFriends();
+    fetchAchievements();
+    fetchUserAchievements();
   }, []);
 
   useEffect(() => {
@@ -199,7 +217,7 @@ const MapScreen = () => {
         subscription = await Location.watchPositionAsync(
           {
             accuracy: Location.Accuracy.High,
-            timeInterval: 1,
+            timeInterval: MIN_POSITION_UPDATE_INTERVAL,
             distanceInterval: 1,
           },
           (newLocation) => {
@@ -232,16 +250,6 @@ const MapScreen = () => {
     };
   }, []);
 
-  // filtrowanie
-  const filteredGnomes = gnomes.filter((gnome) => {
-    const distance = getDistance(userLocation, {
-      latitude: gnome.latitude,
-      longitude: gnome.longitude,
-    });
-
-    return distance;
-  });
-
   useEffect(() => {
     const distances = gnomes.map((gnome) => {
       const distance = getDistance(
@@ -255,7 +263,7 @@ const MapScreen = () => {
       return { gnome, distance };
     });
 
-    const closestGnome = getClosestGnome(distances, latestInteractions);
+    const closestGnome = getClosestGnome(distances, interactions);
 
     if (closestGnome) {
       setClosestGnomeId(closestGnome.gnome.id);
@@ -274,27 +282,11 @@ const MapScreen = () => {
     distance !== undefined &&
     distance <= MIN_REACHED_DISTANCE &&
     closestGnomeId !== undefined;
-
-  const selectedGnomeDistance = selectedGnome
-    ? getDistance(
-        { latitude: userLocation.latitude, longitude: userLocation.longitude },
-        {
-          latitude: selectedGnome.latitude,
-          longitude: selectedGnome.longitude,
-        },
-      )
-    : null;
-
-  const formattedDistance =
-    selectedGnomeDistance !== null
-      ? selectedGnomeDistance < 1000
-        ? `${selectedGnomeDistance} m`
-        : `${(selectedGnomeDistance / 1000).toFixed(2)} km`
-      : null;
+  const isCurrentScreenFocused = pathname === "/";
 
   return (
-    <SafeAreaView className="flex-1">
-      <View className="absolute top-10 left-1/2 -translate-x-1/2 px-10 gap-2 z-10">
+    <SafeAreaView className="flex-1 relative">
+      <SafeAreaView className="absolute top-4 left-4 right-4 gap-2 z-10">
         <Compass />
 
         {user && (
@@ -302,14 +294,13 @@ const MapScreen = () => {
             user={user}
             errorMsg={errorMsg}
             setErrorMsg={setErrorMsg}
-            openResourcesInfo={() => setIsResourceSheetVisible(true)}
+            openResourcesInfo={() => resourcesSheetRef.current?.present()}
           />
         )}
-      </View>
-
+      </SafeAreaView>
       <MapView
-        style={styles.map}
-        initialRegion={defaultRegion}
+        style={StyleSheet.absoluteFillObject}
+        initialRegion={DEFAULT_REGION}
         showsUserLocation={true}
         provider={PROVIDER_GOOGLE}
         zoomEnabled={true}
@@ -324,7 +315,7 @@ const MapScreen = () => {
         mapPadding={{
           top: 100,
           right: 5,
-          bottom: 160,
+          bottom: 100,
           left: 5,
         }}
         minZoomLevel={10}
@@ -335,6 +326,7 @@ const MapScreen = () => {
           <Marker
             onPress={() => {
               setSelectedGnomeId(gnome.id);
+              selectedGnomeRef.current?.present();
               gnome.location;
             }}
             key={gnome.id}
@@ -353,14 +345,15 @@ const MapScreen = () => {
           </Marker>
         ))}
       </MapView>
-
       <View className="absolute bottom-12 left-0 right-0 p-4 bg-transparent z-10">
-        {isGnomeTrackerVisible && <DistanceTracker distance={distance} />}
+        {isGnomeTrackerVisible && isCurrentScreenFocused && (
+          <DistanceTracker distance={distance} />
+        )}
         {isGnomeCatcherVisible && (
           <DraggableGnome
             onUnlock={() => {
-              addPendingInteraction(closestGnomeId);
-              setIsInteractionSheetVisible(true);
+              addInteraction(closestGnomeId);
+              interactionSheetRef.current?.present();
             }}
           />
         )}
@@ -372,54 +365,38 @@ const MapScreen = () => {
           colors={["transparent", "hsl(359 63.4% 56.1%)"]}
         />
       )}
-      <Portal name={"bottom-sheets"}>
-        {!!selectedGnome && (
+      <BottomSheetWrapper
+        ref={selectedGnomeRef}
+        onDismiss={() => setSelectedGnomeId(null)}
+      >
+        {selectedGnomeId && (
           <GnomeDetailsBottomSheet
-            selectedGnome={selectedGnome}
-            formattedDistance={formattedDistance}
-            onClick={() => {
-              setSelectedGnomeId(null);
-              router.push(`/gnomes/${selectedGnomeId}`);
-            }}
-            onClose={() => setSelectedGnomeId(null)}
+            gnomeId={selectedGnomeId}
+            userLocation={userLocation}
           />
         )}
+      </BottomSheetWrapper>
 
-        {isInteractionSheetVisible && !!closestGnomeId && (
+      <BottomSheetWrapper
+        ref={interactionSheetRef}
+        onDismiss={() => interactionSheetRef.current?.dismiss()}
+      >
+        {!!closestGnomeId && (
           <InteractionBottomSheet
-            onClose={() => setIsInteractionSheetVisible(false)}
-            name={closestGnomeData?.name}
-            pictureUrl={closestGnomeData?.pictureUrl}
+            onDismiss={() => interactionSheetRef.current?.dismiss()}
             gnomeId={closestGnomeId}
           />
         )}
+      </BottomSheetWrapper>
 
-        {isResourceSheetVisible && (
-          <ResourcesBottomSheet
-            onClose={() => setIsResourceSheetVisible(false)}
-          />
-        )}
-      </Portal>
+      <BottomSheetWrapper
+        ref={resourcesSheetRef}
+        onDismiss={() => resourcesSheetRef.current?.dismiss()}
+      >
+        <ResourcesBottomSheet />
+      </BottomSheetWrapper>
     </SafeAreaView>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "flex-end",
-  },
-  mapContainer: {
-    flex: 1,
-  },
-  map: {
-    ...StyleSheet.absoluteFillObject,
-  },
-  text: {
-    fontSize: 16,
-    textAlign: "center",
-    marginTop: 20,
-  },
-});
 
 export default MapScreen;

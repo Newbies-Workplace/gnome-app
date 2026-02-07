@@ -1,32 +1,33 @@
-import BottomSheet, { BottomSheetView } from "@gorhom/bottom-sheet";
+import { BottomSheetBackdrop, BottomSheetModal } from "@gorhom/bottom-sheet";
+import { BottomSheetDefaultBackdropProps } from "@gorhom/bottom-sheet/lib/typescript/components/bottomSheetBackdrop/types";
 import { useNavigation } from "@react-navigation/native";
-import { Portal } from "@rn-primitives/portal";
 import { useRouter } from "expo-router";
-import { setStatusBarStyle } from "expo-status-bar";
-import { colorScheme } from "nativewind";
-import { useEffect, useRef } from "react";
-import { Linking, TouchableOpacity, View } from "react-native";
+import { useCallback, useEffect, useRef } from "react";
+import { useTranslation } from "react-i18next";
+import { TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import ArrowLeft from "@/assets/icons/arrow-left.svg";
 import LanguageIcon from "@/assets/icons/language.svg";
 import ModeIcon from "@/assets/icons/mode.svg";
-import NotificationsIcon from "@/assets/icons/notifications.svg";
 import AccoutDeleteIcon from "@/assets/icons/security.svg";
+import { BottomSheetWrapper } from "@/components/BottomSheetWrapper";
 import DeleteAccountBottomSheet from "@/components/settings-components/AccountDeleteBottomSheet";
-import ThemeSelector from "@/components/settings-components/ThemeSelector";
+import { LanguageSelector } from "@/components/settings-components/LanguageSelector";
+import ThemeSelectorBottomSheet from "@/components/settings-components/ThemeSelectorBottomSheet";
 import { SettingsOption } from "@/components/ui/SettingsOption";
 import { Text } from "@/components/ui/text";
-import { useColorScheme } from "@/lib/useColorScheme";
+import { useTheme } from "@/contexts/ThemeContext";
 import { useAuthStore } from "@/store/useAuthStore";
 
 function SettingsScreen() {
   const navigation = useNavigation();
   const router = useRouter();
-  const deleteAccountBottomSheetRef = useRef<BottomSheet>(null);
-  const themeBottomSheetRef = useRef<BottomSheet>(null);
-  const languageBottomSheetRef = useRef<BottomSheet>(null);
-  const { setColorScheme } = useColorScheme();
+  const { t } = useTranslation();
+  const deleteAccountBottomSheetRef = useRef<BottomSheetModal>(null);
+  const themeBottomSheetRef = useRef<BottomSheetModal>(null);
+  const languageBottomSheetRef = useRef<BottomSheetModal>(null);
   const { deleteAccount } = useAuthStore();
+  const { theme } = useTheme();
 
   useEffect(() => {
     navigation.setOptions({
@@ -37,7 +38,7 @@ function SettingsScreen() {
       ),
       headerTitle: () => (
         <Text className="text-tekst text-2xl font-bold text-center tracking-wide">
-          USTAWIENIA
+          {t("settings.title")}
         </Text>
       ),
       headerTitleAlign: "center",
@@ -47,117 +48,70 @@ function SettingsScreen() {
       ),
       headerShown: true,
     });
-  }, [navigation, router]);
+  }, [navigation, router, t]);
 
   return (
     <SafeAreaView className="flex-1 bg-primary-foreground">
-      <Portal name={"bottom-sheets"}>
-        <BottomSheet
-          ref={themeBottomSheetRef}
-          index={-1}
-          enablePanDownToClose
-          backgroundClassName={"bg-background"}
-          handleIndicatorClassName={"bg-tekst w-24 mt-2 rounded-lg"}
-        >
-          <ThemeSelector
-            colorScheme={colorScheme}
-            setColorScheme={setColorScheme}
-            themeBottomSheetRef={themeBottomSheetRef}
-            setStatusBarStyle={setStatusBarStyle}
-          />
-        </BottomSheet>
-        <BottomSheet
-          ref={languageBottomSheetRef}
-          index={-1}
-          enablePanDownToClose
-          backgroundClassName={"bg-background"}
-          handleIndicatorClassName={"bg-tekst w-24 mt-2 rounded-lg"}
-        >
-          <BottomSheetView className="w-full px-6 py-6">
-            <View className="py-4 border-b border-tekst">
-              <Text
-                className="text-tekst text-xl font-bold"
-                onPress={() => {
-                  // TODO: set language to Polish
-                  languageBottomSheetRef.current?.close();
-                }}
-              >
-                Polski
-              </Text>
-            </View>
+      <View className="w-full px-4 mt-4">
+        <SettingsOption
+          text={t("settings.theme.title")}
+          image={ModeIcon}
+          onClick={() => {
+            languageBottomSheetRef.current?.dismiss();
+            themeBottomSheetRef.current?.present();
+            deleteAccountBottomSheetRef.current?.dismiss();
+          }}
+          extraText={t(`settings.theme.${theme}`)}
+          customClass="mb-4"
+        />
+        <SettingsOption
+          text={t("settings.language")}
+          image={LanguageIcon}
+          onClick={() => {
+            themeBottomSheetRef.current?.dismiss();
+            languageBottomSheetRef.current?.present();
+            deleteAccountBottomSheetRef.current?.dismiss();
+          }}
+          extraText={t("settings.languageTitle")}
+          customClass="mb-4"
+        />
+        <SettingsOption
+          text={t("settings.deleteAccount.title")}
+          image={AccoutDeleteIcon}
+          onClick={() => {
+            deleteAccountBottomSheetRef.current?.present();
+            themeBottomSheetRef.current?.dismiss();
+            languageBottomSheetRef.current?.dismiss();
+          }}
+          customClass="mb-8 text-primary"
+        />
+      </View>
 
-            <View className="py-4 border-b border-tekst">
-              <Text
-                className="text-tekst text-xl font-bold"
-                onPress={() => {
-                  // TODO: set language to English
-                  languageBottomSheetRef.current?.close();
-                }}
-              >
-                English
-              </Text>
-            </View>
-
-            <View className="py-4">
-              <Text
-                className="text-tekst text-xl font-bold"
-                onPress={() => {
-                  // TODO: set language to Deutsch
-                  languageBottomSheetRef.current?.close();
-                }}
-              >
-                Deutsch
-              </Text>
-            </View>
-          </BottomSheetView>
-        </BottomSheet>
+      <BottomSheetWrapper ref={themeBottomSheetRef}>
+        <ThemeSelectorBottomSheet
+          onDismiss={() => {
+            themeBottomSheetRef.current?.dismiss();
+          }}
+        />
+      </BottomSheetWrapper>
+      <BottomSheetWrapper ref={languageBottomSheetRef}>
+        <LanguageSelector
+          onDismiss={() => {
+            languageBottomSheetRef.current?.dismiss();
+          }}
+        />
+      </BottomSheetWrapper>
+      <BottomSheetWrapper ref={deleteAccountBottomSheetRef}>
         <DeleteAccountBottomSheet
           onDelete={() => {
             deleteAccount();
             router.replace("/welcome");
           }}
-          deleteAccountBottomSheetRef={deleteAccountBottomSheetRef}
-        />
-      </Portal>
-      <View className="w-full px-4 mt-4">
-        <SettingsOption
-          text="Motyw"
-          image={ModeIcon}
-          onClick={() => {
-            languageBottomSheetRef.current?.close();
-            themeBottomSheetRef.current?.expand();
-            deleteAccountBottomSheetRef.current?.close();
+          onDismiss={() => {
+            deleteAccountBottomSheetRef.current?.dismiss();
           }}
-          customClass="mb-8"
         />
-        <SettingsOption
-          text="Powiadomienia"
-          image={NotificationsIcon}
-          onClick={() => Linking.openSettings()}
-          customClass="mb-8"
-        />
-        <SettingsOption
-          text="Język"
-          image={LanguageIcon}
-          onClick={() => {
-            themeBottomSheetRef.current?.close();
-            languageBottomSheetRef.current?.expand();
-            deleteAccountBottomSheetRef.current?.close();
-          }}
-          extraText="Polski"
-          customClass="mb-8"
-        />
-        <SettingsOption
-          text="Usuń konto"
-          image={AccoutDeleteIcon}
-          onClick={() => {
-            deleteAccountBottomSheetRef.current?.expand();
-            themeBottomSheetRef.current?.close();
-            languageBottomSheetRef.current?.close();
-          }}
-          customClass="mb-8 text-primary"
-        />
-      </View>
+      </BottomSheetWrapper>
     </SafeAreaView>
   );
 }

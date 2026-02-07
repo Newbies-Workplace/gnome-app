@@ -5,7 +5,7 @@ import EditIcon from "@/assets/icons/edit-icon.svg";
 import FoundIcon from "@/assets/icons/found-icon.svg";
 import GoBack from "@/assets/icons/goBack-icon.svg";
 import LocationIcon from "@/assets/icons/location-icon.svg";
-import PlaceHolder from "@/assets/images/placeholder.png";
+import PlaceHolder from "@/assets/images/gnomeplaceholder.svg";
 import { Button } from "@/components/ui/button";
 import { useToastNavigate } from "@/hooks/useToastNavigate";
 import { useDistrictStore } from "@/store/useDistrictStore";
@@ -55,7 +55,7 @@ export default function GnomeDetailsPage() {
         <img
           src={gnome.pictureUrl || PlaceHolder}
           alt={gnome.name}
-          className="w-24 h-32 sm:w-32 sm:h-40 object-cover rounded flex-shrink-0"
+          className="w-24 h-32 sm:w-32 sm:h-40 object-cover rounded shrink-0"
         />
 
         <div className="flex flex-col gap-1 sm:gap-2 w-full min-w-0">
@@ -68,15 +68,15 @@ export default function GnomeDetailsPage() {
 
           <div className="flex flex-col gap-1 mt-2 text-xs sm:text-sm">
             <div className="flex gap-1 sm:gap-2 items-center flex-wrap">
-              <img src={LocationIcon} className="size-4 flex-shrink-0" />
+              <img src={LocationIcon} className="size-4" />
               <span>{gnome.location}</span>
             </div>
             <div className="flex gap-1 sm:gap-2 items-center flex-wrap">
-              <img src={CreationIcon} className="size-4 flex-shrink-0" />
+              <img src={CreationIcon} className="size-4" />
               <span>{new Date(gnome.creationDate).toLocaleDateString()}</span>
             </div>
             <div className="flex gap-1 sm:gap-2 items-center flex-wrap">
-              <img src={FoundIcon} className="size-4 flex-shrink-0" />
+              <img src={FoundIcon} className="size-4" />
               <span>0 osób</span>
             </div>
           </div>
@@ -88,7 +88,7 @@ export default function GnomeDetailsPage() {
           className="text-white bg-primary-color py-2 rounded-2xl w-full text-xs sm:text-sm"
         >
           <div className="flex gap-1 sm:gap-2 items-center justify-center flex-wrap">
-            <img src={EditIcon} className="size-4 flex-shrink-0" />
+            <img src={EditIcon} className="size-4" />
             <span>Edytuj</span>
           </div>
         </Button>
@@ -98,7 +98,7 @@ export default function GnomeDetailsPage() {
           className="text-white bg-primary-color py-2 rounded-2xl w-full text-xs sm:text-sm"
         >
           <div className="flex gap-1 sm:gap-2 items-center justify-center flex-wrap">
-            <img src={DeleteIcon} className="size-4 flex-shrink-0" />
+            <img src={DeleteIcon} className="size-4" />
             <span>Usuń</span>
           </div>
         </Button>
@@ -107,9 +107,14 @@ export default function GnomeDetailsPage() {
       <hr className="border-t-2 border-primary-color mt-3" />
 
       <div className="flex flex-col text-left mt-2 text-xs sm:text-sm gap-1">
+        <h4 className="font-bold mt-1">Opis:</h4>
         <div>{gnome.description}</div>
-        <h4 className="font-bold mt-1">Ciekawostka:</h4>
-        <div>{gnome.funFact}</div>
+        {gnome.funFact && (
+          <>
+            <h4 className="font-bold mt-1">Ciekawostka:</h4>
+            <div>{gnome.funFact}</div>
+          </>
+        )}
       </div>
     </div>
   );

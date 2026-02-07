@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { Toaster } from "sonner";
 import { RequireAuth } from "@/components/require-auth.tsx";
 import AdminPage from "@/pages/admin";
 import BuildDetail from "@/pages/buildings/building-details.tsx";
@@ -16,6 +17,7 @@ import LoginCallback from "@/pages/login-callback";
 import Privacy from "@/pages/privacy";
 import UserDetail from "@/pages/users/users-detail-panel";
 import UsersPanel from "@/pages/users/users-panel";
+import AccountDeleteTutorialPage from "./pages/account-delete-tutorial";
 import { useAuthStore } from "./store/useAuthStore";
 
 const router = createBrowserRouter([
@@ -39,6 +41,10 @@ const router = createBrowserRouter([
         element: <LoginCallback />,
       },
     ],
+  },
+  {
+    path: "account-delete-tutorial",
+    element: <AccountDeleteTutorialPage />,
   },
   {
     path: "admin",
@@ -97,9 +103,14 @@ function App() {
 
   useEffect(() => {
     void init();
-  }, []);
+  }, [init]);
 
-  return <RouterProvider router={router} />;
+  return (
+    <>
+      <RouterProvider router={router} />
+      <Toaster richColors theme="dark" duration={1000} position="top-right" />
+    </>
+  );
 }
 
 export default App;

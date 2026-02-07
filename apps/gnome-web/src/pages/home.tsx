@@ -1,5 +1,3 @@
-import { Link } from "react-router-dom";
-import loginIcon from "@/assets/icons/login.svg";
 import backgroundImage from "@/assets/images/background.png";
 import phoneImage from "@/assets/images/phone.png";
 import teamBuildMap from "@/assets/images/teamBuildMap.png";
@@ -11,17 +9,9 @@ function HomePage() {
       className="fixed inset-0 bg-cover bg-center bg-repeat"
       style={{ backgroundImage: `url(${backgroundImage})` }}
     >
-      {/* Header */}
       <div className="w-full p-5 bg-transparent">
         <div className="flex items-center justify-between">
-          <h1 className="text-white text-5xl font-Afacad">KRASNALE</h1>
-          {/* Zaloguj button z icon */}
-          <button className="bg-primary-color text-white text-2xl font-Afacad px-6 py-3 rounded-4xl hover:opacity-90 transition flex items-center gap-2">
-            <img src={loginIcon} alt="login icon" className="w-6 h-6" />
-            <Link to="/login" className="text-white">
-              Zaloguj się
-            </Link>
-          </button>
+          <h1 className="text-white text-5xl font-Afacad">Krasnal GO</h1>
         </div>
 
         <div className="flex items-center mt-3">
@@ -32,7 +22,6 @@ function HomePage() {
       </div>
 
       <div className="overflow-y-auto px-5 pt-10 h-[calc(100vh-20px)]">
-        {/* Section 1 */}
         <div className="mt-10 mb-20">
           <h2 className="text-white text-center text-6xl font-bold font-Afacad">
             Pobyt we Wrocławiu nie musi być nudny - odkrywaj krasnale i walcz o
@@ -44,7 +33,6 @@ function HomePage() {
           </h4>
         </div>
 
-        {/* Section 2 */}
         <div className="mt-10 mb-20 flex flex-row items-center justify-center gap-10 sm:gap-20 md:gap-40 lg:gap-60">
           <div className="flex flex-col space-y-2 w-64 sm:w-72 md:w-80 lg:w-96">
             <img src={phoneImage} alt="phone" className="w-full h-auto" />
@@ -59,7 +47,6 @@ function HomePage() {
           </div>
         </div>
 
-        {/* Section 3 */}
         <div className="flex flex-col mt-10 mb-20 items-center">
           <h1 className="text-white text-6xl font-bold text-center font-Afacad">
             DOŁĄCZ DO DRUŻYNY

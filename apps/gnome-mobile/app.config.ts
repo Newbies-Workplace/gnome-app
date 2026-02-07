@@ -3,7 +3,7 @@ import { ConfigContext, ExpoConfig } from "expo/config";
 export default ({ config }: ConfigContext): ExpoConfig => ({
   ...config,
   name: "Krasnal GO",
-  slug: "Krasnal GO",
+  slug: "gnome-mobile",
   owner: "rstnewbies",
   version: "1.0.0",
   orientation: "portrait",
@@ -27,12 +27,8 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
       },
     },
   },
-  web: {
-    bundler: "metro",
-    output: "static",
-    favicon: "./src/assets/images/favicon.png",
-  },
   plugins: [
+    "expo-localization",
     [
       "expo-location",
       {
@@ -47,6 +43,22 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
           "com.googleusercontent.apps.1072736295761-veuj45s0ngd02p3mmhfh5fc14btkuh6r",
       },
     ],
+    [
+      "expo-camera",
+      {
+        cameraPermission: "Allow $(PRODUCT_NAME) to access your camera",
+        recordAudioAndroid: false,
+      },
+    ],
+    [
+      "expo-media-library",
+      {
+        photosPermission: "Allow $(PRODUCT_NAME) to access your photos.",
+        savePhotosPermission: "Allow $(PRODUCT_NAME) to save photos.",
+        isAccessMediaLocationEnabled: false,
+        granularPermissions: ["photo"],
+      },
+    ],
     "expo-router",
     [
       "expo-splash-screen",
@@ -58,15 +70,9 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
       },
     ],
     "expo-font",
-    [
-      "react-native-vision-camera",
-      {
-        cameraPermissionText: "$(PRODUCT_NAME) needs access to your Camera.",
-        enableCodeScanner: true,
-      },
-    ],
     "expo-build-properties",
     "expo-web-browser",
+    "./scripts/withShortCmakePath.js",
   ],
   experiments: {
     typedRoutes: true,
