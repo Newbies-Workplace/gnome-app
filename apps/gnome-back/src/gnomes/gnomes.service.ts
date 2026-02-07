@@ -69,7 +69,7 @@ export class GnomesService {
     }
   }
 
-  async createGnome(data: CreateGnomeRequest, pictureUrl: string) {
+  async createGnome(data: CreateGnomeRequest, pictureUrl: string | null) {
     const districtId = await this.districtsService.findDistrictId([
       Number(data.longitude),
       Number(data.latitude),
@@ -166,14 +166,16 @@ export class GnomesService {
     const type = typeSplit[typeSplit.length - 1];
     const fileName = `${gnome.name}.${type}`;
     const catalogueName = "defaultGnomePictures";
+    const filePath = `${catalogueName}/${fileName}`;
     await this.minioService.uploadFile(file, fileName, catalogueName);
+    const fileUrl = await this.minioService.getFileUrl(filePath);
 
     return this.prismaService.gnome.update({
       where: {
         id: gnomeId,
       },
       data: {
-        pictureUrl: fileName,
+        pictureUrl: fileUrl,
       },
     });
   }
@@ -194,12 +196,12 @@ export class GnomesService {
       const fullUrl = gnome.pictureUrl.split("/images/")[1];
 
       await this.minioService.deleteFile(bucketName, fullUrl);
-      await this.prismaService.gnome.update({
+      return await this.prismaService.gnome.update({
         where: {
           id: gnomeId,
         },
         data: {
-          pictureUrl: "",
+          pictureUrl: null,
         },
       });
     }

@@ -142,13 +142,16 @@ export class GnomesController {
     file: Express.Multer.File,
     @Body() createGnomeDto: CreateGnomeRequest,
   ): Promise<GnomeDetailsResponse> {
-    const typeSplit = file.mimetype.split("/");
-    const type = typeSplit[typeSplit.length - 1];
-    const fileName = `${createGnomeDto.name}.${type}`;
-    const catalogueName = "defaultGnomePictures";
-    const filePath = `${catalogueName}/${fileName}`;
-    await this.minioService.uploadFile(file, fileName, catalogueName);
-    const fileUrl = await this.minioService.getFileUrl(filePath);
+    let fileUrl: string | null = null;
+    if (file) {
+      const typeSplit = file.mimetype.split("/");
+      const type = typeSplit[typeSplit.length - 1];
+      const fileName = `${createGnomeDto.name}.${type}`;
+      const catalogueName = "defaultGnomePictures";
+      const filePath = `${catalogueName}/${fileName}`;
+      await this.minioService.uploadFile(file, fileName, catalogueName);
+      fileUrl = await this.minioService.getFileUrl(filePath);
+    }
 
     const createdGnome = await this.gnomeService.createGnome(
       createGnomeDto,

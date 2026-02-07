@@ -28,7 +28,7 @@ const GnomesList = ({ search = "" }: GnomesListProps) => {
   }
 
   const filtered = gnomes.filter((gnome) =>
-    gnome.name.toLowerCase().includes(search.toLowerCase()),
+    gnome.name?.toLowerCase().includes(search.toLowerCase()),
   );
 
   if (filtered.length === 0) {
@@ -55,7 +55,6 @@ const GnomesList = ({ search = "" }: GnomesListProps) => {
                 <img
                   src={gnome.pictureUrl || PlaceHolder}
                   alt={gnome.name}
-                  onError={(e) => (e.currentTarget.src = PlaceHolder)}
                   className="w-16 h-16 object-cover rounded-sm"
                 />
                 <div className="flex flex-col">
