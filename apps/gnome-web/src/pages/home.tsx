@@ -1,5 +1,3 @@
-import { Link } from "react-router-dom";
-import loginIcon from "@/assets/icons/login.svg";
 import backgroundImage from "@/assets/images/background.png";
 import phoneImage from "@/assets/images/phone.png";
 import teamBuildMap from "@/assets/images/teamBuildMap.png";
