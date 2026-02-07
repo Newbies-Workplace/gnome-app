@@ -5,6 +5,7 @@ import { ThrottlerGuard, ThrottlerModule } from "@nestjs/throttler";
 import { AchievementsModule } from "@/achievements/achievements.module";
 import { AuthModule } from "@/auth/auth.module";
 import { BuildingsModule } from "@/buildings/buildings.module";
+import { SeedRemoteCommand } from "@/commands/seedRemoteCommand";
 import { PrismaModule } from "@/db/prisma.module";
 import { DistrictsModule } from "@/districts/districts.module";
 import { FriendsModule } from "@/friends/friends.module";
@@ -43,6 +44,7 @@ import { UsersModule } from "@/users/users.module";
       provide: APP_GUARD,
       useClass: ThrottlerGuard,
     },
+    SeedRemoteCommand,
   ],
 })
 export class AppModule {}
