@@ -1,4 +1,4 @@
-import { Injectable, OnModuleInit } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import * as Minio from "minio";
 
@@ -8,7 +8,7 @@ export enum StorageDirectory {
 }
 
 @Injectable()
-export class StorageService implements OnModuleInit {
+export class StorageService {
   private minioClient: Minio.Client;
 
   private readonly bucketName: string;
@@ -24,8 +24,6 @@ export class StorageService implements OnModuleInit {
 
     this.bucketName = this.configService.get("MINIO_BUCKET_NAME");
   }
-
-  async onModuleInit() {}
 
   async uploadFile(
     file: Express.Multer.File,

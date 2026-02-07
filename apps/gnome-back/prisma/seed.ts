@@ -1,6 +1,7 @@
 import * as fs from "node:fs/promises";
 import { ConfigService } from "@nestjs/config";
 import { PrismaPg } from "@prisma/adapter-pg";
+import axios from "axios";
 import { PrismaClient } from "../src/generated/prisma/client";
 import {
   StorageDirectory,
