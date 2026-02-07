@@ -3,7 +3,6 @@ import { useNavigate, useOutletContext, useParams } from "react-router-dom";
 import { toast } from "sonner";
 import { GnomeForm } from "@/components/admin/gnome-form";
 import type { GnomeFormData } from "@/schemas/gnomeSchema";
-import { useDistrictStore } from "@/store/useDistrictStore";
 import { useGnomeStore } from "@/store/useGnomeStore";
 
 type OutletContextType = {
@@ -13,10 +12,9 @@ type OutletContextType = {
 export default function GnomeEditPage() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { gnomes, updateGnome } = useGnomeStore();
-  const { districts } = useDistrictStore();
+  const { gnomes, updateGnome, updateGnomePicture, deleteGnomePicuture } =
+    useGnomeStore();
   const { selectedPosition } = useOutletContext<OutletContextType>();
-
   const gnome = gnomes.find((g) => g.id.toString() === id);
 
   if (!gnome) {
@@ -36,16 +34,27 @@ export default function GnomeEditPage() {
       creationDate: new Date(gnome.creationDate),
     };
 
+    if (data.pictureURL && data.pictureURL.length > 0) {
+      const formData = new FormData();
+
+      formData.append("file", data.pictureURL[0]);
+
+      await updateGnomePicture(gnome.id, formData);
+    }
+
+    if (!data.pictureURL) {
+      await deleteGnomePicuture(gnome.id);
+    }
+
     await updateGnome(gnome.id, updatedGnome);
+
     toast.success(`Zapisano zmiany dla gnoma "${data.name}"`);
     navigate("/admin");
   };
 
   return (
     <GnomeForm
-      // @ts-expect-error
-      defaultValues={gnome}
-      districts={districts}
+      gnome={gnome}
       selectedPosition={selectedPosition}
       onSubmit={handleSubmit}
       onCancel={() => navigate("/admin")}

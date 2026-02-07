@@ -11,17 +11,9 @@ function HomePage() {
       className="fixed inset-0 bg-cover bg-center bg-repeat"
       style={{ backgroundImage: `url(${backgroundImage})` }}
     >
-      {/* Header */}
       <div className="w-full p-5 bg-transparent">
         <div className="flex items-center justify-between">
-          <h1 className="text-white text-5xl font-Afacad">KRASNALE</h1>
-          {/* Zaloguj button z icon */}
-          <button className="bg-primary-color text-white text-2xl font-Afacad px-6 py-3 rounded-4xl hover:opacity-90 transition flex items-center gap-2">
-            <img src={loginIcon} alt="login icon" className="w-6 h-6" />
-            <Link to="/login" className="text-white">
-              Zaloguj się
-            </Link>
-          </button>
+          <h1 className="text-white text-5xl font-Afacad">Krasnal GO</h1>
         </div>
 
         <div className="flex items-center mt-3">
