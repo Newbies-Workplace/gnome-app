@@ -4,7 +4,7 @@ import { PrismaService } from "@/db/prisma.service";
 import { DistrictsService } from "@/districts/districts.service";
 import { Gnome, GnomeInteraction } from "@/generated/prisma/client";
 import { GnomeInteractionCreateResult } from "@/gnomes/gnomes.dto";
-import { MinioService } from "@/minio/minio.service";
+import { StorageDirectory, StorageService } from "@/storage/storage.service";
 
 const MIN_INTERACTION_INTERVAL = 5 * 60 * 1000;
 
@@ -12,7 +12,7 @@ const MIN_INTERACTION_INTERVAL = 5 * 60 * 1000;
 export class GnomesService {
   constructor(
     private readonly prismaService: PrismaService,
-    private readonly minioService: MinioService,
+    private readonly storageService: StorageService,
     private readonly districtsService: DistrictsService,
   ) {}
 
@@ -69,7 +69,11 @@ export class GnomesService {
     }
   }
 
-  async createGnome(data: CreateGnomeRequest, pictureUrl: string | null) {
+  async createGnome(
+    gnomeId: string,
+    data: CreateGnomeRequest,
+    pictureUrl: string | null,
+  ) {
     const districtId = await this.districtsService.findDistrictId([
       Number(data.longitude),
       Number(data.latitude),
@@ -77,6 +81,7 @@ export class GnomesService {
 
     return this.prismaService.gnome.create({
       data: {
+        id: gnomeId,
         name: data.name,
         latitude: Number(data.latitude),
         longitude: Number(data.longitude),
@@ -135,9 +140,13 @@ export class GnomesService {
       },
     });
 
-    const bucketName = "images";
-    const fullUrl = `defaultGnomePictures/${gnomes.pictureUrl}`;
-    await this.minioService.deleteFile(bucketName, fullUrl);
+    if (gnomes.pictureUrl) {
+      await this.storageService.deleteFile(
+        gnomes.pictureUrl,
+        StorageDirectory.GNOME_IMAGES,
+      );
+    }
+
     await this.prismaService.gnome.delete({
       where: {
         id: id,
@@ -153,29 +162,21 @@ export class GnomesService {
   }
 
   async updateGnomePicture(gnomeId: string, file: Express.Multer.File) {
-    const gnome = await this.prismaService.gnome.findUnique({
-      where: {
-        id: gnomeId,
-      },
-      select: {
-        name: true,
-      },
-    });
-
     const typeSplit = file.mimetype.split("/");
     const type = typeSplit[typeSplit.length - 1];
-    const fileName = `${gnome.name}.${type}`;
-    const catalogueName = "defaultGnomePictures";
-    const filePath = `${catalogueName}/${fileName}`;
-    await this.minioService.uploadFile(file, fileName, catalogueName);
-    const fileUrl = await this.minioService.getFileUrl(filePath);
+    const fileName = `${gnomeId}.${type}`;
+    const uploadedFile = await this.storageService.uploadFile(
+      file,
+      fileName,
+      StorageDirectory.GNOME_IMAGES,
+    );
 
     return this.prismaService.gnome.update({
       where: {
         id: gnomeId,
       },
       data: {
-        pictureUrl: fileUrl,
+        pictureUrl: uploadedFile.path,
       },
     });
   }
@@ -192,11 +193,12 @@ export class GnomesService {
     });
 
     if (gnome.pictureUrl) {
-      const bucketName = "images";
-      const fullUrl = gnome.pictureUrl.split("/images/")[1];
+      await this.storageService.deleteFile(
+        gnome.pictureUrl,
+        StorageDirectory.GNOME_IMAGES,
+      );
 
-      await this.minioService.deleteFile(bucketName, fullUrl);
-      return await this.prismaService.gnome.update({
+      await this.prismaService.gnome.update({
         where: {
           id: gnomeId,
         },

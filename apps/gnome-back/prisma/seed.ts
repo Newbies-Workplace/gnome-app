@@ -2,7 +2,10 @@ import * as fs from "node:fs/promises";
 import { ConfigService } from "@nestjs/config";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "../src/generated/prisma/client";
-import { MinioService } from "../src/minio/minio.service";
+import {
+  StorageDirectory,
+  StorageService,
+} from "../src/storage/storage.service";
 
 const pool = new PrismaPg({
   connectionString: process.env.DATABASE_URL,
@@ -11,7 +14,7 @@ const prisma = new PrismaClient({
   adapter: pool,
 });
 const configService = new ConfigService();
-const minioService = new MinioService(configService);
+const storageService = new StorageService(configService);
 
 function extractCoords(coords: number[][][]) {
   const flat = coords.flat();
@@ -193,7 +196,7 @@ async function main() {
     },
   ];
 
-  const files = ["Kacuś.jpg", "Frugalek.jpg"];
+  const files = ["Kacus.jpg", "Frugalek.jpg"];
   for (const filename of files) {
     const file: Express.Multer.File = {
       originalname: filename,
@@ -201,7 +204,11 @@ async function main() {
       mimetype: "image/jpeg",
     } as unknown as Express.Multer.File;
 
-    await minioService.uploadFile(file, filename, "defaultGnomePictures");
+    await storageService.uploadFile(
+      file,
+      filename,
+      StorageDirectory.GNOME_IMAGES,
+    );
   }
 
   for (const gnome of gnomes) {

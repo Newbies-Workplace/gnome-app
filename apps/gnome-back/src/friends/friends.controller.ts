@@ -20,7 +20,7 @@ import { FriendsConverter } from "@/friends/friends.converter";
 import { FriendsService } from "@/friends/friends.service";
 
 @ApiBearerAuth()
-@Controller("friends")
+@Controller("/v1/friends")
 export class FriendsController {
   constructor(
     private readonly prismaService: PrismaService,

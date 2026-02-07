@@ -4,10 +4,10 @@ import { DistrictsModule } from "@/districts/districts.module";
 import { GnomesController } from "@/gnomes/gnomes.controller";
 import { GnomesConverter } from "@/gnomes/gnomes.converter";
 import { GnomesService } from "@/gnomes/gnomes.service";
-import { MinioModule } from "@/minio/minio.module";
+import { StorageModule } from "@/storage/storage.module";
 
 @Module({
-  imports: [MinioModule, DistrictsModule, AchievementsModule],
+  imports: [StorageModule, DistrictsModule, AchievementsModule],
   providers: [GnomesService, GnomesConverter],
   controllers: [GnomesController],
 })

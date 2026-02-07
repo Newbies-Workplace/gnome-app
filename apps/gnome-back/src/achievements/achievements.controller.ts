@@ -18,7 +18,7 @@ import { JwtUser } from "@/auth/types/jwt-user";
 import { FriendsService } from "@/friends/friends.service";
 
 @ApiBearerAuth()
-@Controller("achievements")
+@Controller("/v1/achievements")
 export class AchievementsController {
   constructor(
     private readonly achievementsService: AchievementsService,

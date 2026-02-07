@@ -1,4 +1,5 @@
 import { Injectable } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
 import {
   GnomeDetailsResponse,
   GnomeResponse,
@@ -11,7 +12,10 @@ import { GnomeInteractionCreateResult } from "@/gnomes/gnomes.dto";
 
 @Injectable()
 export class GnomesConverter {
-  constructor(private readonly prismaService: PrismaService) {}
+  constructor(
+    private readonly prismaService: PrismaService,
+    private readonly configService: ConfigService,
+  ) {}
 
   async toGnomeResponse(gnome: Gnome): Promise<GnomeResponse> {
     return {
@@ -24,7 +28,9 @@ export class GnomesConverter {
       creationDate: gnome.creationDate,
       description: gnome.description,
       exists: gnome.exists,
-      pictureUrl: gnome.pictureUrl,
+      pictureUrl: gnome.pictureUrl
+        ? this.configService.get("STORAGE_URL_PREFIX") + gnome.pictureUrl
+        : undefined,
       districtId: gnome.districtId,
     };
   }

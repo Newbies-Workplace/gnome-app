@@ -17,7 +17,7 @@ import { UsersConverter } from "@/users/users.converter";
 import { UsersService } from "@/users/users.service";
 
 @ApiBearerAuth()
-@Controller("auth")
+@Controller("/v1/auth")
 export class AuthController {
   constructor(
     private readonly configService: ConfigService,

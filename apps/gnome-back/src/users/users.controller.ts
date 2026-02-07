@@ -32,17 +32,17 @@ import { Role } from "@/auth/decorators/role.decorator";
 import { JwtGuard } from "@/auth/guards/jwt.guard";
 import { RoleGuard } from "@/auth/guards/role.guard";
 import { JwtUser } from "@/auth/types/jwt-user";
-import { MinioService } from "@/minio/minio.service";
+import { StorageDirectory, StorageService } from "@/storage/storage.service";
 import { UsersConverter } from "@/users/users.converter";
 import { UsersService } from "@/users/users.service";
 
 @ApiBearerAuth()
-@Controller("users")
+@Controller("/v1/users")
 export class UsersController {
   constructor(
     private readonly converter: UsersConverter,
     private readonly usersService: UsersService,
-    private readonly minioService?: MinioService,
+    private readonly minioService?: StorageService,
   ) {}
 
   @Get()
@@ -95,13 +95,18 @@ export class UsersController {
       throw new BadRequestException("Nic do zaaktualizowania");
     }
 
-    const fileName = `${user.id}.jpg`;
-    const catalogueName = "userProfilePictures";
+    let fileUrl: string | undefined;
     if (file) {
-      await this.minioService.uploadFile(file, fileName, catalogueName);
+      const fileName = `${user.id}.jpg`;
+
+      const uploadedFile = await this.minioService.uploadFile(
+        file,
+        fileName,
+        StorageDirectory.USER_IMAGES,
+      );
+
+      fileUrl = uploadedFile.path;
     }
-    const filePath = `${catalogueName}/${fileName}`;
-    const fileUrl: string = await this.minioService.getFileUrl(filePath);
 
     const updatedUser = await this.usersService.changeUserData(user.id, {
       name: body.name,
