@@ -51,8 +51,10 @@ export class StorageService implements OnModuleInit {
     return this.minioClient.getObject(this.bucketName, filePath);
   }
 
-  async deleteFile(bucketName: string, objectName: string) {
-    await this.minioClient.removeObject(bucketName, objectName);
+  async deleteFile(fileName: string, directory: StorageDirectory) {
+    const filePath = this.getPathForDirectory(directory, fileName);
+
+    await this.minioClient.removeObject(this.bucketName, filePath);
   }
 
   getPathForDirectory(directory: StorageDirectory, fileName: string) {

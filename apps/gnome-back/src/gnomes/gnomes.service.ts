@@ -140,9 +140,13 @@ export class GnomesService {
       },
     });
 
-    const bucketName = "images";
-    const fullUrl = `defaultGnomePictures/${gnomes.pictureUrl}`;
-    await this.storageService.deleteFile(bucketName, fullUrl);
+    if (gnomes.pictureUrl) {
+      await this.storageService.deleteFile(
+        gnomes.pictureUrl,
+        StorageDirectory.GNOME_IMAGES,
+      );
+    }
+
     await this.prismaService.gnome.delete({
       where: {
         id: id,
@@ -189,11 +193,12 @@ export class GnomesService {
     });
 
     if (gnome.pictureUrl) {
-      const bucketName = "images";
-      const fullUrl = gnome.pictureUrl.split("/images/")[1];
+      await this.storageService.deleteFile(
+        gnome.pictureUrl,
+        StorageDirectory.GNOME_IMAGES,
+      );
 
-      await this.storageService.deleteFile(bucketName, fullUrl);
-      return await this.prismaService.gnome.update({
+      await this.prismaService.gnome.update({
         where: {
           id: gnomeId,
         },
