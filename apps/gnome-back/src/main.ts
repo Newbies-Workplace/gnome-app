@@ -9,7 +9,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   app.use(morgan("tiny"));
-  app.setGlobalPrefix("api/rest/v1");
+  app.setGlobalPrefix("api/rest");
   app.useGlobalPipes(
     new ValidationPipe({
       transform: true,

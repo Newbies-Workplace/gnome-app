@@ -4,7 +4,7 @@ import { FriendsController } from "@/friends/friends.controller";
 import { FriendsConverter } from "@/friends/friends.converter";
 import { FriendsService } from "@/friends/friends.service";
 import { GnomesService } from "@/gnomes/gnomes.service";
-import { MinioService } from "@/minio/minio.service";
+import { StorageService } from "@/storage/storage.service";
 
 @Module({
   controllers: [FriendsController],
@@ -12,7 +12,7 @@ import { MinioService } from "@/minio/minio.service";
     FriendsService,
     GnomesService,
     DistrictsService,
-    MinioService,
+    StorageService,
     FriendsConverter,
   ],
   exports: [FriendsService],

@@ -30,7 +30,7 @@ import { BuildingsConverter } from "@/buildings/buildings.converter";
 import { BuildingsService } from "@/buildings/buildings.service";
 
 @ApiBearerAuth()
-@Controller("buildings")
+@Controller("/v1/buildings")
 export class BuildingsController {
   constructor(
     private readonly buildingsService: BuildingsService,

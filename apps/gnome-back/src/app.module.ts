@@ -10,7 +10,7 @@ import { DistrictsModule } from "@/districts/districts.module";
 import { FriendsModule } from "@/friends/friends.module";
 import { GnomesModule } from "@/gnomes/gnomes.module";
 import { MetricsModule } from "@/metrics/metrics.module";
-import { MinioModule } from "@/minio/minio.module";
+import { StorageModule } from "@/storage/storage.module";
 import { UsersModule } from "@/users/users.module";
 
 @Module({
@@ -24,7 +24,7 @@ import { UsersModule } from "@/users/users.module";
     UsersModule,
     GnomesModule,
     FriendsModule,
-    MinioModule,
+    StorageModule,
     DistrictsModule,
     BuildingsModule,
     MetricsModule,

@@ -1,6 +1,6 @@
 services:
   gnome-minio:
-    container_name: gnome-minio
+    container_name: gnome-storage
     image: docker.io/minio/minio:RELEASE.2022-12-12T19-27-27Z
     command: server /data --console-address ":9001"
     restart: unless-stopped
@@ -9,7 +9,7 @@ services:
       - '127.0.0.1:9000:9000'
       - '127.0.0.1:9001:9001'
     volumes:
-      - gnome-minio-data:/data
+      - gnome-storage-data:/data
     networks:
       - gnome-backend-network
 

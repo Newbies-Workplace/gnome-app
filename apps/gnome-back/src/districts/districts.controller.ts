@@ -5,7 +5,7 @@ import { JwtGuard } from "@/auth/guards/jwt.guard";
 import { DistrictsService } from "@/districts/districts.service";
 
 @ApiBearerAuth()
-@Controller("districts")
+@Controller("/v1/districts")
 export class DistrictsController {
   constructor(private readonly districtService: DistrictsService) {}
 

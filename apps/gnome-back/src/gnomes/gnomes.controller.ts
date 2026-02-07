@@ -1,3 +1,4 @@
+import { randomUUID } from "node:crypto";
 import {
   Body,
   Controller,
@@ -38,16 +39,16 @@ import { JwtUser } from "@/auth/types/jwt-user";
 import { PrismaService } from "@/db/prisma.service";
 import { GnomesConverter } from "@/gnomes/gnomes.converter";
 import { GnomesService } from "@/gnomes/gnomes.service";
-import { MinioService } from "@/minio/minio.service";
+import { StorageDirectory, StorageService } from "@/storage/storage.service";
 
 @ApiBearerAuth()
-@Controller("gnomes")
+@Controller("/v1/gnomes")
 export class GnomesController {
   constructor(
     private readonly prismaService: PrismaService,
     private readonly gnomeService: GnomesService,
     private readonly converter: GnomesConverter,
-    private readonly minioService: MinioService,
+    private readonly storageService: StorageService,
     private readonly achievementService: AchievementsService,
   ) {}
 
@@ -101,8 +102,6 @@ export class GnomesController {
       user.id,
     );
 
-    console.log("interactions", interactions);
-
     return Promise.all(
       interactions.map(async (interaction) =>
         this.converter.toInteractionResponse(interaction),
@@ -142,15 +141,24 @@ export class GnomesController {
     file: Express.Multer.File,
     @Body() createGnomeDto: CreateGnomeRequest,
   ): Promise<GnomeDetailsResponse> {
-    const typeSplit = file.mimetype.split("/");
-    const type = typeSplit[typeSplit.length - 1];
-    const fileName = `${createGnomeDto.name}.${type}`;
-    const catalogueName = "defaultGnomePictures";
-    const filePath = `${catalogueName}/${fileName}`;
-    await this.minioService.uploadFile(file, fileName, catalogueName);
-    const fileUrl = await this.minioService.getFileUrl(filePath);
+    const gnomeId = randomUUID();
+    let fileUrl: string | null = null;
+
+    if (file) {
+      const typeSplit = file.mimetype.split("/");
+      const type = typeSplit[typeSplit.length - 1];
+      const fileName = `${gnomeId}.${type}`;
+      const uploadedFile = await this.storageService.uploadFile(
+        file,
+        fileName,
+        StorageDirectory.GNOME_IMAGES,
+      );
+
+      fileUrl = uploadedFile.path;
+    }
 
     const createdGnome = await this.gnomeService.createGnome(
+      gnomeId,
       createGnomeDto,
       fileUrl,
     );

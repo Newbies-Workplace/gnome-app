@@ -1,20 +1,20 @@
 import { Module } from "@nestjs/common";
 import { AchievementsService } from "@/achievements/achievements.service";
 import { DistrictsService } from "@/districts/districts.service";
-import { GnomesController } from "@/gnomes/gnomes.controller";
 import { GnomesConverter } from "@/gnomes/gnomes.converter";
 import { GnomesService } from "@/gnomes/gnomes.service";
-import { MinioService } from "@/minio/minio.service";
+import { StorageController } from "@/storage/storage.controller";
+import { StorageService } from "@/storage/storage.service";
 
 @Module({
-  controllers: [GnomesController],
+  controllers: [StorageController],
   providers: [
-    MinioService,
+    StorageService,
     GnomesService,
     GnomesConverter,
     DistrictsService,
     AchievementsService,
   ],
-  exports: [MinioService],
+  exports: [StorageService],
 })
-export class MinioModule {}
+export class StorageModule {}
