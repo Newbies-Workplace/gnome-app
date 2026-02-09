@@ -1,13 +1,10 @@
-import BottomSheet, {
-  BottomSheetBackdrop,
-  BottomSheetBackdropProps,
-  BottomSheetView,
-} from "@gorhom/bottom-sheet";
+import { BottomSheetView } from "@gorhom/bottom-sheet";
 import { useRouter } from "expo-router";
 import { getDistance } from "geolib";
 import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Text, TouchableOpacity, View } from "react-native";
+import { LatLng } from "react-native-maps/lib/sharedTypes";
 import GnomeDetailsFullScreenIcon from "@/assets/icons/FullscreenButton.svg";
 import GnomeCaughtCountIcon from "@/assets/icons/GnomeCaughtCount.svg";
 import GnomeHowFarAwayIcon from "@/assets/icons/GnomeHowFarAway.svg";
@@ -18,7 +15,7 @@ import { useGnomeStore } from "@/store/useGnomeStore";
 
 interface GnomeDetailsBottomSheetProps {
   gnomeId: string;
-  userLocation: { latitude: number; longitude: number };
+  userLocation: LatLng | undefined;
 }
 
 export const GnomeDetailsBottomSheet: React.FC<
@@ -39,15 +36,19 @@ export const GnomeDetailsBottomSheet: React.FC<
     router.push(`/gnomes/${gnomeId}`);
   };
 
-  const selectedGnomeDistance = gnome
-    ? getDistance(
-        { latitude: userLocation.latitude, longitude: userLocation.longitude },
-        {
-          latitude: gnome.latitude,
-          longitude: gnome.longitude,
-        },
-      )
-    : null;
+  const selectedGnomeDistance =
+    gnome && userLocation
+      ? getDistance(
+          {
+            latitude: userLocation.latitude,
+            longitude: userLocation.longitude,
+          },
+          {
+            latitude: gnome.latitude,
+            longitude: gnome.longitude,
+          },
+        )
+      : null;
 
   const formattedDistance =
     selectedGnomeDistance !== null
