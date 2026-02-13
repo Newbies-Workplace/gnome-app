@@ -1,5 +1,4 @@
-import { BottomSheetModal, BottomSheetView } from "@gorhom/bottom-sheet";
-import { Portal } from "@rn-primitives/portal";
+import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { LinearGradient } from "expo-linear-gradient";
 import * as Location from "expo-location";
 import { useFocusEffect, usePathname, useRouter } from "expo-router";
@@ -28,7 +27,7 @@ import GnomePin from "@/assets/images/GnomePin.svg";
 import GnomePinCatch from "@/assets/images/GnomePinCatch.svg";
 import { BottomSheetWrapper } from "@/components/BottomSheetWrapper";
 import { GnomeDetailsBottomSheet } from "@/components/GnomeDetailsBottomSheet";
-import { MapStyle } from "@/components/map-styles";
+import { MapStyleDark } from "@/components/map-styles";
 import ResourcesBottomSheet from "@/components/ResourcesInfoBottomSheet";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Compass from "@/components/ui/compass";
@@ -36,6 +35,7 @@ import DistanceTracker from "@/components/ui/DistanceTracker";
 import DraggableGnome from "@/components/ui/DraggableGnome";
 import ResourcesBar from "@/components/ui/ResourcesBar";
 import { Text } from "@/components/ui/text";
+import { useTheme } from "@/contexts/ThemeContext";
 import { getClosestGnome } from "@/lib/getClosestGnome";
 import { useAchievementsStore } from "@/store/useAchievementsStore";
 import { useAuthStore } from "@/store/useAuthStore";
@@ -46,6 +46,8 @@ import InteractionBottomSheet from "../interactionsheet";
 const MIN_TRACKER_DISTANCE = 50;
 const MIN_REACHED_DISTANCE = 15;
 const MIN_POSITION_UPDATE_INTERVAL = 5000;
+const MAX_GNOME_RENDER_DISTANCE = 2000000;
+const IS_RESOURCES_BAR_ENABLED = false;
 
 const INITIAL_COORDINATES = {
   latitude: 51.109967,
@@ -64,6 +66,32 @@ interface HeaderControlsProps {
   setErrorMsg: (msg: string | null) => void;
   openResourcesInfo: () => void;
 }
+
+const GnomeMarker: React.FC<{
+  latitude: number;
+  longitude: number;
+  caught: boolean;
+  onPress: () => void;
+}> = ({ latitude, longitude, caught, onPress }) => {
+  const [markerReady, setMarkerReady] = useState(false);
+
+  return (
+    <Marker
+      tracksViewChanges={markerReady}
+      onPress={onPress}
+      coordinate={{
+        latitude: latitude,
+        longitude: longitude,
+      }}
+    >
+      {caught ? (
+        <GnomePinCatch onLayout={() => setMarkerReady(true)} />
+      ) : (
+        <GnomePin onLayout={() => setMarkerReady(true)} />
+      )}
+    </Marker>
+  );
+};
 
 const HeaderControls: React.FC<HeaderControlsProps> = ({
   user,
@@ -113,12 +141,14 @@ const HeaderControls: React.FC<HeaderControlsProps> = ({
               </AvatarFallback>
             </Avatar>
           </TouchableOpacity>
-          <ResourcesBar
-            onClick={openResourcesInfo}
-            berries={200}
-            stones={4500}
-            sticks={100}
-          />
+          {IS_RESOURCES_BAR_ENABLED && (
+            <ResourcesBar
+              onClick={openResourcesInfo}
+              berries={200}
+              stones={4500}
+              sticks={100}
+            />
+          )}
         </View>
         <View className="flex-row">
           {errorMsg && (
@@ -159,29 +189,33 @@ const MapScreen = () => {
   const { fetchAchievements, fetchUserAchievements } = useAchievementsStore();
 
   const ref = useRef<MapView>(null);
+  const { isDark } = useTheme();
 
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
-  const [userLocation, setUserLocation] = useState<LatLng>(INITIAL_COORDINATES);
+  const [userLocation, setUserLocation] = useState<LatLng>();
   const [distance, setDistance] = useState<number>();
 
   const [closestGnomeId, setClosestGnomeId] = useState<string>();
   const [selectedGnomeId, setSelectedGnomeId] = useState<string | null>(null);
   const pathname = usePathname();
+
   const selectedGnomeRef = useRef<BottomSheetModal>(null);
   const interactionSheetRef = useRef<BottomSheetModal>(null);
   const resourcesSheetRef = useRef<BottomSheetModal>(null);
 
-  const filteredGnomes = useMemo(
-    () =>
-      gnomes.filter((gnome) => {
-        return getDistance(userLocation, {
+  const filteredGnomes = useMemo(() => {
+    if (!userLocation) return [];
+
+    return gnomes.filter((gnome) => {
+      return (
+        getDistance(userLocation, {
           latitude: gnome.latitude,
           longitude: gnome.longitude,
-        });
-      }),
-    [gnomes, userLocation],
-  );
+        }) <= MAX_GNOME_RENDER_DISTANCE
+      );
+    });
+  }, [gnomes, userLocation]);
 
   useFocusEffect(
     useCallback(() => {
@@ -205,7 +239,6 @@ const MapScreen = () => {
 
   useEffect(() => {
     let subscription: Location.LocationSubscription | null = null;
-    let headingSubscription: Location.LocationSubscription | null = null;
 
     (async () => {
       try {
@@ -225,15 +258,6 @@ const MapScreen = () => {
             setUserLocation({ latitude, longitude });
           },
         );
-        headingSubscription = await Location.watchHeadingAsync(
-          (headingData) => {
-            if (ref.current) {
-              ref.current.animateCamera({
-                heading: headingData.trueHeading,
-              });
-            }
-          },
-        );
       } catch (error) {
         console.error("Error getting location:", error);
         setErrorMsg("Error getting location");
@@ -244,13 +268,14 @@ const MapScreen = () => {
       if (subscription) {
         subscription.remove();
       }
-      if (headingSubscription) {
-        headingSubscription.remove();
-      }
     };
   }, []);
 
   useEffect(() => {
+    if (!userLocation) {
+      return;
+    }
+
     const distances = gnomes.map((gnome) => {
       const distance = getDistance(
         {
@@ -306,7 +331,7 @@ const MapScreen = () => {
         zoomEnabled={true}
         zoomControlEnabled={false}
         scrollEnabled={true}
-        customMapStyle={MapStyle}
+        customMapStyle={isDark ? MapStyleDark : undefined}
         showsCompass={false}
         showsMyLocationButton={false}
         rotateEnabled={true}
@@ -318,31 +343,25 @@ const MapScreen = () => {
           bottom: 100,
           left: 5,
         }}
-        minZoomLevel={10}
-        maxZoomLevel={18}
+        minZoomLevel={0}
+        maxZoomLevel={20}
         ref={ref}
       >
         {filteredGnomes.map((gnome) => (
-          <Marker
+          <GnomeMarker
+            latitude={gnome.latitude}
+            longitude={gnome.longitude}
+            key={gnome.id}
+            caught={
+              interactions.find(
+                (interactions) => interactions.gnomeId === gnome.id,
+              ) !== undefined
+            }
             onPress={() => {
               setSelectedGnomeId(gnome.id);
               selectedGnomeRef.current?.present();
-              gnome.location;
             }}
-            key={gnome.id}
-            coordinate={{
-              latitude: gnome.latitude,
-              longitude: gnome.longitude,
-            }}
-          >
-            {interactions.find(
-              (interactions) => interactions.gnomeId === gnome.id,
-            ) !== undefined ? (
-              <GnomePinCatch />
-            ) : (
-              <GnomePin />
-            )}
-          </Marker>
+          />
         ))}
       </MapView>
       <View className="absolute bottom-12 left-0 right-0 p-4 bg-transparent z-10">

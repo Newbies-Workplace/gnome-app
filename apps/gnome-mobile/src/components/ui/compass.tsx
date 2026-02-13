@@ -45,23 +45,22 @@ const Compass: React.FC = () => {
   const translateX = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
-    setUpdateIntervalForType(SensorTypes.magnetometer, 200);
+    setUpdateIntervalForType(SensorTypes.magnetometer, 1000);
 
     const subscription = magnetometer.subscribe(({ x, y }) => {
-      if (x !== 0 && y !== 0) {
-        let newAngle = Math.atan2(y, x) * (180 / Math.PI);
-        newAngle = newAngle < 0 ? newAngle + 360 : newAngle; // Normalizacja do 0-360°
-
-        // Poprawione przesunięcie, aby "N" było na środku
-        const compassPosition = ((180 - newAngle) / 360) * COMPASS_WIDTH;
-
-        Animated.spring(translateX, {
-          toValue: compassPosition,
-          useNativeDriver: true,
-          speed: 10,
-          bounciness: 0,
-        }).start();
+      if (!(x !== 0 && y !== 0)) {
+        return;
       }
+
+      let newAngle = Math.atan2(y, x) * (180 / Math.PI);
+      newAngle = newAngle < 0 ? newAngle + 360 : newAngle;
+      const compassPosition = ((180 - newAngle) / 360) * COMPASS_WIDTH;
+      Animated.spring(translateX, {
+        toValue: compassPosition,
+        useNativeDriver: true,
+        speed: 10,
+        bounciness: 0,
+      }).start();
     });
 
     return () => subscription.unsubscribe();
