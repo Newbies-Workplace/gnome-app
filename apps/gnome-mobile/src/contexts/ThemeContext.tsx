@@ -1,7 +1,14 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { StatusBar } from "expo-status-bar";
 import { colorScheme } from "nativewind";
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
+import { Appearance } from "react-native";
 
 interface ThemeProviderProps {
   children: React.ReactNode;
@@ -11,16 +18,26 @@ type ThemeOption = "light" | "dark" | "system";
 
 type ThemeContextType = {
   theme: ThemeOption;
+  isDark: boolean;
   toggleTheme: (theme: ThemeOption) => void;
 };
 
 export const ThemeContext = createContext<ThemeContextType>({
   theme: "system",
+  isDark: Appearance.getColorScheme() === "dark",
   toggleTheme: () => {},
 });
 
 export const ThemeProvider = ({ children }: ThemeProviderProps) => {
   const [currentTheme, setCurrentTheme] = useState<ThemeOption>("system");
+  const systemColorScheme = Appearance.getColorScheme();
+
+  const isDark = useMemo(() => {
+    if (currentTheme === "system") {
+      return systemColorScheme === "dark";
+    }
+    return currentTheme === "dark";
+  }, [currentTheme, systemColorScheme]);
 
   useEffect(() => {
     (async () => {
@@ -46,7 +63,13 @@ export const ThemeProvider = ({ children }: ThemeProviderProps) => {
         : "auto";
 
   return (
-    <ThemeContext.Provider value={{ theme: currentTheme, toggleTheme }}>
+    <ThemeContext.Provider
+      value={{
+        theme: currentTheme,
+        isDark,
+        toggleTheme,
+      }}
+    >
       <StatusBar style={statusBarStyle} />
 
       {children}

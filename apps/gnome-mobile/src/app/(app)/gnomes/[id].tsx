@@ -114,10 +114,14 @@ const GnomeDetail = () => {
 
         <Text className="text-tekst mb-2.5">{gnome.description}</Text>
 
-        <Text className="text-tekst font-bold text-xl font-afacad my-2">
-          {t("gnomeDetails.funFact")}
-        </Text>
-        <Text className="text-tekst font-afacad my-2">{gnome.funFact}</Text>
+        {!!gnome.funFact && (
+          <>
+            <Text className="text-tekst font-bold text-xl font-afacad my-2">
+              {t("gnomeDetails.funFact")}
+            </Text>
+            <Text className="text-tekst font-afacad my-2">{gnome.funFact}</Text>
+          </>
+        )}
 
         <View className="flex-row justify-center">
           {nearestGnomes.slice(0, 3).map((gnome) => (
