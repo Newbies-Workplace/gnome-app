@@ -48,7 +48,7 @@ CREATE TABLE "Gnome" (
     "creationDate" TIMESTAMP(3) NOT NULL,
     "description" TEXT NOT NULL,
     "exists" BOOLEAN NOT NULL DEFAULT true,
-    "pictureUrl" TEXT NOT NULL,
+    "pictureUrl" TEXT,
     "districtId" INTEGER,
 
     CONSTRAINT "Gnome_pkey" PRIMARY KEY ("id")
@@ -140,6 +140,9 @@ CREATE UNIQUE INDEX "UserResource_userId_key" ON "UserResource"("userId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Gnome_id_key" ON "Gnome"("id");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Gnome_name_key" ON "Gnome"("name");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Achievement_id_key" ON "Achievement"("id");

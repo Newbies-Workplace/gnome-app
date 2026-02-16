@@ -112,15 +112,15 @@
     "home": "Główna"
   },
   "welcome": {
-    "acceptPrivacy": "Akceptuję politykę prywatności",
+    "acceptPrivacy": "Akceptuję ",
     "appDescription": "Krasnal GO - odkrywaj Wrocław krok po kroku.",
-    "privacyPolicy": "Polityka prywatności",
+    "privacyPolicy": "politykę prywatności",
     "sheet": {
       "description": "Twoim zadaniem jest porwanie czapek z głów wszystkich krasnali! Po zbliżeniu się na mapię do krasnala pojawi się opcja z przeciągnięciem na pasku jego czapki. Uzbieraj jak największą kolekcję gnomów ze swoimi unikatowymi zdjęciami. Wyrusz na poszukiwania!",
       "title": "WITAJ W PRZYGODZIE Z WROCŁAWSKIMI KRASNALAMI!"
     },
-    "signInWithGoogle": "Zaloguj się przez Google",
-    "subtitle": "Dołącz do nas i odkryj swojego idealnego krasnala we Wrocławiu!",
-    "title": "Znajdź swojego ulubionego krasnala!"
+    "signInWithGoogle": "ZALOGUJ SIĘ Z GOOGLE",
+    "subtitle": "Każdy z nich ma swoją historię. Poznaj je wszystkie",
+    "title": "Krasnale czekają!"
   }
 }
