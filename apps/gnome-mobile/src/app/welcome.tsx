@@ -2,10 +2,11 @@ import { FontAwesome } from "@expo/vector-icons";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import { Checkbox } from "expo-checkbox";
 import { useRouter } from "expo-router";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Alert, Image, Linking, Pressable, View } from "react-native";
-import LoginLogo from "@/assets/images/LoginLogo.svg";
+import LoginLogoDarkTheme from "@/assets/images/LoginLogoDarkTheme.svg";
+import LoginLogoLightTheme from "@/assets/images/LoginLogoLightTheme.svg";
 import LoginSearchingGnome from "@/assets/images/LoginSearchingGnome.svg";
 import LoginWelcomingGnome from "@/assets/images/LoginWelcomingGnome.svg";
 import { Text } from "@/components/ui/text";
@@ -43,10 +44,18 @@ export default function SignInScreen() {
     }
   };
 
+  const LoginLogo = useMemo(() => {
+    return theme === "dark" ? LoginLogoDarkTheme : LoginLogoLightTheme;
+  }, [theme]);
+
   return (
     <View className="flex-1 justify-end">
       <Image
-        source={require("@/assets/images/LoginBackground.png")}
+        source={
+          theme === "dark"
+            ? require("@/assets/images/LoginBackgroundDark.png")
+            : require("@/assets/images/LoginBackgroundLight.png")
+        }
         className="w-full h-full flex-1 object-cover"
       />
 
@@ -76,7 +85,7 @@ export default function SignInScreen() {
 
         <Pressable
           disabled={!isChecked}
-          onPress={isChecked ? onSignInPress : null}
+          onPress={onSignInPress}
           className="flex flex-row p-2.5 rounded-3xl justify-center gap-4"
           style={{
             backgroundColor: isChecked ? "#d6484a" : "#d6484a88",
@@ -94,16 +103,17 @@ export default function SignInScreen() {
             color={isChecked ? "#d6484a" : undefined}
             style={{ borderRadius: 5 }}
           />
-          <Text className="text-tekst">{t("welcome.acceptPrivacy")}</Text>
-          <Pressable
-            onPress={() =>
-              Linking.openURL(`${process.env.EXPO_PUBLIC_FRONT_URL}privacy`)
-            }
-          >
-            <Text className="text-primary font-bold text-center underline">
+          <Text className="text-tekst">
+            {t("welcome.acceptPrivacy")}{" "}
+            <Text
+              className="text-primary font-bold underline"
+              onPress={() =>
+                Linking.openURL(`${process.env.EXPO_PUBLIC_FRONT_URL}privacy`)
+              }
+            >
               {t("welcome.privacyPolicy")}
             </Text>
-          </Pressable>
+          </Text>
         </View>
 
         <Text className="text-tekst mt-5 text-md text-center justify-center">
