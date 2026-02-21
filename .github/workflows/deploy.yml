@@ -13,6 +13,22 @@ env:
   REGISTRY: ghcr.io
 
 jobs:
+  build-web:
+    name: Build Web
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Build
+        run: yarn install && yarn workspace gnome-web build
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: gnome-web-dist
+          path: apps/gnome-web/dist
+
   deploy-web:
     name: Deploy to Cloudflare Pages
     runs-on: ubuntu-latest
@@ -21,11 +37,16 @@ jobs:
       contents: read
       deployments: write
 
+    needs: [ build-web ]
+
     steps:
       - uses: actions/checkout@v5
 
-      - name: Build
-        run: yarn install &&  yarn workspace gnome-web build
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: gnome-web-dist
+          path: apps/gnome-web/dist
 
       - name: Deploy
         uses: cloudflare/wrangler-action@v3
@@ -75,7 +96,9 @@ jobs:
   deploy-back:
     name: Deploy
     runs-on: ubuntu-latest
+
     environment: Production
+
     needs: [ build-back ]
 
     steps:
