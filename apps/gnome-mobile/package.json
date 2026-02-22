@@ -12,7 +12,7 @@
     "lint:ci": "npx @biomejs/biome ci ./src",
     "prebuild": "expo prebuild --clean",
     "apk:preview": "eas build --profile preview --platform android --local",
-    "apk:prod": "eas build --profile production --platform android --local",
+    "aab:prod": "eas build --profile production --platform android --local",
     "i18n:sync": "npx i18next-cli extract --sync-primary",
     "i18n:lint": "npx i18next-cli lint"
   },
@@ -67,7 +67,7 @@
     "react-i18next": "^16.4.0",
     "react-native": "0.81.4",
     "react-native-gesture-handler": "~2.28.0",
-    "react-native-maps": "1.20.1",
+    "react-native-maps": "1.27.1",
     "react-native-qr-svg": "^1.5.0",
     "react-native-reanimated": "~4.1.1",
     "react-native-safe-area-context": "~5.6.0",
