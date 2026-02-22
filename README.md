@@ -8,6 +8,20 @@ Install dependencies:
   yarn install
 ```
 
+### Commit Messages
+
+This project uses [Conventional Commits](https://www.conventionalcommits.org/) for commit messages. Husky will validate all commit messages to ensure they follow this format.
+
+Valid commit message examples:
+- `feat: add new feature`
+- `fix: resolve bug in component`
+- `docs: update README`
+- `refactor: improve code structure`
+- `test: add unit tests`
+- `chore: update dependencies`
+
+The format is: `<type>(<optional scope>): <description>`
+
 ### Backend service
 
 Create a `.env` file based on `.env.example` in `apps/gnome-back` directory and fill in the necessary values.
