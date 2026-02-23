@@ -3,7 +3,6 @@ import * as SplashScreen from "expo-splash-screen";
 import "../global.css";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { PortalHost } from "@rn-primitives/portal";
-import React from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import "@/i18n";
 import { ThemeProvider } from "@/contexts/ThemeContext";
