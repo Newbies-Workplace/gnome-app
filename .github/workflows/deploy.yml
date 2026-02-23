@@ -13,9 +13,55 @@ env:
   REGISTRY: ghcr.io
 
 jobs:
-  docker:
+  build-web:
+    name: Build Web
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Build
+        run: yarn install && yarn workspace gnome-web build
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: gnome-web-dist
+          path: apps/gnome-web/dist
+
+  deploy-web:
+    name: Deploy to Cloudflare Pages
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      deployments: write
+
+    needs: [ build-web ]
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: gnome-web-dist
+          path: apps/gnome-web/dist
+
+      - name: Deploy
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          preCommands: cd apps/gnome-web
+          command: pages deploy --assets=./dist --project-name=gnome-app
+          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+
+  build-back:
     name: Build Docker Image
     runs-on: ubuntu-latest
+
+    environment: Production
 
     steps:
       - uses: actions/checkout@v5
@@ -49,11 +95,13 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
 
-  deploy:
+  deploy-back:
     name: Deploy
     runs-on: ubuntu-latest
+
     environment: Production
-    needs: [ docker ]
+
+    needs: [ build-back ]
 
     steps:
       - name: Deploy package to production
