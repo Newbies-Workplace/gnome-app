@@ -5,9 +5,8 @@ concurrency:
   cancel-in-progress: true
 
 on:
-  push:
-    tags:
-      - 'v*'
+  release:
+    types: [published]
 
 env:
   REGISTRY: ghcr.io
