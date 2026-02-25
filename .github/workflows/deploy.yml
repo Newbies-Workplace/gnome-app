@@ -19,6 +19,11 @@ jobs:
     steps:
       - uses: actions/checkout@v5
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v6.2.0
+        with:
+          node-version: 24.x
+
       - name: Build
         run: yarn install && yarn workspace gnome-web build
 
@@ -31,6 +36,8 @@ jobs:
   deploy-web:
     name: Deploy to Cloudflare Pages
     runs-on: ubuntu-latest
+
+    environment: Production
 
     permissions:
       contents: read
