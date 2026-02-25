@@ -72,7 +72,7 @@ jobs:
           workingDirectory: apps/gnome-web
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy --assets=./dist --project-name=gnome-app
+          command: pages deploy ./dist --project-name=gnome-app
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
 
   build-back:
