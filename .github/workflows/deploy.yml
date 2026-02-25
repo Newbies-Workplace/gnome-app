@@ -6,7 +6,7 @@ concurrency:
 
 on:
   release:
-    types: [created, published]
+    types: [published]
 
 env:
   REGISTRY: ghcr.io
