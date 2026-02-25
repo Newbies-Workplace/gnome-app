@@ -1,14 +1,6 @@
 # Gnome app
 
-## Development
-
-Install dependencies:
-
-```bash
-  yarn install
-```
-
-### Commit Messages
+## Commit Messages
 
 This project uses [Conventional Commits](https://www.conventionalcommits.org/) for commit messages. Husky will validate all commit messages to ensure they follow this format.
 
@@ -21,6 +13,14 @@ Valid commit message examples:
 - `chore: update dependencies`
 
 The format is: `<type>(<optional scope>): <description>`
+
+## Development
+
+Install dependencies:
+
+```bash
+  yarn install
+```
 
 ### Backend service
 
