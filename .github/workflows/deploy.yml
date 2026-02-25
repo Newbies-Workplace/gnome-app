@@ -62,6 +62,10 @@ jobs:
           name: gnome-web-dist
           path: apps/gnome-web/dist
 
+      - name: Install wrangler
+        run: |
+          npm install -g wrangler
+
       - name: Deploy
         uses: cloudflare/wrangler-action@v3
         with:
