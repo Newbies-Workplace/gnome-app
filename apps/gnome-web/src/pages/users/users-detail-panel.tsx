@@ -69,17 +69,17 @@ export default function UserDetailPanel() {
             <div className="flex flex-row rounded-4xl border border-black text-2xl text-white font-Afacad px-4 py-2 w-full items-center">
               <div className="flex flex-row w-full justify-between">
                 <div className="flex flex-row items-center gap-2">
-                  <img src={BerryIcon} className="w-8 h-8" />
+                  <img src={BerryIcon} className="w-8 h-8" alt="Berries" />
                   <div>{user.resources.berries}</div>
                 </div>
 
                 <div className="flex flex-row items-center gap-2">
-                  <img src={StoneIcon} className="w-8 h-8" />
+                  <img src={StoneIcon} className="w-8 h-8" alt="Stones" />
                   <div>{user.resources.stones}</div>
                 </div>
 
                 <div className="flex flex-row items-center gap-2">
-                  <img src={WoodIcon} className="w-8 h-8" />
+                  <img src={WoodIcon} className="w-8 h-8" alt="Wood" />
                   <div>{user.resources.sticks}</div>
                 </div>
               </div>
@@ -95,12 +95,12 @@ export default function UserDetailPanel() {
           {/* Przyciski */}
           <div className="flex flex-col gap-2 w-full">
             <Button className="bg-primary-color rounded-4xl">
-              <img src={BlockIcon} />
+              <img src={BlockIcon} alt="Block" />
               Zbanuj użytkownika
             </Button>
 
             <Button className="bg-primary-color rounded-4xl">
-              <img src={DeleteIcon} />
+              <img src={DeleteIcon} alt="Delete" />
               Usuń budowle użytkownika
             </Button>
           </div>
