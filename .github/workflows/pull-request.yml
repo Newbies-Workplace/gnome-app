@@ -32,4 +32,4 @@ jobs:
         with:
           diff: main
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          directory: apps/${{ matrix.app }}/src
+          directory: apps/${{ matrix.app }}
