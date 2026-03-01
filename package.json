@@ -22,7 +22,8 @@
     "@types/leaflet": "^1.9.17",
     "husky": "9.1.7",
     "lint-staged": "15.2.11",
-    "turbo": "^2.3.3"
+    "turbo": "^2.3.3",
+    "doctor": "npx react-doctor@latest . --no-ami"
   },
   "packageManager": "yarn@1.22.22",
   "lint-staged": {

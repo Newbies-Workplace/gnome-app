@@ -17,3 +17,19 @@ jobs:
 
       - name: Run Biome
         run: yarn workspaces run lint:ci
+  doctor:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        app: [gnome-mobile, gnome-web]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Run React Doctor (${{ matrix.app }})
+        uses: millionco/react-doctor@main
+        with:
+          diff: main
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          directory: apps/${{ matrix.app }}/src
