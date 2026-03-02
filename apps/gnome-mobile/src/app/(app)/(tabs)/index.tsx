@@ -391,6 +391,7 @@ const MapScreen = () => {
         {selectedGnomeId && (
           <GnomeDetailsBottomSheet
             gnomeId={selectedGnomeId}
+            onGnomeDetailsPress={() => selectedGnomeRef.current?.dismiss()}
             userLocation={userLocation}
           />
         )}

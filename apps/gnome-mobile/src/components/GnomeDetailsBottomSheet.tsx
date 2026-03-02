@@ -15,12 +15,13 @@ import { useGnomeStore } from "@/store/useGnomeStore";
 
 interface GnomeDetailsBottomSheetProps {
   gnomeId: string;
+  onGnomeDetailsPress: () => void;
   userLocation: LatLng | undefined;
 }
 
 export const GnomeDetailsBottomSheet: React.FC<
   GnomeDetailsBottomSheetProps
-> = ({ gnomeId, userLocation }) => {
+> = ({ gnomeId, onGnomeDetailsPress, userLocation }) => {
   const { t } = useTranslation();
   const router = useRouter();
   const { interactionCount, fetchInteractionCount } = useGnomeStore();
@@ -33,6 +34,7 @@ export const GnomeDetailsBottomSheet: React.FC<
   }, [gnomeId]);
 
   const handleOpenGnomeDetails = () => {
+    onGnomeDetailsPress();
     router.push(`/gnomes/${gnomeId}`);
   };
 

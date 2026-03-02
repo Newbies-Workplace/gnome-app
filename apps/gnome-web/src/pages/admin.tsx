@@ -5,7 +5,7 @@ import {
   Polygon,
   useJsApiLoader,
 } from "@react-google-maps/api";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { NavLink, Outlet, useLocation, useNavigate } from "react-router-dom";
 import BuildingsIcon from "@/assets/icons/buildings-icon.svg";
 import EventsIcon from "@/assets/icons/events-icon.svg";
@@ -40,11 +40,8 @@ export default function AdminPage() {
   } | null>(null);
   const [mapRef, setMapRef] = useState<google.maps.Map | null>(null);
 
-  const [gnomeClusterer, setGnomeClusterer] = useState<MarkerClusterer | null>(
-    null,
-  );
-  const [buildingClusterer, setBuildingClusterer] =
-    useState<MarkerClusterer | null>(null);
+  const gnomeClustererRef = useRef<MarkerClusterer | null>(null);
+  const buildingClustererRef = useRef<MarkerClusterer | null>(null);
 
   if (loadError) {
     console.error("Error while loading google map:", loadError);
@@ -96,9 +93,11 @@ export default function AdminPage() {
     ) {
       mapRef.panTo(defaultCenter);
       mapRef.setZoom(defaultZoom);
-      setSelectedPosition(null);
     }
   }, [location.pathname, mapRef]);
+
+  const effectiveSelectedPosition =
+    location.pathname === "/admin/gnomes/add" ? selectedPosition : null;
 
   const mapOptions = {
     fullscreenControl: false,
@@ -123,13 +122,13 @@ export default function AdminPage() {
   useEffect(() => {
     if (!mapRef) return;
 
-    if (gnomeClusterer) {
-      gnomeClusterer.clearMarkers();
-      setGnomeClusterer(null);
+    if (gnomeClustererRef.current) {
+      gnomeClustererRef.current.clearMarkers();
+      gnomeClustererRef.current = null;
     }
-    if (buildingClusterer) {
-      buildingClusterer.clearMarkers();
-      setBuildingClusterer(null);
+    if (buildingClustererRef.current) {
+      buildingClustererRef.current.clearMarkers();
+      buildingClustererRef.current = null;
     }
 
     if (filters.gnomesVisible && Array.isArray(gnomes)) {
@@ -142,12 +141,11 @@ export default function AdminPage() {
         return marker;
       });
 
-      const newClusterer = new MarkerClusterer({
+      gnomeClustererRef.current = new MarkerClusterer({
         markers,
         map: mapRef,
         renderer: gnomeClusterRenderer,
       });
-      setGnomeClusterer(newClusterer);
     }
 
     if (filters.buildingsVisible && Array.isArray(buildings)) {
@@ -163,12 +161,11 @@ export default function AdminPage() {
         return marker;
       });
 
-      const newClusterer = new MarkerClusterer({
+      buildingClustererRef.current = new MarkerClusterer({
         markers,
         map: mapRef,
         renderer: buildingClusterRenderer,
       });
-      setBuildingClusterer(newClusterer);
     }
   }, [filters, gnomes, buildings, mapRef]);
 
@@ -199,9 +196,9 @@ export default function AdminPage() {
                 }
               }}
             >
-              {selectedPosition && (
+              {effectiveSelectedPosition && (
                 <Marker
-                  position={selectedPosition}
+                  position={effectiveSelectedPosition}
                   icon={{
                     url: MarkerIcon,
                     scaledSize: new window.google.maps.Size(40, 40),
@@ -257,7 +254,7 @@ export default function AdminPage() {
         <div className="w-full h-full md:w-[420px] min-w-[300px] bg-primary-gray flex flex-col p-2 rounded-2xl overflow-auto">
           <Outlet
             context={{
-              selectedPosition,
+              selectedPosition: effectiveSelectedPosition,
               onGnomeMarkerClick,
               onBuildingMarkerClick,
             }}

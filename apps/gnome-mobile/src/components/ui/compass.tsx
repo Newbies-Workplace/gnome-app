@@ -85,8 +85,7 @@ const Compass: React.FC = () => {
 
             return (
               <SvgText
-                // biome-ignore lint/suspicious/noArrayIndexKey: finite number of markers
-                key={i}
+                key={label}
                 className="fill-tekst"
                 x={position % (COMPASS_WIDTH * 3)}
                 y={isMainDirection ? 28 : 25}

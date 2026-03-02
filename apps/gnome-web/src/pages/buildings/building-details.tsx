@@ -78,7 +78,11 @@ export default function BuildingDetailsPage() {
                 </ItemDescription>
 
                 <div className="flex flex-row gap-2">
-                  <img src={ClockIcon} className="size-8" />
+                  <img
+                    src={ClockIcon}
+                    className="size-8"
+                    alt="Time remaining"
+                  />
                   <div className="text-lg text-white font-Afacad">15h</div>
                 </div>
               </ItemContent>

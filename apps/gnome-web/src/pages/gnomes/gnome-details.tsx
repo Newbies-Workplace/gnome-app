@@ -68,15 +68,15 @@ export default function GnomeDetailsPage() {
 
           <div className="flex flex-col gap-1 mt-2 text-xs sm:text-sm">
             <div className="flex gap-1 sm:gap-2 items-center flex-wrap">
-              <img src={LocationIcon} className="size-4" />
+              <img src={LocationIcon} className="size-4" alt="Location" />
               <span>{gnome.location}</span>
             </div>
             <div className="flex gap-1 sm:gap-2 items-center flex-wrap">
-              <img src={CreationIcon} className="size-4" />
+              <img src={CreationIcon} className="size-4" alt="Creation date" />
               <span>{new Date(gnome.creationDate).toLocaleDateString()}</span>
             </div>
             <div className="flex gap-1 sm:gap-2 items-center flex-wrap">
-              <img src={FoundIcon} className="size-4" />
+              <img src={FoundIcon} className="size-4" alt="Found by" />
               <span>0 osób</span>
             </div>
           </div>
@@ -88,7 +88,7 @@ export default function GnomeDetailsPage() {
           className="text-white bg-primary-color py-2 rounded-2xl w-full text-xs sm:text-sm"
         >
           <div className="flex gap-1 sm:gap-2 items-center justify-center flex-wrap">
-            <img src={EditIcon} className="size-4" />
+            <img src={EditIcon} className="size-4" alt="Edit" />
             <span>Edytuj</span>
           </div>
         </Button>
@@ -98,7 +98,7 @@ export default function GnomeDetailsPage() {
           className="text-white bg-primary-color py-2 rounded-2xl w-full text-xs sm:text-sm"
         >
           <div className="flex gap-1 sm:gap-2 items-center justify-center flex-wrap">
-            <img src={DeleteIcon} className="size-4" />
+            <img src={DeleteIcon} className="size-4" alt="Delete" />
             <span>Usuń</span>
           </div>
         </Button>
