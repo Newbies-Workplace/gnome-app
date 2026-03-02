@@ -19,6 +19,8 @@ jobs:
         run: yarn workspaces run lint:ci
   doctor:
     runs-on: ubuntu-latest
+    env:
+      NO_COLOR: "1"
     strategy:
       matrix:
         app: [gnome-mobile, gnome-web]
