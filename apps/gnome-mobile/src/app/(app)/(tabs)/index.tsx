@@ -134,7 +134,7 @@ const HeaderControls: React.FC<HeaderControlsProps> = ({
       <View className="flex flex-row items-center gap-5 w-full justify-between">
         <View className="flex-row gap-3">
           <TouchableOpacity onPress={() => router.push("/profile")}>
-            <Avatar alt="Your avatar" className="w-10 h-10">
+            <Avatar alt="" className="w-10 h-10">
               <AvatarImage source={{ uri: user.pictureUrl }} />
               <AvatarFallback>
                 <Text className="text-md">{t("common.you")}</Text>
@@ -178,6 +178,7 @@ const HeaderControls: React.FC<HeaderControlsProps> = ({
 
 const MapScreen = () => {
   const { user } = useAuthStore();
+  const router = useRouter();
   const {
     gnomes,
     fetchGnomes,
@@ -391,7 +392,10 @@ const MapScreen = () => {
         {selectedGnomeId && (
           <GnomeDetailsBottomSheet
             gnomeId={selectedGnomeId}
-            onGnomeDetailsPress={() => selectedGnomeRef.current?.dismiss()}
+            onGnomeDetailsPress={() => {
+              selectedGnomeRef.current?.dismiss();
+              router.push(`/gnomes/${selectedGnomeId}`);
+            }}
             userLocation={userLocation}
           />
         )}

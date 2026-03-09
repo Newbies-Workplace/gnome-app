@@ -229,22 +229,22 @@ export default function AdminPage() {
             <TabsList className="grid grid-cols-4 gap-2 p-2 w-full bg-primary-gray rounded-4xl h-16 items-center">
               <TabsTrigger value="gnomes" asChild>
                 <NavLink to="/admin">
-                  <img src={GnomeIcon} alt="gnome" />
+                  <img src={GnomeIcon} alt="" />
                 </NavLink>
               </TabsTrigger>
               <TabsTrigger value="buildings" asChild>
                 <NavLink to="/admin/buildings">
-                  <img src={BuildingsIcon} alt="buildings" />
+                  <img src={BuildingsIcon} alt="" />
                 </NavLink>
               </TabsTrigger>
               <TabsTrigger value="events" asChild>
                 <NavLink to="/admin/events">
-                  <img src={EventsIcon} alt="events" />
+                  <img src={EventsIcon} alt="" />
                 </NavLink>
               </TabsTrigger>
               <TabsTrigger value="users" asChild>
                 <NavLink to="/admin/users">
-                  <img src={UsersIcon} alt="users" />
+                  <img src={UsersIcon} alt="" />
                 </NavLink>
               </TabsTrigger>
             </TabsList>

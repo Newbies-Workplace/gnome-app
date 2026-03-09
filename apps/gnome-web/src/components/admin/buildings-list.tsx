@@ -30,7 +30,7 @@ const BuildingsList = () => {
             <div className="flex w-full h-full items-center text-left text-white font-Afacad">
               <img
                 src={BuildPlaceHolder}
-                alt="user"
+                alt=""
                 className="w-16 h-16 object-cover rounded flex-shrink-0"
               />
               <div className="flex flex-col ml-4 h-16 justify-between flex-1">
@@ -39,7 +39,7 @@ const BuildingsList = () => {
                 </div>
 
                 <div className="flex flex-row justify-end items-center">
-                  <img src={ClockIcon} alt="clock" className="w-4 h-4 mr-1" />
+                  <img src={ClockIcon} alt="" className="w-4 h-4 mr-1" />
                   <div className="text-gray-300 text-sm">
                     {convertHealthToRemainingTime(build.health)}
                   </div>

@@ -1,5 +1,11 @@
 import React, { useEffect, useRef } from "react";
-import { Animated, Dimensions, StyleSheet, View } from "react-native";
+import {
+  Animated,
+  Dimensions,
+  StyleSheet,
+  useColorScheme,
+  View,
+} from "react-native";
 import {
   magnetometer,
   SensorTypes,
@@ -43,6 +49,8 @@ const EXTENDED_MARKERS = [...MARKERS, ...MARKERS, ...MARKERS];
 
 const Compass: React.FC = () => {
   const translateX = useRef(new Animated.Value(0)).current;
+  const colorScheme = useColorScheme();
+  const textColor = colorScheme === "dark" ? "#ffffff" : "#000000";
 
   useEffect(() => {
     setUpdateIntervalForType(SensorTypes.magnetometer, 1000);
@@ -85,8 +93,8 @@ const Compass: React.FC = () => {
 
             return (
               <SvgText
-                key={label}
-                className="fill-tekst"
+                key={i}
+                fill={textColor}
                 x={position % (COMPASS_WIDTH * 3)}
                 y={isMainDirection ? 28 : 25}
                 fontSize={isMainDirection ? 20 : 12}
