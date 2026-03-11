@@ -29,7 +29,6 @@ export function GnomeForm({
   const {
     register,
     handleSubmit,
-    watch,
     setValue,
     formState: { errors },
   } = useForm<GnomeFormData>({
@@ -45,15 +44,14 @@ export function GnomeForm({
     },
   });
 
-  const pictureFile = watch("pictureURL");
-  useEffect(() => {
-    if (pictureFile && pictureFile.length > 0) {
-      const file = pictureFile[0];
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
       const reader = new FileReader();
       reader.onloadend = () => setPreview(reader.result as string);
       reader.readAsDataURL(file);
     }
-  }, [pictureFile]);
+  };
 
   useEffect(() => {
     if (selectedPosition) {
@@ -88,6 +86,7 @@ export function GnomeForm({
             type="file"
             accept="image/*"
             {...register("pictureURL")}
+            onChange={handleFileChange}
             className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
           />
           {preview && (
@@ -140,7 +139,7 @@ export function GnomeForm({
           {selectedPosition ? (
             <div className="bg-[#282B28] p-2 rounded text-sm text-gray-300">
               <div className="flex flex-row items-center">
-                <img src={MarkerIcon} alt="icon" className="w-5 h-5" />
+                <img src={MarkerIcon} alt="" className="w-5 h-5" />
                 <div className="text-xs">Wybrany punkt na mapie:</div>
               </div>
               <div className="text-xs">Latitude: {selectedPosition.lat}</div>

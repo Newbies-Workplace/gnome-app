@@ -30,7 +30,7 @@ export default function MapOptions({ filters, setFilters }: MapOptionsProps) {
         <Button className="rounded-2xl">
           <div className="flex flex-row gap-2 items-center">
             Filtry
-            <img src={FiltersIcon} alt="map" className="w-6 h-6" />
+            <img src={FiltersIcon} alt="" className="w-6 h-6" />
           </div>
         </Button>
       </DropdownMenuTrigger>

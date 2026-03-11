@@ -58,7 +58,7 @@ export default function ProfileScreen() {
   return (
     <View className="p-4 flex-1 bg-primary-foreground items-center">
       <View className="flex flex-row items-center gap-5 mb-5 rounded-lg bg-background-foreground w-full justify-center">
-        <Avatar alt="Your avatar" className="w-20 h-20">
+        <Avatar alt="" className="w-20 h-20">
           <AvatarImage source={{ uri: user.pictureUrl }} />
           <AvatarFallback>
             <Text className="text-lg">{t("common.you")}</Text>

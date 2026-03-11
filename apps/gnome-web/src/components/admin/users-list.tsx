@@ -23,7 +23,7 @@ function UsersList() {
             <div className="flex w-full h-full items-center text-left text-white font-Afacad">
               <img
                 src={user.pictureUrl}
-                alt="userAvatar"
+                alt=""
                 className="w-16 h-16 object-cover rounded-4xl flex-shrink-0"
               />
               <div className="flex flex-col ml-4 h-16 justify-center flex-1">

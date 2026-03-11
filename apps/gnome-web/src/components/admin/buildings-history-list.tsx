@@ -16,7 +16,7 @@ const BuildingsHistoryList = () => {
         {buildings.map((build) => (
           <Item key={build.id} className="justify-between w-full" size={"sm"}>
             <div>
-              <img className="w-full" src={GnomeAvatar} alt="Avatar" />
+              <img className="w-full" src={GnomeAvatar} alt="" />
             </div>
             <ItemContent>
               <ItemDescription className="text-2xl text-white font-Afacad">

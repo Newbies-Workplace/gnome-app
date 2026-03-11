@@ -33,11 +33,7 @@ export function LoginForm({
                 className="bg-white text-black border-none rounded-4xl"
               >
                 Zaloguj się z{" "}
-                <img
-                  src={GoogleLogo}
-                  alt="Logo Google"
-                  className="inline-block"
-                />
+                <img src={GoogleLogo} alt="" className="inline-block" />
               </Button>
             </Field>
             <Field>

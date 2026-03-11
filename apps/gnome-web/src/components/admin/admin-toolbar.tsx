@@ -17,7 +17,7 @@ function AdminToolbar() {
     <div className="flex justify-between items-center rounded-2xl bg-primary-gray text-white p-2 w-full h-16">
       <Link to="/admin">
         <div className="flex flex-row gap-2 items-center">
-          <img src={AppIcon} alt="app-icon" className="w-10 h-10" />
+          <img src={AppIcon} alt="" className="w-10 h-10" />
           <b>Krasnal GO</b>
         </div>
       </Link>

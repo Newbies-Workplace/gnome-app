@@ -1,16 +1,8 @@
-import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import backgroundImage from "@/assets/images/background.png";
+import PrivacyPolicyContent from "../../public/privacy-policy.tsx";
 
 export default function Privacy() {
-  const [policyHtml, setPolicyHtml] = useState<string>("");
-
-  useEffect(() => {
-    fetch("/privacy-policy.html")
-      .then((res) => res.text())
-      .then(setPolicyHtml);
-  }, []);
-
   return (
     <div
       className="h-screen w-screen bg-cover bg-center bg-no-repeat flex flex-col overflow-y-auto"
@@ -30,16 +22,15 @@ export default function Privacy() {
         </div>
 
         <div className="flex items-center mt-3">
-          <div className="flex-grow border-t border-white" />
+          <div className="grow border-t border-white" />
           <div className="mx-4 w-100" />
-          <div className="flex-grow border-t border-white" />
+          <div className="grow border-t border-white" />
         </div>
       </div>
 
       <div className="flex flex-col m-8 bg-black/70 rounded-4xl">
-        <div className="text-white text-Afacad p-8 h-full text-lg ">
-          {/** biome-ignore lint/security/noDangerouslySetInnerHtml: loading static file from public */}
-          <div dangerouslySetInnerHTML={{ __html: policyHtml }} />
+        <div className="text-white text-Afacad p-8 h-full text-lg">
+          <PrivacyPolicyContent />
         </div>
       </div>
     </div>

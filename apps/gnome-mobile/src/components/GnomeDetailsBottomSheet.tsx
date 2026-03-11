@@ -1,5 +1,4 @@
 import { BottomSheetView } from "@gorhom/bottom-sheet";
-import { useRouter } from "expo-router";
 import { getDistance } from "geolib";
 import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
@@ -15,14 +14,14 @@ import { useGnomeStore } from "@/store/useGnomeStore";
 
 interface GnomeDetailsBottomSheetProps {
   gnomeId: string;
+  onGnomeDetailsPress: () => void;
   userLocation: LatLng | undefined;
 }
 
 export const GnomeDetailsBottomSheet: React.FC<
   GnomeDetailsBottomSheetProps
-> = ({ gnomeId, userLocation }) => {
+> = ({ gnomeId, onGnomeDetailsPress, userLocation }) => {
   const { t } = useTranslation();
-  const router = useRouter();
   const { interactionCount, fetchInteractionCount } = useGnomeStore();
   const gnome = useGnomeStore((state) =>
     state.gnomes.find((gnome) => gnome.id === gnomeId),
@@ -31,10 +30,6 @@ export const GnomeDetailsBottomSheet: React.FC<
   useEffect(() => {
     fetchInteractionCount(gnomeId);
   }, [gnomeId]);
-
-  const handleOpenGnomeDetails = () => {
-    router.push(`/gnomes/${gnomeId}`);
-  };
 
   const selectedGnomeDistance =
     gnome && userLocation
@@ -66,7 +61,7 @@ export const GnomeDetailsBottomSheet: React.FC<
               {gnome?.name}
             </Text>
 
-            <TouchableOpacity onPress={handleOpenGnomeDetails}>
+            <TouchableOpacity onPress={onGnomeDetailsPress}>
               <GnomeDetailsFullScreenIcon />
             </TouchableOpacity>
           </View>
