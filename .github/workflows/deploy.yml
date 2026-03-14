@@ -34,6 +34,15 @@ jobs:
         with:
           node-version: 24.x
 
+      - name: "Create .env"
+        uses: iamsauravsharma/create-dotenv@v4.0.0
+        with:
+          file-path: 'apps/gnome-web/.env'
+        env:
+          VITE_PUBLIC_API_URL: ${{ secrets.VITE_PUBLIC_API_URL }}
+          VITE_PUBLIC_GOOGLE_MAPS_API_KEY: ${{ secrets.VITE_PUBLIC_GOOGLE_MAPS_API_KEY }}
+          VITE_PUBLIC_GOOGLE_WEB_CLIENT_ID: ${{ secrets.VITE_PUBLIC_GOOGLE_WEB_CLIENT_ID }}
+
       - name: Build
         run: yarn install && yarn workspace gnome-web build
 
